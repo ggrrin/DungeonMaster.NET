@@ -46,8 +46,8 @@ namespace DungeonMasterEngine.Tiles
 
         public override void DeactivateTileContent()
         {
-            IsOpen = true;
             base.DeactivateTileContent();
+            IsOpen = true;
         }
 
         public override bool IsAccessible => !IsOpen;

@@ -85,6 +85,7 @@
     <Compile Include="DungeonContent\Items\Actuators\Constrains\TypeConstrain.cs" />
     <Compile Include="DungeonContent\Items\Actuators\ExchangerActuator.cs" />
     <Compile Include="GameConsoleContent\HandCommand.cs" />
+    <Compile Include="GameConsoleContent\ItemCommand.cs" />
     <Compile Include="GameConsoleContent\KeyboardStream.cs" />
     <Compile Include="GameConsoleContent\ScreenStream.cs" />
     <Compile Include="GameSynchronizationContext.cs" />

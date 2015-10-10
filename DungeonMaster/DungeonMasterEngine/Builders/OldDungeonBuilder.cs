@@ -176,6 +176,7 @@ namespace DungeonMasterEngine.Builders
 
         private void SetupFloorItems(Tile tile)
         {
+            //TODO 24 22 target tile null
             var tileData = map[tile.GridPosition.X, tile.GridPosition.Y];
 
             foreach (var act in tileData.Actuators)

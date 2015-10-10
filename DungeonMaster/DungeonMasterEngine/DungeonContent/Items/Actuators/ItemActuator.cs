@@ -9,41 +9,36 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
-    public class ItemActuator : Actuator
+    public class ItemActuator : FloorActuator
     {
-        public Tile TargetTile { get; }
 
         private bool switchedOn = false;
         public bool SwitchedOn
         {
             get { return switchedOn; }
-            set
+            private set
             {
                 if (switchedOn != value)
-                    TargetTile.ActivateTileContent();//TODO status!!!
-
+                    AffectTile();
                 switchedOn = value;
             }
         }
 
-        private Tile currentTile;
 
         public IConstrain Constrain { get; }
 
-        public ItemActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain) : base(position)
+        public ItemActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionState action) : base(position, currentTile, targetTile, action)
         {
-            this.currentTile = currentTile;
-            TargetTile = targetTile;
-            currentTile.ObjectEntered += CurrentTile_ObjectEntered;
             Constrain = constrain;
         }
 
-        private void CurrentTile_ObjectEntered(object sender, object e)
+        protected override void TestAndRun(object enteringObject, bool objectEntered)
         {
-            if (null != (from i in currentTile.SubItems where Constrain.IsAcceptable(i as GrabableItem) select i).FirstOrDefault())
+            if (null != (from i in CurrentTile.SubItems where Constrain.IsAcceptable(i as GrabableItem) select i).FirstOrDefault())
                 SwitchedOn = true;
             else
                 SwitchedOn = false;
+
         }
     }
 }

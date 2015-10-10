@@ -8,20 +8,15 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
-    public class CreatureActuator : Actuator
+    public class CreatureActuator : FloorActuator
     {
-        public Tile TargetTile { get; }
 
-        public CreatureActuator(Vector3 position, Tile currentTile, Tile targetTile) : base(position)
+        public CreatureActuator(Vector3 position, Tile currentTile, Tile targetTile, ActionState action) : base(position, currentTile, targetTile, action)
+        {}
+
+        protected override void TestAndRun(object enterginObject, bool objectEntered)
         {
-            TargetTile = targetTile;
-
-            currentTile.ObjectEntered += CurrentTile_ObjectEntered;
-        }
-
-        private void CurrentTile_ObjectEntered(object sender, object e)
-        {
-            var creature = e as Creature;
+            var creature = enterginObject as Creature;
 
             if (creature != null)
                 Activate();
@@ -29,7 +24,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 
         protected virtual void Activate()
         {
-            TargetTile.ActivateTileContent();
+            AffectTile();
         }
     }
 }

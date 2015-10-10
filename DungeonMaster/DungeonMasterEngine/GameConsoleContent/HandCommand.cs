@@ -26,12 +26,17 @@ namespace DungeonMasterEngine.GameConsoleContent
             {
                 if(Parameters[0] == "take")
                 {
-                    var ch = await GetFromItemIndex(theron.PartyGroup);
-
-                    if (ch != null)
+                    if (theron.Hand != null)
                     {
-                        theron.HandToInventory(ch);                        
+                        var ch = await GetFromItemIndex(theron.PartyGroup);
+
+                        if (ch != null)
+                        {
+                            theron.HandToInventory(ch);
+                        }
                     }
+                    else
+                        Output.WriteLine("Hand is empty!");
 
                 }
                 else if(Parameters[0] == "put")

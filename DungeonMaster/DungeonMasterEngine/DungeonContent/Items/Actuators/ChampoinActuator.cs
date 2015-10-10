@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.Items
 
         public bool Empty => Champoin == null;
 
-        public ChampoinActuator(Vector3 position, Champoin champoin) : base(position)
+        public ChampoinActuator(Vector3 position, Champoin champoin) :  base(position)
         {
             Champoin = champoin;
         }

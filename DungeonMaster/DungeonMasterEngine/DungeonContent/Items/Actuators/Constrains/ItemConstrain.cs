@@ -17,5 +17,10 @@ namespace DungeonMasterEngine.Items
         {
             return item?.Identifer == Data;
         }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name}: {Data}";
+        }
     }
 }

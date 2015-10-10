@@ -9,27 +9,22 @@ using DungeonMasterEngine.Player;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
-    public class TheronPartyCreatureActuator : Actuator
+    public class TheronPartyCreatureActuator : FloorActuator
     {
-        public Tile TargetTile { get; }
-
-        public TheronPartyCreatureActuator(Vector3 position, Tile currentTile, Tile targetTile) : base(position)
+        public TheronPartyCreatureActuator(Vector3 position, Tile currentTile, Tile targetTile, ActionState action) : base(position, currentTile, targetTile, action)
         {
-            TargetTile = targetTile;
-            currentTile.ObjectEntered += CurrentTile_ObjectEntered;
         }
 
-        private void CurrentTile_ObjectEntered(object sender, object e)
+        protected override void TestAndRun(object enteringObject, bool objectEntered)
         {
-            bool activated = e is Theron || e is Creature;
+            bool activated = enteringObject is Theron || enteringObject is Creature;
 
             if (activated)
                 Activate();
         }
-
         protected virtual void Activate()
         {
-            TargetTile.ActivateTileContent();
+            AffectTile();
         }
     }
 }

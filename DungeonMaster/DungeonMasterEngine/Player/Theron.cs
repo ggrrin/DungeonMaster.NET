@@ -15,8 +15,9 @@ namespace DungeonMasterEngine.Player
     public class Theron : PointOfViewCamera
     {
         private MouseState prevMouse = Mouse.GetState();
+        private KeyboardState prevKeyboard;
 
-        public List<Champoin> PartyGroup { get; } = new List<Champoin> { };// new Champoin { Name = "Pepa Mocap 1" }, new Champoin { Name = "Pepa Mocap 2 " }, new Champoin { Name = "Pepa Mocap 3" }, new Champoin { Name = "Pepa Mocap 4" }, };//TODO remove champion mocap
+        public List<Champoin> PartyGroup { get; } = new List<Champoin> {  new Champoin { Name = "Pepa Mocap 1" }, new Champoin { Name = "Pepa Mocap 2 " }, new Champoin { Name = "Pepa Mocap 3" }, new Champoin { Name = "Pepa Mocap 4" }, };//TODO remove champion mocap
 
         public GrabableItem Hand { get; private set; }
 
@@ -42,7 +43,7 @@ namespace DungeonMasterEngine.Player
         {
             base.Update(time);
 
-            if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+            if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released /*|| Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter)*/)
             {
                 var tiles = new List<Tile> { Location };
                 var aimingTile = Location.Neighbours.GetTile(GetShift(ForwardDirection));
@@ -72,11 +73,13 @@ namespace DungeonMasterEngine.Player
 
                 if (closest != null)
                 {
-                    closest.Item1.Dump(1);
+                    //closest.Item1.Dump(1);
+                    $"Click on Item: {closest.Item1}".Dump();
                     if (closest.Item1 is GrabableItem && Hand == null)
                     {
                         Hand = (GrabableItem)closest.Item1;
                         closest.Item2.SubItems.Remove(closest.Item1);
+                        closest.Item2.OnObjectLeft(closest.Item1);//notify tile that item disappeareds
                     }
                     else
                     {
@@ -86,6 +89,7 @@ namespace DungeonMasterEngine.Player
             }
 
             prevMouse = Mouse.GetState();
+            prevKeyboard = Keyboard.GetState();
         }
 
         public void ThrowOutItem()
@@ -94,18 +98,25 @@ namespace DungeonMasterEngine.Player
             {
                 Hand.Position = Location.Position;
                 Location.SubItems.Add(Hand);
+                Location.OnObjectEntered(Hand);
                 Hand = null;
             }
         }
 
+        public void PutToHand(GrabableItem item) => PutToHand(item, null);
+
         public void PutToHand(GrabableItem item, Champoin ch)
         {
             Hand = item;
-            ch.Inventory.Remove(item);
+
+            if (ch != null)
+                ch.Inventory.Remove(item);
         }
 
         public void HandToInventory(Champoin ch)
         {
+            if (Hand == null)
+                throw new InvalidOperationException("Hand is empty.");
             ch.Inventory.Add(Hand);
             Hand = null;
         }

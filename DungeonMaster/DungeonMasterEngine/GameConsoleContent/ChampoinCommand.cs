@@ -89,46 +89,19 @@ namespace DungeonMasterEngine.GameConsoleContent
         }
     }
 
-
-
     public class ChampoinFactory : ICommandFactory<Dungeon>
     {
         private static ChampoinFactory instance = new ChampoinFactory();
 
+        public static ChampoinFactory Instance => instance;
 
-        /// <summary>
-        /// Gets the instance.
-        /// </summary>
-        /// <value>The instance.</value>
-        public static ChampoinFactory Instance
-        {
-            get { return instance; }
-        }
+        private ChampoinFactory(){ }
 
-        private ChampoinFactory()
-        { }
-
-        /// <summary>
-        /// Text-form command
-        /// </summary>
-        /// <value>The command token.</value>
-        public string CommandToken
-        {
-            get { return "champoin"; }
-        }
-
-        /// <summary>
-        /// Interpreter for command
-        /// </summary>
-        /// <value>The command interpreter.</value>
+        public string CommandToken => "champoin"; 
+        
         public IInterpreter<Dungeon> GetNewInterpreter() => new ChampoinCommand();
 
-        /// <summary>
-        /// Help text for command
-        /// </summary>
-        /// <value>The help text.</value>
         public string HelpText => "";
-
 
         public IParameterParser ParameterParser => null;
     }

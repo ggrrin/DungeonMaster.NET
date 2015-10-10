@@ -29,7 +29,7 @@ namespace DungeonMasterEngine
 
         public LevelCollection ActiveLevels { get; private set; }
 
-        public int FogHorizont { get; } = 4;
+        public int FogHorizont { get; } = 8;
 
         public GameTime Time { get; private set; }
 
@@ -46,7 +46,7 @@ namespace DungeonMasterEngine
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(0, null);
+            var l = LoadLevel(1, new Point(29, 17));
             CurrentPlayer.Location = l.StartTile;
             this.EnabledChanged += Dungeon_EnabledChanged;          
         }

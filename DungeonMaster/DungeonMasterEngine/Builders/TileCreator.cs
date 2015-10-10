@@ -67,6 +67,9 @@ namespace DungeonMasterEngine.Builders
             public Tile GetTile(TeleporterTile t)
             {
                 SetMinimapTile(Color.Blue);
+
+                var teleport = (TeleporterItem)t.Items.Find(x => x.GetType() == typeof(TeleporterItem));
+
                 return new Tiles.Teleport(position);
             }
 
@@ -92,7 +95,7 @@ namespace DungeonMasterEngine.Builders
                 {
                     return new TileInfo<StairsTile> { Position = pos, Tile = (StairsTile)stairs };
                 }
-                else
+                else//TODO shouldnt be necesarry
                 {
                     var k = builder.GetNeigbourTiles(pos, map);
 

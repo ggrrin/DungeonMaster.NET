@@ -1,0 +1,65 @@
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DungeonMasterEngine.exe.config
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DUNGEON.DAT
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Fonts\Default.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Models\outterDoor.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Models\stairs.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Models\stairs1.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Models\xyz.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Arched Grid.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Big Switch Out.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Black door (Dungeon Entrance).xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Champion Mirror.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Crack.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Default.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\DefaultDoor.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Empty Torch Holder.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Fountain.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Full Torch Holder.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Grate.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Green Switch In.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Green Switch Out.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Hook.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Iron Lock.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Lever Down.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Lever Up.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Lord Order (Outside).xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Manacles.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Moss.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Puddle.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Red Triangle Lock.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Slime.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Square Alcove.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Square Pressure Pad.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Vi Altar.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Wall.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Wood Ring.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\Wooden Bars.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\WoodenDoor.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\Content\Textures\xyz.xnb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DungeonMasterEngine.exe
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DungeonMasterEngine.pdb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DungeonMasterParser.exe
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\MonoGame.Framework.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.MediaFoundation.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.XAudio2.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct3D11.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.DXGI.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct2D1.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.XInput.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.RawInput.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct3D9.dll
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\DungeonMasterParser.pdb
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\MonoGame.Framework.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.MediaFoundation.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.XAudio2.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct3D11.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.DXGI.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct2D1.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.XInput.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.RawInput.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\bin\Windows\Debug\SharpDX.Direct3D9.xml
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\obj\x86\Debug\DungeonMasterEngine.csprojResolveAssemblyReference.cache
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\obj\x86\Debug\DungeonMasterEngine.exe
+C:\Users\petrg\Documents\GitHub\DungeonMaster\DungeonMaster\DungeonMasterEngine\obj\x86\Debug\DungeonMasterEngine.pdb

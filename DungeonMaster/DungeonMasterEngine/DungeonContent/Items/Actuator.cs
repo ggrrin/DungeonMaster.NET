@@ -4,8 +4,12 @@ using System.Diagnostics;
 
 namespace DungeonMasterEngine.Items
 {
+ 
+
+
     public class Actuator : Item
-    { 
+    {
+
         public string s;
         
         public Actuator(Vector3 position, string s) : base(position)
@@ -14,8 +18,10 @@ namespace DungeonMasterEngine.Items
         }
 
         public Actuator(Vector3 position) : base(position)
-        {          
-        }
-      
+        { }
+
+
+
+        public override string ToString() => s;
     }
 }

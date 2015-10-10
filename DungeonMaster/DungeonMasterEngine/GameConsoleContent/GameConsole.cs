@@ -34,7 +34,8 @@ namespace DungeonMasterEngine.GameConsoleContent
         private static readonly IEnumerable<ICommandFactory<Dungeon>> defaultFactories =
         new ICommandFactory<Dungeon>[] {
             HandFactory.Instance,
-            ChampoinFactory.Instance
+            ChampoinFactory.Instance,
+            ItemFactory.Instance
             //TODO add default factories
         };
         private ScreenStream ouput;     

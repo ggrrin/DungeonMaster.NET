@@ -34,13 +34,17 @@ namespace DungeonMasterEngine
 
         public sealed override IGraphicProvider GraphicsProvider => graphicsProviders;
 
+        public bool ContentActivated { get; private set; }
+
         public virtual void ActivateTileContent()
         {
+            ContentActivated = true;
             $"Activating message received at {GridPosition}".Dump();
         }
 
         public virtual void DeactivateTileContent()
         {
+            ContentActivated = false;
             $"Deactivating message recived at {GridPosition}".Dump();
         }
 

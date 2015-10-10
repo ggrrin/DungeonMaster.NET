@@ -11,6 +11,9 @@ namespace DungeonMasterEngine.Items
     {
         public int Identifer { get; set; }
 
+        public int TableIndex { get; set; }
+        public string Name { get; set; }
+
 
         public GrabableItem(Vector3 position) : base(position)
         {
@@ -18,5 +21,9 @@ namespace DungeonMasterEngine.Items
         }
 
 
+        public override string ToString()
+        {
+            return $"{GetType().Name} : {Name} | {Identifer}";
+        }
     }
 }

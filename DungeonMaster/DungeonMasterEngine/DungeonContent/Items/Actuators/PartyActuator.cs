@@ -11,30 +11,18 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
-    enum ActionState
+    public abstract class PartyActuator : FloorActuator
     {
-        Set = 0, Clear, Toggle, Hold
-    }
+        public PartyActuator(Vector3 position, Tile currentTile, Tile targetTile, ActionState action) : base(position, currentTile, targetTile, action)
+        { }
 
-    public abstract class PartyActuator : Actuator
-    {
-        public bool Enabled { get; private set; } = true;
-
-        public Tile TargetTile { get; }
-
-        public PartyActuator(Vector3 position, Tile tile, Tile targetTile) : base(position)
+        protected override void TestAndRun(object enteringObect, bool objectEnter)
         {
-            TargetTile = targetTile;
-            tile.ObjectEntered += Tile_ObjectEntered;
-        }
-
-        private void Tile_ObjectEntered(object sender, object e)
-        {
-            var theron = (e as Theron);
+            var theron = (enteringObect as Theron);
 
             if (Enabled && theron?.PartyGroup.Count == 4)
             {
-                Activate(theron);   
+                Activate(theron);
             }
         }
 

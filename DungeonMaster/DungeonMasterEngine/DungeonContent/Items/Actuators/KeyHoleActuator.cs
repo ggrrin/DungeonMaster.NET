@@ -59,5 +59,10 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
         {
             TargetTile.ActivateTileContent();
         }
+
+        public override string ToString()
+        {
+            return $"Click on item {GetType().Name} with constrain {Constrain}";
+        }
     }
 }
