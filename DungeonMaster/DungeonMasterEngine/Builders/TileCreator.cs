@@ -36,6 +36,8 @@ namespace DungeonMasterEngine.Builders
                 }
             }
 
+            public IEnumerable<TileInfo<DungeonMasterParser.Tile>> Successors { get; private set; }
+
             public TileCreator(OldDungeonBuilder d, int level)
             {
                 builder = d;
@@ -53,6 +55,7 @@ namespace DungeonMasterEngine.Builders
 
             public Tile GetTile(TileInfo<DungeonMasterParser.Tile> tileInfo)
             {
+                Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tile>>();
                 position = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
                 return tileInfo.Tile.GetTile(this);
             }
@@ -69,13 +72,25 @@ namespace DungeonMasterEngine.Builders
                 SetMinimapTile(Color.Blue);
 
                 var teleport = (TeleporterItem)t.Items.Find(x => x.GetType() == typeof(TeleporterItem));
+                teleport.Processed = true;
 
-                return new Tiles.Teleport(position);
+                var destinationPosition = teleport.DestinationPosition.ToAbsolutePosition(builder.data.Maps[teleport.MapIndex]);
+
+                if (teleport.MapIndex == level)
+                    Successors = new List<TileInfo<DungeonMasterParser.Tile>>
+                    {
+                        new TileInfo<DungeonMasterParser.Tile> {
+                            Position = destinationPosition,
+                            Tile = builder.map[destinationPosition.X, destinationPosition.Y]
+                        }
+                    };
+
+                return new Tiles.Teleport(position, teleport.MapIndex, destinationPosition);
             }
 
             public Tile GetTile(WallTile t)
             {
-                throw new InvalidOperationException();                
+                throw new InvalidOperationException();
                 //SetMinimapTile(Color.Brown);
             }
 
@@ -140,8 +155,9 @@ namespace DungeonMasterEngine.Builders
                 //    from j in t.GetItems(builder.data) where j.TilePosition == TilePosition.North_TopLeft || j.TilePosition == TilePosition.West_BottomRight select new { Position = j.TilePosition, ahojky = j.NextObjectID, behojky = j.ToString() };
                 //}
 
-                DoorItem door = (from i in t.Items where i.GetType() == typeof(DoorItem) select (DoorItem)i  ).FirstOrDefault();
-                
+                DoorItem door = (from i in t.Items where i.GetType() == typeof(DoorItem) select (DoorItem)i).FirstOrDefault();
+                door.Processed = true;
+
                 return new Tiles.Gateway(position, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door)builder.itemCreator.GetItem(door));
             }
         }

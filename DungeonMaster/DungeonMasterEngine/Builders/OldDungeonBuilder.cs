@@ -115,6 +115,7 @@ namespace DungeonMasterEngine.Builders
         {
             var nextTiles = GetNeigbourTiles(currentTile.Position, map);
             var newTile = tileCreator.GetTile(currentTile);//, GetWallFaces(nextTiles));
+            nextTiles.AddRange(tileCreator.Successors);//add nextTiles advised by currentTile
             tilesPositions.Add(currentTile.Position, newTile);//remember tiles-position association
             outputTiles.Add(newTile);
 

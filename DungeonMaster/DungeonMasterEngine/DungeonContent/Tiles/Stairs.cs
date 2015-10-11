@@ -22,13 +22,13 @@ namespace DungeonMasterEngine.Tiles
         /// Creates fake stairs
         /// </summary>
         /// <param name="position"></param>
-        public Stairs(Vector3 position):base(position)
+        public Stairs(Vector3 position) : base(position)
         {
             Position = position;
             up = true;
         }
 
-        public Stairs(Vector3 position, bool westEast, bool shapeL):base(position)
+        public Stairs(Vector3 position, bool westEast, bool shapeL) : base(position)
         {
             Position = position;
 
@@ -91,5 +91,8 @@ namespace DungeonMasterEngine.Tiles
 
         }
 
+        public Point TargetTilePosition => GridPosition;
+
     }
+
 }

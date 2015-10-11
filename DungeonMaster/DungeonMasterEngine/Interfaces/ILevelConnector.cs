@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.Interfaces
     {
         Tile NextLevelEnter { get; set; }
         int NextLevelIndex { get; }
-
+        Point TargetTilePosition { get; }
         Point GridPosition { get; }
         
     }

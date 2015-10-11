@@ -17,7 +17,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
         
         protected override void TestAndRun(object e, bool objectEnter)
         {
-            bool activated = e is Theron || e is Creature || e is GrabableItem;
+            bool activated = e is Theron || e is Creature || e is GrabableItem;//TODO party test not only Theron 1!!!!
 
             if (activated)
                 Activate();

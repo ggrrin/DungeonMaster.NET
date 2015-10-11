@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/petrg/Documents/GitHub/DungeonMaster/DungeonMaster/DungeonMasterEngine/Content/Textures/Red Triangle Lock.png</SourceFile>
-  <SourceTime>2015-09-26T02:14:14.6462552+02:00</SourceTime>
-  <DestFile>C:/Users/petrg/Documents/GitHub/DungeonMaster/DungeonMaster/DungeonMasterEngine/Content/bin/Windows/Textures/Red Triangle Lock.xnb</DestFile>
-  <DestTime>2015-09-27T14:43:24.1564623+02:00</DestTime>
+  <SourceFile>D:/DATA/Documents/School/Mff/Bachelor thesis/DungeonMaster/DungeonMasterEngine/Content/Textures/Red Triangle Lock.png</SourceFile>
+  <SourceTime>2015-09-21T11:44:50.2379499+02:00</SourceTime>
+  <DestFile>D:/DATA/Documents/School/Mff/Bachelor thesis/DungeonMaster/DungeonMasterEngine/Content/bin/Windows/Textures/Red Triangle Lock.xnb</DestFile>
+  <DestTime>2015-10-10T19:00:31.1715032+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2015-04-29T19:14:44+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

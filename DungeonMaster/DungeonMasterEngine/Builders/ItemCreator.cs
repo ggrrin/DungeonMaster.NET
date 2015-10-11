@@ -409,11 +409,20 @@ namespace DungeonMasterEngine.Builders
 
             private Tile GetTargetTile(ActuatorItem i)
             {
+                var targetPos = (i.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map);
+
                 Tile targetTile = null;
-                if (builder.tilesPositions.TryGetValue((i.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map), out targetTile))
+                if (builder.tilesPositions.TryGetValue(targetPos, out targetTile))
                     return targetTile;
                 else
                 {
+                    //try find tile in raw data, and than actuator, add it to tiles Positions
+                    var virtualTileData = builder.map[targetPos.X, targetPos.Y];
+                    if (virtualTileData.Actuators.Count > 0)
+                    {
+                        var virtualTile = new VirtualTile();
+                        builder.tilesPositions.Add(targetPos, virtualTile);//subitems will be processed 
+                    }
 
                     return null; //TODO think out what to do 
                     //Acutor at the begining references wall neer by with tag only ... what to do ? 

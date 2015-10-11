@@ -46,7 +46,7 @@ namespace DungeonMasterEngine
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1, new Point(29, 17));
+            var l = LoadLevel(1, new Point(14, 32));
             CurrentPlayer.Location = l.StartTile;
             this.EnabledChanged += Dungeon_EnabledChanged;          
         }
@@ -69,9 +69,9 @@ namespace DungeonMasterEngine
         {
             DungeonLevel nextLevel;
             if (!ActiveLevels.Contains(e.NextLevelIndex, out nextLevel))
-                nextLevel = LoadLevel(e.NextLevelIndex, e.GridPosition);//load level if necesarry    
+                nextLevel = LoadLevel(e.NextLevelIndex, e.TargetTilePosition);//load level if necesarry    
 
-            e.NextLevelEnter = nextLevel.TilesPositions[e.GridPosition];
+            e.NextLevelEnter = nextLevel.TilesPositions[e.TargetTilePosition];//TODO unolad level disconect
 
             UpdateVisibleTiles();
         }

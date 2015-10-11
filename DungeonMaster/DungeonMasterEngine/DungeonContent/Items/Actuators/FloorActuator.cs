@@ -47,6 +47,9 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 
         protected void AffectTile()
         {
+            if (TargetTile == null)
+                return;
+
             switch (Action)
             {
                 case ActionState.Set:
