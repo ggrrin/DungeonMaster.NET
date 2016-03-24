@@ -58,9 +58,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Builders\ChampoinBuilder.cs" />
+    <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
+    <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
     <Compile Include="DungeonContent\Tiles\VirtualTile.cs" />
     <Compile Include="DungeonContent\Items\Actuators\AlcoveActuator.cs" />
-    <Compile Include="DungeonContent\Items\Actuators\Constrains\ItemConstrain.cs" />
+    <Compile Include="DungeonContent\Constrains\ItemConstrain.cs" />
     <Compile Include="DungeonContent\Items\Actuators\CreatureActuator.cs" />
     <Compile Include="DungeonContent\Items\Actuators\DirectionPartyActuator.cs" />
     <Compile Include="DungeonContent\Items\Actuators\FloorActuator.cs" />
@@ -82,8 +84,8 @@
     <Compile Include="GameConsoleContent\Base\Interpreter.cs" />
     <Compile Include="GameConsoleContent\ChampoinCommand.cs" />
     <Compile Include="GameConsoleContent\GameConsole.cs" />
-    <Compile Include="DungeonContent\Items\Actuators\Constrains\NoConstrain.cs" />
-    <Compile Include="DungeonContent\Items\Actuators\Constrains\TypeConstrain.cs" />
+    <Compile Include="DungeonContent\Constrains\NoConstrain.cs" />
+    <Compile Include="DungeonContent\Constrains\TypeConstrain.cs" />
     <Compile Include="DungeonContent\Items\Actuators\ExchangerActuator.cs" />
     <Compile Include="GameConsoleContent\HandCommand.cs" />
     <Compile Include="GameConsoleContent\ItemCommand.cs" />

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace DungeonMasterEngine.Items
 {
     //TODO: extension objects =>  new object -> new class vs parameter class
-    public abstract class Item : WorldObject
+    public abstract class Item : WorldObject, ILocalizable<Tile>
     {
         public Graphic Graphics { get; set; }
 
@@ -58,5 +58,25 @@ namespace DungeonMasterEngine.Items
 
         public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
 
+        private Tile location;
+
+        public event EventHandler LocationChanged;
+
+        public Tile Location
+        {
+            get
+            {
+                return location;
+            }
+
+            set
+            {
+                var oldLocation = location;
+                oldLocation.SubItems.Remove(this);
+                location = value;
+                location.SubItems.Add(this);
+                 
+            }
+        }
     }
 }

@@ -294,7 +294,7 @@ namespace DungeonMasterEngine.Builders
                     {
                         IConstrain constrain = null;
                         if (i.Data > 0)
-                            constrain = new ItemConstrain(i.Data);
+                            constrain = new GrabableItemConstrain(i.Data);
                         else
                             constrain = new NoConstrain();
                         return new ItemPartyActuator(GetItemPosition(i), currentTile, remoteTile, constrain, (ActionState)i.Action);
@@ -316,7 +316,7 @@ namespace DungeonMasterEngine.Builders
                 decoration = null;
 
                 if (i.Data > 0)
-                    constrain = new ItemConstrain(i.Data);
+                    constrain = new GrabableItemConstrain(i.Data);
                 else
                     constrain = new NoConstrain();
 
@@ -418,10 +418,11 @@ namespace DungeonMasterEngine.Builders
                 {
                     //try find tile in raw data, and than actuator, add it to tiles Positions
                     var virtualTileData = builder.map[targetPos.X, targetPos.Y];
-                    if (virtualTileData.Actuators.Count > 0)
+                    if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
                     {
                         var virtualTile = new VirtualTile();
-                        builder.tilesPositions.Add(targetPos, virtualTile);//subitems will be processed 
+                        builder.tilesPositions.Add(targetPos, virtualTile);//subitems will be processed becccause adding at the end of the list( should get an exception)
+                        return virtualTile;
                     }
 
                     return null; //TODO think out what to do 
@@ -463,7 +464,7 @@ namespace DungeonMasterEngine.Builders
                 {
                     ; //TODO find out what to do (mancacles in the first level points to its wall tile)   
 
-                    var constrain = new ItemConstrain(i.Data);
+                    var constrain = new GrabableItemConstrain(i.Data);
                     var item = (from k in wallTile.Items where k is DungeonMasterParser.GrabableItem select new ItemCreator(builder).GetItem(k)).FirstOrDefault();
 
                     //TODO select appropriate items

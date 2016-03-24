@@ -85,7 +85,28 @@ namespace DungeonMasterEngine.Builders
                         }
                     };
 
-                return new Tiles.Teleport(position, teleport.MapIndex, destinationPosition);
+                return new Tiles.Teleport(position, teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(teleport.Scope));
+            }
+
+            private IConstrain GetTeleportScopeType(TeleportScope scope)
+            {
+                switch (scope)
+                {
+                    case TeleportScope.Creatures:
+                        return new TypeConstrain(typeof(Creature));
+                    case TeleportScope.Everything:
+                        return new NoConstrain();
+                    case TeleportScope.Items:
+                        return new TypeConstrain(typeof(Items.GrabableItem));
+                    case TeleportScope.ItemsOrParty:
+                        return new OrConstrain(new List<IConstrain>
+                        {
+                            new TypeConstrain(typeof(Items.GrabableItem)),
+                            new PartyConstrain()
+                        });
+                    default: throw new InvalidOperationException();
+
+                }
             }
 
             public Tile GetTile(WallTile t)

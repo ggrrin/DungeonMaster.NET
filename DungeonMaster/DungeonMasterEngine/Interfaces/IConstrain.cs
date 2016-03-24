@@ -4,7 +4,7 @@ namespace DungeonMasterEngine.Interfaces
 {
     public interface IConstrain
     {
-        bool IsAcceptable(GrabableItem item);
+        bool IsAcceptable(object item);
 
     }
 }
