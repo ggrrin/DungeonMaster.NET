@@ -8,6 +8,8 @@ using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.DungeonContent.Items.Actuators;
 using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.DungeonContent.Tiles;
+using System.Diagnostics;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -153,7 +155,6 @@ namespace DungeonMasterEngine.Builders
 
             Item IItemCreator<Item>.GetItem(TeleporterItem i)
             {
-
                 return new Teleporter(GetItemPosition(i));
             }
 
@@ -225,6 +226,8 @@ namespace DungeonMasterEngine.Builders
 
                 return new Actuator(GetItemPosition(i), $"{absolutePosition} {i.DumpString()}");
             }
+
+
 
             private Actuator Actuator7(ActuatorItem i)
             {
@@ -347,6 +350,8 @@ namespace DungeonMasterEngine.Builders
                     case 4:
                         return GetKeyHole4(i);
 
+                    case 5:
+                        return GetLogicalActuator(i);
                     case 13:
                         return GetExchanger(i);
 
@@ -364,6 +369,11 @@ namespace DungeonMasterEngine.Builders
                         return new Actuator(GetItemPosition(i), $"{absolutePosition} {i.DumpString()}");
 
                 }
+            }
+
+            private Item GetLogicalActuator(ActuatorItem i)
+            {
+                throw new NotImplementedException();
             }
 
             private Item GetKeyHole4(ActuatorItem i)
@@ -397,7 +407,10 @@ namespace DungeonMasterEngine.Builders
                     var leverDown = wallTile.Actuators.Find(x => !x.Processed);
                     if (leverDown != null && leverDown.AcutorType == 1)
                     {
-                        var res = new LeverActuator(GetItemPosition(i), GetTargetTile(i), !((LocalTarget)leverDown.ActionLocation).RotateAutors);
+                        var res = new LeverActuator(GetItemPosition(i), GetTargetTile(i),
+                            !((LocalTarget)leverDown.ActionLocation).RotateAutors, (ActionState)i.Action,
+                           (i.ActionLocation as RemoteTarget)?.Position.Direction ?? Direction.North);
+
                         res.UpTexture = builder.wallTextures[i.Decoration - 1];
                         res.DownTexture = builder.wallTextures[leverDown.Decoration - 1];
                         return res;
@@ -420,15 +433,18 @@ namespace DungeonMasterEngine.Builders
                     var virtualTileData = builder.map[targetPos.X, targetPos.Y];
                     if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
                     {
-                        var virtualTile = new VirtualTile();
-                        builder.tilesPositions.Add(targetPos, virtualTile);//subitems will be processed becccause adding at the end of the list( should get an exception)
-                        return virtualTile;
+                        targetTile = new LogicTile(
+                            virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y => new LogicGate(
+                                GetTargetTile(y), (ActionState)i.Action,
+                                 (y.Data & 0x10) == 0x10, (y.Data & 0x20) == 0x20,
+                                 (y.Data & 0x40) == 0x40, (y.Data & 0x80) == 0x80)));
+
+                        builder.tilesPositions.Add(targetPos, targetTile);//subitems will be processed 
                     }
 
-                    return null; //TODO think out what to do 
-                    //Acutor at the begining references wall neer by with tag only ... what to do ? 
+                    return targetTile; //TODO (if null)  think out what to do 
+                                 //Acutor at the begining references wall near by with tag only ... what to do ? 
                 }
-
             }
 
             private Item GetAlcove(ActuatorItem i)

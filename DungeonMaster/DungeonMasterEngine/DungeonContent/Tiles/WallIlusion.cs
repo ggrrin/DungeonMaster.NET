@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Tiles
 {
-    class WallIlusion : Floor
+    public class WallIlusion : Floor
     {
         public WallIlusion(Vector3 position) : base(position)
         {

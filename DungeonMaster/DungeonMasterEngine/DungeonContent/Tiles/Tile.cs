@@ -48,6 +48,12 @@ namespace DungeonMasterEngine
             $"Deactivating message recived at {GridPosition}".Dump();
         }
 
+        public virtual void ExecuteContentActivator(ITileContentActivator contentActivator)
+        {
+            //throw new InvalidOperationException("Activator not implemented!");
+        }
+
+
         public virtual void OnObjectEntered(object obj)
         {
             ObjectEntered?.Invoke(this, obj);

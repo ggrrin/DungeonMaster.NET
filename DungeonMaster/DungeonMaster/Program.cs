@@ -61,6 +61,9 @@ namespace DungeonMasterParser
                         }
                         foreach(ActuatorItem a in from item in tile.GetItems(dat.Data) where item.GetType() == typeof(ActuatorItem) select item as ActuatorItem)
                         {
+                            //if (a.AcutorType != 5)
+                            //    continue;
+
                             w.WriteLine($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}; ");
                             ObjectDumper.Write(a, 2, w);
                             w.WriteLine();

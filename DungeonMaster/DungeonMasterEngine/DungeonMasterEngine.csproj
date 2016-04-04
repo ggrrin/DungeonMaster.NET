@@ -60,7 +60,8 @@
     <Compile Include="Builders\ChampoinBuilder.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
-    <Compile Include="DungeonContent\Tiles\VirtualTile.cs" />
+    <Compile Include="DungeonContent\Tiles\ITileContentActivator.cs" />
+    <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Items\Actuators\AlcoveActuator.cs" />
     <Compile Include="DungeonContent\Constrains\ItemConstrain.cs" />
     <Compile Include="DungeonContent\Items\Actuators\CreatureActuator.cs" />

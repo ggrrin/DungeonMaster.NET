@@ -46,7 +46,7 @@ namespace DungeonMasterEngine
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1, new Point(18, 35));
+            var l = LoadLevel(1, new Point(18, 33));
             CurrentPlayer.Location = l.StartTile;
             this.EnabledChanged += Dungeon_EnabledChanged;          
         }

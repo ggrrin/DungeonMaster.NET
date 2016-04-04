@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DungeonMasterEngine.Tiles
 {
-    class Stairs : Tile, ILevelConnector
+    public class Stairs : Tile, ILevelConnector
     {
         public GraphicsCollection graphics;
 

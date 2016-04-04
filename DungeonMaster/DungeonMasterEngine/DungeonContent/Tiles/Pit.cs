@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Tiles
 {
-    class Pit : Floor
+    public class Pit : Floor
     {
         private GraphicsCollection graphics;
 
