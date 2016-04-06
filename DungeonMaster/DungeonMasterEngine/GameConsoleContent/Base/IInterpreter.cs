@@ -7,6 +7,25 @@ using System.Threading.Tasks;
 
 namespace DungeonMasterEngine.GameConsoleContent.Base
 {
+    public class ConsoleContext<T> : IConsoleContext<T>
+    {
+        public IEnumerable<ICommandFactory<ConsoleContext<T>>> Factories { get; }
+        public T AppContext { get; }
+
+        public ConsoleContext(IEnumerable<ICommandFactory<ConsoleContext<T>>> factories , T applicationContext)
+        {
+            Factories = factories;
+            AppContext = applicationContext;
+        }
+    }
+
+    public interface IConsoleContext<T>
+    {
+        IEnumerable<ICommandFactory<ConsoleContext<T>>> Factories { get; }
+        T AppContext { get; }
+    }
+
+
     /// <summary>
     /// Interface for implementing interpreters and their transitive use.
     /// </summary>
@@ -28,10 +47,13 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 		/// Application context
 		/// Property should be set by creator of appropriate interpreter.
 		/// </summary>
-		Application AppContext { get; set; }
+		Application ConsoleContext { get; set; }
 
         string[] Parameters { get; set; }
 
+        /// <summary>
+        /// Determines wheather console can by minimized when command is in progress
+        /// </summary>
         bool CanRunBackground { get; }
 
         /// <summary>

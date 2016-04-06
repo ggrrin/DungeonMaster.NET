@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            theron = AppContext.Theron;
+            theron = ConsoleContext.AppContext.Theron;
 
             if(Parameters.Length > 0)
             {
@@ -49,7 +49,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
     }
 
-    public class ItemFactory : ICommandFactory<Dungeon>
+    public class ItemFactory : ICommandFactory<ConsoleContext<Dungeon>>
     {
         private static ItemFactory instance = new ItemFactory();
 
@@ -59,9 +59,9 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public string CommandToken => "item";
 
-        public IInterpreter<Dungeon> GetNewInterpreter() => new ItemCommand();
+        public IInterpreter<ConsoleContext<Dungeon>> GetNewInterpreter() => new ItemCommand();
 
-        public string HelpText => "";
+        public string HelpText => $"{CommandToken} create NUMBER\r\n create fake item with identifer NUMBER and puts it to hand";
 
         public IParameterParser ParameterParser => null;
     }

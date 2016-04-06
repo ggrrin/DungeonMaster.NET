@@ -76,7 +76,6 @@ namespace DungeonMasterEngine.Player
 
                     if (newLocation != null && newLocation.IsAccessible)
                     {
-
                         animator.MoveTo(this, newLocation);
                         return animator.GetTranslation(time);
                     }

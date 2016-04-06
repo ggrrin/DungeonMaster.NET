@@ -11,5 +11,7 @@ namespace DungeonMasterEngine.Items
             var theron = item as Theron;
             return theron?.PartyGroup.Count == 4;
         }
+
+        
     }
 }

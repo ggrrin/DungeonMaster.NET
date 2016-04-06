@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,9 +46,9 @@ namespace DungeonMasterEngine
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1, new Point(18, 33));
+            var l = LoadLevel(1, new Point(14, 42));
             CurrentPlayer.Location = l.StartTile;
-            this.EnabledChanged += Dungeon_EnabledChanged;          
+            EnabledChanged += Dungeon_EnabledChanged;          
         }
 
         private void Dungeon_EnabledChanged(object sender, EventArgs e)
@@ -56,13 +56,13 @@ namespace DungeonMasterEngine
             Theron.Enabled = Enabled;
         }
 
-        private DungeonLevel currentLevel;
+        private DungeonLevel currentLevel = null;
 
         private DungeonLevel LoadLevel(int levelIndex, Point? enterTile)
         {
-            currentLevel = Builder.GetLevel(levelIndex, this, enterTile);
-            ActiveLevels.Add(currentLevel);
-            return currentLevel;
+            var nextLevel = Builder.GetLevel(levelIndex, this, enterTile);
+            ActiveLevels.Add(nextLevel);
+            return nextLevel;
         }
 
         private void ConnectLevels(ILevelConnector e)
@@ -88,6 +88,8 @@ namespace DungeonMasterEngine
                     if (connector != null)
                         ConnectLevels(connector);
                 }
+
+                currentLevel = ActiveLevels.Single(x => x.LevelIndex == Theron.Location.LevelIndex);
             }
         }
 
@@ -167,13 +169,19 @@ namespace DungeonMasterEngine
             foreach (var t in currentVisibleTiles.ReverseLazy())
                 t.GraphicsProvider?.Draw(Effect);
 
-            const int scale = 8;
+            DrawMiniMap();
+        }
 
-            batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            batcher.Draw(currentLevel.MiniMap, new Rectangle(Point.Zero, new Point(currentLevel.MiniMap.Width * scale, currentLevel.MiniMap.Height * scale) ), Color.White);
-            batcher.Draw(pixel, new Rectangle((CurrentPlayer.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
-            batcher.End();
-
+        private void DrawMiniMap()
+        {
+            if (currentLevel != null)
+            {
+                const int scale = 8;
+                batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+                batcher.Draw(currentLevel.MiniMap, new Rectangle(Point.Zero, new Point(currentLevel.MiniMap.Width * scale, currentLevel.MiniMap.Height * scale)), Color.White);
+                batcher.Draw(pixel, new Rectangle((CurrentPlayer.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
+                batcher.End();
+            }
         }
     }
 }

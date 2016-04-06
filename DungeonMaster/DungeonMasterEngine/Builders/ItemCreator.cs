@@ -260,6 +260,7 @@ namespace DungeonMasterEngine.Builders
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
                 var res = new TheronPartyCreatureItemActuator(GetItemPosition(i), currentTile, targetTile, (ActionState)i.Action);
+                //TODO 14 28 actuator sends Clear message to pit(which open the pit => should be close) 
                 res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
             }
@@ -433,17 +434,22 @@ namespace DungeonMasterEngine.Builders
                     var virtualTileData = builder.map[targetPos.X, targetPos.Y];
                     if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
                     {
-                        targetTile = new LogicTile(
-                            virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y => new LogicGate(
-                                GetTargetTile(y), (ActionState)i.Action,
-                                 (y.Data & 0x10) == 0x10, (y.Data & 0x20) == 0x20,
-                                 (y.Data & 0x40) == 0x40, (y.Data & 0x80) == 0x80)));
+                        var t = new LogicTile();
+                        targetTile = t;
+
+                        var logicGates = virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y =>
+                        {
+                            Tile nextTargetTile = targetPos == (y.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map) ? targetTile : GetTargetTile(y);
+                            return new LogicGate(nextTargetTile, (ActionState)i.Action, (y.Data & 0x10) == 0x10, (y.Data & 0x20) == 0x20,
+                                (y.Data & 0x40) == 0x40, (y.Data & 0x80) == 0x80);
+                        });
+                        t.Gates = logicGates.ToArray(); 
 
                         builder.tilesPositions.Add(targetPos, targetTile);//subitems will be processed 
                     }
 
                     return targetTile; //TODO (if null)  think out what to do 
-                                 //Acutor at the begining references wall near by with tag only ... what to do ? 
+                                       //Acutor at the begining references wall near by with tag only ... what to do ? 
                 }
             }
 

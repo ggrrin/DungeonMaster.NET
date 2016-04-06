@@ -24,7 +24,7 @@ namespace DungeonMasterEngine.Items
         {
             if(!Empty)
             {
-                GameConsole.Instance?.RunCommand(new ChampoinCommand { Actuator = this });
+                GameConsole.Instance?.RunCommand(new ChampionCommand { Actuator = this });
             }
             return base.ExchangeItems(item);
         }

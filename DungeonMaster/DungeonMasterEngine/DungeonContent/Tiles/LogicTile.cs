@@ -12,10 +12,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public IEnumerable<LogicGate> Gates { get; set; }
 
-        public LogicTile(IEnumerable<LogicGate> gates) : base(Vector3.Zero)
-        {
-            Gates = gates.ToArray();
-        }
+        public LogicTile() : base(Vector3.Zero)
+        { }
  
         public override void ExecuteContentActivator(ITileContentActivator contentActivator)
         {

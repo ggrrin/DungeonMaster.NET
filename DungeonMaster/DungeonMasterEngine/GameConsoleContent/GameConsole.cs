@@ -31,18 +31,20 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public Color BackgroundColor { get; set; } = new Color(new Vector4(0, 0, 0, 0.85f));
 
-        private static readonly IEnumerable<ICommandFactory<Dungeon>> defaultFactories =
-        new ICommandFactory<Dungeon>[] {
+        private static readonly IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> defaultFactories =
+        new ICommandFactory<ConsoleContext<Dungeon>>[] {
+            HelpFactory.Instance,
             HandFactory.Instance,
             ChampoinFactory.Instance,
-            ItemFactory.Instance
+            ItemFactory.Instance,
+            TeleportFactory.Instance
             //TODO add default factories
         };
         private ScreenStream ouput;     
 
         public Rectangle Window { get; set; }
 
-        public static void InitializeConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<Dungeon>> thirdPartyFactories)
+        public static void InitializeConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories)
         {
             if (Instance != null)
                 throw new InvalidOperationException($"Cannont create multiple instances of {Instance.GetType()}. Instead access instance through {nameof(Instance)}");
@@ -50,16 +52,16 @@ namespace DungeonMasterEngine.GameConsoleContent
             Instance = new GameConsole(game, dungeon, thirdPartyFactories);
         }
 
-        public static void InitializeConsole(Game game, Dungeon dungeon) => InitializeConsole(game, dungeon, new ICommandFactory<Dungeon>[0]);
+        public static void InitializeConsole(Game game, Dungeon dungeon) => InitializeConsole(game, dungeon, new ICommandFactory<ConsoleContext<Dungeon>>[0]);
 
-        private GameConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<Dungeon>> thirdPartyFactories) : base(game)
+        private GameConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories) : base(game)
         {
             In = new StreamReader(input = new KeyboardStream());
             var s = new StreamWriter(ouput = new ScreenStream());
             s.AutoFlush = true;
             Out = s;
             interpreter = new BaseInterpreter(defaultFactories.Concat(thirdPartyFactories), In, Out, input);
-            interpreter.AppContext = dungeon;
+            interpreter.ConsoleContext = new ConsoleContext<Dungeon>(defaultFactories.Concat(thirdPartyFactories), dungeon);
             new Action(async () =>
             {
                 await interpreter.Run();
@@ -86,7 +88,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public static GameConsole Instance { get; private set; }
 
-        public void RunCommand(IInterpreter<Dungeon> cmd)
+        public void RunCommand(IInterpreter<ConsoleContext<Dungeon>> cmd)
         {
             ActivateDeactivateConsole();
             interpreter.RunCommand(cmd);
@@ -170,7 +172,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
 
             Activated ^= true;
-            interpreter.AppContext.Enabled = !Activated;
+            interpreter.ConsoleContext.AppContext.Enabled = !Activated;
             if (Activated)
                 SetWindowSize(0.8f);
             else
@@ -232,4 +234,5 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
         }
     }
+
 }

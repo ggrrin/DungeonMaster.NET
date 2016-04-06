@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace DungeonMasterEngine.GameConsoleContent.Base
 {
-    public abstract class Interpreter : IInterpreter<Dungeon>
+    public abstract class Interpreter : IInterpreter<ConsoleContext<Dungeon>>
     {
-        public Dungeon AppContext { get; set; }
+        public ConsoleContext<Dungeon> ConsoleContext { get; set; }
 
         public virtual bool CanRunBackground => false;
         public TextReader Input { get; set; }
@@ -17,7 +17,6 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
         public string[] Parameters { get; set; }
 
         public abstract Task Run();
-
 
         protected async Task<T> GetFromItemIndex<T>(IList<T> list, bool result = true) where T : class
         {

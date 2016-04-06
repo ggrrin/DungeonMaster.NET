@@ -96,9 +96,7 @@ namespace DungeonMasterEngine.Player
         {
             if (Hand != null)
             {
-                Hand.Position = Location.Position;
-                Location.SubItems.Add(Hand);
-                Location.OnObjectEntered(Hand);
+                Hand.Location = Location;
                 Hand = null;
             }
         }

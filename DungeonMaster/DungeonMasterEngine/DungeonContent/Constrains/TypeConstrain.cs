@@ -30,5 +30,10 @@ namespace DungeonMasterEngine.Items
             else
                 return item.GetType() == AcceptableType;
         }
+
+        public override string ToString()
+        {
+            return $"T:{AcceptableType.Name}\r\n->child:{AccepChild}";
+        }
     }
 }

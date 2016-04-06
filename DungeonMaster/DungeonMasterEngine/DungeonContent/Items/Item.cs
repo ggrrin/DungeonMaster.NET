@@ -72,9 +72,20 @@ namespace DungeonMasterEngine.Items
             set
             {
                 var oldLocation = location;
-                oldLocation.SubItems.Remove(this);
+                if (oldLocation != null)
+                {
+                    oldLocation.OnObjectLeft(this);
+                    oldLocation.SubItems.Remove(this);
+                    Position += value.Position - oldLocation.Position;
+                }
+                else
+                {
+                    Position = value.Position;
+                }
+
                 location = value;
                 location.SubItems.Add(this);
+                location.OnObjectEntered(this);
                  
             }
         }

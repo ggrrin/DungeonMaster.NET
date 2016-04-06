@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
     /// </summary>
     public class BaseInterpreter : Interpreter
     {
-        private CommandParser<Dungeon> parser;
+        private CommandParser<ConsoleContext<Dungeon>> parser;
 
         private KeyboardStream inputStream;
 
@@ -37,7 +37,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public BaseInterpreter(IEnumerable<ICommandFactory<Dungeon>> factories, TextReader input, TextWriter output, KeyboardStream inputStream)
+        public BaseInterpreter(IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> factories, TextReader input, TextWriter output, KeyboardStream inputStream)
         {
             if (factories == null || input == null || output == null || inputStream == null)
                 throw new ArgumentNullException();
@@ -46,14 +46,14 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
             Output = output;
             this.inputStream = inputStream;
 
-            parser = new CommandParser<Dungeon>(factories);
+            parser = new CommandParser<ConsoleContext<Dungeon>>(factories);
         }
 
         public bool Running { get; set; } = true;
 
         public bool ExecutingCommand => RunningCommand != null;
 
-        public IInterpreter<Dungeon> RunningCommand { get; private set; }
+        public IInterpreter<ConsoleContext<Dungeon>> RunningCommand { get; private set; }
 
         /// <summary>
         /// Runs the interpreter.
@@ -71,7 +71,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
                 {
                     RunningCommand.Input = Input;
                     RunningCommand.Output = Output;
-                    RunningCommand.AppContext = AppContext;
+                    RunningCommand.ConsoleContext = ConsoleContext;
 
                     await RunningCommand.Run();
                     RunningCommand = null;
@@ -87,7 +87,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
         }
 
 
-        private async Task<IInterpreter<Dungeon>> GetInterpreter()
+        private async Task<IInterpreter<ConsoleContext<Dungeon>>> GetInterpreter()
         {
             var queueTask = WaitForImplicitCommand();
             var readLineTask = WaitForInput();
@@ -102,23 +102,23 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
             return await winTask;
         }
 
-        private async Task<IInterpreter<Dungeon>> WaitForInput()
+        private async Task<IInterpreter<ConsoleContext<Dungeon>>> WaitForInput()
         {
             string command = await Input.ReadLineAsync();
             return parser.ParseCommand(command);
         }
 
 
-        TaskCompletionSource<IInterpreter<Dungeon>> interpreterPromise = new TaskCompletionSource<IInterpreter<Dungeon>>();
+        TaskCompletionSource<IInterpreter<ConsoleContext<Dungeon>>> interpreterPromise = new TaskCompletionSource<IInterpreter<ConsoleContext<Dungeon>>>();
 
-        private async Task<IInterpreter<Dungeon>> WaitForImplicitCommand()
+        private async Task<IInterpreter<ConsoleContext<Dungeon>>> WaitForImplicitCommand()
         {
             var res = await interpreterPromise.Task;
-            interpreterPromise = new TaskCompletionSource<IInterpreter<Dungeon>>();
+            interpreterPromise = new TaskCompletionSource<IInterpreter<ConsoleContext<Dungeon>>>();
             return res;
         }
 
-        public void RunCommand(IInterpreter<Dungeon> interpreter)
+        public void RunCommand(IInterpreter<ConsoleContext<Dungeon>> interpreter)
         {
             interpreterPromise.SetResult(interpreter);//TODO try set result (maybe)
         }

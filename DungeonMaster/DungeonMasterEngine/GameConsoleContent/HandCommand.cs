@@ -13,7 +13,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public async override Task Run()
         {            
-            theron = AppContext.Theron;
+            theron = ConsoleContext.AppContext.Theron;
 
             if (Parameters.Length == 0)
             {
@@ -68,7 +68,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
     }
 
-    public class HandFactory : ICommandFactory<Dungeon>
+    public class HandFactory : ICommandFactory<ConsoleContext<Dungeon>>
     {
         private static HandFactory instance = new HandFactory();
 
@@ -98,13 +98,13 @@ namespace DungeonMasterEngine.GameConsoleContent
         /// Interpreter for command
         /// </summary>
         /// <value>The command interpreter.</value>
-        public IInterpreter<Dungeon> GetNewInterpreter() => new HandCommand();
+        public IInterpreter<ConsoleContext<Dungeon>> GetNewInterpreter() => new HandCommand();
 
         /// <summary>
         /// Help text for command
         /// </summary>
         /// <value>The help text.</value>
-        public string HelpText => "";
+        public string HelpText => "usage: hand [put|take|throw]\r\nwithout parametres show content of hand\r\n put: put item from specific inventory to hand \r\nthrow item in hand on floor of current tile";
 
 
         public IParameterParser ParameterParser => null;
