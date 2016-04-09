@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.GameConsoleContent.Factories;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

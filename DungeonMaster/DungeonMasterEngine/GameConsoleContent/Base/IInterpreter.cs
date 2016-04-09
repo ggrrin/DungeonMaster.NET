@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,25 +6,6 @@ using System.Threading.Tasks;
 
 namespace DungeonMasterEngine.GameConsoleContent.Base
 {
-    public class ConsoleContext<T> : IConsoleContext<T>
-    {
-        public IEnumerable<ICommandFactory<ConsoleContext<T>>> Factories { get; }
-        public T AppContext { get; }
-
-        public ConsoleContext(IEnumerable<ICommandFactory<ConsoleContext<T>>> factories , T applicationContext)
-        {
-            Factories = factories;
-            AppContext = applicationContext;
-        }
-    }
-
-    public interface IConsoleContext<T>
-    {
-        IEnumerable<ICommandFactory<ConsoleContext<T>>> Factories { get; }
-        T AppContext { get; }
-    }
-
-
     /// <summary>
     /// Interface for implementing interpreters and their transitive use.
     /// </summary>

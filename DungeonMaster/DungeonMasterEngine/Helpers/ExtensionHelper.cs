@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterParser.Enums;
-using DungeonMasterParser.Structures;
+using DungeonMasterParser.Support;
 
 namespace DungeonMasterEngine.Helpers
 {

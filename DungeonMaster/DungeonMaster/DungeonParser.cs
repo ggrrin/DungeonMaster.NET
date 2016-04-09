@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Structures;
+using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser

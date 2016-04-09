@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Structures;
+using DungeonMasterParser.Support;
 using static DungeonMasterParser.Enums.ObjectCategory;
 using static DungeonMasterParser.Enums.CarrryLocations;
 namespace DungeonMasterParser

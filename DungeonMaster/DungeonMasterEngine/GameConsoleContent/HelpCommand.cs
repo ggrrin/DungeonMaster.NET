@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
@@ -30,17 +29,5 @@ namespace DungeonMasterEngine.GameConsoleContent
             else
                 Output.WriteLine("Invalid parameter");
         }
-    }
-
-    public class HelpFactory : ICommandFactory<ConsoleContext<Dungeon>>
-    {
-        public string CommandToken => "help";
-        public string HelpText => $"usage:{CommandToken} [commandToken]";
-        public IInterpreter<ConsoleContext<Dungeon>> GetNewInterpreter() => new HelpCommand();
-        public IParameterParser ParameterParser => null;
-
-        public static HelpFactory Instance { get; } = new HelpFactory();
-
-        private HelpFactory() { }
     }
 }

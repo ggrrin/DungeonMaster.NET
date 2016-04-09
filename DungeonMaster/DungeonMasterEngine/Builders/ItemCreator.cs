@@ -15,6 +15,7 @@ using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Items.@abstract;
+using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
