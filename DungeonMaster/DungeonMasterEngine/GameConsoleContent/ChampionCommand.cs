@@ -1,11 +1,12 @@
 ﻿using DungeonMasterEngine.GameConsoleContent.Base;
-using DungeonMasterEngine.Items;
 using DungeonMasterEngine.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Items.Actuators;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

@@ -60,6 +60,19 @@
     <Compile Include="Builders\ChampoinBuilder.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
+    <Compile Include="DungeonContent\Items\Actuators\Counter.cs" />
+    <Compile Include="DungeonContent\Items\Actuators\LogicGate.cs" />
+    <Compile Include="DungeonContent\Items\Actuators\RemoteActuator.cs" />
+    <Compile Include="DungeonContent\Items\LivingItem.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\ISpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorSpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\SpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\ISpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\OpenDoorSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\Factories\ISymbolFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\SpellSymbol.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\Factories\SymbolFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\ZoSymbol.cs" />
     <Compile Include="DungeonContent\Tiles\ITileContentActivator.cs" />
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Items\Actuators\AlcoveActuator.cs" />
@@ -93,6 +106,7 @@
     <Compile Include="GameConsoleContent\ItemCommand.cs" />
     <Compile Include="GameConsoleContent\KeyboardStream.cs" />
     <Compile Include="GameConsoleContent\ScreenStream.cs" />
+    <Compile Include="GameConsoleContent\SpellCommand.cs" />
     <Compile Include="GameConsoleContent\TeleportCommand.cs" />
     <Compile Include="GameSynchronizationContext.cs" />
     <Compile Include="Interfaces\IConstrain.cs" />
@@ -100,7 +114,7 @@
     <Compile Include="DungeonContent\Items\Actuators\ChampoinActuator.cs" />
     <Compile Include="Builders\ItemCreator.cs" />
     <Compile Include="Builders\TileCreator.cs" />
-    <Compile Include="DungeonContent\Items\Actuator.cs" />
+    <Compile Include="DungeonContent\Items\Actuators\Actuator.cs" />
     <Compile Include="Helpers\BitMapMemory.cs" />
     <Compile Include="Helpers\BreadthFirstSearch.cs" />
     <Compile Include="Helpers\BuilderMocap.cs" />
@@ -195,6 +209,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Enums;
+
+namespace DungeonMasterParser
 {
     public struct ItemDescriptor
     {

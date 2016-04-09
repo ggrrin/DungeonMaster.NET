@@ -1,5 +1,4 @@
 ﻿using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
 using DungeonMasterEngine.Player;
 using DungeonMasterParser;
 using System;
@@ -7,6 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Items.@abstract;
+using DungeonMasterParser.Tiles;
+using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -54,8 +57,8 @@ namespace DungeonMasterEngine.Builders
                 }
 
                 champoin.Inventory.AddRange(from k in champoinWall.Items
-                                            where k is DungeonMasterParser.GrabableItem
-                                            select (Items.GrabableItem)new ItemCreator(builder).GetItem(k));
+                                            where k is GrabableItem
+                                            select (DungeonContent.Items.GrabableItem)new ItemCreator(builder).GetItem(k));
                 return champoin;
             }
 

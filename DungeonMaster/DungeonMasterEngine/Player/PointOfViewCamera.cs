@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Collections.Generic;
-using DungeonMasterEngine.Items;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
 
@@ -11,7 +11,7 @@ namespace DungeonMasterEngine.Player
 {
     public class PointOfViewCamera : FreeLookCamera, IPlayer, IMovable<Tile>
     {
-        private Animator<PointOfViewCamera, Tile> animator = new Animator<PointOfViewCamera, Tile>();
+        private readonly Animator<PointOfViewCamera, Tile> animator = new Animator<PointOfViewCamera, Tile>();
         private IPOVInputProvider inputProvider = new DefaultPOVInput();
 
         public IPOVInputProvider InputProvider
@@ -52,7 +52,6 @@ namespace DungeonMasterEngine.Player
         protected virtual void OnLocationChanged(Tile oldLocation, Tile newLocation)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
-
         }
 
         public PointOfViewCamera(Game game) : base(game)
@@ -113,14 +112,12 @@ namespace DungeonMasterEngine.Player
             return GetShift(moveDirection);
         }
 
-        protected Point GetShift(Vector3 direction)
+        public Point GetShift(Vector3 direction)
         {
             direction = Vector3.Normalize(new Vector3(direction.X, 0, direction.Z));//let direction be always horizontal of unit length
             direction += Position;//destination position
             return direction.ToGrid() - GridPosition;
         }
-
-
 
         private class DefaultPOVInput : IPOVInputProvider
         {

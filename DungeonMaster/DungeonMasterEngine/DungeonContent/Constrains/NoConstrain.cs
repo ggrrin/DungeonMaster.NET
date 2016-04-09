@@ -1,13 +1,17 @@
 ﻿using DungeonMasterEngine.Interfaces;
-using System;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Constrains
 {
     public class NoConstrain : IConstrain
     {
         public bool IsAcceptable(object item)
         {
             return true;
+        }
+
+        public override string ToString()
+        {
+            return "NoConstraion";
         }
     }
 }

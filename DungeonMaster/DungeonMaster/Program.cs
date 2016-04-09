@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
 {
@@ -59,16 +61,23 @@ namespace DungeonMasterParser
                             w.WriteLine("0000000000000000000000000000000000000000000000000000000000");
                             line = false;
                         }
-                        foreach(ActuatorItem a in from item in tile.GetItems(dat.Data) where item.GetType() == typeof(ActuatorItem) select item as ActuatorItem)
-                        {
-                            //if (a.AcutorType != 5)
-                            //    continue;
 
-                            w.WriteLine($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}; ");
-                            ObjectDumper.Write(a, 2, w);
-                            w.WriteLine();
-                            line = true;
+                        var door = tile as DoorTile;
+                        if (door != null)
+                        {
+                            w.WriteLine($"state:{door.State} {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}");
                         }
+
+                        //foreach(ActuatorItem a in from item in tile.GetItems(dat.Data) where item.GetType() == typeof(ActuatorItem) select item as ActuatorItem)
+                        //{
+                        //    //if (tile.GetType() != typeof(WallTile) || !(a.AcutorType == 5 || a.AcutorType == 6 ) )
+                        //    //    continue;
+
+                        //    w.WriteLine($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}; ");
+                        //    ObjectDumper.Write(a, 2, w);
+                        //    w.WriteLine();
+                        //    line = true;
+                        //}
                     }
                 }
             }

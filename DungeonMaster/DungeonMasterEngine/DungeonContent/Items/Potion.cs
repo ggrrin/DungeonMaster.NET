@@ -1,7 +1,6 @@
-﻿using DungeonMasterEngine.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items
 {
     public class Potion : GrabableItem
     {

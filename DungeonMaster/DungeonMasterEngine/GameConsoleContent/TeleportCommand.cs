@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using Microsoft.Xna.Framework;
 
@@ -10,7 +12,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     public class TeleportCommand : Interpreter
     {
-        public async override Task Run()
+        public override async Task Run()
         {
             Point targetLocation;
             if (Parameters.Length == 2 && int.TryParse(Parameters[0], out targetLocation.X) && int.TryParse(Parameters[1], out targetLocation.Y))
@@ -39,9 +41,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
     public class TeleportFactory : ICommandFactory<ConsoleContext<Dungeon>>
     {
-        private static TeleportFactory instance = new TeleportFactory();
-
-        public static TeleportFactory Instance => instance;
+        public static TeleportFactory Instance { get; } = new TeleportFactory();
 
         public string CommandToken => "teleport";
 

@@ -11,7 +11,7 @@ namespace DungeonMasterEngine.Graphics.ResourcesProvides
         private VertexPositionNormalTexture[] vertices;
         private int[] indeices;
 
-        public static new BufferResourceProvider Instance
+        public new static BufferResourceProvider Instance
         {
             get
             {

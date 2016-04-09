@@ -1,6 +1,4 @@
-﻿using DungeonMasterEngine.Items;
-
-namespace DungeonMasterEngine.Interfaces
+﻿namespace DungeonMasterEngine.Interfaces
 {
     public interface IConstrain
     {

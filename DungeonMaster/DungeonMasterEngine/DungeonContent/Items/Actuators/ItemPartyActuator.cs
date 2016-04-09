@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
-using DungeonMasterEngine.Items;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
@@ -14,7 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
     {
         public IConstrain Constrain { get; }
 
-        public ItemPartyActuator(Vector3 position, Tile actuatorTile, Tile targetTile, IConstrain constrain, ActionState action) : base(position, actuatorTile, targetTile, action)
+        public ItemPartyActuator(Vector3 position, Tile actuatorTile, Tile targetTile, IConstrain constrain, ActionStateX action) : base(position, actuatorTile, targetTile, action)
         {
             Constrain = constrain;
         }

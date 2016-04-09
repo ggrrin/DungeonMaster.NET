@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Constrains
 {
     internal class OrConstrain : IConstrain
     {

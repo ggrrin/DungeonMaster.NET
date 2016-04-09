@@ -1,8 +1,4 @@
-﻿using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Tiles;
-using DungeonMasterParser;
-
-namespace DungeonMasterEngine
+﻿namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public interface ITileContentActivator
     {

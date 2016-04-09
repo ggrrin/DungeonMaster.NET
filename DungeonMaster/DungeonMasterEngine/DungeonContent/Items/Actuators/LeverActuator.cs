@@ -1,5 +1,4 @@
-﻿using DungeonMasterEngine.Items;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterParser.Enums;
 
 namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
-    public class LeverActuator : Actuator
+    public class LeverActuator : RemoteActuator
     {
         private bool used = false;
 
@@ -48,15 +48,11 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
             }
         }
 
-        public Tile TargetTile { get; set; }
-        public ActionState Action { get; private set; }
-        public DungeonMasterParser.Direction ActionDirection { get; private set; }
+        public Direction ActionDirection { get; private set; }
 
-        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionState action, DungeonMasterParser.Direction actionDirection) : base(position)
+        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX action, Direction actionDirection) : base(targetTile, action, position)
         {
-            TargetTile = targetTile;
             OnceOnly = onceOnly;
-            Action = action;
             ActionDirection = actionDirection;
         }
 
@@ -80,7 +76,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
             else
                 Deactivate();
 
-            TargetTile.ExecuteContentActivator(new LogicTileActivator((int)ActionDirection, Action));
+            TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
         }
 
         private void Deactivate()
@@ -100,10 +96,10 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
         public int BitIndex { get; }
         public ActionState BitAction { get; }
 
-        public LogicTileActivator(int bitIndex, ActionState bitAction)
+        public LogicTileActivator( ActionStateX action)
         {
-            BitIndex = bitIndex;
-            BitAction = bitAction;
+            BitIndex = action.Specifer;
+            BitAction = action.Action;
         }
 
         public override void ActivateContent(LogicTile t)
@@ -120,6 +116,22 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
                         break;
                     case ActionState.Toggle:
                         gate[BitIndex] ^= true;
+                        break;
+                    case ActionState.Hold:
+                        throw new InvalidOperationException();
+                }
+            }
+
+            foreach (var counter in t.Counters)
+            {
+                switch (BitAction)
+                {
+                    case ActionState.Set:
+                        counter.Increase();
+                        break;
+                    case ActionState.Clear:
+                    case ActionState.Toggle:
+                        counter.Decrease();
                         break;
                     case ActionState.Hold:
                         throw new InvalidOperationException();

@@ -2,13 +2,8 @@
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DungeonMasterEngine.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Floor : Tile
     {
@@ -50,16 +45,6 @@ namespace DungeonMasterEngine.Tiles
             if (Neighbours.West != null)
                 wallGraphic.DrawFaces ^= CubeFaces.Left;
         }
-
-        public override bool IsAccessible
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-
-
+        public override bool IsAccessible => true;
     }
 }

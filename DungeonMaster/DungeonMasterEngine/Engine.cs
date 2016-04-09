@@ -1,6 +1,5 @@
 ﻿using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,6 +9,7 @@ using System;
 using DungeonMasterEngine.GameConsoleContent;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine
 {
@@ -26,8 +26,8 @@ namespace DungeonMasterEngine
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             graphics.IsFullScreen = false;

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
     public class HelpCommand : Interpreter
     {
-        public async override Task Run()
+        public override async Task Run()
         {
             if (!Parameters.Any())
             {
@@ -38,8 +39,8 @@ namespace DungeonMasterEngine.GameConsoleContent
         public IInterpreter<ConsoleContext<Dungeon>> GetNewInterpreter() => new HelpCommand();
         public IParameterParser ParameterParser => null;
 
-        private static HelpFactory instance = new HelpFactory();
-        public static HelpFactory Instance => instance;
+        public static HelpFactory Instance { get; } = new HelpFactory();
+
         private HelpFactory() { }
     }
 }

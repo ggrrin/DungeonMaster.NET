@@ -1,7 +1,6 @@
-﻿using System;
-using DungeonMasterParser.Tiles;
+﻿using DungeonMasterParser.Enums;
 
-namespace DungeonMasterParser
+namespace DungeonMasterParser.Tiles
 {
     public class StairsTile : Tile
     {

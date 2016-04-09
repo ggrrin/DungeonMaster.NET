@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items
 {
     public class DecorationItem : Item
     {

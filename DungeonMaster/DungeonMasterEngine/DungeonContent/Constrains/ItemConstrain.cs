@@ -1,27 +1,32 @@
-﻿using System;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Constrains
 {
     public class GrabableItemConstrain : IConstrain
     {
-        public int Data { get; }
+        public int DataIndex { get; }
 
-        public GrabableItemConstrain(int data)
+        /// <summary>
+        /// Constraion accespts all grabable items with other DataIndex than specifed
+        /// </summary>
+        public bool AcceptOthers { get; }
+
+        public GrabableItemConstrain(int data, bool acceptOthers )
         {
-            Data = data;
+            DataIndex = data;
+            AcceptOthers = acceptOthers;
         }
 
         public bool IsAcceptable(object item)
         {
             var i = item as GrabableItem;
-            return i?.Identifer == Data;
+            return i?.Identifer == DataIndex ^ AcceptOthers;
         }
 
         public override string ToString()
         {
-            return $"{GetType().Name}: {Data}";
+            return $"{GetType().Name}: {DataIndex}";
         }
     }
 }

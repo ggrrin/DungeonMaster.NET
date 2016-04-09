@@ -1,4 +1,7 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items.@abstract;
+
+namespace DungeonMasterParser.Items
 {
     public class ActuatorItem : SuperItem
     {

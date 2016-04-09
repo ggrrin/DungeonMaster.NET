@@ -5,8 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using DungeonMasterEngine.Items;
 using System.Diagnostics;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Magic.Spells;
+using DungeonMasterEngine.DungeonContent.Magic.Symbols;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Helpers;
 
@@ -20,7 +23,6 @@ namespace DungeonMasterEngine.Player
         public List<Champoin> PartyGroup { get; } = new List<Champoin> {  new Champoin { Name = "Pepa Mocap 1" }, new Champoin { Name = "Pepa Mocap 2 " }, new Champoin { Name = "Pepa Mocap 3" }, new Champoin { Name = "Pepa Mocap 4" }, };//TODO remove champion mocap
 
         public GrabableItem Hand { get; private set; }
-
 
         public Theron(Game game) : base(game)
         {
@@ -78,8 +80,10 @@ namespace DungeonMasterEngine.Player
                     if (closest.Item1 is GrabableItem && Hand == null)
                     {
                         Hand = (GrabableItem)closest.Item1;
-                        closest.Item2.SubItems.Remove(closest.Item1);
-                        closest.Item2.OnObjectLeft(closest.Item1);//notify tile that item disappeareds
+                        closest.Item1.Location = null;
+                        //Location setter should do a job
+                        //closest.Item2.SubItems.Remove(closest.Item1);
+                        //closest.Item2.OnObjectLeft(closest.Item1);//notify tile that item disappeareds
                     }
                     else
                     {
@@ -92,13 +96,36 @@ namespace DungeonMasterEngine.Player
             prevKeyboard = Keyboard.GetState();
         }
 
-        public void ThrowOutItem()
+        public bool ThrowOutItem(uint distance = 0)
         {
-            if (Hand != null)
+            if (Hand != null )
             {
-                Hand.Location = Location;
-                Hand = null;
+                var targetLocation = CheckRoute(distance);
+
+                if (targetLocation != null)
+                {
+                    Hand.Location = targetLocation;
+                    Hand = null;
+                    return true;
+                }
+                else
+                    return false;
             }
+            else
+                return false;
+        }
+
+        private Tile CheckRoute(uint distance)
+        {
+            var direction = GetShift(ForwardDirection);
+            var curLocation = Location;
+            for (int i = 0; i < distance; i++)
+            {
+                curLocation = curLocation.Neighbours.GetTile(direction);
+                if (!curLocation.IsAccessible)
+                    return null;
+            }
+            return curLocation;
         }
 
         public void PutToHand(GrabableItem item) => PutToHand(item, null);
@@ -107,8 +134,7 @@ namespace DungeonMasterEngine.Player
         {
             Hand = item;
 
-            if (ch != null)
-                ch.Inventory.Remove(item);
+            ch?.Inventory.Remove(item);
         }
 
         public void HandToInventory(Champoin ch)

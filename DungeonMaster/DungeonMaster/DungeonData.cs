@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static DungeonMasterParser.ObjectCategory;
-using static DungeonMasterParser.CarrryLocations;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Structures;
+using static DungeonMasterParser.Enums.ObjectCategory;
+using static DungeonMasterParser.Enums.CarrryLocations;
 namespace DungeonMasterParser
 {
     public class DungeonData

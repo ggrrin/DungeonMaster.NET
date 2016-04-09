@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.Helpers
 {
     public class Animator<Movable, Stopable> where Stopable : IStopable where Movable : IMovable<Stopable>
     {
-        public bool IsAnimating { get { return NewLocation != null; } }
+        public bool IsAnimating => NewLocation != null;
 
         public Stopable NewLocation { get; private set; }
 
@@ -39,7 +39,7 @@ namespace DungeonMasterEngine.Helpers
             if (translation.LengthSquared() >= animationTranslation.LengthSquared())
             {//finish animation
                 movableObject.Location = NewLocation;
-                NewLocation = default(Stopable);
+                NewLocation = default(Stopable);//to notify animation stopped
                 return Vector3.Zero;
             }
             else

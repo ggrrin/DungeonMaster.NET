@@ -1,12 +1,7 @@
-﻿using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using DungeonMasterEngine.Interfaces;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Constrains
 {
     class TypeConstrain : IConstrain
     {

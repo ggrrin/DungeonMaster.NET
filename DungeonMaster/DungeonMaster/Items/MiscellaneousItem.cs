@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Items.@abstract;
+
+namespace DungeonMasterParser.Items
 {
     public class MiscellaneousItem : GrabableItem
     {

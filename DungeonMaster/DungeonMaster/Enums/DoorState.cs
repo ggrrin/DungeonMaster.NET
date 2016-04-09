@@ -1,4 +1,4 @@
-﻿namespace DungeonMasterParser
+﻿namespace DungeonMasterParser.Enums
 {
     public enum DoorState
     {

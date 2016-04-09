@@ -1,6 +1,7 @@
-﻿using System;
+﻿using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items.@abstract;
 
-namespace DungeonMasterParser
+namespace DungeonMasterParser.Items
 {
     public class CreatureItem : TileObject
     {

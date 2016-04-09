@@ -1,15 +1,19 @@
 ﻿using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
-using DungeonMasterEngine.Tiles;
 using DungeonMasterParser;
-using DungeonMasterParser.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Constrains;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Tiles;
+using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -36,7 +40,7 @@ namespace DungeonMasterEngine.Builders
                 }
             }
 
-            public IEnumerable<TileInfo<DungeonMasterParser.Tile>> Successors { get; private set; }
+            public IEnumerable<TileInfo<DungeonMasterParser.Tiles.Tile>> Successors { get; private set; }
 
             public TileCreator(OldDungeonBuilder d, int level)
             {
@@ -53,9 +57,9 @@ namespace DungeonMasterEngine.Builders
                 miniMapData[(int)position.Z * texture.Width + (int)position.X] = color;
             }
 
-            public Tile GetTile(TileInfo<DungeonMasterParser.Tile> tileInfo)
+            public Tile GetTile(TileInfo<DungeonMasterParser.Tiles.Tile> tileInfo)
             {
-                Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tile>>();
+                Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tiles.Tile>>();
                 position = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
                 return tileInfo.Tile.GetTile(this);
             }
@@ -77,15 +81,15 @@ namespace DungeonMasterEngine.Builders
                 var destinationPosition = teleport.DestinationPosition.ToAbsolutePosition(builder.data.Maps[teleport.MapIndex]);
 
                 if (teleport.MapIndex == level)
-                    Successors = new List<TileInfo<DungeonMasterParser.Tile>>
+                    Successors = new List<TileInfo<DungeonMasterParser.Tiles.Tile>>
                     {
-                        new TileInfo<DungeonMasterParser.Tile> {
+                        new TileInfo<DungeonMasterParser.Tiles.Tile> {
                             Position = destinationPosition,
                             Tile = builder.map[destinationPosition.X, destinationPosition.Y]
                         }
                     };
 
-                return new Tiles.Teleport(position, teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(teleport.Scope));
+                return new Teleport(position, teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(teleport.Scope));
             }
 
             private IConstrain GetTeleportScopeType(TeleportScope scope)
@@ -97,11 +101,11 @@ namespace DungeonMasterEngine.Builders
                     case TeleportScope.Everything:
                         return new NoConstrain();
                     case TeleportScope.Items:
-                        return new TypeConstrain(typeof(Items.GrabableItem));
+                        return new TypeConstrain(typeof(GrabableItem));
                     case TeleportScope.ItemsOrParty:
                         return new OrConstrain(new List<IConstrain>
                         {
-                            new TypeConstrain(typeof(Items.GrabableItem)),
+                            new TypeConstrain(typeof(GrabableItem)),
                             new PartyConstrain()
                         });
                     default: throw new InvalidOperationException();
@@ -118,10 +122,10 @@ namespace DungeonMasterEngine.Builders
             public Tile GetTile(TrickTile t)
             {
                 SetMinimapTile(Color.Green);
-                return new WallIlusion(position);
+                return new WallIlusion(position, t.IsImaginary, t.IsOpen);
             }
 
-            private TileInfo<DungeonMasterParser.StairsTile> FindStairs(Point pos, int level)
+            private TileInfo<StairsTile> FindStairs(Point pos, int level)
             {
                 var map = builder.data.Maps[level];
 
@@ -179,7 +183,7 @@ namespace DungeonMasterEngine.Builders
                 DoorItem door = (from i in t.Items where i.GetType() == typeof(DoorItem) select (DoorItem)i).FirstOrDefault();
                 door.Processed = true;
 
-                return new Tiles.Gateway(position, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door)builder.itemCreator.GetItem(door));
+                return new Gateway(position, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door)builder.itemCreator.GetItem(door));
             }
         }
     }

@@ -1,9 +1,9 @@
-﻿using DungeonMasterParser.Tiles;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Items.@abstract;
 
-namespace DungeonMasterParser
+namespace DungeonMasterParser.Tiles
 {
     public abstract class Tile 
     {
@@ -33,47 +33,45 @@ namespace DungeonMasterParser
                 yield return d.Current;
         }
 
+    }
+    public struct ItemEnumerator : IEnumerator<SuperItem>
+    {
+        private DungeonData data;
 
-        struct ItemEnumerator : IEnumerator<SuperItem>
+        private ObjectID nextObjectId, backup;
+
+        public ItemEnumerator(DungeonData d, ObjectID nextObjectId) : this()
         {
-            private DungeonData data;
-
-            private ObjectID nextObjectId, backup;
-
-            public ItemEnumerator(DungeonData d, ObjectID nextObjectId) : this()
-            {
-                data = d;
-                this.nextObjectId = backup = nextObjectId;
-            }
-
-
-            public SuperItem Current { get; private set; }
-
-            object IEnumerator.Current => Current;
-
-            public void Dispose()
-            {
-                data = null;
-                nextObjectId = null;
-                backup = null;
-            }
-
-            public bool MoveNext()
-            {
-                if (nextObjectId == null || nextObjectId.IsNull)
-                    return false;
-
-                Current = nextObjectId.GetObject(data);                
-                Current.ObjectID = nextObjectId;
-                nextObjectId = new ObjectID(Current.NextObjectID);
-                return true;
-            }
-
-            public void Reset()
-            {
-                nextObjectId = backup;
-            }
+            data = d;
+            this.nextObjectId = backup = nextObjectId;
         }
 
+
+        public SuperItem Current { get; private set; }
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose()
+        {
+            data = null;
+            nextObjectId = null;
+            backup = null;
+        }
+
+        public bool MoveNext()
+        {
+            if (nextObjectId == null || nextObjectId.IsNull)
+                return false;
+
+            Current = nextObjectId.GetObject(data);
+            Current.ObjectID = nextObjectId;
+            nextObjectId = new ObjectID(Current.NextObjectID);
+            return true;
+        }
+
+        public void Reset()
+        {
+            nextObjectId = backup;
+        }
     }
 }

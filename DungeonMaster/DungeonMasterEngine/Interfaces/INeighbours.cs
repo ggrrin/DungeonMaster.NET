@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.Interfaces
 {

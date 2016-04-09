@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using DungeonMasterEngine.Tiles;
-using Microsoft.Xna.Framework;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine
+namespace DungeonMasterEngine.DungeonContent
 {
 
     public class Neighbours : INeighbours

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items
 {
-    internal class Miscellaneous : GrabableItem
+    public class Miscellaneous : GrabableItem
     {
         public Miscellaneous(Vector3 position) : base(position)
         {

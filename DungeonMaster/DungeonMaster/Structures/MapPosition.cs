@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Enums;
+
+namespace DungeonMasterParser.Structures
 {
     public struct MapPosition
     {

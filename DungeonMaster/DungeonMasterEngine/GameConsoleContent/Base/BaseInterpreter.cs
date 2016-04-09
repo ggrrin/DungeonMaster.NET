@@ -17,7 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine.GameConsoleContent.Base
 {
@@ -59,7 +59,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
         /// Runs the interpreter.
         /// </summary>
         /// <returns>Return s false whether application end is requested.</returns>
-        public async override Task Run()
+        public override async Task Run()
         {
             Output.WriteLine("Welcome! Write a command. (Consider using \"help\" command if U R lost.)");
 

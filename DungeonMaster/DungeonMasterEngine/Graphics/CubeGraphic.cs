@@ -10,6 +10,7 @@ using DungeonMasterEngine.Graphics.ResourcesProvides;
 
 namespace DungeonMasterEngine.Graphics
 {
+    [Flags]
     public enum CubeFaces : byte
     {
         None = 0, Back = 1, Right = 2, Front = 4, Left = 8, Floor = 16, Ceeling = 32,

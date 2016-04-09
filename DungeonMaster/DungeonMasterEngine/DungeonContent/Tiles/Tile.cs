@@ -1,18 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Items;
-using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.GameConsoleContent;
+using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine
+namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public abstract class Tile : WorldObject, IStopable
     {
-        public Tile(Vector3 position) : base(position)
+        protected Tile(Vector3 position) : base(position)
         {
             graphicsProviders = new GraphicsCollection();
             graphicsProviders.AddListOfDrawables(SubItems = new List<Item>());
@@ -22,11 +20,11 @@ namespace DungeonMasterEngine
 
         public abstract bool IsAccessible { get; }
 
-        public Point GridPosition { get { return Position.ToGrid(); } }
+        public Point GridPosition => Position.ToGrid();
 
-        public int LevelIndex { get { return -(int)Position.Y; } }
+        public int LevelIndex => -(int)Position.Y;
 
-        public virtual Vector3 StayPoint { get { return Position + new Vector3(0.5f); } }
+        public virtual Vector3 StayPoint => Position + new Vector3(0.5f);
 
         public List<Item> SubItems { get; }
 
@@ -34,7 +32,7 @@ namespace DungeonMasterEngine
 
         public sealed override IGraphicProvider GraphicsProvider => graphicsProviders;
 
-        public bool ContentActivated { get; private set; }
+        public virtual bool ContentActivated { get; protected set; }
 
         public virtual void ActivateTileContent()
         {
@@ -67,7 +65,14 @@ namespace DungeonMasterEngine
         }
 
         public event EventHandler<object> ObjectLeft;
-            
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (var item in SubItems.ToArray())//Enable modifing collection
+            {
+                item.Update(gameTime);
+            }
+        }
     }
 
 

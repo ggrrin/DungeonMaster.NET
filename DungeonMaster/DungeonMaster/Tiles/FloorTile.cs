@@ -1,6 +1,4 @@
-﻿using DungeonMasterParser.Tiles;
-
-namespace DungeonMasterParser
+﻿namespace DungeonMasterParser.Tiles
 {
     public class FloorTile : Tile
     {

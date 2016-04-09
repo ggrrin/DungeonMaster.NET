@@ -1,54 +1,52 @@
-﻿using DungeonMasterEngine.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace DungeonMasterEngine
+namespace DungeonMasterEngine.DungeonContent
 {
     public class Dungeon : DrawableGameComponent
     {
-        private BreadthFirstSearch bfs = new BreadthFirstSearch();
+        private readonly BreadthFirstSearch bfs = new BreadthFirstSearch();
+        private List<Tile> currentVisibleTiles;
+        private SpriteBatch batcher;
+
+        public DungeonLevel CurrentLevel { get; private set; }
 
         public Theron Theron { get; }
-        private List<Tile> currentVisibleTiles;
 
         public BasicEffect Effect { get; private set; }
 
-        public IPlayer CurrentPlayer { get { return Theron; } }
+        public IPlayer CurrentPlayer => Theron;
 
         public IDungonBuilder Builder { get; }
 
-        public LevelCollection ActiveLevels { get; private set; }
+        public LevelCollection ActiveLevels { get; }
 
         public int FogHorizont { get; } = 8;
 
         public GameTime Time { get; private set; }
-
-        private SpriteBatch batcher;
 
         public Dungeon(Game game, IDungonBuilder builder) : base(game)
         {
             InitilizeGraphicsResources();
             Game.Components.Add(this);
             Builder = builder;
-            
+
             Theron = new Theron(Game);
             Game.Components.Add(Theron);
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1, new Point(14, 42));
+            var l = LoadLevel(2, new Point(14, 24));
             CurrentPlayer.Location = l.StartTile;
-            EnabledChanged += Dungeon_EnabledChanged;          
+            EnabledChanged += Dungeon_EnabledChanged;
         }
 
         private void Dungeon_EnabledChanged(object sender, EventArgs e)
@@ -56,7 +54,6 @@ namespace DungeonMasterEngine
             Theron.Enabled = Enabled;
         }
 
-        private DungeonLevel currentLevel = null;
 
         private DungeonLevel LoadLevel(int levelIndex, Point? enterTile)
         {
@@ -89,23 +86,19 @@ namespace DungeonMasterEngine
                         ConnectLevels(connector);
                 }
 
-                currentLevel = ActiveLevels.Single(x => x.LevelIndex == Theron.Location.LevelIndex);
+                CurrentLevel = ActiveLevels.Single(x => x.LevelIndex == Theron.Location.LevelIndex);
             }
         }
 
         private void InitilizeGraphicsResources()
         {
             InitializeEffect();
-
             ResourceProvider.Instance.Initialize(GraphicsDevice, Game.Content);
-
         }
 
 
         private void InitializeEffect()
         {
-            
-
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
@@ -114,7 +107,6 @@ namespace DungeonMasterEngine
 
             batcher = new SpriteBatch(GraphicsDevice);
             Effect = new BasicEffect(GraphicsDevice);
-
 
             Effect.TextureEnabled = true;
 
@@ -142,6 +134,11 @@ namespace DungeonMasterEngine
             Effect.View = Theron.View;
             Effect.Projection = Theron.Projection;
 
+            foreach (var tile in CurrentLevel.Tiles)
+            {
+                tile.Update(gameTime);
+            }
+
             base.Update(gameTime);
         }
 
@@ -151,15 +148,15 @@ namespace DungeonMasterEngine
             bfs.StartSearch(CurrentPlayer.Location, (FogHorizont + 1) * 2 + 1, (t) => currentVisibleTiles.Add(t));
         }
 
-        Texture2D pixel;
+        private Texture2D pixel;
 
-        
+
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
-            
+
 
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -174,11 +171,11 @@ namespace DungeonMasterEngine
 
         private void DrawMiniMap()
         {
-            if (currentLevel != null)
+            if (CurrentLevel != null)
             {
                 const int scale = 8;
                 batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-                batcher.Draw(currentLevel.MiniMap, new Rectangle(Point.Zero, new Point(currentLevel.MiniMap.Width * scale, currentLevel.MiniMap.Height * scale)), Color.White);
+                batcher.Draw(CurrentLevel.MiniMap, new Rectangle(Point.Zero, new Point(CurrentLevel.MiniMap.Width * scale, CurrentLevel.MiniMap.Height * scale)), Color.White);
                 batcher.Draw(pixel, new Rectangle((CurrentPlayer.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
                 batcher.End();
             }

@@ -1,10 +1,8 @@
-﻿
-using DungeonMasterEngine.GameConsoleContent;
-using DungeonMasterEngine.Helpers;
+﻿using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
     public class ChampoinActuator : Actuator
     {

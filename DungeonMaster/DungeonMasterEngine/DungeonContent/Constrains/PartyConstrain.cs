@@ -1,8 +1,7 @@
-﻿using System;
-using DungeonMasterEngine.Interfaces;
+﻿using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Constrains
 {
     internal class PartyConstrain : IConstrain
     {

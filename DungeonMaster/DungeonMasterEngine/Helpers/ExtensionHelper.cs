@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Structures;
 
 namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
-        public static Point ToAbsolutePosition(this DungeonMasterParser.Position p, DungeonMasterParser.DungeonMap map)
+        public static Point ToAbsolutePosition(this Position p, DungeonMasterParser.DungeonMap map)
         {
             Point absolutePosition = new Point();
             absolutePosition.X = map.OffsetX + p.X;
@@ -24,21 +26,22 @@ namespace DungeonMasterEngine.Helpers
                 yield return list[list.Count - (i + 1)];
         }
 
+
         public static Vector3 ToGridVector3(this Point p, int level)
         {
             return new Vector3(p.X, -level, p.Y);
         }
 
-        public static DungeonMasterParser.TilePosition ToDirection(this Point p)
+        public static TilePosition ToDirection(this Point p)
         {
             if (p == new Point(0, -1))
-                return DungeonMasterParser.TilePosition.North_TopLeft;
+                return TilePosition.North_TopLeft;
             else if (p == new Point(1, 0))
-                return DungeonMasterParser.TilePosition.East_TopRight;
+                return TilePosition.East_TopRight;
             else if (p == new Point(0, 1))
-                return DungeonMasterParser.TilePosition.South_BottomLeft;
+                return TilePosition.South_BottomLeft;
             else if (p == new Point(-1, 0))
-                return DungeonMasterParser.TilePosition.West_BottomRight;
+                return TilePosition.West_BottomRight;
             else
                 throw new ArgumentException();
         }

@@ -1,9 +1,9 @@
-﻿using DungeonMasterEngine.Items;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.Interfaces;
 
@@ -27,7 +27,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 
         public IConstrain Constrain { get; }
 
-        public ItemActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionState action) : base(position, currentTile, targetTile, action)
+        public ItemActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionStateX action) : base(position, currentTile, targetTile, action)
         {
             Constrain = constrain;
         }

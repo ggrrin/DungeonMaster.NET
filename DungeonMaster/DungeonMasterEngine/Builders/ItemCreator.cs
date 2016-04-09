@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DungeonMasterEngine.Items;
 using DungeonMasterParser;
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.Interfaces;
@@ -10,6 +9,15 @@ using DungeonMasterEngine.DungeonContent.Items.Actuators;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using System.Diagnostics;
+using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Constrains;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Items.@abstract;
+using DungeonMasterParser.Tiles;
+using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;
+using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -117,15 +125,16 @@ namespace DungeonMasterEngine.Builders
 
             Item IItemCreator<Item>.GetItem(ContainerItem i)
             {
-                return new Container(GetItemPosition(i));
+                i.Processed = true;
+                return new Container(GetItemPosition(i), i.GetEnumerator(builder.data).Select(x => (GrabableItem)GetItem(x)).ToList());
             }
 
             private void SetupItem(Item item, SuperItem i)
             {
-                var grabable = item as Items.GrabableItem;
+                var grabable = item as GrabableItem;
                 if (grabable != null)
                 {
-                    var descriptor = builder.data.ItemDescriptors[builder.data.GetTableIndex(i.ObjectID.Category, (i as DungeonMasterParser.GrabableItem).ItemTypeIndex)];
+                    var descriptor = builder.data.ItemDescriptors[builder.data.GetTableIndex(i.ObjectID.Category, (i as DungeonMasterParser.Items.@abstract.GrabableItem).ItemTypeIndex)];
 
                     grabable.Identifer = descriptor.GlobalItemIndex;
                     grabable.Name = descriptor.Name;
@@ -236,7 +245,8 @@ namespace DungeonMasterEngine.Builders
                 Texture2D decoration = null;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
-                var res = new CreatureActuator(GetItemPosition(i), currentTile, targetTile, (ActionState)i.Action); res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
+                var res = new CreatureActuator(GetItemPosition(i), currentTile, targetTile, new ActionStateX((ActionState)i.Action));
+                res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
             }
 
@@ -247,7 +257,7 @@ namespace DungeonMasterEngine.Builders
                 Texture2D decoration = null;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
-                var res = new ItemActuator(GetItemPosition(i), currentTile, targetTile, constrain, (ActionState)i.Action);
+                var res = new ItemActuator(GetItemPosition(i), currentTile, targetTile, constrain, new ActionStateX((ActionState)i.Action));
                 res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
             }
@@ -259,7 +269,7 @@ namespace DungeonMasterEngine.Builders
                 Texture2D decoration = null;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
-                var res = new TheronPartyCreatureItemActuator(GetItemPosition(i), currentTile, targetTile, (ActionState)i.Action);
+                var res = new TheronPartyCreatureItemActuator(GetItemPosition(i), currentTile, targetTile, new ActionStateX((ActionState)i.Action));
                 //TODO 14 28 actuator sends Clear message to pit(which open the pit => should be close) 
                 res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
@@ -272,7 +282,7 @@ namespace DungeonMasterEngine.Builders
                 Texture2D decoration = null;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
-                var res = new TheronPartyCreatureActuator(GetItemPosition(i), currentTile, targetTile, (ActionState)i.Action);
+                var res = new TheronPartyCreatureActuator(GetItemPosition(i), currentTile, targetTile, new ActionStateX((ActionState)i.Action));
                 res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
             }
@@ -284,7 +294,7 @@ namespace DungeonMasterEngine.Builders
                 Texture2D decoration = null;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
 
-                var res = new DirectionPartyActuator(GetItemPosition(i), currentTile, targetTile, (ActionState)i.Action);
+                var res = new DirectionPartyActuator(GetItemPosition(i), currentTile, targetTile, new ActionStateX((ActionState)i.Action));
                 res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
                 return res;
             }
@@ -298,10 +308,10 @@ namespace DungeonMasterEngine.Builders
                     {
                         IConstrain constrain = null;
                         if (i.Data > 0)
-                            constrain = new GrabableItemConstrain(i.Data);
+                            constrain = new GrabableItemConstrain(i.Data, acceptOthers: false);
                         else
                             constrain = new NoConstrain();
-                        return new ItemPartyActuator(GetItemPosition(i), currentTile, remoteTile, constrain, (ActionState)i.Action);
+                        return new ItemPartyActuator(GetItemPosition(i), currentTile, remoteTile, constrain, new ActionStateX((ActionState)i.Action));
 
                     }
                     else
@@ -320,7 +330,7 @@ namespace DungeonMasterEngine.Builders
                 decoration = null;
 
                 if (i.Data > 0)
-                    constrain = new GrabableItemConstrain(i.Data);
+                    constrain = new GrabableItemConstrain(i.Data, acceptOthers: i.IsRevertable);
                 else
                     constrain = new NoConstrain();
 
@@ -348,11 +358,20 @@ namespace DungeonMasterEngine.Builders
                     case 1:
                         return GetSwitch1(i);
 
-                    case 4:
-                        return GetKeyHole4(i);
+                    case 3:
+                        return GetKeyHole3a4(i, destroyItem: false);
 
-                    case 5:
-                        return GetLogicalActuator(i);
+                    case 4:
+                        return GetKeyHole3a4(i, destroyItem: true);
+
+                    //case 5:
+                    //acutor of this type are created when needed by another actuators
+                    //break;
+
+                    //case 6:
+                    //acutor of this type are created when needed by another actuators
+                    //break;
+
                     case 13:
                         return GetExchanger(i);
 
@@ -372,18 +391,14 @@ namespace DungeonMasterEngine.Builders
                 }
             }
 
-            private Item GetLogicalActuator(ActuatorItem i)
-            {
-                throw new NotImplementedException();
-            }
 
-            private Item GetKeyHole4(ActuatorItem i)
+            private Item GetKeyHole3a4(ActuatorItem i, bool destroyItem)
             {
                 Texture2D decoration;
                 IConstrain constrain;
                 Tile targetTile;
                 PrepareActuatorData(i, out targetTile, out constrain, out decoration);
-                var res = new KeyHoleActuator(GetItemPosition(i), targetTile, constrain);
+                var res = new KeyHoleActuator(GetItemPosition(i), targetTile, new ActionStateX((ActionState)i.Action, (i.ActionLocation as RemoteTarget).Direction), constrain, destroyItem);
                 res.DecorationTexture = decoration;
                 return res;
             }
@@ -409,8 +424,10 @@ namespace DungeonMasterEngine.Builders
                     if (leverDown != null && leverDown.AcutorType == 1)
                     {
                         var res = new LeverActuator(GetItemPosition(i), GetTargetTile(i),
-                            !((LocalTarget)leverDown.ActionLocation).RotateAutors, (ActionState)i.Action,
-                           (i.ActionLocation as RemoteTarget)?.Position.Direction ?? Direction.North);
+                            /*!((LocalTarget)leverDown.ActionLocation).RotateAutors*/
+                            leverDown.IsRevertable,
+                            new ActionStateX((ActionState)i.Action, (i.ActionLocation as RemoteTarget).Direction),
+                            (i.ActionLocation as RemoteTarget)?.Position.Direction ?? Direction.North);
 
                         res.UpTexture = builder.wallTextures[i.Decoration - 1];
                         res.DownTexture = builder.wallTextures[leverDown.Decoration - 1];
@@ -421,36 +438,46 @@ namespace DungeonMasterEngine.Builders
                 }
             }
 
-            private Tile GetTargetTile(ActuatorItem i)
+            private Tile GetTargetTile(ActuatorItem callingActuator)
             {
-                var targetPos = (i.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map);
+                var targetPos = (callingActuator.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map);
 
                 Tile targetTile = null;
                 if (builder.tilesPositions.TryGetValue(targetPos, out targetTile))
                     return targetTile;
                 else
                 {
-                    //try find tile in raw data, and than actuator, add it to tiles Positions
+                    //try find tile in raw data, and than actuator, add it to Tiles Positions
                     var virtualTileData = builder.map[targetPos.X, targetPos.Y];
                     if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
                     {
-                        var t = new LogicTile();
-                        targetTile = t;
+                        var newTile = new LogicTile(targetPos.ToGridVector3(builder.currentTile.Position.Y));
+                        newTile.Gates = virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y => InitLogicGates(y, newTile)).ToArray();//recurse
+                        newTile.Counters = virtualTileData.Actuators.Where(x => x.AcutorType == 6).Select(y => InitCounters(y, newTile)).ToArray(); //recurse
 
-                        var logicGates = virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y =>
-                        {
-                            Tile nextTargetTile = targetPos == (y.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map) ? targetTile : GetTargetTile(y);
-                            return new LogicGate(nextTargetTile, (ActionState)i.Action, (y.Data & 0x10) == 0x10, (y.Data & 0x20) == 0x20,
-                                (y.Data & 0x40) == 0x40, (y.Data & 0x80) == 0x80);
-                        });
-                        t.Gates = logicGates.ToArray(); 
-
-                        builder.tilesPositions.Add(targetPos, targetTile);//subitems will be processed 
+                        builder.tilesPositions.Add(targetPos, targetTile = newTile);//subitems will be processed 
                     }
 
                     return targetTile; //TODO (if null)  think out what to do 
                                        //Acutor at the begining references wall near by with tag only ... what to do ? 
                 }
+            }
+
+            private Counter InitCounters(ActuatorItem gateActuator, Tile gateActuatorTile)
+            {
+                //if nextTarget tile is current tile do not call recurese
+                Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map) ? gateActuatorTile : GetTargetTile(gateActuator);
+
+                return new Counter(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActionLocation as RemoteTarget).Direction), gateActuator.Data, gateActuatorTile.Position);
+            }
+
+            private LogicGate InitLogicGates(ActuatorItem gateActuator, Tile gateActuatorTile)
+            {
+                //if nextTarget tile is current tile do not call recurese
+                Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActionLocation as RemoteTarget).Position.Position.ToAbsolutePosition(builder.map) ? gateActuatorTile : GetTargetTile(gateActuator);
+
+                return new LogicGate(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActionLocation as RemoteTarget).Direction), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20,
+                    (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
             }
 
             private Item GetAlcove(ActuatorItem i)
@@ -470,8 +497,8 @@ namespace DungeonMasterEngine.Builders
 
 
                     var items = from x in wallTile.Items
-                                where !x.Processed && x.TilePosition == i.TilePosition && x is DungeonMasterParser.GrabableItem
-                                select (Items.GrabableItem)GetItem(x);
+                                where !x.Processed && x.TilePosition == i.TilePosition && x is DungeonMasterParser.Items.@abstract.GrabableItem
+                                select (GrabableItem)GetItem(x);
 
                     var res = new AlcoveActuator(GetItemPosition(i), items);
                     res.AlcoveTexture = builder.wallTextures[i.Decoration - 1];
@@ -486,11 +513,11 @@ namespace DungeonMasterEngine.Builders
                 {
                     ; //TODO find out what to do (mancacles in the first level points to its wall tile)   
 
-                    var constrain = new GrabableItemConstrain(i.Data);
-                    var item = (from k in wallTile.Items where k is DungeonMasterParser.GrabableItem select new ItemCreator(builder).GetItem(k)).FirstOrDefault();
+                    var constrain = new GrabableItemConstrain(i.Data, acceptOthers: false);
+                    var item = (from k in wallTile.Items where k is DungeonMasterParser.Items.@abstract.GrabableItem select new ItemCreator(builder).GetItem(k)).FirstOrDefault();
 
                     //TODO select appropriate items
-                    var res = new ExchangerActuator(GetItemPosition(i), (Items.GrabableItem)item, constrain);
+                    var res = new ExchangerActuator(GetItemPosition(i), (GrabableItem)item, constrain);
                     res.DecorationActivated = builder.wallTextures[i.Decoration - 1];
 
                     if ((i.ActionLocation as LocalTarget).RotateAutors)

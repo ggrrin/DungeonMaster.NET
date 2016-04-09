@@ -5,6 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
+using DungeonMasterParser.Structures;
+using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
 {
@@ -101,11 +105,6 @@ namespace DungeonMasterParser
                         t.Items.Add(item);
                 }
             }
-
-
-
-
-
         }
 
         private void ReadHeader(BinaryReader r)
@@ -523,7 +522,7 @@ namespace DungeonMasterParser
             var c = new ContainerItem();
             c.NextObjectID = r.ReadUInt16();
 
-            c.NextContainedObjectID = r.ReadUInt16();
+            c.NextContainedObjectID = new ObjectID(r.ReadUInt16());
             r.ReadUInt32(); //padding
             return c;
         }

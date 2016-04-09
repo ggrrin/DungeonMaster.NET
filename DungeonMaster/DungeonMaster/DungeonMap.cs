@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
 {

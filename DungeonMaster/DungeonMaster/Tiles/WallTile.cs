@@ -1,7 +1,4 @@
-﻿using System;
-using DungeonMasterParser.Tiles;
-
-namespace DungeonMasterParser
+﻿namespace DungeonMasterParser.Tiles
 {
     public class WallTile :  Tile
     {

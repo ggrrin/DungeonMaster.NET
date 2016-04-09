@@ -1,23 +1,20 @@
-﻿using DungeonMasterEngine.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.Actuators;
+using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DungeonMasterEngine.Items;
-using DungeonMasterEngine.DungeonContent.Items.Actuators;
 
-namespace DungeonMasterEngine.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Gateway : Floor
     {
-        private GraphicsCollection graphics;
+        private readonly GraphicsCollection graphics;
 
-        private ModelGraphic doorFrame;
+        private readonly ModelGraphic doorFrame;
 
-        private Door door;
+        private readonly Door door;
+
+        public bool HasButton => door.HasButton;
 
         private bool IsOpen
         {
@@ -49,8 +46,8 @@ namespace DungeonMasterEngine.Tiles
 
             if (door.HasButton)
             {
-                Vector3 shift = !isWestEast ? new Vector3(0,0, 0.4f) : new Vector3(0.4f, 0, 0);
-                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0)+shift, this, isOpen);
+                Vector3 shift = !isWestEast ? new Vector3(0, 0, 0.4f) : new Vector3(0.4f, 0, 0);
+                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle));
                 //t.Position = position + new Vector3(0, 0.4f, 0);
                 SubItems.Add(t);
             }
@@ -68,6 +65,6 @@ namespace DungeonMasterEngine.Tiles
             IsOpen = false;
         }
 
-        public override bool IsAccessible =>  IsOpen;
+        public override bool IsAccessible => IsOpen;
     }
 }

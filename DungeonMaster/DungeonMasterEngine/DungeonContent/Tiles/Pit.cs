@@ -1,13 +1,8 @@
 ﻿using DungeonMasterEngine.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Pit : Floor
     {
@@ -20,6 +15,10 @@ namespace DungeonMasterEngine.Tiles
             get { return isOpen; }
             set { isOpen = value; UpdateWall(); }
         }
+
+        public override bool IsAccessible => true;
+
+        public override Vector3 StayPoint => IsOpen ? base.StayPoint + Vector3.Down : base.StayPoint;
 
         public Pit(Vector3 position) : base(position)
         {
@@ -40,18 +39,14 @@ namespace DungeonMasterEngine.Tiles
 
         public override void ActivateTileContent()
         {
-            IsOpen = false;
+            IsOpen = true;
             base.ActivateTileContent();
         }
 
         public override void DeactivateTileContent()
         {
             base.DeactivateTileContent();
-            IsOpen = true;
+            IsOpen = false;
         }
-
-        public override bool IsAccessible => !IsOpen;
-   
-
     }
 }

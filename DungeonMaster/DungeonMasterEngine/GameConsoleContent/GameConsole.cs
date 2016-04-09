@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
@@ -37,7 +38,8 @@ namespace DungeonMasterEngine.GameConsoleContent
             HandFactory.Instance,
             ChampoinFactory.Instance,
             ItemFactory.Instance,
-            TeleportFactory.Instance
+            TeleportFactory.Instance,
+            SpellCommandFactory.Instance
             //TODO add default factories
         };
         private ScreenStream ouput;     

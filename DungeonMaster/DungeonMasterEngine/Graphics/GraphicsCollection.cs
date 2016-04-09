@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Graphics.ResourcesProvides;

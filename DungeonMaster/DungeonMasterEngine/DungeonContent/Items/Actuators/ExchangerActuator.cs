@@ -1,11 +1,9 @@
-﻿using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
+﻿using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
-using System;
 using Microsoft.Xna.Framework.Graphics;
-using DungeonMasterEngine.Graphics;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
     public class ExchangerActuator : Actuator
     {

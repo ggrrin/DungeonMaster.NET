@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DungeonMasterEngine
+namespace DungeonMasterEngine.DungeonContent
 {
     public class LevelCollection : IEnumerable<DungeonLevel>, IEnumerable, ICollection<DungeonLevel>
     {

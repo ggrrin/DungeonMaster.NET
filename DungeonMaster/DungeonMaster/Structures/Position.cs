@@ -1,4 +1,4 @@
-﻿namespace DungeonMasterParser
+﻿namespace DungeonMasterParser.Structures
 {
     public struct Position
     {

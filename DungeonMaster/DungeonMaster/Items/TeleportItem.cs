@@ -1,4 +1,8 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items.@abstract;
+using DungeonMasterParser.Structures;
+
+namespace DungeonMasterParser.Items
 {
     public class TeleporterItem : TileObject
     {

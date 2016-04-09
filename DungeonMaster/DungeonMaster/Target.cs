@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser
+﻿using DungeonMasterParser.Structures;
+
+namespace DungeonMasterParser
 {
     public abstract class Target { }
 
@@ -17,6 +19,8 @@
         {
             return Position.ToString();
         }
+
+        public int Direction => (int)Position.Direction;
     }
 
     public class LocalTarget : Target

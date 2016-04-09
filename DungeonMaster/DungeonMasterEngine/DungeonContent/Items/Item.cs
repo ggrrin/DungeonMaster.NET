@@ -1,18 +1,10 @@
-﻿using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Helpers;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items
 {
-    //TODO: extension objects =>  new object -> new class vs parameter class
     public abstract class Item : WorldObject, ILocalizable<Tile>
     {
         public Graphic Graphics { get; set; }
@@ -34,8 +26,7 @@ namespace DungeonMasterEngine.Items
             }
         }
 
-
-        public Item(Vector3 position) : base(position)
+        protected Item(Vector3 position) : base(position)
         {
             Graphics = new CubeGraphic
             {
@@ -44,13 +35,11 @@ namespace DungeonMasterEngine.Items
                 DrawFaces = CubeFaces.All ^ CubeFaces.Floor,
                 Outter = true
             };
-
-            
         }
 
         public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
 
-        
+
         public virtual GrabableItem ExchangeItems(GrabableItem item)
         {
             return item;
@@ -59,8 +48,6 @@ namespace DungeonMasterEngine.Items
         public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
 
         private Tile location;
-
-        public event EventHandler LocationChanged;
 
         public Tile Location
         {
@@ -71,23 +58,20 @@ namespace DungeonMasterEngine.Items
 
             set
             {
-                var oldLocation = location;
-                if (oldLocation != null)
-                {
-                    oldLocation.OnObjectLeft(this);
-                    oldLocation.SubItems.Remove(this);
-                    Position += value.Position - oldLocation.Position;
-                }
-                else
-                {
-                    Position = value.Position;
-                }
+                //old
+                location?.SubItems.Remove(this);
+                location?.OnObjectLeft(this);
 
                 location = value;
-                location.SubItems.Add(this);
-                location.OnObjectEntered(this);
-                 
+                
+                //new
+                location?.SubItems.Add(this);
+                location?.OnObjectEntered(this);
+
+                Position = value?.Position ?? Vector3.Zero;
             }
         }
+
+        public virtual void Update(GameTime gameTime) { }
     }
 }

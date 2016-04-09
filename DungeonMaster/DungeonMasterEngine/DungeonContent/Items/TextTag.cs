@@ -3,7 +3,7 @@ using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.Items
+namespace DungeonMasterEngine.DungeonContent.Items
 {
     public class TextTag : DecorationItem
     {

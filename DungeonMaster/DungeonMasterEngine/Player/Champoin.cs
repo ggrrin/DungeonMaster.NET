@@ -1,5 +1,5 @@
-﻿using DungeonMasterEngine.Items;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.Items;
 
 namespace DungeonMasterEngine.Player
 {

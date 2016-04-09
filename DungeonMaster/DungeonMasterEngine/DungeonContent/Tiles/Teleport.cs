@@ -1,17 +1,12 @@
-﻿using DungeonMasterEngine.Graphics;
+﻿using System.Linq;
+using DungeonMasterEngine.DungeonContent.Items.Actuators;
+using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Items;
-using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DungeonMasterEngine.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Teleport : Floor, ILevelConnector
     {
@@ -19,7 +14,25 @@ namespace DungeonMasterEngine.Tiles
 
         public bool Visible { get; } //TODO use this value
 
-        public bool IsOpen { get; }
+        public bool IsOpen => ContentActivated;
+
+        public override bool ContentActivated
+        {
+            get
+            {
+                return base.ContentActivated;
+            }
+
+            protected set
+            {
+                base.ContentActivated = value;
+                if(IsOpen)
+                {
+                    foreach (var i in SubItems.Where(x => !(x is Actuator)).ToArray())
+                        TeleportItem(i);
+                }
+            }
+        }
 
         public Tile NextLevelEnter { get; set; }
 
@@ -31,7 +44,7 @@ namespace DungeonMasterEngine.Tiles
         {
             NextLevelIndex = targetMapIndex;
             TargetTilePosition = targetGridPosition;
-            IsOpen = teleportOpen;
+            ContentActivated = teleportOpen;
             Visible = teleportVisible;
             ScopeConstrain = scopeConstrain;
 
@@ -78,7 +91,12 @@ namespace DungeonMasterEngine.Tiles
         public override void OnObjectEntered(object obj)
         {
             base.OnObjectEntered(obj);
+            TeleportItem(obj);
+        }
 
+
+        private void TeleportItem(object obj)
+        {
             if (IsOpen && ScopeConstrain.IsAcceptable(obj))
             {
                 var item = obj as ILocalizable<Tile>;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Interfaces
 {
