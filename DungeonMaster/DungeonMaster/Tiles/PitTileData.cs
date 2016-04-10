@@ -1,6 +1,6 @@
 ﻿namespace DungeonMasterParser.Tiles
 {
-    public class PitTile : Tile
+    public class PitTileData : TileData
     {
         //Bit 0:
         //     '0' Normal

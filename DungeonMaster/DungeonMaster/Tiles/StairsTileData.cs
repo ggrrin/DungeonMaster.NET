@@ -2,7 +2,7 @@
 
 namespace DungeonMasterParser.Tiles
 {
-    public class StairsTile : Tile
+    public class StairsTileData : TileData
     {
         //Bit 3: Orientation
             //'0' West - East

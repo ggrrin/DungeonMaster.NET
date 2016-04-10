@@ -91,24 +91,23 @@ namespace DungeonMasterParser
 
         private void DeployObjects()
         {
+            var itemSorter = new ItemSorter();
 
             int k = 0;
-            foreach (Tile t in from i in Data.Maps.SelectMany(x => x.Tiles) where i.HasItemsList select i)
+            foreach (TileData tile in from i in Data.Maps.SelectMany(x => x.Tiles) where i.HasItemsList select i)
             {
-                t.FirstObject = Data.ObjectIDs[k++];
+                tile.FirstObject = Data.ObjectIDs[k++];
 
-                foreach (var item in t.GetItems(Data))
-                {
-                    if (item.GetType() == typeof(ActuatorItem))
-                        t.Actuators.Add((ActuatorItem)item);
-                    else
-                        t.Items.Add(item);
-                }
+
+                foreach (var item in tile.GetItems(Data))
+                    itemSorter.CreateItem(item, tile);
 
                 //last actuator is active one thus revers => first actuator is active one now
-                t.Actuators.Reverse();
+                tile.Actuators.Reverse();
             }
         }
+
+        
 
         private void ReadHeader(BinaryReader r)
         {
@@ -320,18 +319,18 @@ namespace DungeonMasterParser
             t.Text = new StreamReader(Data.TextDataStream, new DMEncoding(), false).ReadLine();
         }
 
-        private IList<ActuatorItem> ReadActuatorsData(BinaryReader r)
+        private IList<ActuatorItemData> ReadActuatorsData(BinaryReader r)
         {
-            var a = new ActuatorItem[Data.ActuatorsCount];
+            var a = new ActuatorItemData[Data.ActuatorsCount];
             for (int i = 0; i < Data.ActuatorsCount; i++)
                 a[i] = ParseActuatorData(r);
 
             return a;
         }
 
-        private ActuatorItem ParseActuatorData(BinaryReader r)
+        private ActuatorItemData ParseActuatorData(BinaryReader r)
         {
-            var a = new ActuatorItem();
+            var a = new ActuatorItemData();
             a.NextObjectID = r.ReadUInt16();
 
             ushort data0 = r.ReadUInt16();
@@ -413,9 +412,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private IList<WeaponItem> ReadWeaponsData(BinaryReader r)
+        private IList<WeaponItemData> ReadWeaponsData(BinaryReader r)
         {
-            var a = new WeaponItem[Data.WeaponsCount];
+            var a = new WeaponItemData[Data.WeaponsCount];
 
             for (int i = 0; i < Data.WeaponsCount; i++)
                 a[i] = ParseWeaponData(r);
@@ -423,9 +422,9 @@ namespace DungeonMasterParser
             return a;
         }
 
-        private WeaponItem ParseWeaponData(BinaryReader r)
+        private WeaponItemData ParseWeaponData(BinaryReader r)
         {
-            var w = new WeaponItem();
+            var w = new WeaponItemData();
             w.NextObjectID = r.ReadUInt16();
 
             ushort data = r.ReadUInt16();
@@ -442,9 +441,9 @@ namespace DungeonMasterParser
             return w;
         }
 
-        private IList<ClothItem> ReadClothesData(BinaryReader r)
+        private IList<ClothItemData> ReadClothesData(BinaryReader r)
         {
-            var c = new ClothItem[Data.ClothesCount];
+            var c = new ClothItemData[Data.ClothesCount];
 
             for (int i = 0; i < Data.ClothesCount; i++)
                 c[i] = ParseClothData(r);
@@ -452,9 +451,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private ClothItem ParseClothData(BinaryReader r)
+        private ClothItemData ParseClothData(BinaryReader r)
         {
-            var c = new ClothItem();
+            var c = new ClothItemData();
             c.NextObjectID = r.ReadUInt16();
 
             ushort data = r.ReadUInt16();
@@ -467,9 +466,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private IList<ScrollItem> ReadScrollsData(BinaryReader r)
+        private IList<ScrollItemData> ReadScrollsData(BinaryReader r)
         {
-            var c = new ScrollItem[Data.ScrollsCount];
+            var c = new ScrollItemData[Data.ScrollsCount];
 
             for (int i = 0; i < Data.ScrollsCount; i++)
                 c[i] = ParseScrollData(r);
@@ -477,18 +476,18 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private ScrollItem ParseScrollData(BinaryReader r)
+        private ScrollItemData ParseScrollData(BinaryReader r)
         {
-            var s = new ScrollItem();
+            var s = new ScrollItemData();
             s.NextObjectID = r.ReadUInt16();
 
             s.ReferredTextIndex = r.ReadUInt16() & nineBitsMask;
             return s;
         }
 
-        private IList<PotionItem> ReadPotionsData(BinaryReader r)
+        private IList<PotionItemData> ReadPotionsData(BinaryReader r)
         {
-            var c = new PotionItem[Data.PotionsCount];
+            var c = new PotionItemData[Data.PotionsCount];
 
             for (int i = 0; i < Data.PotionsCount; i++)
                 c[i] = ParsePotionData(r);
@@ -496,9 +495,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private PotionItem ParsePotionData(BinaryReader r)
+        private PotionItemData ParsePotionData(BinaryReader r)
         {
-            var p = new PotionItem();
+            var p = new PotionItemData();
             p.NextObjectID = r.ReadUInt16();
 
             ushort data = r.ReadUInt16();
@@ -509,9 +508,9 @@ namespace DungeonMasterParser
             return p;
         }
 
-        private IList<ContainerItem> ReadContainersData(BinaryReader r)
+        private IList<ContainerItemData> ReadContainersData(BinaryReader r)
         {
-            var c = new ContainerItem[Data.ContainersCount];
+            var c = new ContainerItemData[Data.ContainersCount];
 
             for (int i = 0; i < Data.ContainersCount; i++)
                 c[i] = ParseContainerData(r);
@@ -519,9 +518,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private ContainerItem ParseContainerData(BinaryReader r)
+        private ContainerItemData ParseContainerData(BinaryReader r)
         {
-            var c = new ContainerItem();
+            var c = new ContainerItemData();
             c.NextObjectID = r.ReadUInt16();
 
             c.NextContainedObjectID = new ObjectID(r.ReadUInt16());
@@ -529,9 +528,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private IList<MiscellaneousItem> ReadMiscellaneousItemsData(BinaryReader r)
+        private IList<MiscellaneousItemData> ReadMiscellaneousItemsData(BinaryReader r)
         {
-            var c = new MiscellaneousItem[Data.MiscellaneousItemsCount];
+            var c = new MiscellaneousItemData[Data.MiscellaneousItemsCount];
 
             for (int i = 0; i < Data.MiscellaneousItemsCount; i++)
                 c[i] = ParseMiscellaneousItemData(r);
@@ -539,9 +538,9 @@ namespace DungeonMasterParser
             return c;
         }
 
-        private MiscellaneousItem ParseMiscellaneousItemData(BinaryReader r)
+        private MiscellaneousItemData ParseMiscellaneousItemData(BinaryReader r)
         {
-            var m = new MiscellaneousItem();
+            var m = new MiscellaneousItemData();
             m.NextObjectID = r.ReadUInt16();
 
             ushort data = r.ReadUInt16();
@@ -575,19 +574,19 @@ namespace DungeonMasterParser
 
         #region Tiles
 
-        private IList<Tile> ParseTilesData(BinaryReader r, int count)
+        private IList<TileData> ParseTilesData(BinaryReader r, int count)
         {
-            var t = new Tile[count];
+            var t = new TileData[count];
             for (int i = 0; i < count; i++)
                 t[i] = ParseTilesData(r);
             return t;
         }
 
-        private Tile ParseTilesData(BinaryReader r)
+        private TileData ParseTilesData(BinaryReader r)
         {
             byte data = r.ReadByte();
 
-            Tile t = null;
+            TileData t = null;
 
             switch ((data >> 5) & threeBitsMask)
             {
@@ -605,9 +604,9 @@ namespace DungeonMasterParser
             return t;
         }
 
-        private WallTile ParseWallTile(byte data)
+        private WallTileData ParseWallTile(byte data)
         {
-            return new WallTile
+            return new WallTileData
             {
                 AllowNorthRandomDecoration = ((data >> 3) & oneBitMask) == 1,
                 AllowEastRandomDecoration = ((data >> 2) & oneBitMask) == 1,
@@ -616,17 +615,17 @@ namespace DungeonMasterParser
             };
         }
 
-        private FloorTile ParseFloorTile(byte data)
+        private FloorTileData ParseFloorTile(byte data)
         {
-            return new FloorTile
+            return new FloorTileData
             {
                 AllowRandomDecoration = ((data >> 3) & oneBitMask) == 1
             };
         }
 
-        private PitTile ParsePitTile(byte data)
+        private PitTileData ParsePitTile(byte data)
         {
-            return new PitTile
+            return new PitTileData
             {
                 IsImaginary = (data & oneBitMask) == 1,
                 IsVisible = ((data >> 2) & oneBitMask) == 1,
@@ -634,36 +633,36 @@ namespace DungeonMasterParser
             };
         }
 
-        private StairsTile ParseStairsTile(byte data)
+        private StairsTileData ParseStairsTile(byte data)
         {
-            return new StairsTile
+            return new StairsTileData
             {
                 Orientation = (Orientation)((data >> 3) & oneBitMask),
                 Direction = (VerticalDirection)((data >> 2) & oneBitMask)
             };
         }
 
-        private DoorTile ParseDoorTile(byte data)
+        private DoorTileData ParseDoorTile(byte data)
         {
-            return new DoorTile
+            return new DoorTileData
             {
                 State = (DoorState)(data & threeBitsMask),
                 Orientation = (Orientation)((data >> 3) & oneBitMask)
             };
         }
 
-        private TeleporterTile ParseTeleporterTile(byte data)
+        private TeleporterTileData ParseTeleporterTile(byte data)
         {
-            return new TeleporterTile
+            return new TeleporterTileData
             {
                 IsVisible = ((data >> 2) & oneBitMask) == 1,
                 IsOpen = ((data >> 3) & oneBitMask) == 1
             };
         }
 
-        private TrickTile ParseTrickTile(byte data)
+        private TrickTileData ParseTrickTile(byte data)
         {
-            return new TrickTile
+            return new TrickTileData
             {
                 IsImaginary = (data & oneBitMask) == 1,
                 IsOpen = ((data >> 2) & oneBitMask) == 1,

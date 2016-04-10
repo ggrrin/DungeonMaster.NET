@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.Builders
             this.builder = builder;
         }
 
-        public Item ProcessFloorActuator(ActuatorItem i)
+        public Item ProcessFloorActuator(ActuatorItemData i)
         {
             switch (i.AcutorType)
             {
@@ -57,7 +57,7 @@ namespace DungeonMasterEngine.Builders
             return new Actuator(itemCreator.GetItemPosition(i), $"{absolutePosition} {i.DumpString()}");
         }
 
-        private Actuator Actuator7(ActuatorItem i)
+        private Actuator Actuator7(ActuatorItemData i)
         {
             IConstrain constrain = null;
             Tile targetTile = null;
@@ -69,7 +69,7 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private Actuator Actuator4(ActuatorItem i)
+        private Actuator Actuator4(ActuatorItemData i)
         {
             IConstrain constrain = null;
             Tile targetTile = null;
@@ -81,7 +81,7 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private Actuator Actuator1(ActuatorItem i)
+        private Actuator Actuator1(ActuatorItemData i)
         {
             IConstrain constrain = null;
             Tile targetTile = null;
@@ -94,7 +94,7 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private Actuator Actuator2(ActuatorItem i)
+        private Actuator Actuator2(ActuatorItemData i)
         {
             IConstrain constrain = null;
             Tile targetTile = null;
@@ -106,7 +106,7 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private Actuator PartyActuator3(ActuatorItem i)
+        private Actuator PartyActuator3(ActuatorItemData i)
         {
             IConstrain constrain = null;
             Tile targetTile = null;
@@ -118,7 +118,7 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private Actuator FloorActuatorType8(ActuatorItem i)
+        private Actuator FloorActuatorType8(ActuatorItemData i)
         {  //TODO use PrepareActuatorData
             if (!i.IsLocal)
             {

@@ -2,7 +2,7 @@
 
 namespace DungeonMasterParser.Items
 {
-    public abstract class SuperItem 
+    public abstract class ItemData 
     {
 
         public ObjectID ObjectID { get; set; }
@@ -10,7 +10,7 @@ namespace DungeonMasterParser.Items
 
         public TilePosition TilePosition => ObjectID.TilePosition;
 
-        public abstract T GetItem<T>(IItemCreator<T> t);
+        public abstract T CreateItem<T>(IItemCreator<T> t);
 
 
         /// <summary>

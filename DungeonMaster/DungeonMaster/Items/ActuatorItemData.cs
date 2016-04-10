@@ -3,11 +3,11 @@ using DungeonMasterParser.Support;
 
 namespace DungeonMasterParser.Items
 {
-    public class ActuatorItem : SuperItem
+    public class ActuatorItemData : ItemData
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateActuator(this);
         }
 
 

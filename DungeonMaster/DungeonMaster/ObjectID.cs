@@ -21,7 +21,7 @@ namespace DungeonMasterParser
 
 
         
-        public SuperItem GetObject(DungeonData d)
+        public ItemData GetObject(DungeonData d)
         {
             if (IsNull)
                 return null;

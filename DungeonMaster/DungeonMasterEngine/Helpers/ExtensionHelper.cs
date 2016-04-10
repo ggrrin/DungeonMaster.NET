@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterParser;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Support;
+using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterEngine.Helpers
 {
@@ -21,7 +23,7 @@ namespace DungeonMasterEngine.Helpers
         }
 
 
-        public static DungeonMasterParser.Tiles.Tile GetTile(this DungeonMasterParser.DungeonMap map, Point x) => map[x.X, x.Y];
+        public static TileData GetTileData(this DungeonMap map, Point x) => map[x.X, x.Y];
 
         public static IEnumerable<T> ReverseLazy<T>(this IList<T> list)
         {

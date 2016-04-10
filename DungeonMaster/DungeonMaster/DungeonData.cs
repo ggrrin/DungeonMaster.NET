@@ -333,7 +333,7 @@ namespace DungeonMasterParser
         }
 
 
-        public DungeonMasterParser.Tiles.Tile GetTile(int x, int y, int level)
+        public DungeonMasterParser.Tiles.TileData GetTile(int x, int y, int level)
         {
             var map = Maps[level];
             return map[map.OffsetX + x, map.OffsetY + y];
@@ -719,7 +719,7 @@ namespace DungeonMasterParser
         //Each actuator is defined by 8 bytes. (684 actuators* 8 bytes = 5472 bytes)
 
         //->>Actuator.cs
-        public IList<ActuatorItem> Actuators { get; set; }
+        public IList<ActuatorItemData> Actuators { get; set; }
 
         #endregion
 
@@ -735,7 +735,7 @@ namespace DungeonMasterParser
         #region 4894h(18580) 428 bytes - List of weapons
 
         //Each weapon is defined by 4 bytes. (107 weapons * 4 bytes = 428 bytes)
-        public IList<WeaponItem> Weapons { get; set; }
+        public IList<WeaponItemData> Weapons { get; set; }
 
         #endregion
 
@@ -743,7 +743,7 @@ namespace DungeonMasterParser
 
         //Each clothe is defined by 4 bytes. (121 clothes * 4 bytes = 484 bytes)
 
-        public IList<ClothItem> Clothes { get; set; }
+        public IList<ClothItemData> Clothes { get; set; }
 
         #endregion
 
@@ -751,7 +751,7 @@ namespace DungeonMasterParser
 
         //Each scroll is defined by 4 bytes. (35 scrolls * 4 bytes = 680 bytes)
 
-        public IList<ScrollItem> Scrolls { get; set; }
+        public IList<ScrollItemData> Scrolls { get; set; }
 
 
         #endregion
@@ -760,7 +760,7 @@ namespace DungeonMasterParser
 
         //Each potion is defined by 4 bytes. (56 potions * 4 bytes = 224 bytes)
 
-        public IList<PotionItem> Potions { get; set; }
+        public IList<PotionItemData> Potions { get; set; }
 
 
         #endregion
@@ -769,7 +769,7 @@ namespace DungeonMasterParser
 
         //Each container is defined by 8 bytes. (12 containers * 8 bytes = 96 bytes)
 
-        public IList<ContainerItem> Containers { get; set; }
+        public IList<ContainerItemData> Containers { get; set; }
 
         #endregion
 
@@ -777,7 +777,7 @@ namespace DungeonMasterParser
 
         // Each miscellaneous item is defined by 4 bytes. (280 miscellaneous items * 4 bytes = 1120 bytes)
 
-        public IList<MiscellaneousItem> MiscellaneousItems { get; set; }
+        public IList<MiscellaneousItemData> MiscellaneousItems { get; set; }
 
         #endregion
 

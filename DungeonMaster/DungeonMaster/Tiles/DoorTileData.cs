@@ -1,8 +1,9 @@
 ﻿using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
 
 namespace DungeonMasterParser.Tiles
 {
-    public class DoorTile : Tile
+    public class DoorTileData : TileData
     {
         //Bit 2 - 0: State
         //    '000' Open
@@ -19,6 +20,8 @@ namespace DungeonMasterParser.Tiles
         //    '0' West - East
         //    '1' North - South
         public Orientation Orientation { get; set; }
+
+        public DoorItem Door { get; set; }
 
         public override T GetTile<T>(ITileCreator<T> t)
         {

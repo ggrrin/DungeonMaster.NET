@@ -1,10 +1,10 @@
 ﻿namespace DungeonMasterParser.Items
 {
-    public class ScrollItem : GrabableItem
+    public class ScrollItemData : GrabableItemData
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateScrool(this);
         }
 
         //    1 word: Next object ID.

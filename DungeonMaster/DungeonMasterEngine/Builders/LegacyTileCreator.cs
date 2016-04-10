@@ -36,7 +36,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public IEnumerable<TileInfo<DungeonMasterParser.Tiles.Tile>> Successors { get; private set; }
+        public IEnumerable<TileInfo<DungeonMasterParser.Tiles.TileData>> Successors { get; private set; }
 
         public LegacyTileCreator(LegacyMapBuilder builder)
         {
@@ -48,57 +48,62 @@ namespace DungeonMasterEngine.Builders
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color; 
 
-        public Tile GetTile(TileInfo<DungeonMasterParser.Tiles.Tile> tileInfo)
+        public Tile GetTile(TileInfo<DungeonMasterParser.Tiles.TileData> tileInfo)
         {
-            Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tiles.Tile>>();//reset sucessors
+            Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tiles.TileData>>();//reset sucessors
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             return tileInfo.Tile.GetTile(this);
         }
 
-        public Tile GetTile(PitTile t)
+        public Tile GetTile(PitTileData t)
         {
             SetMinimapTile(Color.Orange);
 
             return new Pit(tilePosition);
         }
 
-        public Tile GetTile(TeleporterTile t)
+        public Tile GetTile(TeleporterTileData t)
         {
             SetMinimapTile(Color.Blue);
 
-            var teleport = (TeleporterItem)t.Items.Find(x => x.GetType() == typeof(TeleporterItem));
-            teleport.Processed = true;
-
-            var destinationPosition = teleport.DestinationPosition.ToAbsolutePosition(builder.Data.Maps[teleport.MapIndex]);
-
-            if (teleport.MapIndex == level)
+            if (t.Teleport != null)
             {
-                Successors = new[] {new TileInfo<DungeonMasterParser.Tiles.Tile>
-                {
-                    Position = destinationPosition,
-                    Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
-                }};
-            }
+                t.Teleport.Processed = true;
 
-            return new Teleport(tilePosition, teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(teleport.Scope));
+                var destinationPosition = t.Teleport.DestinationPosition.ToAbsolutePosition(builder.Data.Maps[t.Teleport.MapIndex]);
+
+                if (t.Teleport.MapIndex == level)
+                {
+                    Successors = new[] {new TileInfo<DungeonMasterParser.Tiles.TileData>
+                    {
+                        Position = destinationPosition,
+                        Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
+                    }};
+                }
+                return new Teleport(tilePosition, t.Teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(t.Teleport.Scope));
+            }
+            else
+            {
+                throw new InvalidOperationException("Invalid map format. Teleport tile has to have teleport");
+            }
         }
 
-        public Tile GetTile(WallTile t)
+        public Tile GetTile(WallTileData t)
         {
             throw new InvalidOperationException();
         }
 
-        public Tile GetTile(TrickTile t)
+        public Tile GetTile(TrickTileData t)
         {
             SetMinimapTile(Color.Green);
             return new WallIlusion(tilePosition, t.IsImaginary, t.IsOpen);
         }
 
-        public Tile GetTile(StairsTile t)
+        public Tile GetTile(StairsTileData t)
         {
             SetMinimapTile(Color.Yellow);
 
-            TileInfo<StairsTile> stairs;
+            TileInfo<StairsTileData> stairs;
             if (t.Direction == VerticalDirection.Up)
             {
                 stairs = FindStairs(tilePosition.ToGrid(), level - 1);
@@ -111,22 +116,20 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Tile GetTile(FloorTile t)
+        public Tile GetTile(FloorTileData t)
         {
             SetMinimapTile(Color.White);
             return new Floor(tilePosition);
         }
 
-        public Tile GetTile(DoorTile t)
+        public Tile GetTile(DoorTileData t)
         {
             SetMinimapTile(Color.Purple);
 
-            DoorItem door = t.Items.OfType<DoorItem>().FirstOrDefault();
-            if (door != null)
+            if (t.Door != null)
             {
-                door.Processed = true;
-
-                return new Gateway(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door) builder.LegacyItemCreator.GetItem(door));
+                t.Door.Processed = true;
+                return new Gateway(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door) builder.LegacyItemCreator.CreateItem(t.Door));
             }
             else
             {
@@ -134,15 +137,15 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        private TileInfo<StairsTile> FindStairs(Point pos, int level)
+        private TileInfo<StairsTileData> FindStairs(Point pos, int level)
         {
             var map = builder.Data.Maps[level];
 
             var stairs = map[pos.X, pos.Y];
 
-            if (stairs.GetType() == typeof(StairsTile))
+            if (stairs.GetType() == typeof(StairsTileData))
             {
-                return new TileInfo<StairsTile> { Position = pos, Tile = (StairsTile)stairs };
+                return new TileInfo<StairsTileData> { Position = pos, Tile = (StairsTileData)stairs };
             }
             else//TODO shouldnt be necesarry
             {
@@ -152,7 +155,7 @@ namespace DungeonMasterEngine.Builders
                 if (res.Tile == null)
                     throw new InvalidOperationException("Invalid CurrentMap format");
                 else
-                    return new TileInfo<StairsTile> { Position = res.Position, Tile = (StairsTile)res.Tile };
+                    return new TileInfo<StairsTileData> { Position = res.Position, Tile = (StairsTileData)res.Tile };
             }
         }
 

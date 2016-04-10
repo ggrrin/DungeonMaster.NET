@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,7 +19,7 @@ namespace DungeonMasterEngine.Builders
     {
         private readonly Dictionary<int, DungeonLevel> loadedLevels = new Dictionary<int, DungeonLevel>();
         private List<Tile> outputTiles;
-        private Stack<TileInfo<DungeonMasterParser.Tiles.Tile>> stack;
+        private Stack<TileInfo<DungeonMasterParser.Tiles.TileData>> stack;
         private Point start;
         private BitMapMemory bitMap;
 
@@ -29,7 +30,7 @@ namespace DungeonMasterEngine.Builders
         public DungeonData Data { get; }
         public DungeonMap CurrentMap { get; private set; }
         public Dictionary<Point, Tile> TilesPositions { get; private set; }
-        public TileInfo<DungeonMasterParser.Tiles.Tile> CurrentTile { get; private set; }
+        public TileInfo<DungeonMasterParser.Tiles.TileData> CurrentTile { get; private set; }
         public LegacyItemCreator LegacyItemCreator { get; private set; }
         public LegacyTileCreator LegacyTileCreator { get; private set; }
 
@@ -56,7 +57,7 @@ namespace DungeonMasterEngine.Builders
                 return dungeonLevel;
 
             Initialize(level, startTile);
-            stack.Push(new TileInfo<DungeonMasterParser.Tiles.Tile>
+            stack.Push(new TileInfo<DungeonMasterParser.Tiles.TileData>
             {
                 Position = start,
                 Tile = CurrentMap[start.X, start.Y]
@@ -69,7 +70,7 @@ namespace DungeonMasterEngine.Builders
                 var nextTiles = CreateTile(CurrentTile);
 
                 foreach (var t in nextTiles) //recursion
-                    if (t.Tile != null && t.Tile.GetType() != typeof(WallTile) && !bitMap[t.Position.X, t.Position.Y])
+                    if (t.Tile != null && t.Tile.GetType() != typeof(WallTileData) && !bitMap[t.Position.X, t.Position.Y])
                     {
                         stack.Push(t);
                         bitMap[t.Position.X, t.Position.Y] = true;
@@ -93,13 +94,13 @@ namespace DungeonMasterEngine.Builders
             InitializeMapTextures();
 
             outputTiles = new List<Tile>();
-            stack = new Stack<TileInfo<DungeonMasterParser.Tiles.Tile>>();
+            stack = new Stack<TileInfo<DungeonMasterParser.Tiles.TileData>>();
             start = startTile ?? new Point(Data.StartPosition.Position.X, Data.StartPosition.Position.Y);
             TilesPositions = new Dictionary<Point, Tile>();
             bitMap = new BitMapMemory(CurrentMap.OffsetX, CurrentMap.OffsetY, CurrentMap.Width, CurrentMap.Height);
         }
 
-        private IEnumerable<TileInfo<DungeonMasterParser.Tiles.Tile>> CreateTile(TileInfo<DungeonMasterParser.Tiles.Tile> currentTile)
+        private IEnumerable<TileInfo<DungeonMasterParser.Tiles.TileData>> CreateTile(TileInfo<DungeonMasterParser.Tiles.TileData> currentTile)
         {
             var newTile = LegacyTileCreator.GetTile(currentTile); 
             TilesPositions.Add(currentTile.Position, newTile); //remember Tiles-position association
@@ -109,7 +110,7 @@ namespace DungeonMasterEngine.Builders
                 .Concat(LegacyTileCreator.Successors);//add nextTiles advised by CurrentTile
         }
 
-        public IEnumerable<TileInfo<DungeonMasterParser.Tiles.Tile>> GetNeigbourTiles(Point position, DungeonMap map)
+        public IEnumerable<TileInfo<DungeonMasterParser.Tiles.TileData>> GetNeigbourTiles(Point position, DungeonMap map)
         {
             Point[] positions = {
                 position + new Point { Y = -1 }, //North
@@ -118,7 +119,7 @@ namespace DungeonMasterEngine.Builders
                 position + new Point { X = -1 } //West
             };
 
-            return positions.Select(p => new TileInfo<DungeonMasterParser.Tiles.Tile>
+            return positions.Select(p => new TileInfo<DungeonMasterParser.Tiles.TileData>
             {
                 Position = p,
                 Tile = map[p.X, p.Y]
@@ -129,28 +130,25 @@ namespace DungeonMasterEngine.Builders
         {
             foreach (var tile in outputTiles)
             {
-                SetupWallItems(tile);
+
                 SetupFloorItems(tile);
             }
         }
 
         private void SetupWallItems(Tile tile)
         {
-            Func<SuperItem, Point, bool> isValid = (o, p) => !o.Processed && o.TilePosition == (new Point(-1) * p).ToDirection();
+            Func<ItemData, Point, bool> isValid = (o, p) => !o.Processed && o.TilePosition == (new Point(-1) * p).ToDirection();
             foreach (var neighbour in tile.Neighbours.Where(p => p.Key == null))
             {
-                var wall = CurrentMap.GetTile(tile.GridPosition + neighbour.Value) as WallTile;
+                var wall = CurrentMap.GetTileData(tile.GridPosition + neighbour.Value) as WallTileData;
                 if (wall != null && wall.HasItemsList)
                 {
                     var validActuators = wall.Actuators.Where(x => isValid(x, neighbour.Value) && x.AcutorType != 5 && x.AcutorType != 6); //do not evaluate And/Or gate, counters
-                    foreach (ActuatorItem o in validActuators)
+                    foreach (ActuatorItemData o in validActuators)
                         LegacyItemCreator.AddWallItem(o, tile, wall);
 
-                    var tags = wall.Items.OfType<TextDataItem>().Where(x => isValid(x, neighbour.Value));
-                    foreach (var t in tags)
+                    foreach (var t in wall.TextTags.Where(x => isValid(x, neighbour.Value)))
                         LegacyItemCreator.AddWallItem(t, tile, wall);
-
-                    //TODO process rest => items should be processed by acutors builder themselves, nevertheless check is necessary
                 }
             }
         }
@@ -160,11 +158,14 @@ namespace DungeonMasterEngine.Builders
             //TODO 24 22 target tile null
             var tileData = CurrentMap[tile.GridPosition.X, tile.GridPosition.Y];
 
-            foreach (var act in tileData.Actuators.Where(act => !act.Processed))
-                LegacyItemCreator.AddFloorItem(act, tile);
+            foreach (var actuator in tileData.Actuators.Where(act => !act.Processed))
+                LegacyItemCreator.AddFloorItem(actuator, tile);
 
-            foreach (var i in tileData.Items.Where(i => !i.Processed))
-                LegacyItemCreator.AddFloorItem(i, tile);
+            foreach (var item in tileData.GrabableItems.Where(i => !i.Processed))
+                LegacyItemCreator.AddFloorItem(item, tile);
+
+            foreach (var creatre in tileData.Creatures.Where(i => !i.Processed))
+                LegacyItemCreator.AddFloorItem(creatre, tile);
         }
 
         private void InitializeMapTextures()
@@ -189,15 +190,9 @@ namespace DungeonMasterEngine.Builders
                 floorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.FloorDecorations[i]}");
         }
 
-        private DungeonMasterParser.Tiles.Tile GetTile(Vector3 x)
-        {
-            int level = -(int)x.Y;
-            var dungeonMap = Data.Maps[level];
-            return dungeonMap[(int)x.X, (int)x.Z];
-        }
     }
 
-    public struct TileInfo<T> where T : DungeonMasterParser.Tiles.Tile
+    public struct TileInfo<T> where T : TileData
     {
         public T Tile { get; set; }
 

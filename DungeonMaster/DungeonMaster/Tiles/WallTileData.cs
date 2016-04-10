@@ -1,7 +1,17 @@
-﻿namespace DungeonMasterParser.Tiles
+﻿using System.Collections.Generic;
+using System.Linq;
+using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
+
+namespace DungeonMasterParser.Tiles
 {
-    public class WallTile :  Tile
+    public class WallTileData :  TileData
     {
+        public IEnumerable<ActuatorItemData> WestActuators => Actuators.Where(x => x.TilePosition == TilePosition.West_BottomRight);
+        public IEnumerable<ActuatorItemData> EastActuators => Actuators.Where(x => x.TilePosition == TilePosition.East_TopRight);
+        public IEnumerable<ActuatorItemData> NorthActuators => Actuators.Where(x => x.TilePosition == TilePosition.North_TopLeft);
+        public IEnumerable<ActuatorItemData> SouthActuators => Actuators.Where(x => x.TilePosition == TilePosition.South_BottomLeft);
+
         //Bit 3:
         //    '0' Do not allow random decoration on North side
         //    '1' Allow random decoration on North side
@@ -21,6 +31,7 @@
         //    '0' Do not allow random decoration on West side
         //    '1' Allow random decoration on West side
         public bool AllowWestRandomDecoration { get; set; }
+
 
         public override T GetTile<T>(ITileCreator<T> t)
         {

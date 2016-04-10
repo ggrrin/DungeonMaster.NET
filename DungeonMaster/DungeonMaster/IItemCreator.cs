@@ -9,16 +9,16 @@ namespace DungeonMasterParser
 {
     public interface IItemCreator<out T>
     {
-        T GetItem(ActuatorItem i);      
-        T GetItem(ClothItem i);
-        T GetItem(ContainerItem i);
-        T GetItem(CreatureItem i);
-        T GetItem(DoorItem i);
-        T GetItem(MiscellaneousItem i);
-        T GetItem(PotionItem i);
-        T GetItem(ScrollItem i);
-        T GetItem(TeleporterItem i);
-        T GetItem(TextDataItem i);
-        T GetItem(WeaponItem i);
+        T CreateActuator(ActuatorItemData actuator);
+        T CreateCloth(ClothItemData cloth);
+        T CreateContainer(ContainerItemData container);
+        T CreateCreature(CreatureItem creature);
+        T CreateDoor(DoorItem door);
+        T CreateMisc(MiscellaneousItemData misc);
+        T CreatePotion(PotionItemData potion);
+        T CreateScrool(ScrollItemData scroll);
+        T CreateTeleport(TeleporterItem teleport);
+        T CreateTextData(TextDataItem textTag);
+        T CreateWeapon(WeaponItemData weapon);
     }
 }

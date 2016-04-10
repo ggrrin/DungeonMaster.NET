@@ -2,11 +2,11 @@
 
 namespace DungeonMasterParser.Items
 {
-    public class CreatureItem : TileObject
+    public class CreatureItem : ItemData
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateCreature(this);
         }
 
         //    00h(0) 1 word: Next object ID.
@@ -14,7 +14,7 @@ namespace DungeonMasterParser.Items
 
         //    02h(2) 1 word: Next possession object ID. Although not recommended, it is possible to put a creature as a possession of another creature. When the creature dies, the other one is released.
         public int NextPossessionObjectID { get; set; }
-        
+
         //    04h(4) 1 byte: Creature type. Here are the possible values in Dungeon Master and Chaos Strikes Back:
         public CreatureType Type { get; set; }
 
@@ -37,13 +37,13 @@ namespace DungeonMasterParser.Items
 
         //    08h(8) 1 word: Hit points of creature 2
         public int HitPointsCreature2 { get; set; }
-        
+
         //    0Ah(10) 1 word: Hit points of creature 3
         public int HitPointsCreature3 { get; set; }
-        
+
         //    0Ch(12) 1 word: Hit points of creature 4
         public int HitPointsCreature4 { get; set; }
-        
+
         //    0Eh(14) 1 word:
         //    Bits 15 - 11: Unused
         //      Bits 10: Important object, non flushable
@@ -60,11 +60,11 @@ namespace DungeonMasterParser.Items
 
         //        Bits 6 - 5: Number of creatures in the group -1
         public int CreaturesCount { get; set; }
-        
+
         //        Bit 4: Unused
-        
+
         //        Bits 3 - 0: Used only during the game
-        
+
         //  Notes:
 
         //    There is a bug at least Dungeon Master for Atari ST v1.2 where you should not use creatures 25 and 26: they can cause graphical glitches and crashes.

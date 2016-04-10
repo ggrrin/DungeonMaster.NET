@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
@@ -14,17 +15,18 @@ namespace DungeonMasterEngine.Builders
 {
     class ChampoinBuilder
     {
-        private LegacyMapBuilder builder;
-        private WallTile champoinWall;
-        private Tile currentTile;
-        public ChampoinBuilder(LegacyMapBuilder builder, WallTile champoinWall, Tile currentTile)
+        private readonly LegacyMapBuilder builder;
+        private readonly WallTileData champoinWall;
+        private readonly Tile currentTile;
+
+        public ChampoinBuilder(LegacyMapBuilder builder, WallTileData champoinWall, Tile currentTile)
         {
             this.builder = builder;
             this.champoinWall = champoinWall;
             this.currentTile = currentTile;
         }
 
-        public Champoin GetChampoin(ActuatorItem i)
+        public Champoin GetChampoin(ActuatorItemData i)
         {
             string[] descriptor = FindChampionDescriptor()?.Split(new char[] { '|' });
 
@@ -53,9 +55,8 @@ namespace DungeonMasterEngine.Builders
                 champoin.Wizard = GetValueOfDMHexEncoding(descriptor[6].Substring(12, 4));
             }
 
-            champoin.Inventory.AddRange(from k in champoinWall.Items
-                                        where k is GrabableItem
-                                        select (DungeonContent.Items.GrabableItem)new LegacyItemCreator(builder).GetItem(k));
+            var champoinItems = champoinWall.GrabableItems.Select(k => (DungeonContent.Items.GrabableItem)builder.LegacyItemCreator.CreateItem(k));
+            champoin.Inventory.AddRange(champoinItems);
             return champoin;
         }
 
@@ -77,19 +78,16 @@ namespace DungeonMasterEngine.Builders
 
         private string FindChampionDescriptor()
         {
-            //assuming champoin actuator always on wall !!!
-            var texts = (from i in builder.CurrentMap[currentTile.GridPosition.X, currentTile.GridPosition.Y].Items
-                         where i.GetType() == typeof(TextDataItem)
-                         select i as TextDataItem).ToList();
-
-            if (texts.Count == 1)
+            try
             {
-                texts[0].Processed = true;
-                return texts[0].Text;
+                var descriptor = builder.CurrentMap.GetTileData(currentTile.GridPosition).TextTags.Single(x => !x.Processed);
+                descriptor.Processed = true;
+                return descriptor.Text;
             }
-            else
-                return null;
-            //throw new InvalidOperationException("Unambigious champoin text descriptor");
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Unambigious champoin text descriptor", e);
+            }
         }
     }
 

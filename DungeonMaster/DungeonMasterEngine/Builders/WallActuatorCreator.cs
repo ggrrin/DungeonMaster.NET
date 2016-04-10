@@ -28,14 +28,14 @@ namespace DungeonMasterEngine.Builders
         private LegacyItemCreator itemCreator => builder.LegacyItemCreator;
         public Tile CurrentTile => itemCreator.CurrentTile;
 
-        public WallTile wallTile => itemCreator.WallTile;
+        public WallTileData wallTile => itemCreator.WallTile;
         
         public WallActuatorCreator(LegacyMapBuilder builder)
         {
             this.builder = builder;
         }
 
-        public Item ProcessWallActuator(ActuatorItem i)
+        public Item ProcessWallActuator(ActuatorItemData i)
         {
             switch (i.AcutorType)
             {
@@ -74,22 +74,22 @@ namespace DungeonMasterEngine.Builders
                         absolutePosition = (i.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap);
 
                     return new Actuator(itemCreator.GetItemPosition(i), $"{absolutePosition} {i.DumpString()}");
-
             }
         }
 
-        private Item GetKeyHole3a4(ActuatorItem i, bool destroyItem)
+        private Item GetKeyHole3a4(ActuatorItemData i, bool destroyItem)
         {
             Texture2D decoration;
             IConstrain constrain;
             Tile targetTile;
             itemCreator.PrepareActuatorData(i, out targetTile, out constrain, out decoration);
-            var res = new KeyHoleActuator(itemCreator.GetItemPosition(i), targetTile, new ActionStateX((ActionState)i.Action, (i.ActLoc as RmtTrg).Direction), constrain, destroyItem);
-            res.DecorationTexture = decoration;
-            return res;
+            return new KeyHoleActuator(itemCreator.GetItemPosition(i), targetTile, new ActionStateX((ActionState) i.Action, (i.ActLoc as RmtTrg).Direction), constrain, destroyItem)
+            {
+                DecorationTexture = decoration
+            };
         }
 
-        private Item GetSwitch1(ActuatorItem i)
+        private Item GetSwitch1(ActuatorItemData i)
         {
             if (i.IsLocal)
             {
@@ -99,7 +99,7 @@ namespace DungeonMasterEngine.Builders
                     if (alcoveSuperItem == null || alcoveSuperItem.AcutorType != 0)
                         throw new NotSupportedException("yet");
 
-                    var alcove = itemCreator.GetItem(alcoveSuperItem) as AlcoveActuator;
+                    var alcove = itemCreator.CreateItem(alcoveSuperItem) as AlcoveActuator;
 
                     alcove.Hidden = true;
                     alcove.HideoutTexture = builder.WallTextures[i.Decoration - 1];
@@ -116,7 +116,7 @@ namespace DungeonMasterEngine.Builders
                 if (leverDown != null && leverDown.AcutorType == 1)
                 {
                     leverDown.Processed = true;
-                    return new LeverActuator(itemCreator.GetItemPosition(i), GetTargetTile(i),
+                    return new LeverActuator(itemCreator.GetItemPosition(i), itemCreator.GetTargetTile(i),
                         leverDown.IsRevertable, new ActionStateX((ActionState)i.Action,
                         ((RmtTrg)i.ActLoc).Direction),
                         (i.ActLoc as RmtTrg)?.Position.Direction ?? Direction.North)
@@ -132,49 +132,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Tile GetTargetTile(ActuatorItem callingActuator)
-        {
-            var targetPos = (callingActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap);
-
-            Tile targetTile = null;
-            if (builder.TilesPositions.TryGetValue(targetPos, out targetTile))
-                return targetTile;
-            else
-            {
-                //try find tile in raw data, and than actuator, add it to Tiles Positions
-                var virtualTileData = builder.CurrentMap[targetPos.X, targetPos.Y];
-                if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
-                {
-                    var newTile = new LogicTile(targetPos.ToGridVector3(builder.CurrentTile.Position.Y));
-                    newTile.Gates = virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y => InitLogicGates(y, newTile)).ToArray();//recurse
-                    newTile.Counters = virtualTileData.Actuators.Where(x => x.AcutorType == 6).Select(y => InitCounters(y, newTile)).ToArray(); //recurse
-
-                    builder.TilesPositions.Add(targetPos, targetTile = newTile);//subitems will be processed 
-                }
-
-                return targetTile; //TODO (if null)  think out what to do 
-                                   //Acutor at the begining references wall near by with tag only ... what to do ? 
-            }
-        }
-
-        private Counter InitCounters(ActuatorItem gateActuator, Tile gateActuatorTile)
-        {
-            //if nextTarget tile is current tile do not call recurese
-            Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
-
-            return new Counter(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActLoc as RmtTrg).Direction), gateActuator.Data, gateActuatorTile.Position);
-        }
-
-        private LogicGate InitLogicGates(ActuatorItem gateActuator, Tile gateActuatorTile)
-        {
-            //if nextTarget tile is current tile do not call recurese
-            Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
-
-            return new LogicGate(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActLoc as RmtTrg).Direction), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20,
-                (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
-        }
-
-        private Item GetAlcove(ActuatorItem i)
+        private Item GetAlcove(ActuatorItemData i)
         {
             if (!i.IsLocal) //only decoration
             {
@@ -182,23 +140,22 @@ namespace DungeonMasterEngine.Builders
             }
             else//alcove
             {
-                var items = wallTile.Items
-                    .OfType<DungeonMasterParser.Items.GrabableItem>()
+                var items = wallTile.GrabableItems
                     .Where(x => !x.Processed)
-                    .Select(x => (GrabableItem)itemCreator.GetItem(x));
+                    .Select(x => (GrabableItem)itemCreator.CreateItem(x));
 
                 return new AlcoveActuator(itemCreator.GetItemPosition(i), items) { AlcoveTexture = builder.WallTextures[i.Decoration - 1] };
             }
         }
 
-        private Actuator GetExchanger(ActuatorItem i)
+        private Actuator GetExchanger(ActuatorItemData i)
         {
             if (i.IsLocal)
             {
                 ; //TODO find out what to do (mancacles in the first level points to its wall tile)   
 
                 var constrain = new GrabableItemConstrain(i.Data, acceptOthers: false);
-                var item = (from k in wallTile.Items where k is DungeonMasterParser.Items.GrabableItem select new LegacyItemCreator(builder).GetItem(k)).FirstOrDefault();
+                var item = wallTile.GrabableItems.Select(k => new LegacyItemCreator(builder).CreateItem(k)).FirstOrDefault();
 
                 //TODO select appropriate items
                 var res = new ExchangerActuator(itemCreator.GetItemPosition(i), (GrabableItem)item, constrain);

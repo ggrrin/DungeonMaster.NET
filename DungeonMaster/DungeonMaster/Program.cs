@@ -62,7 +62,7 @@ namespace DungeonMasterParser
                             line = false;
                         }
 
-                        var door = tile as DoorTile;
+                        var door = tile as DoorTileData;
                         if (door != null)
                         {
                             w.WriteLine($"state:{door.State} {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}");
@@ -90,7 +90,7 @@ namespace DungeonMasterParser
             for (int i = 0; i < map.Tiles.Count; i++)
             {
                 foreach(var k in map.Tiles[i].GetItems(data))
-                    if(k.GetType() == typeof(WeaponItem) && ((WeaponItem)k).ItemTypeIndex == 9)
+                    if(k.GetType() == typeof(WeaponItemData) && ((WeaponItemData)k).ItemTypeIndex == 9)
                     {
                         Console.WriteLine("{0} | {1} {2} ", i, i / map.Height , i % map.Height);
                         break;
@@ -109,9 +109,9 @@ namespace DungeonMasterParser
                     for (int y = 0; y < dat.Data.Maps[i].Height; y++)
                     {
                         var tile = dat.Data.Maps[i][dat.Data.Maps[i].OffsetX + x, dat.Data.Maps[i].OffsetY + y];
-                        if (tile?.GetType() == typeof(StairsTile))
+                        if (tile?.GetType() == typeof(StairsTileData))
                         {
-                            lst.Add($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i};  orientation: {(tile as StairsTile).Orientation}; vertical : {(tile as StairsTile).Direction};");
+                            lst.Add($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i};  orientation: {(tile as StairsTileData).Orientation}; vertical : {(tile as StairsTileData).Direction};");
                         }
 
                     }

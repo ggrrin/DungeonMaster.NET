@@ -2,11 +2,11 @@
 
 namespace DungeonMasterParser.Items
 {
-    public class DoorItem : TileObject
+    public class DoorItem : ItemData 
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateDoor(this);
         }
 
         //Door objects must always be created on door tiles.

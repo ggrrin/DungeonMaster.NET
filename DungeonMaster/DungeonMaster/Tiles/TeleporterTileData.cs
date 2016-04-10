@@ -1,6 +1,8 @@
-﻿namespace DungeonMasterParser.Tiles
+﻿using DungeonMasterParser.Items;
+
+namespace DungeonMasterParser.Tiles
 {
-    public class TeleporterTile : Tile
+    public class TeleporterTileData : TileData
     {
         //Bit 1 - 0: Unused
 
@@ -13,6 +15,8 @@
         //        '0' Closed
         //        '1' Open
         public bool IsOpen { get; set; }
+
+        public TeleporterItem Teleport { get; set; }
 
         public override T GetTile<T>(ITileCreator<T> t)
         {

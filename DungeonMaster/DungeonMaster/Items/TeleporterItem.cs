@@ -3,11 +3,11 @@ using DungeonMasterParser.Support;
 
 namespace DungeonMasterParser.Items
 {
-    public class TeleporterItem : TileObject
+    public class TeleporterItem : ItemData
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateTeleport(this);
         }
 
         //    1 word: Next object ID.

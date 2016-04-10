@@ -4,7 +4,7 @@ using DungeonMasterParser.Items;
 
 namespace DungeonMasterParser.Tiles
 {
-    public struct ItemEnumerator : IEnumerator<SuperItem>
+    public struct ItemEnumerator : IEnumerator<ItemData>
     {
         private DungeonData data;
 
@@ -17,7 +17,7 @@ namespace DungeonMasterParser.Tiles
         }
 
 
-        public SuperItem Current { get; private set; }
+        public ItemData Current { get; private set; }
 
         object IEnumerator.Current => Current;
 

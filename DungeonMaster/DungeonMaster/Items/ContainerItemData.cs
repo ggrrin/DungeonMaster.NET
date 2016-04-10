@@ -3,11 +3,11 @@ using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser.Items
 {
-    public class ContainerItem : GrabableItem
+    public class ContainerItemData : GrabableItemData
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateContainer(this);
         }
 
         //    1 word: Next object ID.
@@ -23,7 +23,7 @@ namespace DungeonMasterParser.Items
         //     1 word: 00 00 : Unused
 
 
-        public IEnumerable<SuperItem> GetEnumerator(DungeonData dungeon)
+        public IEnumerable<ItemData> GetEnumerator(DungeonData dungeon)
         {
             var it = new ItemEnumerator(dungeon, NextContainedObjectID);
             while (it.MoveNext())

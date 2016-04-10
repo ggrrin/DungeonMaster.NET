@@ -4,12 +4,12 @@ namespace DungeonMasterParser
 {
     public interface ITileCreator<out T>
     {
-        T GetTile(DoorTile t);
-        T GetTile(FloorTile t);
-        T GetTile(PitTile t);
-        T GetTile(StairsTile t);
-        T GetTile(TeleporterTile t);
-        T GetTile(TrickTile t);
-        T GetTile(WallTile t);
+        T GetTile(DoorTileData t);
+        T GetTile(FloorTileData t);
+        T GetTile(PitTileData t);
+        T GetTile(StairsTileData t);
+        T GetTile(TeleporterTileData t);
+        T GetTile(TrickTileData t);
+        T GetTile(WallTileData t);
     }
 }

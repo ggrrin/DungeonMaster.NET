@@ -1,10 +1,10 @@
 ﻿namespace DungeonMasterParser.Items
 {
-    public class TextDataItem : TileObject
+    public class TextDataItem : ItemData 
     {
-        public override T GetItem<T>(IItemCreator<T> t)
+        public override T CreateItem<T>(IItemCreator<T> t)
         {
-            return t.GetItem(this);
+            return t.CreateTextData(this);
         }
 
         //    1 word: Next object ID.

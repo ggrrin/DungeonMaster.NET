@@ -125,10 +125,10 @@ namespace DungeonMasterParser
         //------------------------------------------------------------------------------------------
 
 
-        public IList<Tile> Tiles { get; set; }
+        public IList<TileData> Tiles { get; set; }
 
 
-        public Tile this[int x, int y]
+        public TileData this[int x, int y]
         {
             get
             {

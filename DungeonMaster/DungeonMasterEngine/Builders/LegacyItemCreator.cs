@@ -24,7 +24,7 @@ namespace DungeonMasterEngine.Builders
     public class LegacyItemCreator : IItemCreator<Item>
     {
         private readonly LegacyMapBuilder builder;
-        public WallTile WallTile;
+        public WallTileData WallTile;
         private bool putOnWall;
         
         public Tile CurrentTile { get; private set; }
@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.Builders
             FloorActuatorCreator = new FloorActuatorCreator(builder);
         }
 
-        public Vector3 GetItemPosition(SuperItem i)
+        public Vector3 GetItemPosition(ItemData i)
         {
             if (CurrentTile == null)
                 return Vector3.Zero;
@@ -87,13 +87,13 @@ namespace DungeonMasterEngine.Builders
             return CurrentTile.Position + offset;
         }
 
-        public WorldObject AddWallItem(SuperItem i, Tile parentTile, WallTile wallTile)
+        public WorldObject AddWallItem(ItemData i, Tile parentTile, WallTileData wallTile)
         {
             i.Processed = true;
             WallTile = wallTile;
             putOnWall = true;
             CurrentTile = parentTile;
-            var res = i.GetItem(this);
+            var res = i.CreateItem(this);
             if (res != null)
             {
                 SetupGrabableItem(res, i);
@@ -102,12 +102,12 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        public WorldObject AddFloorItem(SuperItem i, Tile parentTile)
+        public WorldObject AddFloorItem(ItemData i, Tile parentTile)
         {
             i.Processed = true;
             putOnWall = false;
             CurrentTile = parentTile;
-            var res = i.GetItem(this);
+            var res = i.CreateItem(this);
             if (res != null)
             {
                 SetupGrabableItem(res, i);
@@ -116,12 +116,12 @@ namespace DungeonMasterEngine.Builders
             return res;
         }
 
-        private void SetupGrabableItem(Item item, SuperItem i)
+        private void SetupGrabableItem(Item item, ItemData i)
         {
             var grabable = item as GrabableItem;
             if (grabable != null)
             {
-                var descriptor = builder.Data.ItemDescriptors[builder.Data.GetTableIndex(i.ObjectID.Category, (i as DungeonMasterParser.Items.GrabableItem).ItemTypeIndex)];
+                var descriptor = builder.Data.ItemDescriptors[builder.Data.GetTableIndex(i.ObjectID.Category, (i as DungeonMasterParser.Items.GrabableItemData).ItemTypeIndex)];
 
                 grabable.Identifer = descriptor.GlobalItemIndex;
                 grabable.Name = descriptor.Name;
@@ -130,19 +130,19 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Item GetItem(SuperItem i)
+        public Item CreateItem(ItemData itemData)
         {
-            i.Processed = true;
-            var res = i.GetItem(this);
+            itemData.Processed = true;
+            var res = itemData.CreateItem(this);
 
             if (res != null)
-                SetupGrabableItem(res, i);
+                SetupGrabableItem(res, itemData);
             return res;
         }
 
-        public bool PrepareActuatorData(ActuatorItem i, out Tile targetTile, out IConstrain constrain, out Texture2D decoration)
+        public bool PrepareActuatorData(ActuatorItemData i, out Tile targetTile, out IConstrain constrain, out Texture2D decoration)
         {
-            targetTile = WallActuatorCreator.GetTargetTile(i);
+            targetTile = GetTargetTile(i);
             constrain = null;
             decoration = null;
 
@@ -160,68 +160,110 @@ namespace DungeonMasterEngine.Builders
             return true;
         }
 
-        Item IItemCreator<Item>.GetItem(ContainerItem i)
+        Item IItemCreator<Item>.CreateContainer(ContainerItemData container)
         {
-            i.Processed = true;
-            return new Container(GetItemPosition(i), i.GetEnumerator(builder.Data).Select(x => (GrabableItem)GetItem(x)).ToList());
+            container.Processed = true;
+            return new Container(GetItemPosition(container), container.GetEnumerator(builder.Data).Select(x => (GrabableItem)CreateItem(x)).ToList());
         }
 
-        Item IItemCreator<Item>.GetItem(DoorItem i)
+        Item IItemCreator<Item>.CreateDoor(DoorItem door)
         {
-            var res = new Door(Vector3.Zero, i.HasButton);
+            var res = new Door(Vector3.Zero, door.HasButton);
 
             res.Graphic.Texture = builder.defaultDoorTexture;
-            if (i.DoorAppearance)
+            if (door.DoorAppearance)
                 res.Graphic.Texture = builder.defaultMapDoorTypeTexture;
 
-            if (i.OrnamentationID != null)
-                res.Graphic.Texture = builder.DoorTextures[i.OrnamentationID.Value - 1];
+            if (door.OrnamentationID != null)
+                res.Graphic.Texture = builder.DoorTextures[door.OrnamentationID.Value - 1];
             return res;
         }
 
-        Item IItemCreator<Item>.GetItem(PotionItem i)
+        Item IItemCreator<Item>.CreatePotion(PotionItemData potion)
         {
-            return new Potion(GetItemPosition(i));
+            return new Potion(GetItemPosition(potion));
         }
 
-        Item IItemCreator<Item>.GetItem(TeleporterItem i)
+        Item IItemCreator<Item>.CreateTeleport(TeleporterItem teleport)
         {
-            return new Teleporter(GetItemPosition(i));
+            return new Teleporter(GetItemPosition(teleport));
         }
 
-        Item IItemCreator<Item>.GetItem(WeaponItem i)
+        Item IItemCreator<Item>.CreateWeapon(WeaponItemData weapon)
         {
-            return new Weapon(GetItemPosition(i));
+            return new Weapon(GetItemPosition(weapon));
         }
 
-        Item IItemCreator<Item>.GetItem(TextDataItem i)
+        Item IItemCreator<Item>.CreateTextData(TextDataItem textTag)
         {
-            return new TextTag(GetItemPosition(i), i.IsVisible, i.TilePosition == TilePosition.East_TopRight || i.TilePosition == TilePosition.West_BottomRight, i.Text.Replace("|", Environment.NewLine));
+            return new TextTag(GetItemPosition(textTag), textTag.IsVisible, textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine));
         }
 
-        Item IItemCreator<Item>.GetItem(ScrollItem i)
+        Item IItemCreator<Item>.CreateScrool(ScrollItemData scroll)
         {
-            return new Scroll(GetItemPosition(i));
+            return new Scroll(GetItemPosition(scroll));
         }
 
-        Item IItemCreator<Item>.GetItem(MiscellaneousItem i)
+        Item IItemCreator<Item>.CreateMisc(MiscellaneousItemData misc)
         {
-            return new Miscellaneous(GetItemPosition(i));
+            return new Miscellaneous(GetItemPosition(misc));
         }
 
-        Item IItemCreator<Item>.GetItem(CreatureItem i)
+        Item IItemCreator<Item>.CreateCreature(CreatureItem creature)
         {
-            return new Creature(GetItemPosition(i));
+            return new Creature(GetItemPosition(creature));
         }
 
-        Item IItemCreator<Item>.GetItem(ClothItem i)
+        Item IItemCreator<Item>.CreateCloth(ClothItemData cloth)
         {
-            return new Cloth(GetItemPosition(i));
+            return new Cloth(GetItemPosition(cloth));
         }
 
-        Item IItemCreator<Item>.GetItem(ActuatorItem i)
+        Item IItemCreator<Item>.CreateActuator(ActuatorItemData actuator)
         {
-            return putOnWall ? WallActuatorCreator.ProcessWallActuator(i) : FloorActuatorCreator.ProcessFloorActuator(i);
+            return putOnWall ? WallActuatorCreator.ProcessWallActuator(actuator) : FloorActuatorCreator.ProcessFloorActuator(actuator);
+        }
+
+        public Tile GetTargetTile(ActuatorItemData callingActuator)
+        {
+            var targetPos = (callingActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap);
+
+            Tile targetTile = null;
+            if (builder.TilesPositions.TryGetValue(targetPos, out targetTile))
+                return targetTile;
+            else
+            {
+                //try find tile in raw data, and than actuator, add it to Tiles Positions
+                var virtualTileData = builder.CurrentMap[targetPos.X, targetPos.Y];
+                if (virtualTileData.Actuators.Count > 0)//virtual tile will be proccessed at the and so any checking shouldnt be necessary
+                {
+                    var newTile = new LogicTile(targetPos.ToGridVector3(builder.CurrentTile.Position.Y));
+                    newTile.Gates = virtualTileData.Actuators.Where(x => x.AcutorType == 5).Select(y => InitLogicGates(y, newTile)).ToArray();//recurse
+                    newTile.Counters = virtualTileData.Actuators.Where(x => x.AcutorType == 6).Select(y => InitCounters(y, newTile)).ToArray(); //recurse
+
+                    builder.TilesPositions.Add(targetPos, targetTile = newTile);//subitems will be processed 
+                }
+
+                return targetTile; //TODO (if null)  think out what to do 
+                                   //Acutor at the begining references wall near by with tag only ... what to do ? 
+            }
+        }
+
+        private Counter InitCounters(ActuatorItemData gateActuator, Tile gateActuatorTile)
+        {
+            //if nextTarget tile is current tile do not call recurese
+            Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
+
+            return new Counter(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActLoc as RmtTrg).Direction), gateActuator.Data, gateActuatorTile.Position);
+        }
+
+        private LogicGate InitLogicGates(ActuatorItemData gateActuator, Tile gateActuatorTile)
+        {
+            //if nextTarget tile is current tile do not call recurese
+            Tile nextTargetTile = gateActuatorTile.GridPosition == (gateActuator.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
+
+            return new LogicGate(nextTargetTile, new ActionStateX((ActionState)gateActuator.Action, (gateActuator.ActLoc as RmtTrg).Direction), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20,
+                (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
         }
     }
 }
