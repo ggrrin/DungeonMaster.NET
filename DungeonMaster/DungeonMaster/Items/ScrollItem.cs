@@ -1,6 +1,4 @@
-﻿using DungeonMasterParser.Items.@abstract;
-
-namespace DungeonMasterParser.Items
+﻿namespace DungeonMasterParser.Items
 {
     public class ScrollItem : GrabableItem
     {

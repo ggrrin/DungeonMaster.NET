@@ -1,5 +1,4 @@
 ﻿using DungeonMasterParser.Enums;
-using DungeonMasterParser.Items.@abstract;
 using DungeonMasterParser.Support;
 
 namespace DungeonMasterParser.Items
@@ -61,7 +60,7 @@ namespace DungeonMasterParser.Items
 
 
         //    1 word: This word has different meaning depending on the action target type (Remote or Local).
-        public Target ActionLocation { get; set; }
+        public Target ActLoc { get; set; }
 
         //Notes:
 

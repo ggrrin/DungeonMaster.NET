@@ -1,5 +1,8 @@
-﻿namespace DungeonMasterParser.Enums
+﻿using System;
+
+namespace DungeonMasterParser.Enums
 {
+    [Flags]
     public enum CarrryLocations
     {
         None = 0

@@ -20,6 +20,9 @@ namespace DungeonMasterEngine.Helpers
             return absolutePosition;
         }
 
+
+        public static DungeonMasterParser.Tiles.Tile GetTile(this DungeonMasterParser.DungeonMap map, Point x) => map[x.X, x.Y];
+
         public static IEnumerable<T> ReverseLazy<T>(this IList<T> list)
         {
             for (int i = 0; i < list.Count; i++)

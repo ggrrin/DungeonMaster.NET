@@ -1,4 +1,4 @@
-﻿namespace DungeonMasterParser.Items.@abstract
+﻿namespace DungeonMasterParser.Items
 {
     public abstract class GrabableItem : SuperItem
     {

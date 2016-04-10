@@ -1,6 +1,6 @@
 ﻿using DungeonMasterParser.Enums;
 
-namespace DungeonMasterParser.Items.@abstract
+namespace DungeonMasterParser.Items
 {
     public abstract class SuperItem 
     {

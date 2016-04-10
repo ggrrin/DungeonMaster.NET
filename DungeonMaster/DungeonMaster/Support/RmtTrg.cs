@@ -1,6 +1,6 @@
 namespace DungeonMasterParser.Support
 {
-    public class RemoteTarget :Target
+    public class RmtTrg :Target
     {
         //    For remote target:
         //        Bits 15-11: Y coordinate of target tile

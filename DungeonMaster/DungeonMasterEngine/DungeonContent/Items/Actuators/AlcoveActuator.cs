@@ -12,10 +12,9 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 {
     public class AlcoveActuator : Actuator
     {
-        private List<GrabableItem> Storage;
+        private List<GrabableItem> storage;
 
         public bool Hidden { get; set; }
-
 
         private Texture2D alcoveTexture;
 
@@ -28,7 +27,6 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
                 UpdateTextures();
             }
         }
-
 
         private Texture2D hideOutTexture;
 
@@ -45,7 +43,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
 
         public AlcoveActuator(Vector3 position, IEnumerable<GrabableItem> storage) : base(position)
         {
-            Storage = new List<GrabableItem>(storage);
+            this.storage = storage.ToList();
         }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
@@ -60,15 +58,15 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
             {
                 if (item != null) //put it to alcove
                 {
-                    Storage.Add(item);
+                    storage.Add(item);
                     return null;
                 }
                 else//take item from alcove
                 {
-                    if (Storage.Count > 0)
+                    if (storage.Count > 0)
                     {
-                        var res = Storage[0];
-                        Storage.RemoveAt(0);
+                        var res = storage[0];
+                        storage.RemoveAt(0);
                         return res;
                     }
                     else
@@ -78,14 +76,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
         }
         private void UpdateTextures()
         {
-            if(Hidden)
-            {
-                ((CubeGraphic)Graphics).Texture = hideOutTexture;
-            }
-            else
-            {
-                ((CubeGraphic)Graphics).Texture = alcoveTexture;
-            }
+            ((CubeGraphic)Graphics).Texture = Hidden ? hideOutTexture : alcoveTexture;
         }
     }
 }

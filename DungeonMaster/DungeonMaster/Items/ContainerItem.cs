@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DungeonMasterParser.Items.@abstract;
 using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser.Items

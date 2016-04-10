@@ -35,7 +35,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         public Dungeon(Game game, IDungonBuilder builder) : base(game)
         {
-            InitilizeGraphicsResources();
+            InitializeGraphics();
             Game.Components.Add(this);
             Builder = builder;
 
@@ -44,7 +44,7 @@ namespace DungeonMasterEngine.DungeonContent
             CurrentPlayer.LocationChanged += CurrentPlayer_LocationChanged;
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(2, new Point(14, 24));
+            var l = LoadLevel(0, null);// new Point(9, 27));
             CurrentPlayer.Location = l.StartTile;
             EnabledChanged += Dungeon_EnabledChanged;
         }
@@ -90,14 +90,8 @@ namespace DungeonMasterEngine.DungeonContent
             }
         }
 
-        private void InitilizeGraphicsResources()
-        {
-            InitializeEffect();
-            ResourceProvider.Instance.Initialize(GraphicsDevice, Game.Content);
-        }
 
-
-        private void InitializeEffect()
+        private void InitializeGraphics()
         {
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -106,23 +100,23 @@ namespace DungeonMasterEngine.DungeonContent
             pixel.SetData(new Color[1] { new Color(1f, 0, 0) });
 
             batcher = new SpriteBatch(GraphicsDevice);
-            Effect = new BasicEffect(GraphicsDevice);
-
-            Effect.TextureEnabled = true;
-
+            Effect = new BasicEffect(GraphicsDevice)
+            {
+                TextureEnabled = true,
+                AmbientLightColor = new Vector3(0),
+                DiffuseColor = new Vector3(1f),
+                SpecularColor = new Vector3(0),
+                SpecularPower = 0.1f,
+                Alpha = 1f,
+                EmissiveColor = Vector3.UnitX,
+                FogColor = Vector3.Zero,
+                FogEnabled = true,
+                FogStart = 0,
+                FogEnd = FogHorizont
+            };
             Effect.EnableDefaultLighting();
-            //primitive color
-            Effect.AmbientLightColor = new Vector3(0);
-            Effect.DiffuseColor = new Vector3(1f);
-            Effect.SpecularColor = new Vector3(0);
-            Effect.SpecularPower = 0.1f;
-            Effect.Alpha = 1f;
-            Effect.EmissiveColor = Vector3.UnitX; //pochoden bych dal
-            Effect.FogColor = Vector3.Zero;
-            Effect.FogEnabled = true;
-            Effect.FogStart = 0;
-            Effect.FogEnd = FogHorizont;
         }
+
 
         public override void Update(GameTime gameTime)
         {

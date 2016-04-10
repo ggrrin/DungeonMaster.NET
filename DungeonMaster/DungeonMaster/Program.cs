@@ -31,7 +31,7 @@ namespace DungeonMasterParser
 
                 //foreach (var k in from i in dat.Data.ObjectIDs
                 //                  where i.Category == ObjectCategory.Actuators && ((Actuator)i.GetObject(dat.Data)).AcutorType == 5
-                //                  select ((RemoteTarget)((Actuator)i.GetObject(dat.Data)).ActionType).Position.ToString() + " " +
+                //                  select ((RmtTrg)((Actuator)i.GetObject(dat.Data)).ActionType).Position.ToString() + " " +
                 //                  dat.Data.Actuators.IndexOf((Actuator)i.GetObject(dat.Data)))
 
                 //    w.WriteLine(k);

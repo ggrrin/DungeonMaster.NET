@@ -10,6 +10,7 @@ using DungeonMasterEngine.GameConsoleContent;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 
 namespace DungeonMasterEngine
 {
@@ -41,13 +42,12 @@ namespace DungeonMasterEngine
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            dungeon = new Dungeon(this, new OldDungeonBuilder()); //new OldDungeonBuilder());     
 
-            dungeon.DrawOrder = 0;
+            ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
+            dungeon = new Dungeon(this, new LegacyMapBuilder()) { DrawOrder = 0 }; 
             GameConsole.InitializeConsole(this, dungeon);
             GameConsole.Instance.DrawOrder = 1;             
         }
-
 
         protected override void Update(GameTime gameTime)
         {

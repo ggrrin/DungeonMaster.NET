@@ -57,7 +57,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Builders\BuilderBase.cs" />
     <Compile Include="Builders\ChampoinBuilder.cs" />
+    <Compile Include="Builders\FloorActuatorCreator.cs" />
+    <Compile Include="Builders\WallActuatorCreator.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
     <Compile Include="DungeonContent\Items\Actuators\ActionState.cs" />
@@ -130,12 +133,12 @@
     <Compile Include="Helpers\WalkDirection.cs" />
     <Compile Include="Player\Champoin.cs" />
     <Compile Include="DungeonContent\Items\Actuators\ChampoinActuator.cs" />
-    <Compile Include="Builders\ItemCreator.cs" />
-    <Compile Include="Builders\TileCreator.cs" />
+    <Compile Include="Builders\LegacyItemCreator.cs" />
+    <Compile Include="Builders\LegacyTileCreator.cs" />
     <Compile Include="DungeonContent\Items\Actuators\Actuator.cs" />
     <Compile Include="Helpers\BitMapMemory.cs" />
     <Compile Include="Helpers\BreadthFirstSearch.cs" />
-    <Compile Include="Helpers\BuilderMocap.cs" />
+    <Compile Include="Builders\BuilderMocap.cs" />
     <Compile Include="DungeonContent\Items\Cloth.cs" />
     <Compile Include="DungeonContent\Items\Container.cs" />
     <Compile Include="DungeonContent\Items\Creature.cs" />
@@ -169,7 +172,7 @@
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IViewStatus.cs" />
     <Compile Include="DungeonContent\Neighbours.cs" />
-    <Compile Include="Builders\OldDungeonBuilder.cs" />
+    <Compile Include="Builders\LegacyMapBuilder.cs" />
     <Compile Include="DungeonContent\Items\Potion.cs" />
     <Compile Include="Player\Theron.cs" />
     <Compile Include="Program.cs" />

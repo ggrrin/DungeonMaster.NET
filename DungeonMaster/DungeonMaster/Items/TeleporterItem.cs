@@ -1,5 +1,4 @@
 ﻿using DungeonMasterParser.Enums;
-using DungeonMasterParser.Items.@abstract;
 using DungeonMasterParser.Support;
 
 namespace DungeonMasterParser.Items

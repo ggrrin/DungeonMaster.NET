@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
+using DungeonMasterParser.Tiles;
 using static DungeonMasterParser.Enums.ObjectCategory;
 using static DungeonMasterParser.Enums.CarrryLocations;
 namespace DungeonMasterParser
@@ -331,7 +333,11 @@ namespace DungeonMasterParser
         }
 
 
-
+        public DungeonMasterParser.Tiles.Tile GetTile(int x, int y, int level)
+        {
+            var map = Maps[level];
+            return map[map.OffsetX + x, map.OffsetY + y];
+        }
 
 
         //        Here is a detailed description of the contents of the DUNGEON.DAT file from Dungeon Master for PC.

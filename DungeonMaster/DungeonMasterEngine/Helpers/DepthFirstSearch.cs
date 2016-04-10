@@ -14,7 +14,8 @@ namespace DungeonMasterEngine.Helpers
         private double currentTimeFlag;
         private Tile startTile;
         private Action<Tile> action;
-        private int dimension { get { return onStack.GetLength(0); } }
+
+        private int dimension => onStack.GetLength(0);
 
         public void StartSearch(Tile startTile, double currentTimeFlag, int dimension, Action<Tile> action)
         {

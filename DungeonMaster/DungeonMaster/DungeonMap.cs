@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Tiles;
 
@@ -125,6 +126,7 @@ namespace DungeonMasterParser
 
 
         public IList<Tile> Tiles { get; set; }
+
 
         public Tile this[int x, int y]
         {

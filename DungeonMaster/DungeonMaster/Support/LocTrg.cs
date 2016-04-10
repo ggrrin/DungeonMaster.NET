@@ -1,6 +1,6 @@
 namespace DungeonMasterParser.Support
 {
-    public class LocalTarget : Target
+    public class LocTrg : Target
     {
         //    For local target:
         //        Bits 15-4: Action to execute

@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Helpers
+namespace DungeonMasterEngine.Builders
 {
-    class BuilderMocap : IDungonBuilder
+    public class BuilderMocap : BuilderBase 
     {
-        public DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile)
+        public override DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile)
         {
             var tiles = new List<Tile>();
 
@@ -101,7 +95,7 @@ namespace DungeonMasterEngine.Helpers
             foreach (var t in tiles)            
                 tilePositions.Add(t.GridPosition, t);
 
-            OldDungeonBuilder.SetupNeighbours(tilePositions, tiles);
+            SetupNeighbours(tilePositions, tiles);
 
             return new DungeonLevel(dungeon, tiles, i, tilePositions, tiles.FirstOrDefault(), null);
 

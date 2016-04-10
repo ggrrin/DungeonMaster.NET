@@ -29,7 +29,7 @@ namespace DungeonMasterParser
 
         public void Parse()
         {
-            using (var r = new BinaryReader(new FileStream("DUNGEON.DAT", FileMode.Open)))
+            using (var r = new BinaryReader(new FileStream("DUNGEON.DAT", mode: FileMode.Open)))
             {
                 ReadHeader(r);
                 Debug.Assert(r.BaseStream.Position == 44);
@@ -104,6 +104,9 @@ namespace DungeonMasterParser
                     else
                         t.Items.Add(item);
                 }
+
+                //last actuator is active one thus revers => first actuator is active one now
+                t.Actuators.Reverse();
             }
         }
 
@@ -219,8 +222,7 @@ namespace DungeonMasterParser
                 o[i] = t;
             }
 
-            //TODO FF delimiter check
-            r.ReadBytes(758); //758 FF unused (unreferenced) objects
+            Debug.Assert(r.ReadBytes(758).All(x => x == 0xFF)); //758 FF unused (unreferenced) objects
 
             return o;
         }
@@ -349,7 +351,7 @@ namespace DungeonMasterParser
             if (a.IsLocal)
             {
                 int action = (data2 >> 4);
-                a.ActionLocation = new LocalTarget
+                a.ActLoc = new LocTrg
                 {
                     RotateAutors = (action == 1 || action == 2),
                     ExperienceGain = action == 10
@@ -357,7 +359,7 @@ namespace DungeonMasterParser
             }
             else
             {
-                a.ActionLocation = new RemoteTarget
+                a.ActLoc = new RmtTrg
                 {
                     Position = new MapPosition
                     {
