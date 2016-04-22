@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using Microsoft.Xna.Framework;
 using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
     public class ItemActuator : FloorActuator
     {

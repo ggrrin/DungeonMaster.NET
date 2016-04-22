@@ -1,12 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class LogicGate : RemoteActuator
     {

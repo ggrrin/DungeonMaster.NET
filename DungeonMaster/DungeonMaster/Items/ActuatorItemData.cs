@@ -26,7 +26,7 @@ namespace DungeonMasterParser.Items
 
 
         //        Bits 6-0: Type(all actuator types are listed below)
-        public int AcutorType { get; set; }
+        public int ActuatorType { get; set; }
 
         //    1 word:
         //        Bits 15-12: Graphic decoration ordinal in the list of allowed decorations(0 means no decoration). If there are several actuators in the same location, only the last one in the list is displayed and determines the active screen zones for mouse clicking.

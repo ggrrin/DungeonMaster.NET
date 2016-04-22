@@ -14,12 +14,54 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
-        public static Point ToAbsolutePosition(this Position p, DungeonMasterParser.DungeonMap map)
+        public static Point ToAbsolutePosition(this Position p, DungeonMap map)
         {
-            Point absolutePosition = new Point();
-            absolutePosition.X = map.OffsetX + p.X;
-            absolutePosition.Y = map.OffsetY + p.Y;
+            Point absolutePosition = new Point
+            {
+                X = map.OffsetX + p.X,
+                Y = map.OffsetY + p.Y
+            };
             return absolutePosition;
+        }
+
+        /// <summary>
+        /// If source is null returns true. Otherwise returns whether source value is equal to param.
+        /// </summary>
+        /// <typeparam name="TSoutce"></typeparam>
+        /// <typeparam name="TParam"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="param"></param>
+        /// <returns>If source is null returns true. Otherwise returns whether source value is equal to param.</returns>
+        public static bool OptionalyEquals<TSoutce, TParam>(this TSoutce? source, TParam param) where  TSoutce : struct 
+        {
+            if (source.HasValue)
+            {
+                return source.Value.Equals(param);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+        public static bool SequenceSimilar<TSource, TSimilar>(this IEnumerable<TSource> source, IEnumerable<TSimilar> similar) where  TSource : IEquatable<TSimilar>
+        {
+            if (source == null)
+                throw  new ArgumentNullException();
+            if (similar == null)
+                throw new ArgumentNullException(); 
+
+            using (var e1 = source.GetEnumerator())
+            using (var e2 = similar.GetEnumerator())
+            {
+                while (e1.MoveNext())
+                {
+                    if (!(e2.MoveNext() && e1.Current.Equals(e2.Current))) return false;
+                }
+                if (e2.MoveNext()) return false;
+            }
+            return true;
         }
 
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using DungeonMasterEngine.Player;
-using Microsoft.Xna.Framework.Graphics;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class AlcoveActuator : Actuator
     {

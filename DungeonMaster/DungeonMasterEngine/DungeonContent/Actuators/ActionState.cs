@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators
 {
     public enum ActionState
     {

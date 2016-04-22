@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DungeonMasterEngine.DungeonContent.Items.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Interfaces;

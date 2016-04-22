@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using Microsoft.Xna.Framework;
-using DungeonMasterEngine.Interfaces;
-using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class KeyHoleActuator : RemoteActuator
     {

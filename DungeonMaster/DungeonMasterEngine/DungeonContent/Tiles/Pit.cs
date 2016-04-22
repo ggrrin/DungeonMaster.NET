@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             var pitGraphic = new CubeGraphic { Position = position - Vector3.Up, DrawFaces = CubeFaces.Sides };
             pitGraphic.Resources.Content.Load<Texture2D>("Textures/Wall");
 
-            graphics = new GraphicsCollection(base.wallGraphic, pitGraphic);
+            graphics = new GraphicsCollection(wallGraphic, pitGraphic);
             graphicsProviders.SubProviders.Add(graphics);
         }
 

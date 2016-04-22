@@ -1,7 +1,7 @@
 using System;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class LogicTileActivator : TileContentActivator
     {

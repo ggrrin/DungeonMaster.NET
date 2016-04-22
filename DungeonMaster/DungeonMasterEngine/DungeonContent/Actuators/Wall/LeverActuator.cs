@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Graphics;
+using DungeonMasterParser.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterParser.Enums;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class LeverActuator : RemoteActuator
     {

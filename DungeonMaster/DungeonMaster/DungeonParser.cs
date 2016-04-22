@@ -335,7 +335,7 @@ namespace DungeonMasterParser
 
             ushort data0 = r.ReadUInt16();
             a.Data = (data0 >> 7 & nineBitsMask);
-            a.AcutorType = data0 & sevenBitsMask;
+            a.ActuatorType = data0 & sevenBitsMask;
 
             ushort data1 = r.ReadUInt16();
             a.Decoration = (data1 >> 12) & fourBitsMask;

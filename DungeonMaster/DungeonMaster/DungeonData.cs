@@ -303,27 +303,27 @@ namespace DungeonMasterParser
             switch (category)
             {
                 //                    +0(1 item type)
-                case ObjectCategory.Scroll:
+                case Scroll:
                     baseIndex = 0;
                     break;
                 //                    +1(1 item types)
-                case ObjectCategory.Container:
+                case Container:
                     baseIndex = 1;
                     break;
                 //                    +2(21 item types)
-                case ObjectCategory.Potion:
+                case Potion:
                     baseIndex = 2;
                     break;
                 //                    +23(46 item types)
-                case ObjectCategory.Weapon:
+                case Weapon:
                     baseIndex = 23;
                     break;
                 //                    +69(58 item types)
-                case ObjectCategory.Clothe:
+                case Clothe:
                     baseIndex = 69;
                     break;
                 //                    +127(53 item types)
-                case ObjectCategory.Miscelaneous:
+                case Miscelaneous:
                     baseIndex = 127;
                     break;
 
@@ -333,7 +333,7 @@ namespace DungeonMasterParser
         }
 
 
-        public DungeonMasterParser.Tiles.TileData GetTile(int x, int y, int level)
+        public TileData GetTile(int x, int y, int level)
         {
             var map = Maps[level];
             return map[map.OffsetX + x, map.OffsetY + y];

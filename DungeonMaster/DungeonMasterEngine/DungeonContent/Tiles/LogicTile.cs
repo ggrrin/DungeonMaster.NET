@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using DungeonMasterEngine.DungeonContent.Items.Actuators;
 using System.Linq;
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
@@ -11,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public override bool IsAccessible => false;
 
         public IEnumerable<LogicGate> Gates { get; set; }
-        public IEnumerable<Counter> Counters { get; internal set; }
+        public IEnumerable<CounterActuator> Counters { get; internal set; }
 
         public LogicTile(Vector3 position) : base(position)
         { }

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using Microsoft.Xna.Framework;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Player;
-using DungeonMasterEngine.GameConsoleContent;
-using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
     public abstract class PartyActuator : FloorActuator
     {

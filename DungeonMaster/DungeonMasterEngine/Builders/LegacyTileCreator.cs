@@ -36,7 +36,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public IEnumerable<TileInfo<DungeonMasterParser.Tiles.TileData>> Successors { get; private set; }
+        public IEnumerable<TileInfo<TileData>> Successors { get; private set; }
 
         public LegacyTileCreator(LegacyMapBuilder builder)
         {
@@ -48,9 +48,9 @@ namespace DungeonMasterEngine.Builders
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color; 
 
-        public Tile GetTile(TileInfo<DungeonMasterParser.Tiles.TileData> tileInfo)
+        public Tile GetTile(TileInfo<TileData> tileInfo)
         {
-            Successors = Enumerable.Empty<TileInfo<DungeonMasterParser.Tiles.TileData>>();//reset sucessors
+            Successors = Enumerable.Empty<TileInfo<TileData>>();//reset sucessors
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             return tileInfo.Tile.GetTile(this);
         }
@@ -74,7 +74,7 @@ namespace DungeonMasterEngine.Builders
 
                 if (t.Teleport.MapIndex == level)
                 {
-                    Successors = new[] {new TileInfo<DungeonMasterParser.Tiles.TileData>
+                    Successors = new[] {new TileInfo<TileData>
                     {
                         Position = destinationPosition,
                         Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
@@ -129,7 +129,17 @@ namespace DungeonMasterEngine.Builders
             if (t.Door != null)
             {
                 t.Door.Processed = true;
-                return new Gateway(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, (Door) builder.LegacyItemCreator.CreateItem(t.Door));
+
+                var door = new Door(Vector3.Zero, t.Door.HasButton);
+
+                door.Graphic.Texture = builder.defaultDoorTexture;
+                if (t.Door.DoorAppearance)
+                    door.Graphic.Texture = builder.defaultMapDoorTypeTexture;
+
+                if (t.Door.OrnamentationID != null)
+                    door.Graphic.Texture = builder.DoorTextures[t.Door.OrnamentationID.Value - 1];
+
+                return new Gateway(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
             }
             else
             {

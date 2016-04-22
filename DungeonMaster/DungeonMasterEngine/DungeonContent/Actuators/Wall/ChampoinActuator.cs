@@ -1,8 +1,9 @@
-﻿using DungeonMasterEngine.GameConsoleContent;
+﻿using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class ChampoinActuator : Actuator
     {
@@ -15,8 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
             Champoin = champoin;
         }
 
-        public void RemoveChampoin()
-            => Champoin = null;
+        public void RemoveChampoin() => Champoin = null;
 
         public override GrabableItem ExchangeItems(GrabableItem item)
         {

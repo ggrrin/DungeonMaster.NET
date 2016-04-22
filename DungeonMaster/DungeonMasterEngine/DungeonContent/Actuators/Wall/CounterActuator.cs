@@ -1,14 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
+using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class Counter : RemoteActuator
+    public class CounterActuator : RemoteActuator
     {
         private int count;
         public int Count
@@ -25,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.Actuators
             }
         }
 
-        public Counter(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile, action, position)
+        public CounterActuator(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile, action, position)
         {
             count = startCount;
         }

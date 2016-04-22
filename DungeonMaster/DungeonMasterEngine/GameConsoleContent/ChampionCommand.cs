@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Items.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

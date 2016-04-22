@@ -10,18 +10,18 @@ namespace DungeonMasterEngine.DungeonContent.Constrains
         /// <summary>
         /// Constraion accespts all grabable items with other DataIndex than specifed
         /// </summary>
-        public bool AcceptOthers { get; }
+        public bool InvertConstraion { get; }
 
-        public GrabableItemConstrain(int data, bool acceptOthers )
+        public GrabableItemConstrain(int data, bool invertConstraion )
         {
             DataIndex = data;
-            AcceptOthers = acceptOthers;
+            InvertConstraion = invertConstraion;
         }
 
         public bool IsAcceptable(object item)
         {
             var i = item as GrabableItem;
-            return i?.Identifer == DataIndex ^ AcceptOthers;
+            return i?.Identifer == DataIndex ^ InvertConstraion;
         }
 
         public override string ToString()

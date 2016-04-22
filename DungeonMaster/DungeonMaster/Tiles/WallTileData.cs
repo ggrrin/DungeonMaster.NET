@@ -7,11 +7,6 @@ namespace DungeonMasterParser.Tiles
 {
     public class WallTileData :  TileData
     {
-        public IEnumerable<ActuatorItemData> WestActuators => Actuators.Where(x => x.TilePosition == TilePosition.West_BottomRight);
-        public IEnumerable<ActuatorItemData> EastActuators => Actuators.Where(x => x.TilePosition == TilePosition.East_TopRight);
-        public IEnumerable<ActuatorItemData> NorthActuators => Actuators.Where(x => x.TilePosition == TilePosition.North_TopLeft);
-        public IEnumerable<ActuatorItemData> SouthActuators => Actuators.Where(x => x.TilePosition == TilePosition.South_BottomLeft);
-
         //Bit 3:
         //    '0' Do not allow random decoration on North side
         //    '1' Allow random decoration on North side

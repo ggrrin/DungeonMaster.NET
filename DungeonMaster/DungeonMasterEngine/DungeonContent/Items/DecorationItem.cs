@@ -1,17 +1,18 @@
-﻿using DungeonMasterEngine.Graphics;
+﻿using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
-    public class DecorationItem : Item
+    public class DecorationItem : Actuator 
     {
         public DecorationItem(Vector3 position) : base(position)
         {}
 
         public DecorationItem(Vector3 position, Texture2D decoration) : base(position)
         {
-            (Graphics as CubeGraphic).Texture = decoration;
+            ((CubeGraphic) Graphics).Texture = decoration;
         }
     }
 }

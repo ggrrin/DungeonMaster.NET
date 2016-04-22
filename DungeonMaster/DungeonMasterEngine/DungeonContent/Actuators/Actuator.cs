@@ -1,9 +1,7 @@
-﻿using DungeonMasterEngine.DungeonContent.Items.Actuators;
-using DungeonMasterEngine.Interfaces;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using Microsoft.Xna.Framework;
-using System.Diagnostics;
 
-namespace DungeonMasterEngine.DungeonContent.Items.Actuators
+namespace DungeonMasterEngine.DungeonContent.Actuators
 {
     public class Actuator : Item
     {
