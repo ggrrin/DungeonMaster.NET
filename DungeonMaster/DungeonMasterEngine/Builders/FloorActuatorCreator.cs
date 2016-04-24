@@ -15,6 +15,7 @@ using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using DungeonMasterEngine.Player;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -53,7 +54,7 @@ namespace DungeonMasterEngine.Builders
 
             Point? absolutePosition = null;
             if (i.ActLoc is RmtTrg)
-                absolutePosition = ((RmtTrg) i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
+                absolutePosition = ((RmtTrg)i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
 
             return new Actuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}");
         }
@@ -65,7 +66,9 @@ namespace DungeonMasterEngine.Builders
             Texture2D decoration = null;
             builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-            var res = new CreatureActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile, new ActionStateX((ActionState)i.Action));
+            var res = new FloorActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile,
+                new TypeConstrain(typeof(Creature)), i.GetActionStateX());
+
             res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
             return res;
         }
@@ -77,7 +80,9 @@ namespace DungeonMasterEngine.Builders
             Texture2D decoration = null;
             builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-            var res = new ItemActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile, constrain, new ActionStateX((ActionState)i.Action));
+            var res = new FloorActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile,
+                new TypeConstrain(typeof(GrabableItem)), i.GetActionStateX());
+
             res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
             return res;
         }
@@ -89,7 +94,17 @@ namespace DungeonMasterEngine.Builders
             Texture2D decoration = null;
             builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-            var res = new TheronPartyCreatureItemActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile, new ActionStateX((ActionState)i.Action));
+            var res = new FloorActuator(
+                builder.GetFloorPosition(i.TilePosition, CurrentTile),
+                CurrentTile, targetTile,
+                new OrConstrain(new IConstrain[]
+                {
+                    new PartyConstrain(),
+                    new TypeConstrain(typeof(Creature)),
+                    new TypeConstrain(typeof(GrabableItem))
+                }),
+                i.GetActionStateX());
+
             //TODO 14 28 actuator sends Clear message to pit(which open the pit => should be close) 
             res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
             return res;
@@ -102,7 +117,15 @@ namespace DungeonMasterEngine.Builders
             Texture2D decoration = null;
             builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-            var res = new TheronPartyCreatureActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile, new ActionStateX((ActionState)i.Action));
+            var res = new FloorActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile),
+                CurrentTile, targetTile,
+                new OrConstrain(new IConstrain[]
+                {
+                    new TypeConstrain(typeof(Theron)),
+                    new PartyConstrain(),
+                    new TypeConstrain(typeof(Creature)),
+                }), i.GetActionStateX());
+
             res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
             return res;
         }
@@ -114,32 +137,27 @@ namespace DungeonMasterEngine.Builders
             Texture2D decoration = null;
             builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-            var res = new DirectionPartyActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, targetTile, new ActionStateX((ActionState)i.Action));
+            if (i.Data == 0)
+                constrain = new PartyConstrain();
+            else
+                constrain = new PartDirectionConstrain((MapDirection)(i.Data - 1));
+
+            var res = new FloorActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile),
+                CurrentTile, targetTile, constrain, i.GetActionStateX());
+            
             res.Graphics = new CubeGraphic { Position = res.Position, DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.2f), Texture = decoration };
             return res;
         }
 
         private Actuator FloorActuatorType8(ActuatorItemData i)
-        {  //TODO use PrepareActuatorData
-            if (!i.IsLocal)
-            {
-                Tile remoteTile = null;
-                if (builder.TilesPositions.TryGetValue((i.ActLoc as RmtTrg).Position.Position.ToAbsolutePosition(builder.CurrentMap), out remoteTile))
-                {
-                    IConstrain constrain = null;
-                    if (i.Data > 0)
-                        constrain = new GrabableItemConstrain(i.Data, invertConstraion: false);
-                    else
-                        constrain = new NoConstrain();
-                    return new ItemPartyActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile, remoteTile, constrain, new ActionStateX((ActionState)i.Action));
+        {  
+            IConstrain constrain = null;
+            Tile targetTile = null;
+            Texture2D decoration = null;
+            builder.PrepareActuatorData(i, out targetTile, out constrain, out decoration, putOnWall: false);
 
-                }
-                else
-                    throw new NotSupportedException("yet");
-            }
-            else
-                throw new NotSupportedException("yet");
+            return new PartyPossesionActuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), CurrentTile,
+                targetTile , constrain, i.GetActionStateX());
         }
-
     }
 }

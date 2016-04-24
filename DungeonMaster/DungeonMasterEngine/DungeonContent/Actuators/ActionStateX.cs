@@ -11,5 +11,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
             Action = action;
             Specifer = specifer;
         }
+
+
+        public override string ToString()
+        {
+            return $"action: {Action}"; 
+        }
     }
 }

@@ -12,6 +12,7 @@ using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Helpers;
+using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 
 namespace DungeonMasterEngine.Player
 {
@@ -20,23 +21,23 @@ namespace DungeonMasterEngine.Player
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
 
-        public List<Champoin> PartyGroup { get; } = new List<Champoin> {  new Champoin { Name = "Pepa Mocap 1" }, new Champoin { Name = "Pepa Mocap 2 " }, new Champoin { Name = "Pepa Mocap 3" }, new Champoin { Name = "Pepa Mocap 4" }, };//TODO remove champion mocap
+        public List<Champoin> PartyGroup { get; } = new List<Champoin> {
+            //TODO remove champion mocap
+            new Champoin { Name = "Pepa Mocap 0" },
+            new Champoin { Name = "Pepa Mocap 1" },
+            new Champoin { Name = "Pepa Mocap 2 "},
+            new Champoin { Name = "Pepa Mocap 3" }};//TODO remove champion mocap
 
         public GrabableItem Hand { get; private set; }
 
         public Theron(Game game) : base(game)
-        {
-            //TODO remove champion mocap
-            //var i = new Miscellaneous(Vector3.Zero);
-            //i.Identifer = 27;
-            //PartyGroup[0].Inventory.Add(i);
-            ////////////////////
-        }
+        { }
 
         protected override void OnLocationChanged(Tile oldLocation, Tile newLocation)
         {
             base.OnLocationChanged(oldLocation, newLocation);
 
+            oldLocation?.SubItems.Remove(this);
             oldLocation?.OnObjectLeft(this);
             newLocation?.OnObjectEntered(this);
         }
@@ -75,15 +76,11 @@ namespace DungeonMasterEngine.Player
 
                 if (closest != null)
                 {
-                    //closest.Item1.Dump(1);
                     $"Click on Item: {closest.Item1}".Dump();
                     if (closest.Item1 is GrabableItem && Hand == null)
                     {
                         Hand = (GrabableItem)closest.Item1;
                         closest.Item1.Location = null;
-                        //Location setter should do a job
-                        //closest.Item2.SubItems.Remove(closest.Item1);
-                        //closest.Item2.OnObjectLeft(closest.Item1);//notify tile that item disappeareds
                     }
                     else
                     {

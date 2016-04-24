@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Items;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterParser.Enums;
@@ -10,8 +11,6 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
     public class LeverActuator : RemoteActuator
     {
         private bool used = false;
-
-        public bool Activated { get; private set; }
 
         public bool OnceOnly { get; }
 
@@ -44,12 +43,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public Direction ActionDirection { get; private set; }
+        private ActionStateX onAction, offAction;
+        public override ActionStateX TargetAction => Activated ? onAction : offAction;
 
-        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX action, Direction actionDirection) : base(targetTile, action, position)
+        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX onAction, ActionStateX offAction) : base(targetTile, position)
         {
+            this.onAction = onAction;
+            this.offAction = offAction;
             OnceOnly = onceOnly;
-            ActionDirection = actionDirection;
         }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
@@ -67,22 +68,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         {
             Activated ^= true;
             UpdateTextures();
-            if (Activated)
-                Activate();
-            else
-                Deactivate();
-
-            TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
-        }
-
-        private void Deactivate()
-        {
-            TargetTile.DeactivateTileContent();
-        }
-
-        private void Activate()
-        {
-            TargetTile.ActivateTileContent();
+            SendMessage();
         }
     }
 }

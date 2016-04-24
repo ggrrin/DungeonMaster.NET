@@ -50,7 +50,7 @@ namespace DungeonMasterEngine.Builders
             foreach (var textTag in wall.TextTags.Where(x => !x.Processed))
             {
                 textTag.Processed = true;
-                var tag = new TextTag(builder.GetFloorPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
+                var tag = new TextTag(builder.GetWallPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
                     textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine));
                 CurrentTile.SubItems.Add(tag);
             }
@@ -66,9 +66,9 @@ namespace DungeonMasterEngine.Builders
                 {
                     var wall = builder.CurrentMap.GetTileData(this.CurrentTile.GridPosition + n.Value); //get appropriate WallData
                     return wall == null ? null : new Tuple<TileData,IReadOnlyList<ActuatorItemData>>(wall,
-                        wall.Actuators.Where(x => x.TilePosition == (new Point(-1) * n.Value).ToDirection()).ToArray());//select appropriate side
+                        wall.Actuators.Where(x => x.TilePosition == (new Point(-1) * n.Value).ToTilePosition()).ToArray());//select appropriate side
                 })
-                .Where(x => x != null);//filter border nonexisting tiles
+                .Where(x => x != null && x.Item2.Any() );//filter border nonexisting tiles && wall with no actuator
 
             foreach (var tuple in sides)
             {

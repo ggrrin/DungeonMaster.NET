@@ -16,8 +16,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public bool ReferenceBit2 { get; }
         public bool ReferenceBit3 { get; }
 
-        public LogicGate(Tile targetTile, ActionStateX action, Vector3 position, bool refBit0, bool refBit1, bool refBit2, bool refBit3) : base(targetTile, action, position)
+        public override ActionStateX TargetAction { get; }
+
+        public LogicGate(Tile targetTile, ActionStateX action, Vector3 position, bool refBit0, bool refBit1, bool refBit2, bool refBit3) : base(targetTile, position)
         {
+            TargetAction = action;
             ReferenceBit0 = refBit0;
             ReferenceBit1 = refBit1;
             ReferenceBit2 = refBit2;

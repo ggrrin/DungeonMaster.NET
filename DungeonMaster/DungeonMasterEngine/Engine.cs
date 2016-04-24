@@ -27,8 +27,8 @@ namespace DungeonMasterEngine
         public Engine()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             graphics.IsFullScreen = false;

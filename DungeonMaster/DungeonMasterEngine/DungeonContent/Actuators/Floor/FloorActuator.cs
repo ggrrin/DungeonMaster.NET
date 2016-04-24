@@ -1,19 +1,28 @@
-﻿using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
+using System.Linq;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
-    public abstract class FloorActuator : RemoteActuator
+    public class FloorActuator : RemoteActuator
     {
-        protected bool objectEntered;
+        public override bool Activated => CurrentTile.SubItems.Any(Constrain.IsAcceptable);
 
         public Tile CurrentTile { get; }
 
+        public override ActionStateX TargetAction { get; }
+
         public bool Enabled { get; private set; } = true;
 
-        public FloorActuator(Vector3 position, Tile currentTile, Tile targetTile, ActionStateX action) : base(targetTile, action, position)
+        public virtual IConstrain Constrain { get; }
+
+        public FloorActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionStateX action) : base(targetTile, position)
         {
             CurrentTile = currentTile;
+            TargetAction = action;
+            Constrain = constrain;
 
             currentTile.ObjectEntered += CurrentTile_ObjectEntered;
             currentTile.ObjectLeft += CurrentTile_ObjectLeft;
@@ -21,52 +30,28 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 
         private void CurrentTile_ObjectLeft(object sender, object e)
         {
-            objectEntered = false;
             if (Enabled)
-                TestAndRun(e, objectEntered);
+                TestAndRun(e);
         }
 
         private void CurrentTile_ObjectEntered(object sender, object e)
         {
-            objectEntered = true;
             if (Enabled)
-                TestAndRun(e, objectEntered);
+                TestAndRun(e);
         }
 
-        protected abstract void TestAndRun(object enteringObject, bool objectEntered);
-
-        protected void AffectTile()
+        protected virtual void TestAndRun(object enteringObject)
         {
-            if (TargetTile == null)//TODO is it necessary ? :O 
-                return;
-
-            if (objectEntered)
+            if (CurrentTile.SubItems.Any(Constrain.IsAcceptable))
+            {
                 SendMessage();
-
-            //TODO does it work this way or as in SendMessage() ????
-            //case ActionState.Hold:
-            //    if (objectEntered)
-            //    {
-            //        if (TargetTile.ContentActivated)
-            //            TargetTile.DeactivateTileContent();
-            //        else
-            //            TargetTile.ActivateTileContent();
-            //    }
-            //    else
-            //    {
-            //        if (TargetTile.ContentActivated)
-            //            TargetTile.DeactivateTileContent();
-            //        else
-            //            TargetTile.ActivateTileContent();
-            //    }
-            //    break;
+            }
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()} {GetType().Name} action: {TargetAction}";
+            return $"{base.ToString()} {GetType().Name} action: {TargetAction}\r\n {Constrain}";
         }
-
     }
 }
 

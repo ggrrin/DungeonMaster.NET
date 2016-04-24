@@ -80,6 +80,7 @@
     <Compile Include="DungeonContent\Actuators\Wall\LogicGateActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LogicTileActivator.cs" />
     <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
+    <Compile Include="DungeonContent\Items\IItem.cs" />
     <Compile Include="DungeonContent\Items\LivingItem.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\ISpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorSpellFactory.cs" />
@@ -96,17 +97,12 @@
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\AlcoveActuator.cs" />
     <Compile Include="DungeonContent\Constrains\GrabableItemConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\CreatureActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\DirectionPartyActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\FloorActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\ItemActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\KeyHoleActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LeverActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\PartyActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\ItemPartyActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Floor\PartyPossesionActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SwitchActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\TheronPartyCreatureActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\TheronPartyCreatureItemActuator.cs" />
     <Compile Include="DungeonContent\Items\DecorationItem.cs" />
     <Compile Include="DungeonContent\Tiles\TileContentActivator.cs" />
     <Compile Include="GameConsoleContent\Base\BaseInterpreter.cs" />

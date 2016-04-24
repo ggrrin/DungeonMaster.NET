@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Items;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
@@ -26,8 +27,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public bool DestroyItem { get; }
 
-        public KeyHoleActuator(Vector3 position, Tile targetTile, ActionStateX action, IConstrain constrain, bool destroyItem) : base(targetTile, action, position)
+        public override ActionStateX TargetAction { get; }
+
+        public KeyHoleActuator(Vector3 position, Tile targetTile, ActionStateX action, IConstrain constrain, bool destroyItem) : base(targetTile, position)
         {
+            TargetAction = action;
             Constrain = constrain;
             DestroyItem = destroyItem;
         }

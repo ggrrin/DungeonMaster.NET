@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
+using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 
 namespace DungeonMasterEngine.Player
 {
@@ -24,6 +25,8 @@ namespace DungeonMasterEngine.Player
                 inputProvider = value;
             }
         }
+
+        public MapDirection MapDirection => GetShift(ForwardDirection).ToMapDirection();
 
         public Point GridPosition => location.GridPosition;
 

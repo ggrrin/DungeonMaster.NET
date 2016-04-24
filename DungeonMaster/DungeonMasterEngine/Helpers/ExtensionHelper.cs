@@ -9,11 +9,25 @@ using DungeonMasterParser;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
+using DungeonMasterEngine.DungeonContent.Actuators.Floor;
+using DungeonMasterParser.Items;
+using DungeonMasterEngine.DungeonContent.Actuators;
 
 namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+
+        public static ActionStateX GetActionStateX(this ActuatorItemData actuator)
+        {
+            int specifer = -1;
+            var location = actuator.ActLoc as RmtTrg;
+            if (location != null)
+                specifer = (int)location.Position.Direction;
+
+            return new ActionStateX((ActionState)actuator.Action, specifer);
+        }
+
         public static Point ToAbsolutePosition(this Position p, DungeonMap map)
         {
             Point absolutePosition = new Point
@@ -79,7 +93,21 @@ namespace DungeonMasterEngine.Helpers
             return new Vector3(p.X, -level, p.Y);
         }
 
-        public static TilePosition ToDirection(this Point p)
+        public static MapDirection ToMapDirection(this Point p)
+        {
+            if (p == new Point(0, -1))
+                return MapDirection.North;
+            else if (p == new Point(1, 0))
+                return MapDirection.East;
+            else if (p == new Point(0, 1))
+                return MapDirection.South;
+            else if (p == new Point(-1, 0))
+                return MapDirection.West;
+            else
+                throw new ArgumentException();
+        }
+
+        public static TilePosition ToTilePosition(this Point p)
         {
             if (p == new Point(0, -1))
                 return TilePosition.North_TopLeft;

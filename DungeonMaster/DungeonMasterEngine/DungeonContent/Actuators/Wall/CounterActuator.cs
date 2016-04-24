@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
@@ -20,8 +21,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public CounterActuator(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile, action, position)
+        public override ActionStateX TargetAction { get; }
+
+        public CounterActuator(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile, position)
         {
+            TargetAction = action;
             count = startCount;
         }
 

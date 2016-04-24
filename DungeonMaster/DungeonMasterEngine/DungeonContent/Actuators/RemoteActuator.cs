@@ -5,19 +5,19 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
 {
-    public class RemoteActuator : Actuator
+    public abstract class RemoteActuator : Actuator
     {
+        public virtual bool Activated { get; protected set; } = false;
         public Tile TargetTile { get; }
 
-        public ActionStateX TargetAction { get; }
+        public abstract ActionStateX TargetAction { get; }
 
-        public RemoteActuator(Tile targetTile, ActionStateX action, Vector3 position) : base(position)
+        public RemoteActuator(Tile targetTile, Vector3 position) : base(position)
         {
             TargetTile = targetTile;
-            TargetAction = action;
         }
 
-        protected void SendMessage(bool actuatorActivated = false)
+        protected void SendMessage()
         {
             TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
 
@@ -36,7 +36,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
                         TargetTile.ActivateTileContent();
                     break;
                 case ActionState.Hold:
-                    if (actuatorActivated)
+                    if (Activated)
                         TargetTile.ActivateTileContent();
                     else
                         TargetTile.DeactivateTileContent();

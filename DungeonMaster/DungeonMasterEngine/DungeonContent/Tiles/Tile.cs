@@ -13,7 +13,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         protected Tile(Vector3 position) : base(position)
         {
             graphicsProviders = new GraphicsCollection();
-            graphicsProviders.AddListOfDrawables(SubItems = new List<Item>());
+            graphicsProviders.AddListOfDrawables(SubItems = new List<IItem>());
         }
 
         public virtual INeighbours Neighbours { get; set; }
@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual Vector3 StayPoint => Position + new Vector3(0.5f);
 
-        public List<Item> SubItems { get; }
+        public List<IItem> SubItems { get; }
 
         protected GraphicsCollection graphicsProviders;
 

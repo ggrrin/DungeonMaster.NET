@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
-    public abstract class Item : WorldObject, ILocalizable<Tile>
+    public abstract class Item : WorldObject,  IItem
     {
         public Graphic Graphics { get; set; }
 

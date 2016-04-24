@@ -1,18 +1,29 @@
-﻿using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
-    public class DirectionPartyActuator : PartyActuator
+    public class PartDirectionConstrain : IConstrain
     {
-        public DirectionPartyActuator(Vector3 position, Tile tile, Tile remoteTile, ActionStateX action) : base(position, tile, remoteTile, action)
-        {}
+        public MapDirection AcceptDirection { get; }
 
-        protected override void Activate(Theron theron)
+        public PartDirectionConstrain(MapDirection acceptDirection)
         {
-            //TODO direction constrain
-            AffectTile();
+            AcceptDirection = acceptDirection;
         }
+
+        public bool IsAcceptable(object item)
+        {
+            var theron = item as Theron;
+            return theron?.PartyGroup.Count == 4 && theron.MapDirection == AcceptDirection;
+        }
+    }
+
+    public enum MapDirection
+    {
+        North = 0, East, South, West
     }
 }

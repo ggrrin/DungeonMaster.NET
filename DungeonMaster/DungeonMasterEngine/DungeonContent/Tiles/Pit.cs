@@ -8,12 +8,21 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     {
         private GraphicsCollection graphics;
 
-        private bool isOpen = true;
 
-        public bool IsOpen
+        public bool IsOpen => ContentActivated;
+
+        public override bool ContentActivated
         {
-            get { return isOpen; }
-            set { isOpen = value; UpdateWall(); }
+            get
+            {
+                return base.ContentActivated;
+            }
+
+            protected set
+            {
+                base.ContentActivated = value;
+                UpdateWall();
+            }
         }
 
         public override bool IsAccessible => true;
@@ -28,6 +37,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
             graphics = new GraphicsCollection(wallGraphic, pitGraphic);
             graphicsProviders.SubProviders.Add(graphics);
+            base.ContentActivated = true;
         }
 
         protected override void UpdateWall()
@@ -35,18 +45,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             base.UpdateWall();
 
             wallGraphic.DrawFaces = IsOpen ? wallGraphic.DrawFaces & ~CubeFaces.Floor : wallGraphic.DrawFaces | CubeFaces.Floor;
-        }
-
-        public override void ActivateTileContent()
-        {
-            IsOpen = true;
-            base.ActivateTileContent();
-        }
-
-        public override void DeactivateTileContent()
-        {
-            base.DeactivateTileContent();
-            IsOpen = false;
         }
     }
 }
