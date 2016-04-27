@@ -13,6 +13,7 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
+using Door = DungeonMasterEngine.DungeonContent.Tiles.Door;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
@@ -130,7 +131,7 @@ namespace DungeonMasterEngine.Builders
             {
                 t.Door.Processed = true;
 
-                var door = new Door(Vector3.Zero, t.Door.HasButton);
+                var door = new DungeonContent.Items.Door(Vector3.Zero, t.Door.HasButton);
 
                 door.Graphic.Texture = builder.defaultDoorTexture;
                 if (t.Door.DoorAppearance)
@@ -139,7 +140,7 @@ namespace DungeonMasterEngine.Builders
                 if (t.Door.OrnamentationID != null)
                     door.Graphic.Texture = builder.DoorTextures[t.Door.OrnamentationID.Value - 1];
 
-                return new Gateway(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
+                return new Door(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
             }
             else
             {

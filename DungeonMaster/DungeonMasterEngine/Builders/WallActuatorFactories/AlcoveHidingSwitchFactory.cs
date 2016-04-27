@@ -9,6 +9,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public class AlcoveHidingSwitchFactory : ActuatorFactoryBase
     {
+        public override bool? RequireItem { get; } = null;
+
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {
             ActuatorType = 1,
@@ -24,7 +26,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 
         public override Actuator CreateItem(LegacyMapBuilder context, Tile currentTile, IReadOnlyList<ActuatorItemData> matchedSequence)
         {
-            return new AlcoveActuator(context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile), context.WallActuatorCreator.CurrentGrabableItems.Select(x => context.ItemCreator.CreateItem(x, currentTile)))
+            return new AlcoveActuator(context.GetWallPosition(matchedSequence[0].TilePosition, currentTile), 
+            context.WallActuatorCreator.CurrentGrabableItems.Select(x => context.ItemCreator.CreateItem(x, currentTile)))
             {
                 Hidden = true,
                 AlcoveTexture = context.WallTextures[matchedSequence[1].Decoration - 1],

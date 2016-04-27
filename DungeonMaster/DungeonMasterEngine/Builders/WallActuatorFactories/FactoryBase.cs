@@ -7,6 +7,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public abstract class FactoryBase<TState, TStateData, TDataContext, TFactoryResult> where TState : IEquatable<TStateData>
     {
+        public abstract bool? RequireItem { get; }
         public abstract IReadOnlyList<TState> MatchingSequence { get; }
 
         public virtual bool MatchLine(IEnumerable<TStateData> sequence)

@@ -350,7 +350,7 @@ namespace DungeonMasterParser
             if (a.IsLocal)
             {
                 int action = (data2 >> 4);
-                a.ActLoc = new LocTrg
+                a.ActionLocation = new LocTrg
                 {
                     RotateAutors = (action == 1 || action == 2),
                     ExperienceGain = action == 10
@@ -358,7 +358,7 @@ namespace DungeonMasterParser
             }
             else
             {
-                a.ActLoc = new RmtTrg
+                a.ActionLocation = new RemoteTarget
                 {
                     Position = new MapPosition
                     {

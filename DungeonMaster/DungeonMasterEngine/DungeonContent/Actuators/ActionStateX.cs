@@ -8,6 +8,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
 
         public int Specifer { get; }
 
+        public bool Used { get; set; } = false;
+
         public ActionStateX(ActionState action, int timeDelay, bool isOnceOnly, int specifer = -1)
         {
             this.TimeDelay = timeDelay;

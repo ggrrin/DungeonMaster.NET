@@ -9,10 +9,12 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public class BasicAlcoveFactory : ActuatorFactoryBase
     {
+        public override bool? RequireItem { get; } = null; 
+
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {
             ActuatorType = 0,
-            IsLocal = true
+            //IsLocal = true
         }};
 
         public BasicAlcoveFactory() { }

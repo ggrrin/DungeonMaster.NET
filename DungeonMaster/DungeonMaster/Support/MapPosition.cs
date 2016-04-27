@@ -1,4 +1,5 @@
-﻿using DungeonMasterParser.Enums;
+﻿using System;
+using DungeonMasterParser.Enums;
 
 namespace DungeonMasterParser.Support
 {
@@ -17,6 +18,20 @@ namespace DungeonMasterParser.Support
 
         public Position Position { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is MapPosition))
+                return false;
+
+            var second = (MapPosition)obj;
+
+            return Direction == second.Direction && Position.X == second.Position.X && Position.Y == second.Position.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(Position.X, Position.Y, Direction).GetHashCode();
+        }
 
         public override string ToString()
         {

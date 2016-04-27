@@ -43,6 +43,9 @@ namespace DungeonMasterEngine.Builders
                 new DestroyingKeyHoleFactory(), 
                 new ChampoinFactory(), 
                 new LeverSwitchFactory(), 
+                new TimerSwitchFactory(), 
+                new HolderButtonFactory(), 
+                new ButtonFactory(), 
             });
         }
 
@@ -88,20 +91,27 @@ namespace DungeonMasterEngine.Builders
             {
                 CurrentGrabableItems = items;
 
-                var factory = parser.TryMatchFactory(actuators);
+                var factory = parser.TryMatchFactory(items.Any(), actuators);
                 if (factory != null)
                 {
                     CurrentTile.SubItems.Add(factory.CreateItem(builder, CurrentTile, actuators));
                 }
                 else
                 {
-                    foreach (var i in actuators)
+                    if(actuators.All(x => x.ActuatorType != 5 && x.ActuatorType != 6))
                     {
-                        Point? absolutePosition = null;
-                        if (i.ActLoc is RmtTrg)
-                            absolutePosition = ((RmtTrg) i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
+                        foreach (var i in actuators)
+                        {
+                            Point? absolutePosition = null;
+                            if (i.ActionLocation is RemoteTarget)
+                                absolutePosition = ((RemoteTarget) i.ActionLocation).Position.Position.ToAbsolutePosition(builder.CurrentMap);
 
-                        CurrentTile.SubItems.Add(new Actuator(builder.GetWallPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}"));
+                            CurrentTile.SubItems.Add(new Actuator(builder.GetWallPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}"));
+                        }
+                    }
+                    else
+                    {
+                        
                     }
                 }
             }

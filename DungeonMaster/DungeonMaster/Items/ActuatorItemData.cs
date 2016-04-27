@@ -60,7 +60,7 @@ namespace DungeonMasterParser.Items
 
 
         //    1 word: This word has different meaning depending on the action target type (Remote or Local).
-        public Target ActLoc { get; set; }
+        public Target ActionLocation { get; set; }
 
         //Notes:
 

@@ -1,47 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 
 namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
-    public class LeverSwitchFactory : ActuatorFactoryBase
+    public class HolderButtonFactory : ActuatorFactoryBase
     {
-        public override bool? RequireItem { get; } = false;
+        public override bool? RequireItem { get; } = true;
 
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {
             new ActuatorState
             {
-                Action =  ActionType.Toggle,
                 ActuatorType = 1,
                 IsLocal = false
             },
-            new ActuatorState
-            {
-                Action =  ActionType.Set,
-                ActuatorType = 1,
-                IsLocal = true,
-                RotateActuator = true
-            }
-
         };
-
-        public LeverSwitchFactory() { }
 
         public override Actuator CreateItem(LegacyMapBuilder context, Tile currentTile, IReadOnlyList<ActuatorItemData> matchedSequence)
         {
-            var leverDown = matchedSequence[1];
-            return new LeverActuator(
-                context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile),
+            return new HolderButtonActuator(
+                context.GetWallPosition(matchedSequence[0].TilePosition, currentTile),
                 context.GetTargetTile(matchedSequence[0]),
-                false,//TODO onceOnlyy flag ???
+                context.WallActuatorCreator.CurrentGrabableItems.Select(x => context.ItemCreator.CreateItem(x, currentTile)),
                 matchedSequence[0].GetActionStateX())
             {
-                UpTexture = context.WallTextures[matchedSequence[0].Decoration - 1],
-                DownTexture = context.WallTextures[leverDown.Decoration - 1]
+                Texture = context.WallTextures[matchedSequence[0].Decoration - 1],
             };
         }
     }

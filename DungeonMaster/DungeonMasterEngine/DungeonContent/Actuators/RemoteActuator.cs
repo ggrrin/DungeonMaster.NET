@@ -10,36 +10,37 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
     {
         public bool Activated { get; protected set; } = true;
 
-        public bool Used { get; private set; } = false;
-
         public Tile TargetTile { get; }
 
         public abstract ActionStateX TargetAction { get; }
 
         protected RemoteActuator(Tile targetTile, Vector3 position) : base(position)
         {
-            if(targetTile == null)
+            if (targetTile == null)
                 throw new ArgumentException();
 
             TargetTile = targetTile;
         }
 
-        protected async void SendMessageAsync()
+        protected virtual async void SendMessageAsync()
         {
-            if (TargetAction.IsOnceOnly && Used)
-                return;
-
-
-            await Task.Delay(TargetAction.TimeDelay);
-            PerformMessage();
-            Used = true;
+            await SendOneMessageAsync(TargetAction);
         }
 
-
-        protected virtual void PerformMessage()
+        protected async Task SendOneMessageAsync(ActionStateX action)
         {
-            TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
-            switch (TargetAction.Action)
+            if (!action.IsOnceOnly || !action.Used)
+            {
+                await Task.Delay(action.TimeDelay);
+                PerformMessage(action);
+                action.Used = true;
+            }
+        }
+
+        protected virtual void PerformMessage(ActionStateX action)
+        {
+            TargetTile.ExecuteContentActivator(new LogicTileActivator(action));
+            switch (action.Action)
             {
                 case ActionState.Clear:
                     if (Activated)

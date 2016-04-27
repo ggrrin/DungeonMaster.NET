@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.WallActuatorFactories;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
@@ -17,12 +19,12 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             Factories = factories;
         }
 
-        public FactoryBase<TState, TStateData, TDataContext, TFactoryResult> TryMatchFactory(IEnumerable<TStateData> sequence)
+        public FactoryBase<TState, TStateData, TDataContext, TFactoryResult> TryMatchFactory(bool hasItems, IEnumerable<TStateData> sequence)
         {
             if (!sequence.Any())
                 return null;
 
-            return Factories.SingleOrDefault(x => x.MatchLine(sequence)); //TODO optimize
+            return Factories.SingleOrDefault(x => x.RequireItem.OptionalyEquals(hasItems) && x.MatchLine(sequence)); //TODO optimize
         }
     }
 }

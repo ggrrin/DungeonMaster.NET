@@ -222,7 +222,7 @@ namespace DungeonMasterEngine.Builders
 
         public Tile GetTargetTile(ActuatorItemData callingActuator)
         {
-            var targetPos = ((RmtTrg) callingActuator.ActLoc).Position.Position.ToAbsolutePosition(CurrentMap);
+            var targetPos = ((RemoteTarget) callingActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap);
 
             Tile targetTile = null;
             if (TilesPositions.TryGetValue(targetPos, out targetTile))
@@ -257,7 +257,7 @@ namespace DungeonMasterEngine.Builders
         private CounterActuator InitCounters(ActuatorItemData gateActuator, Tile gateActuatorTile)
         {
             //if nextTarget tile is current tile do not call recurese
-            Tile nextTargetTile = gateActuatorTile.GridPosition == ((RmtTrg) gateActuator.ActLoc).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
+            Tile nextTargetTile = gateActuatorTile.GridPosition == ((RemoteTarget) gateActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
 
             return new CounterActuator(nextTargetTile, gateActuator.GetActionStateX(), gateActuator.Data, gateActuatorTile.Position);
         }
@@ -265,7 +265,7 @@ namespace DungeonMasterEngine.Builders
         private LogicGate InitLogicGates(ActuatorItemData gateActuator, Tile gateActuatorTile)
         {
             //if nextTarget tile is current tile do not call recurese
-            Tile nextTargetTile = gateActuatorTile.GridPosition == ((RmtTrg) gateActuator.ActLoc).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
+            Tile nextTargetTile = gateActuatorTile.GridPosition == ((RemoteTarget) gateActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
 
             return new LogicGate(nextTargetTile, gateActuator.GetActionStateX(), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20, (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
         }

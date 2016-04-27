@@ -63,7 +63,7 @@
     <Compile Include="ITileCreator.cs" />
     <Compile Include="Support\LocTrg.cs" />
     <Compile Include="ObjectDumper.cs" />
-    <Compile Include="Support\RmtTrg.cs" />
+    <Compile Include="Support\RemoteTarget.cs" />
     <Compile Include="Support\Target.cs" />
     <Compile Include="ObjectID.cs" />
     <Compile Include="Tiles\DoorTileData.cs" />

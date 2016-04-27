@@ -64,17 +64,16 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             return base.ExchangeItems(item);
         }
 
-        private async void Switch()
+        private void Switch()
         {
             Activated ^= true;
             UpdateTextures();
             SendMessageAsync();
-
         }
 
-        protected override void PerformMessage()
+        protected override void PerformMessage(ActionStateX action)
         {
-            TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
+            TargetTile.ExecuteContentActivator(new LogicTileActivator(action));
             Toggle();
         }
     }

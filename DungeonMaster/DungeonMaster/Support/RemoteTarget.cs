@@ -1,6 +1,6 @@
 namespace DungeonMasterParser.Support
 {
-    public class RmtTrg :Target
+    public class RemoteTarget :Target
     {
         //    For remote target:
         //        Bits 15-11: Y coordinate of target tile
@@ -16,6 +16,13 @@ namespace DungeonMasterParser.Support
             return Position.ToString();
         }
 
-        public int Direction => (int)Position.Direction;
+        public override bool Equals(object obj)
+        {
+            var second = obj as RemoteTarget;
+            if (second == null)
+                return false;
+
+            return Position.Equals(second.Position);
+        }
     }
 }

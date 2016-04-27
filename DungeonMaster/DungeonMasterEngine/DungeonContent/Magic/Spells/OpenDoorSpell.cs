@@ -51,7 +51,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         private bool TryFinishSpell()
         {
             $"{GetType().Name} : {Location.Position}".Dump();
-            var door = Location as Gateway;
+            var door = Location as Door;
             if (door != null && door.HasButton)
             {
                 door.ActivateTileContent();

@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             if (i == null)
                 throw new ArgumentNullException();
 
-            return ActuatorType == i.ActuatorType && IsLocal.OptionalyEquals(i.IsLocal) && RotateActuator.OptionalyEquals((i.ActLoc as LocTrg)?.RotateAutors);
+            return ActuatorType == i.ActuatorType && IsLocal.OptionalyEquals(i.IsLocal) && RotateActuator.OptionalyEquals((i.ActionLocation as LocTrg)?.RotateAutors);
         }
     }
 }

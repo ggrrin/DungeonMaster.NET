@@ -2,7 +2,7 @@
 {
     public interface ITileContentActivator
     {
-        void ActivateContent(Gateway t);
+        void ActivateContent(Door t);
         void ActivateContent(Floor t);
         void ActivateContent(Pit t);
         void ActivateContent(Stairs t);

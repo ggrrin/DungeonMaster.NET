@@ -7,26 +7,30 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class Gateway : Floor
+    public class Door : Floor
     {
         private readonly GraphicsCollection graphics;
 
         private readonly ModelGraphic doorFrame;
 
-        private readonly Door door;
+        private readonly Items.Door door;
 
         public bool HasButton => door.HasButton;
 
-        private bool IsOpen
+        public sealed override bool ContentActivated
         {
-            get { return !door.Visible; }
-            set
+            get
+            {
+                return !door.Visible;
+            }
+
+            protected set
             {
                 door.Visible = !value;
             }
         }
 
-        public Gateway(Vector3 position, bool isWestEast, bool isOpen, Door door) : base(position)
+        public Door(Vector3 position, bool isWestEast, bool isOpen, Items.Door door) : base(position)
         {
             doorFrame = new ModelGraphic();
             doorFrame.Model = doorFrame.Resources.Content.Load<Model>("Models/outterDoor");
@@ -43,28 +47,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             graphics.SubDrawable.Add(door);
             graphicsProviders.SubProviders.Add(graphics);
 
-            IsOpen = isOpen;
+            ContentActivated = isOpen;
 
             if (door.HasButton)
             {
                 Vector3 shift = !isWestEast ? new Vector3(0, 0, 0.4f) : new Vector3(0.4f, 0, 0);
-                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle, 0, isOnceOnly:false));
+                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle, 0, isOnceOnly: false));
                 SubItems.Add(t);
             }
         }
 
-        public override void ActivateTileContent()
-        {
-            base.ActivateTileContent();
-            IsOpen = true;
-        }
 
-        public override void DeactivateTileContent()
-        {
-            base.DeactivateTileContent();
-            IsOpen = false;
-        }
-
-        public override bool IsAccessible => IsOpen;
+        public override bool IsAccessible => ContentActivated;
     }
 }

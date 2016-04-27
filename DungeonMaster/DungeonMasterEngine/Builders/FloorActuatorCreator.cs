@@ -53,8 +53,8 @@ namespace DungeonMasterEngine.Builders
 
 
             Point? absolutePosition = null;
-            if (i.ActLoc is RmtTrg)
-                absolutePosition = ((RmtTrg)i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
+            if (i.ActionLocation is RemoteTarget)
+                absolutePosition = ((RemoteTarget)i.ActionLocation).Position.Position.ToAbsolutePosition(builder.CurrentMap);
 
             return new Actuator(builder.GetFloorPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}");
         }

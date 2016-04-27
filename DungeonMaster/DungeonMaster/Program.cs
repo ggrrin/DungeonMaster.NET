@@ -71,7 +71,7 @@ namespace DungeonMasterParser
                         //}
 
                         foreach (ActuatorItemData a in tile.GetItems(dat.Data).OfType<ActuatorItemData>().Where(xz => /*xz.Action == ActionType.Hold &&*/ !xz.IsLocal &&
-                       dat.Data.Maps[i][dat.Data.Maps[i].OffsetX + ((RmtTrg)xz.ActLoc).Position.Position.X, dat.Data.Maps[i].OffsetY + ((RmtTrg)xz.ActLoc).Position.Position.Y] is PitTileData))
+                       dat.Data.Maps[i][dat.Data.Maps[i].OffsetX + ((RemoteTarget)xz.ActionLocation).Position.Position.X, dat.Data.Maps[i].OffsetY + ((RemoteTarget)xz.ActionLocation).Position.Position.Y] is PitTileData))
                         {
                             //if (tile.GetType() != typeof(WallTile) || !(a.AcutorType == 5 || a.AcutorType == 6 ) )
                             //    continue;

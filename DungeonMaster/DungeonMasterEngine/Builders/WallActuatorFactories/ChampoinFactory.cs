@@ -19,6 +19,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public class ChampoinFactory : ActuatorFactoryBase
     {
+        public override bool? RequireItem { get; } = true;
+
         private int GetValueOfDMHexEncoding(string encodedValue)
         {
             //each char transform to char code in DMEncoding table and use it as hexa value
@@ -48,6 +50,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
                 throw new InvalidOperationException("Unambigious champoin text descriptor", e);
             }
         }
+
 
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {

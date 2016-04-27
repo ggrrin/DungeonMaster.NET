@@ -45,7 +45,7 @@ namespace DungeonMasterEngine.Helpers
         public static ActionStateX GetActionStateX(this ActuatorItemData actuator)
         {
             int specifer = -1;
-            var location = actuator.ActLoc as RmtTrg;
+            var location = actuator.ActionLocation as RemoteTarget;
             if (location != null)
                 specifer = (int) location.Position.Direction;
 

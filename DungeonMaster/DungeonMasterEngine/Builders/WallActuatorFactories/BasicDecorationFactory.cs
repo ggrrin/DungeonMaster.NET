@@ -8,6 +8,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public class BasicDecorationFactory : ActuatorFactoryBase
     {
+        public override bool? RequireItem { get; } = false;
+
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {
             ActuatorType = 0,

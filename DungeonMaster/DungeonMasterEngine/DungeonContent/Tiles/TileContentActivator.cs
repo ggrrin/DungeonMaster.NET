@@ -2,7 +2,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class TileContentActivator : ITileContentActivator
     {
-        public virtual void ActivateContent(Gateway t){}
+        public virtual void ActivateContent(Door t){}
         public virtual void ActivateContent(Floor t){}
         public virtual void ActivateContent(Pit t){}
         public virtual void ActivateContent(Stairs t){}

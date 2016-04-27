@@ -12,6 +12,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
     public class BasicKeyHoleFactory : ActuatorFactoryBase
     {
+        public override bool? RequireItem { get; } = false;
+
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {
             ActuatorType = 3,
