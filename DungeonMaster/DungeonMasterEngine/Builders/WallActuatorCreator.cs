@@ -38,6 +38,7 @@ namespace DungeonMasterEngine.Builders
                 new BasicAlcoveFactory(),
                 new BasicDecorationFactory(),
                 new BasicExchangerFactory(),
+                new BasicExchangerFactoryReverse(), 
                 new BasicKeyHoleFactory(), 
                 new DestroyingKeyHoleFactory(), 
                 new ChampoinFactory(), 
@@ -45,13 +46,16 @@ namespace DungeonMasterEngine.Builders
             });
         }
 
-        private void SetupTags(TileData wall)
+        private void SetupTags(TileData wall, Point textTagTilePosition)
         {
-            foreach (var textTag in wall.TextTags.Where(x => !x.Processed))
+            foreach (var textTag in wall.TextTags.Where(x => !x.Processed && x.GetParentPosition(textTagTilePosition) == CurrentTile.GridPosition))
             {
                 textTag.Processed = true;
                 var tag = new TextTag(builder.GetWallPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
-                    textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine));
+                    textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine))
+                {
+                    AcceptMessages = textTag.HasTargetingActuator
+                };
                 CurrentTile.SubItems.Add(tag);
             }
         }
@@ -64,37 +68,41 @@ namespace DungeonMasterEngine.Builders
                 .Where(n => n.Key == null) //only side where is a wall
                 .Select(n =>
                 {
-                    var wall = builder.CurrentMap.GetTileData(this.CurrentTile.GridPosition + n.Value); //get appropriate WallData
-                    return wall == null ? null : new Tuple<TileData,IReadOnlyList<ActuatorItemData>>(wall,
+                    var pos = CurrentTile.GridPosition + n.Value;
+                    var wall = builder.CurrentMap.GetTileData(pos); //get appropriate WallData
+                    return wall == null ? null : new Tuple<TileData,Point,IReadOnlyList<ActuatorItemData>>(wall,pos,
                         wall.Actuators.Where(x => x.TilePosition == (new Point(-1) * n.Value).ToTilePosition()).ToArray());//select appropriate side
                 })
-                .Where(x => x != null && x.Item2.Any() );//filter border nonexisting tiles && wall with no actuator
+                .Where(x => x != null );//filter border nonexisting tiles
 
             foreach (var tuple in sides)
             {
-                SetupTags(tuple.Item1);
-                SetupWallSideActuators(tuple.Item1.GrabableItems, tuple.Item2);
+                SetupTags(tuple.Item1, tuple.Item2);
+                SetupWallSideActuators(tuple.Item1.GrabableItems, tuple.Item3);
             }
         }
 
         private void SetupWallSideActuators(IEnumerable<GrabableItemData> items, IReadOnlyList<ActuatorItemData> actuators)
         {
-            CurrentGrabableItems = items;
+            if (actuators.Any())
+            {
+                CurrentGrabableItems = items;
 
-            var factory = parser.TryMatchFactory(actuators);
-            if (factory != null)
-            {
-                CurrentTile.SubItems.Add(factory.CreateItem(builder, CurrentTile, actuators));
-            }
-            else
-            {
-                foreach (var i in actuators)
+                var factory = parser.TryMatchFactory(actuators);
+                if (factory != null)
                 {
-                    Point? absolutePosition = null;
-                    if (i.ActLoc is RmtTrg)
-                        absolutePosition = ((RmtTrg)i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
+                    CurrentTile.SubItems.Add(factory.CreateItem(builder, CurrentTile, actuators));
+                }
+                else
+                {
+                    foreach (var i in actuators)
+                    {
+                        Point? absolutePosition = null;
+                        if (i.ActLoc is RmtTrg)
+                            absolutePosition = ((RmtTrg) i.ActLoc).Position.Position.ToAbsolutePosition(builder.CurrentMap);
 
-                    CurrentTile.SubItems.Add(new Actuator(builder.GetWallPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}"));
+                        CurrentTile.SubItems.Add(new Actuator(builder.GetWallPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}"));
+                    }
                 }
             }
         }

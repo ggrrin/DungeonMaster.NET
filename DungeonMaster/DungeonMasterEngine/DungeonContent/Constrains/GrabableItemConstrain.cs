@@ -20,6 +20,8 @@ namespace DungeonMasterEngine.DungeonContent.Constrains
 
         public bool IsAcceptable(object item)
         {
+            if (item == null)
+                return false;
             var i = item as GrabableItem;
             return i?.Identifer == DataIndex ^ InvertConstraion;
         }

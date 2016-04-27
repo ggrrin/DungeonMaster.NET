@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public abstract class WorldObject
+    public abstract class WorldObject : IWorldObject
     {
-        public WorldObject(Vector3 position)
+        protected WorldObject(Vector3 position)
         {
             Position = position;
         }

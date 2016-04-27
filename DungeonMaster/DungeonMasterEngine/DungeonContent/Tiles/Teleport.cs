@@ -31,6 +31,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                     foreach (var i in SubItems.Where(x => !(x is Actuator)).ToArray())
                         TeleportItem(i);
                 }
+                InitializeGraphics(reinit:true);
+
             }
         }
 
@@ -42,17 +44,20 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position)
         {
+            InitializeGraphics();
             NextLevelIndex = targetMapIndex;
             TargetTilePosition = targetGridPosition;
             ContentActivated = teleportOpen;
             Visible = teleportVisible;
             ScopeConstrain = scopeConstrain;
 
-            InitializeGraphics();
         }
 
-        private void InitializeGraphics()
+        private void InitializeGraphics(bool reinit =false)
         {
+            if(reinit)
+                graphicsProviders.SubProviders.RemoveAt(graphicsProviders.SubProviders.Count-1);
+
             graphicsProviders.SubProviders.Add(
             new CubeGraphic
             {

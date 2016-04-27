@@ -8,6 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
     public class TextTag : DecorationItem
     {
         public string Text { get; }
+
        
         public TextTag(Vector3 position, bool visible, bool isWestEast, string text) : base(position)
         {
@@ -22,10 +23,9 @@ namespace DungeonMasterEngine.DungeonContent.Items
                 Scale = new Vector3(0.3f, 0.3f, 0.1f),
                 Rotation = isWestEast ? new Vector3(0, MathHelper.PiOver2, 0) : Vector3.Zero
             };
+            
 
         }
-
-        
 
         private Texture2D DrawRenderTarget()
         {
@@ -40,7 +40,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, Text, new Vector2(10), Color.White);
+            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, Text + $"\r\nVisible: {Visible}", new Vector2(10), Color.White);
             spriteBatch.End();
 
             // Reset the device to the back buffer

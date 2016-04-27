@@ -1,5 +1,6 @@
 using System;
 using DungeonMasterEngine.Helpers;
+using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 
@@ -8,6 +9,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
     public class ActuatorState : IEquatable<ActuatorItemData>
     {
         //nullable types are optional if it is null
+        public ActionType? Action { get; set; }
         public int ActuatorType { get; set; }
         public bool? RotateActuator { get; set; }
         public bool? IsLocal { get; set; }

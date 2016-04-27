@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
+using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
@@ -62,22 +64,23 @@ namespace DungeonMasterParser
                             line = false;
                         }
 
-                        var door = tile as DoorTileData;
-                        if (door != null)
-                        {
-                            w.WriteLine($"state:{door.State} {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}");
-                        }
-
-                        //foreach(ActuatorItem a in from item in tile.GetItems(dat.Data) where item.GetType() == typeof(ActuatorItem) select item as ActuatorItem)
+                        //var door = tile as DoorTileData;
+                        //if (door != null)
                         //{
-                        //    //if (tile.GetType() != typeof(WallTile) || !(a.AcutorType == 5 || a.AcutorType == 6 ) )
-                        //    //    continue;
-
-                        //    w.WriteLine($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}; ");
-                        //    ObjectDumper.Write(a, 2, w);
-                        //    w.WriteLine();
-                        //    line = true;
+                        //    w.WriteLine($"state:{door.State} {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}");
                         //}
+
+                        foreach (ActuatorItemData a in tile.GetItems(dat.Data).OfType<ActuatorItemData>().Where(xz => /*xz.Action == ActionType.Hold &&*/ !xz.IsLocal &&
+                       dat.Data.Maps[i][dat.Data.Maps[i].OffsetX + ((RmtTrg)xz.ActLoc).Position.Position.X, dat.Data.Maps[i].OffsetY + ((RmtTrg)xz.ActLoc).Position.Position.Y] is PitTileData))
+                        {
+                            //if (tile.GetType() != typeof(WallTile) || !(a.AcutorType == 5 || a.AcutorType == 6 ) )
+                            //    continue;
+
+                            w.WriteLine($"AbsolutePositon: {x + dat.Data.Maps[i].OffsetX} {y + dat.Data.Maps[i].OffsetY}; Level: {i}; is wall {tile is WallTileData} ");
+                            ObjectDumper.Write(a, 2, w);
+                            w.WriteLine();
+                            line = true;
+                        }
                     }
                 }
             }
@@ -89,10 +92,10 @@ namespace DungeonMasterParser
             //from i in map.Tiles.SelectMany(x => x.GetItems(data)) where i.GetType() == typeof(WeaponItem) && ((WeaponItem)i).ItemTypeIndex == 9 select i
             for (int i = 0; i < map.Tiles.Count; i++)
             {
-                foreach(var k in map.Tiles[i].GetItems(data))
-                    if(k.GetType() == typeof(WeaponItemData) && ((WeaponItemData)k).ItemTypeIndex == 9)
+                foreach (var k in map.Tiles[i].GetItems(data))
+                    if (k.GetType() == typeof(WeaponItemData) && ((WeaponItemData)k).ItemTypeIndex == 9)
                     {
-                        Console.WriteLine("{0} | {1} {2} ", i, i / map.Height , i % map.Height);
+                        Console.WriteLine("{0} | {1} {2} ", i, i / map.Height, i % map.Height);
                         break;
                     }
             }

@@ -20,6 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public LogicGate(Tile targetTile, ActionStateX action, Vector3 position, bool refBit0, bool refBit1, bool refBit2, bool refBit3) : base(targetTile, position)
         {
+            Activated = false;
             TargetAction = action;
             ReferenceBit0 = refBit0;
             ReferenceBit1 = refBit1;
@@ -66,8 +67,20 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                         throw new IndexOutOfRangeException();
                 }
 
-                if (CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3)
-                    SendMessage();
+                    if (CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3)
+                    {
+                        Activated = true;
+                        SendMessageAsync();
+                    }
+
+                if (Activated)
+                {
+                    if (!(CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3))
+                    {
+                        Activated = false;
+                        SendMessageAsync();
+                    }
+                }
             }
         }
 

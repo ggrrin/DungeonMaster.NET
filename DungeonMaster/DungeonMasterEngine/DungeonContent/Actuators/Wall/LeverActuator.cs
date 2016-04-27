@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
@@ -43,13 +44,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        private ActionStateX onAction, offAction;
-        public override ActionStateX TargetAction => Activated ? onAction : offAction;
+        public override ActionStateX TargetAction { get; }
 
-        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX onAction, ActionStateX offAction) : base(targetTile, position)
+        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX targetAction) : base(targetTile, position)
         {
-            this.onAction = onAction;
-            this.offAction = offAction;
+            Activated = false;
+            TargetAction = targetAction;
             OnceOnly = onceOnly;
         }
 
@@ -64,11 +64,18 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             return base.ExchangeItems(item);
         }
 
-        private void Switch()
+        private async void Switch()
         {
             Activated ^= true;
             UpdateTextures();
-            SendMessage();
+            SendMessageAsync();
+
+        }
+
+        protected override void PerformMessage()
+        {
+            TargetTile.ExecuteContentActivator(new LogicTileActivator(TargetAction));
+            Toggle();
         }
     }
 }

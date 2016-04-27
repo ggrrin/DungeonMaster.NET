@@ -21,7 +21,7 @@ namespace DungeonMasterEngine.DungeonContent.Constrains
                 return true;
 
             if (AccepChild)
-                return AcceptableType.IsAssignableFrom(item.GetType());
+                return AcceptableType.IsInstanceOfType(item); 
             else
                 return item.GetType() == AcceptableType;
         }

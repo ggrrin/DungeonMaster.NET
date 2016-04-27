@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Magic.Spells;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
@@ -13,17 +14,22 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.DungeonContent.Actuators.Floor;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.Player
 {
-    public class Theron : PointOfViewCamera
+    public class Theron : PointOfViewCamera, IItem
     {
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
 
+        public IGraphicProvider GraphicsProvider => null;
+        public BoundingBox Bounding => default(BoundingBox);
+        public bool AcceptMessages { get; set; } = false;
+
         public List<Champoin> PartyGroup { get; } = new List<Champoin> {
             //TODO remove champion mocap
-            new Champoin { Name = "Pepa Mocap 0" },
+            new Champoin() { Name = "pepa mocap 0" },
             new Champoin { Name = "Pepa Mocap 1" },
             new Champoin { Name = "Pepa Mocap 2 "},
             new Champoin { Name = "Pepa Mocap 3" }};//TODO remove champion mocap
@@ -39,7 +45,19 @@ namespace DungeonMasterEngine.Player
 
             oldLocation?.SubItems.Remove(this);
             oldLocation?.OnObjectLeft(this);
+
+            newLocation?.SubItems.Add(this);
             newLocation?.OnObjectEntered(this);
+        }
+
+        public GrabableItem ExchangeItems(GrabableItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IItem.Update(GameTime gameTime)
+        {
+            //Do NOT update fromtile, because Theron is component
         }
 
         public override void Update(GameTime time)
@@ -53,11 +71,10 @@ namespace DungeonMasterEngine.Player
                 if (aimingTile != null)
                     tiles.Add(aimingTile);
 
-                List<Tuple<Item, Tile>> intersectingItems = new List<Tuple<Item, Tile>>();
+                var intersectingItems = new List<Tuple<IItem, Tile>>();
 
-                Tuple<Item, Tile> closest = null;
+                Tuple<IItem, Tile> closest = null;
                 float closestDistance = float.MaxValue;
-
 
                 foreach (var tile in tiles)
                     foreach (var item in tile.SubItems)
@@ -65,10 +82,10 @@ namespace DungeonMasterEngine.Player
                         float? res = Ray.Intersects(item.Bounding);
                         if (res != null)
                         {
-                            intersectingItems.Add(new Tuple<Item, Tile>(item, tile));
+                            intersectingItems.Add(new Tuple<IItem, Tile>(item, tile));
                             if (res.Value < closestDistance)
                             {
-                                closest = new Tuple<Item, Tile>(item, tile);
+                                closest = new Tuple<IItem, Tile>(item, tile);
                                 closestDistance = res.Value;
                             }
                         }
@@ -93,9 +110,10 @@ namespace DungeonMasterEngine.Player
             prevKeyboard = Keyboard.GetState();
         }
 
+
         public bool ThrowOutItem(uint distance = 0)
         {
-            if (Hand != null )
+            if (Hand != null)
             {
                 var targetLocation = CheckRoute(distance);
 
@@ -119,7 +137,7 @@ namespace DungeonMasterEngine.Player
             for (int i = 0; i < distance; i++)
             {
                 curLocation = curLocation.Neighbours.GetTile(direction);
-                if (!curLocation.IsAccessible)
+                if (curLocation == null || !curLocation.IsAccessible)
                     return null;
             }
             return curLocation;
@@ -141,5 +159,6 @@ namespace DungeonMasterEngine.Player
             ch.Inventory.Add(Hand);
             Hand = null;
         }
+
     }
 }

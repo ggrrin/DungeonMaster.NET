@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
         }
 
         public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
-
+        public bool AcceptMessages { get; set; }
 
         public virtual GrabableItem ExchangeItems(GrabableItem item)
         {
@@ -66,9 +66,9 @@ namespace DungeonMasterEngine.DungeonContent.Items
                 
                 //new
                 location?.SubItems.Add(this);
+                Position = value?.Position ?? Vector3.Zero;
                 location?.OnObjectEntered(this);
 
-                Position = value?.Position ?? Vector3.Zero;
             }
         }
 

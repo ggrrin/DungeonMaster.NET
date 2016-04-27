@@ -10,11 +10,6 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class KeyHoleActuator : RemoteActuator
     {
-        /// <summary>
-        /// Lock has not been unlocked yet.
-        /// </summary>
-        public bool Active { get; private set; } = true;
-
         public IConstrain Constrain { get; }
 
         private Texture2D decorationTexture;
@@ -43,11 +38,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public override GrabableItem ExchangeItems(GrabableItem item)
         {
-            if (Active && Constrain.IsAcceptable(item))
+            if (Activated && Constrain.IsAcceptable(item))
             {
                 //TODO how to disable eating stuffs when job is done ???
                 //Active = false;
-                SendMessage();
+                SendMessageAsync();
                 return DestroyItem ? null : item;
             }
             else

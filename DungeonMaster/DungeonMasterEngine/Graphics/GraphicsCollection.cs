@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.Graphics
 {
     public class GraphicsCollection : IGraphicProvider
     {
-        private List<IEnumerable<WorldObject>> listOfdrawableList = new List<IEnumerable<WorldObject>>();
+        private readonly List<IEnumerable<IWorldObject>> listOfdrawableList = new List<IEnumerable<IWorldObject>>();
 
         public IList<IGraphicProvider> SubProviders { get; }
 
@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.Graphics
             SubProviders = list;
         }
 
-        public void AddListOfDrawables<T>(IEnumerable<T> drawable) where T : WorldObject // lalal I'm just using covariance :)))))
+        public void AddListOfDrawables(IEnumerable<IWorldObject> drawable)
         {
             listOfdrawableList.Add(drawable);
         }

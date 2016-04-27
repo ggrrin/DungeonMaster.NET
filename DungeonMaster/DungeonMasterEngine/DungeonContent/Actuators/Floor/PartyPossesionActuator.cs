@@ -13,17 +13,20 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
             base(position, actuatorTile, targetTile, constrain,  action)
         { }
 
-        protected override void TestAndRun(object enteringObject)
+        protected override bool TriggerCondition()
         {
-            var theron = enteringObject as Theron;
-            if (theron == null)
+            var theron = CurrentTile.SubItems.FirstOrDefault(x => x is Theron) as Theron;
+            if (theron != null)
             {
                 var items = new[] { theron.Hand }
                     .Concat(theron.PartyGroup.SelectMany(x => x.Inventory))
-                    .Concat(CurrentTile.SubItems);
+                    .Concat(CurrentTile.SubItems.OfType<GrabableItem>());
 
-                if (items.Any(Constrain.IsAcceptable))
-                    SendMessage();
+                return items.Any(Constrain.IsAcceptable);
+            }
+            else
+            {
+                return false;
             }
         }
     }

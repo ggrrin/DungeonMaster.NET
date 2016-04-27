@@ -82,6 +82,7 @@
     <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
     <Compile Include="DungeonContent\Items\IItem.cs" />
     <Compile Include="DungeonContent\Items\LivingItem.cs" />
+    <Compile Include="DungeonContent\IWorldObject.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\ISpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorSpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\SpellFactory.cs" />

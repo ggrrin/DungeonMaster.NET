@@ -16,11 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public override GrabableItem ExchangeItems(GrabableItem item)
         {
-            if (TargetTile.ContentActivated)
-                TargetTile.DeactivateTileContent();
-            else
-                TargetTile.ActivateTileContent();
-
+            SendMessageAsync(); 
             return base.ExchangeItems(item);
         }
     }

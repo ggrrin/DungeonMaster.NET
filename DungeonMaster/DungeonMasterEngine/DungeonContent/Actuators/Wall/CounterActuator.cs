@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 {
                     count = value;
                     if (Count == 0)
-                        SendMessage();
+                        SendMessageAsync();
                 }
             }
         }

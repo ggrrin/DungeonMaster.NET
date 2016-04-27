@@ -48,8 +48,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             if (door.HasButton)
             {
                 Vector3 shift = !isWestEast ? new Vector3(0, 0, 0.4f) : new Vector3(0.4f, 0, 0);
-                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle));
-                //t.Position = position + new Vector3(0, 0.4f, 0);
+                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle, 0, isOnceOnly:false));
                 SubItems.Add(t);
             }
         }

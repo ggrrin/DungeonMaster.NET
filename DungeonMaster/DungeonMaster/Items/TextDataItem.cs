@@ -31,6 +31,9 @@
 
         public string Text { get; set; }
 
+
+        public bool HasTargetingActuator { get; set; } = false;
+
         public override string ToString()
         {
             return Text;

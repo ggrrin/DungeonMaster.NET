@@ -9,6 +9,7 @@ using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
@@ -230,13 +231,22 @@ namespace DungeonMasterEngine.Builders
             {
                 //try find tile in raw data, and than actuator, add it to Tiles Positions
                 var virtualTileData = CurrentMap[targetPos.X, targetPos.Y];
-                if (virtualTileData.Actuators.Count > 0) //virtual tile will be proccessed at the and so any checking shouldnt be necessary
+                if (virtualTileData.Actuators.Any()) //virtual tile will be proccessed at the and so any checking shouldnt be necessary
                 {
                     var newTile = new LogicTile(targetPos.ToGridVector3(CurrentLevel));
                     newTile.Gates = virtualTileData.Actuators.Where(x => x.ActuatorType == 5).Select(y => InitLogicGates(y, newTile)).ToArray(); //recurse
                     newTile.Counters = virtualTileData.Actuators.Where(x => x.ActuatorType == 6).Select(y => InitCounters(y, newTile)).ToArray(); //recurse
 
                     TilesPositions.Add(targetPos, targetTile = newTile); //subitems will be processed 
+                }
+                else if(virtualTileData.TextTags.Any())
+                {
+                    var textTag = virtualTileData.TextTags.Single();
+                    textTag.HasTargetingActuator = true;
+                    targetTile = TilesPositions[textTag.GetParentPosition(targetPos)];
+
+                    if (textTag.Processed)
+                        targetTile.SubItems.Single(x => x is TextTag).AcceptMessages = true;
                 }
 
                 return targetTile; //TODO (if null)  think out what to do 
@@ -249,7 +259,7 @@ namespace DungeonMasterEngine.Builders
             //if nextTarget tile is current tile do not call recurese
             Tile nextTargetTile = gateActuatorTile.GridPosition == ((RmtTrg) gateActuator.ActLoc).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
 
-            return new CounterActuator(nextTargetTile, new ActionStateX((ActionState) gateActuator.Action, ((RmtTrg) gateActuator.ActLoc).Direction), gateActuator.Data, gateActuatorTile.Position);
+            return new CounterActuator(nextTargetTile, gateActuator.GetActionStateX(), gateActuator.Data, gateActuatorTile.Position);
         }
 
         private LogicGate InitLogicGates(ActuatorItemData gateActuator, Tile gateActuatorTile)
@@ -257,7 +267,7 @@ namespace DungeonMasterEngine.Builders
             //if nextTarget tile is current tile do not call recurese
             Tile nextTargetTile = gateActuatorTile.GridPosition == ((RmtTrg) gateActuator.ActLoc).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
 
-            return new LogicGate(nextTargetTile, new ActionStateX((ActionState) gateActuator.Action, ((RmtTrg) gateActuator.ActLoc).Direction), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20, (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
+            return new LogicGate(nextTargetTile, gateActuator.GetActionStateX(), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20, (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
         }
 
         public Vector3 GetFloorPosition(TilePosition tilePosition, Tile currentTile)

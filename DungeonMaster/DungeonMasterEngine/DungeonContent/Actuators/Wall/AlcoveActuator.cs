@@ -2,6 +2,7 @@
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -56,6 +57,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 if (item != null) //put it to alcove
                 {
                     storage.Add(item);
+                    $"Item {item} from hand put to aclove".Dump();
                     return null;
                 }
                 else//take item from alcove
@@ -64,6 +66,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                     {
                         var res = storage[0];
                         storage.RemoveAt(0);
+                        $"Item {res} took from alcove to hand".Dump();
                         return res;
                     }
                     else

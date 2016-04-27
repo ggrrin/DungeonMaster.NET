@@ -2,13 +2,13 @@
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using System.Security.Policy;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
     public class FloorActuator : RemoteActuator
     {
-        public override bool Activated => CurrentTile.SubItems.Any(Constrain.IsAcceptable);
 
         public Tile CurrentTile { get; }
 
@@ -20,6 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 
         public FloorActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionStateX action) : base(targetTile, position)
         {
+            Activated = false;
             CurrentTile = currentTile;
             TargetAction = action;
             Constrain = constrain;
@@ -28,25 +29,31 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
             currentTile.ObjectLeft += CurrentTile_ObjectLeft;
         }
 
-        private void CurrentTile_ObjectLeft(object sender, object e)
-        {
-            if (Enabled)
-                TestAndRun(e);
-        }
-
         private void CurrentTile_ObjectEntered(object sender, object e)
         {
-            if (Enabled)
-                TestAndRun(e);
-        }
-
-        protected virtual void TestAndRun(object enteringObject)
-        {
-            if (CurrentTile.SubItems.Any(Constrain.IsAcceptable))
+            if (Enabled && !Activated)
             {
-                SendMessage();
+                if (TriggerCondition())
+                {
+                    Activated = true;
+                    SendMessageAsync();
+                }
             }
         }
+
+        private void CurrentTile_ObjectLeft(object sender, object e)
+        {
+            if (Enabled && Activated)
+            {
+                if (!TriggerCondition()) //hold message
+                {
+                    Activated = false;
+                    SendMessageAsync();
+                }
+            }
+        }
+
+        protected virtual bool TriggerCondition() => CurrentTile.SubItems.Any(Constrain.IsAcceptable);
 
         public override string ToString()
         {
