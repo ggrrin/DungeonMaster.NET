@@ -39,6 +39,7 @@ namespace DungeonMasterEngine.Builders
                 new BasicDecorationFactory(),
                 new BasicExchangerFactory(),
                 new BasicExchangerFactoryReverse(), 
+                new OnceOnlyExchangerFactory(), 
                 new BasicKeyHoleFactory(), 
                 new DestroyingKeyHoleFactory(), 
                 new ChampoinFactory(), 
@@ -46,21 +47,9 @@ namespace DungeonMasterEngine.Builders
                 new TimerSwitchFactory(), 
                 new HolderButtonFactory(), 
                 new ButtonFactory(), 
+                new TimerMultiSwitchFactory(), 
+                new MultiKeyHoleFactory(), 
             });
-        }
-
-        private void SetupTags(TileData wall, Point textTagTilePosition)
-        {
-            foreach (var textTag in wall.TextTags.Where(x => !x.Processed && x.GetParentPosition(textTagTilePosition) == CurrentTile.GridPosition))
-            {
-                textTag.Processed = true;
-                var tag = new TextTag(builder.GetWallPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
-                    textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine))
-                {
-                    AcceptMessages = textTag.HasTargetingActuator
-                };
-                CurrentTile.SubItems.Add(tag);
-            }
         }
 
         public void CreateSetupActuators(Tile currentTile)
@@ -85,13 +74,27 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
+        private void SetupTags(TileData wall, Point textTagTilePosition)
+        {
+            foreach (var textTag in wall.TextTags.Where(x => !x.Processed && x.GetParentPosition(textTagTilePosition) == CurrentTile.GridPosition))
+            {
+                textTag.Processed = true;
+                var tag = new TextTag(builder.GetWallPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
+                    textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine))
+                {
+                    AcceptMessages = textTag.HasTargetingActuator
+                };
+                CurrentTile.SubItems.Add(tag);
+            }
+        }
+
         private void SetupWallSideActuators(IEnumerable<GrabableItemData> items, IReadOnlyList<ActuatorItemData> actuators)
         {
             if (actuators.Any())
             {
                 CurrentGrabableItems = items;
 
-                var factory = parser.TryMatchFactory(items.Any(), actuators);
+                var factory = parser.TryMatchFactory(actuators, items.Any());
                 if (factory != null)
                 {
                     CurrentTile.SubItems.Add(factory.CreateItem(builder, CurrentTile, actuators));

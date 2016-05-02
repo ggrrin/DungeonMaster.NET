@@ -4,8 +4,11 @@ namespace DungeonMasterEngine.DungeonContent.Items
 {
     internal class Scroll : GrabableItem
     {
-        public Scroll(Vector3 position) : base(position)
+        public string Text { get; set; }
+
+        public Scroll(Vector3 position, string text) : base(position)
         {
+            Text = text;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -27,8 +28,9 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             IConstrain constrain;
             Tile targetTile;
             context.PrepareActuatorData(matchedSequence[0], out targetTile, out constrain, out decoration, putOnWall: true);
-            return new KeyHoleActuator(context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile), targetTile, 
-                matchedSequence[0].GetActionStateX(), constrain, destroyItem: false)
+            return new KeyHoleActuator(context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile),
+                Enumerable.Repeat(targetTile, 1),
+                Enumerable.Repeat(matchedSequence[0].GetActionStateX(), 1), constrain, destroyItem: false)
             {
                 DecorationTexture = decoration
             };

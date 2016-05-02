@@ -6,21 +6,20 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders.WallActuatorFactories
 {
-    public class DestroyingKeyHoleFactory : ActuatorFactoryBase
+    public class MultiKeyHoleFactory : ActuatorFactoryBase
     {
         public override bool? RequireItem { get; } = false;
 
-        public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
-        {
-            ActuatorType = 4,
-        }};
+        public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {
+            new ActuatorState { ActuatorType = 4, },
+            new ActuatorState { ActuatorType = 3, },
+            new ActuatorState { ActuatorType = 3, }
+        };
 
-        public DestroyingKeyHoleFactory() { }
 
         public override Actuator CreateItem(LegacyMapBuilder context, Tile currentTile, IReadOnlyList<ActuatorItemData> matchedSequence)
         {
@@ -29,7 +28,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             Tile targetTile;
             context.PrepareActuatorData(matchedSequence[0], out targetTile, out constrain, out decoration, putOnWall: true);
             return new KeyHoleActuator(context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile),
-                Enumerable.Repeat(targetTile,1), Enumerable.Repeat(matchedSequence[0].GetActionStateX(),1), constrain, destroyItem: true)
+                matchedSequence.Select(context.GetTargetTile),
+                matchedSequence.Select(x => x.GetActionStateX()), constrain, destroyItem: true)
             {
                 DecorationTexture = decoration
             };

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.WallActuatorFactories;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Helpers;
 
-namespace DungeonMasterEngine.Builders.WallActuatorFactories
+namespace DungeonMasterEngine.Builders
 {
     public class Parser<TState, TStateData, TDataContext, TFactoryResult> where TState : IEquatable<TStateData>
     {
@@ -19,7 +15,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             Factories = factories;
         }
 
-        public FactoryBase<TState, TStateData, TDataContext, TFactoryResult> TryMatchFactory(bool hasItems, IEnumerable<TStateData> sequence)
+        public FactoryBase<TState, TStateData, TDataContext, TFactoryResult> TryMatchFactory(IEnumerable<TStateData> sequence, bool hasItems)
         {
             if (!sequence.Any())
                 return null;

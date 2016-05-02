@@ -308,15 +308,15 @@ namespace DungeonMasterParser
 
             t.IsVisible = (data & oneBitMask) == 1;
 
-            SetTextData(t);
+            t.Text = SetTextData(t.ReferredTextOffset);
 
             return t;
         }
 
-        private void SetTextData(TextDataItem t)
+        private string SetTextData(int referredOffset)
         {
-            Data.TextDataStream.Position = t.ReferredTextOffset;
-            t.Text = new StreamReader(Data.TextDataStream, new DMEncoding(), false).ReadLine();
+            Data.TextDataStream.Position = referredOffset; 
+            return new StreamReader(Data.TextDataStream, new DMEncoding(), false).ReadLine();
         }
 
         private IList<ActuatorItemData> ReadActuatorsData(BinaryReader r)
@@ -482,6 +482,7 @@ namespace DungeonMasterParser
             s.NextObjectID = r.ReadUInt16();
 
             s.ReferredTextIndex = r.ReadUInt16() & nineBitsMask;
+            s.Text = Data.Texts[s.ReferredTextIndex].Text.Replace('|' , ' '); 
             return s;
         }
 

@@ -58,14 +58,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Builders\BuilderBase.cs" />
-    <Compile Include="Builders\WallActuatorFactories\ActuatorFactoryBase.cs" />
-    <Compile Include="Builders\WallActuatorFactories\ActuatorState.cs" />
+    <Compile Include="Builders\ActuatorFactoryBase.cs" />
+    <Compile Include="Builders\ActuatorState.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\FloorDecorationFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\MultiFloorDirectionFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\TPCFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\TPCIFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\FloorCreatureFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\FloorDirectionFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\ItemFactory.cs" />
+    <Compile Include="Builders\FloorActuatorFactories\PartyPossesionFactory.cs" />
+    <Compile Include="Builders\TileInfo.cs" />
     <Compile Include="Builders\WallActuatorFactories\AlcoveHidingSwitchFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\BasicAlcoveFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\BasicDecorationFactory.cs" />
+    <Compile Include="Builders\WallActuatorFactories\MultiKeyHoleFactory.cs" />
+    <Compile Include="Builders\WallActuatorFactories\OnceOnlyExchangerFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\BasicExchangerFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\BasicExchangerFactoryReverse.cs" />
     <Compile Include="Builders\WallActuatorFactories\BasicKeyHoleFactory.cs" />
+    <Compile Include="Builders\WallActuatorFactories\TimerMultiSwitchFactory.cs" />
+    <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ButtonActuator.cs" />
     <Compile Include="Builders\WallActuatorFactories\ButtonFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\ChampoinFactory.cs" />
@@ -74,9 +87,10 @@
     <Compile Include="Builders\WallActuatorFactories\DestroyingKeyHoleFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\HolderButtonFactory.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\HolderButtonActuator.cs" />
-    <Compile Include="Builders\WallActuatorFactories\Parser.cs" />
-    <Compile Include="Builders\WallActuatorFactories\FactoryBase.cs" />
+    <Compile Include="Builders\Parser.cs" />
+    <Compile Include="Builders\FactoryBase.cs" />
     <Compile Include="Builders\WallActuatorFactories\LeverSwitchFactory.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\SwitchSequenceActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\TimerSwitchActuator.cs" />
     <Compile Include="Builders\WallActuatorFactories\TimerSwitchFactory.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
@@ -86,7 +100,7 @@
     <Compile Include="DungeonContent\Actuators\Wall\CounterActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LogicGateActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LogicTileActivator.cs" />
-    <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\SimpleRemoteActuator.cs" />
     <Compile Include="DungeonContent\Items\IItem.cs" />
     <Compile Include="DungeonContent\Items\LivingItem.cs" />
     <Compile Include="DungeonContent\IWorldObject.cs" />

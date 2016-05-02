@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -7,14 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class TimerSwitchActuator : RemoteActuator
+    public class SwitchSequenceActuator : RemoteActuator
     {
+        private readonly IEnumerable<Tile> targetTiles;
+        private readonly IEnumerable<ActionStateX> actions;
         private bool Pressed = false;
-
-        public Tile TargetTile { get; }
-        public ActionStateX FirstAction { get; }
-        public ActionStateX SecondAction { get; }
-
 
         #region 
         private Texture2D upTexture;
@@ -48,19 +47,15 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         #endregion
 
 
-        public TimerSwitchActuator(Vector3 position, Tile targetTile, ActionStateX firstAction, ActionStateX secondAction) : base(position)
+        public SwitchSequenceActuator(Vector3 position, IEnumerable<Tile> targetTiles, IEnumerable<ActionStateX> actions) : base(position)
         {
-            TargetTile = targetTile;
-            FirstAction = firstAction;
-            SecondAction = secondAction;
+            this.targetTiles = targetTiles.ToArray();
+            this.actions = actions.ToArray();
         }
-
 
         protected async void SendMessageAsync(bool activated)
         {
-            var t1 = SendOneMessageAsync(TargetTile, FirstAction, activated);
-            var t2 = SendOneMessageAsync(TargetTile, SecondAction, activated);
-            await Task.WhenAll(t1, t2);
+            await Task.WhenAll(targetTiles.Zip(actions, (x,y) => SendOneMessageAsync(x,y,activated)));
         }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
@@ -68,7 +63,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             Pressed ^= true;
             UpdateTextures();
 
-            SendMessageAsync(activated: true);
+            SendMessageAsync(Pressed);
 
             return base.ExchangeItems(item);
         }

@@ -40,7 +40,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, Text + $"\r\nVisible: {Visible}", new Vector2(10), Color.White);
+            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, Text , new Vector2(10), Color.White);
             spriteBatch.End();
 
             // Reset the device to the back buffer

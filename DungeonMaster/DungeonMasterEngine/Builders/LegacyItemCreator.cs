@@ -23,27 +23,12 @@ namespace DungeonMasterEngine.Builders
     public class LegacyItemCreator : IItemCreator<GrabableItem>
     {
         private readonly LegacyMapBuilder builder;
-        public WallTileData WallTile;
         
         public Tile CurrentTile { get; private set; }
-        public FloorActuatorCreator FloorActuatorCreator { get; } 
 
         public LegacyItemCreator(LegacyMapBuilder builder )
         {
             this.builder = builder;
-            FloorActuatorCreator = new FloorActuatorCreator(builder);
-        }
-
-        public void AddFloorItem(ItemData i, Tile parentTile)
-        {
-            i.Processed = true;
-            CurrentTile = parentTile;
-            var res = i.CreateItem(this);
-            if (res != null)
-            {
-                SetupGrabableItem(res, i);
-                CurrentTile.SubItems.Add(res);
-            }
         }
 
         public GrabableItem CreateItem(ItemData itemData, Tile parentTile)
@@ -89,7 +74,7 @@ namespace DungeonMasterEngine.Builders
 
         public GrabableItem CreateScrool(ScrollItemData scroll)
         {
-            return new Scroll(builder.GetFloorPosition(scroll.TilePosition, CurrentTile ));
+            return new Scroll(builder.GetFloorPosition(scroll.TilePosition, CurrentTile ), scroll.Text);
         }
 
         public GrabableItem CreateMisc(MiscellaneousItemData misc)
@@ -109,8 +94,7 @@ namespace DungeonMasterEngine.Builders
 
         public GrabableItem CreateActuator(ActuatorItemData actuator)
         {
-            CurrentTile.SubItems.Add(FloorActuatorCreator.ProcessFloorActuator(actuator));
-            return null;//TODO remake
+            throw new InvalidOperationException("Not supported.");
         }
 
         public GrabableItem CreateTeleport(TeleporterItem teleport)

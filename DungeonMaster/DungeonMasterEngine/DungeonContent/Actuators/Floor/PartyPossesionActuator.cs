@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
@@ -9,8 +11,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
     public class PartyPossesionActuator : FloorActuator 
     {
-        public PartyPossesionActuator(Vector3 position, Tile actuatorTile, Tile targetTile, IConstrain constrain, ActionStateX action) : 
-            base(position, actuatorTile, targetTile, constrain,  action)
+        public PartyPossesionActuator(Vector3 position, Tile actuatorTile, IConstrain constrain, IEnumerable<Tile> targetTile, IEnumerable<ActionStateX> action) : 
+            base(position, actuatorTile, constrain,  targetTile, action)
         { }
 
         protected override bool TriggerCondition()

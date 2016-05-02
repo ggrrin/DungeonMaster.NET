@@ -18,11 +18,11 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
         }
 
-        public override bool IsAccessible => IsOpen;
+        public override bool IsAccessible => IsImaginary || IsOpen;
 
         public WallIlusion(Vector3 position, bool isImaginary, bool isOpen) : base(position)
         {
-            IsImaginary = IsImaginary;
+            IsImaginary = isImaginary;
             this.isOpen = isOpen;
 
             //todo illusion wall face

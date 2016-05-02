@@ -15,6 +15,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public bool OnceOnly { get; }
 
+        public Tile TargetTile { get; }
+
         private Texture2D upTexture;
 
         public Texture2D UpTexture
@@ -44,12 +46,13 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public override ActionStateX TargetAction { get; }
+        public ActionStateX TargetAction { get; }
 
-        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX targetAction) : base(targetTile, position)
+        public LeverActuator(Vector3 position, Tile targetTile, bool onceOnly, ActionStateX targetAction) : base(position)
         {
             Activated = false;
             TargetAction = targetAction;
+            TargetTile = targetTile;
             OnceOnly = onceOnly;
         }
 
@@ -64,17 +67,18 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             return base.ExchangeItems(item);
         }
 
-        private void Switch()
+        private async void Switch()
         {
             Activated ^= true;
             UpdateTextures();
-            SendMessageAsync();
+            await SendOneMessageAsync(TargetTile, TargetAction, Activated);
         }
 
-        protected override void PerformMessage(ActionStateX action)
+        protected override void PerformMessage(Tile targetTile, ActionStateX action, bool activated)
         {
-            TargetTile.ExecuteContentActivator(new LogicTileActivator(action));
-            Toggle();
+            targetTile.ExecuteContentActivator(new LogicTileActivator(action));
+            Toggle(targetTile);
         }
+
     }
 }

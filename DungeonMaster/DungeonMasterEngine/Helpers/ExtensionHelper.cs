@@ -17,6 +17,11 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+        public static IEnumerable<T> ToEnumerable<T>(this T val)
+        {
+            return Enumerable.Repeat(val, 1);
+        }
+
         public static Point GetParentPosition(this TextDataItem tag, Point parentDataPosition)
         {
             Point relativePos;

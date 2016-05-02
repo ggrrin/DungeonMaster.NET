@@ -4,7 +4,7 @@ using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 
-namespace DungeonMasterEngine.Builders.WallActuatorFactories
+namespace DungeonMasterEngine.Builders
 {
     public class ActuatorState : IEquatable<ActuatorItemData>
     {

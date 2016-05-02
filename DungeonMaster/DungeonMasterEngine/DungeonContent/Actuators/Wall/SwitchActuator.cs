@@ -5,18 +5,15 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class SwitchActuator : RemoteActuator
+    public class SwitchActuator : SimpleRemoteActuator
     {
-        public override ActionStateX TargetAction { get; }
 
-        public SwitchActuator(Vector3 position, Tile targetTile, ActionStateX action ) : base(targetTile, position)
-        {
-            TargetAction = action;
-        }
+        public SwitchActuator(Vector3 position, Tile targetTile, ActionStateX action ) : base(targetTile, action, position)
+        { }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
         {
-            SendMessageAsync(); 
+            SendMessageAsync(activated:true); 
             return base.ExchangeItems(item);
         }
     }

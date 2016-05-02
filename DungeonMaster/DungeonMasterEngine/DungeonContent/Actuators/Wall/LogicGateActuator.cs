@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class LogicGate : RemoteActuator
+    public class LogicGate : SimpleRemoteActuator
     {
         public bool CurrentBit0 { get; set; }
         public bool CurrentBit1 { get; set; }
@@ -16,12 +16,10 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public bool ReferenceBit2 { get; }
         public bool ReferenceBit3 { get; }
 
-        public override ActionStateX TargetAction { get; }
 
-        public LogicGate(Tile targetTile, ActionStateX action, Vector3 position, bool refBit0, bool refBit1, bool refBit2, bool refBit3) : base(targetTile, position)
+        public LogicGate(Tile targetTile, ActionStateX action, Vector3 position, bool refBit0, bool refBit1, bool refBit2, bool refBit3) : base(targetTile,action, position)
         {
             Activated = false;
-            TargetAction = action;
             ReferenceBit0 = refBit0;
             ReferenceBit1 = refBit1;
             ReferenceBit2 = refBit2;
@@ -70,7 +68,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                     if (CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3)
                     {
                         Activated = true;
-                        SendMessageAsync();
+                        SendMessageAsync(Activated);
                     }
 
                 if (Activated)
@@ -78,7 +76,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                     if (!(CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3))
                     {
                         Activated = false;
-                        SendMessageAsync();
+                        SendMessageAsync(Activated);
                     }
                 }
             }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 
-namespace DungeonMasterEngine.Builders.WallActuatorFactories
+namespace DungeonMasterEngine.Builders
 {
     public abstract class FactoryBase<TState, TStateData, TDataContext, TFactoryResult> where TState : IEquatable<TStateData>
     {

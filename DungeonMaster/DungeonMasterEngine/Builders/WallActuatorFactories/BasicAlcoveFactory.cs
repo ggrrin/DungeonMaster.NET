@@ -14,7 +14,6 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
         public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
         {
             ActuatorType = 0,
-            //IsLocal = true
         }};
 
         public BasicAlcoveFactory() { }

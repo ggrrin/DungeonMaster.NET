@@ -19,7 +19,7 @@
 
         //        Bits 9 - 0: Referred text in list of text objects.
         public int ReferredTextIndex { get; set; }
-
+        public string Text { get; set; }
 
         //Notes:
         //    Scrolls ignore the visibility attribute of the referred text

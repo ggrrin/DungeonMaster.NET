@@ -6,68 +6,54 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
 {
-    public abstract class RemoteActuator : Actuator
+    public class RemoteActuator : Actuator
     {
         public bool Activated { get; protected set; } = true;
+        public RemoteActuator(Vector3 position, string s) : base(position) { }
 
-        public Tile TargetTile { get; }
-
-        public abstract ActionStateX TargetAction { get; }
-
-        protected RemoteActuator(Tile targetTile, Vector3 position) : base(position)
-        {
-            if (targetTile == null)
-                throw new ArgumentException();
-
-            TargetTile = targetTile;
-        }
-
-        protected virtual async void SendMessageAsync()
-        {
-            await SendOneMessageAsync(TargetAction);
-        }
-
-        protected async Task SendOneMessageAsync(ActionStateX action)
+        public RemoteActuator(Vector3 position) : base(position) { }
+        
+        protected async Task SendOneMessageAsync(Tile targetTile, ActionStateX action, bool activated)
         {
             if (!action.IsOnceOnly || !action.Used)
             {
                 await Task.Delay(action.TimeDelay);
-                PerformMessage(action);
+                PerformMessage(targetTile, action, activated);
                 action.Used = true;
             }
         }
 
-        protected virtual void PerformMessage(ActionStateX action)
+        protected virtual void PerformMessage(Tile targetTile, ActionStateX action, bool activated)
         {
-            TargetTile.ExecuteContentActivator(new LogicTileActivator(action));
+            targetTile.ExecuteContentActivator(new LogicTileActivator(action));
             switch (action.Action)
             {
                 case ActionState.Clear:
-                    if (Activated)
-                        TargetTile.DeactivateTileContent();
+                    if (activated)
+                        targetTile.DeactivateTileContent();
                     break;
                 case ActionState.Set:
-                    if (Activated)
-                        TargetTile.ActivateTileContent();
+                    if (activated)
+                        targetTile.ActivateTileContent();
                     break;
                 case ActionState.Toggle:
-                    if (Activated)
-                        Toggle();
+                    if (activated)
+                        Toggle(targetTile);
                     break;
                 case ActionState.Hold:
-                    Toggle();
+                    Toggle(targetTile);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        protected void Toggle(bool invertEffect = false)
+        protected void Toggle(Tile targetTile, bool invertEffect = false)
         {
-            if (TargetTile.ContentActivated ^ invertEffect)
-                TargetTile.DeactivateTileContent();
+            if (targetTile.ContentActivated ^ invertEffect)
+                targetTile.DeactivateTileContent();
             else
-                TargetTile.ActivateTileContent();
+                targetTile.ActivateTileContent();
         }
     }
 }

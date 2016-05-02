@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class HolderButtonActuator : RemoteActuator
+    public class HolderButtonActuator : SimpleRemoteActuator
     {
         private readonly List<GrabableItem> items;
         public Texture2D Texture
@@ -17,11 +17,9 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             set { ((CubeGraphic) Graphics).Texture = value; }
         }
 
-        public override ActionStateX TargetAction { get; }
 
-        public HolderButtonActuator(Vector3 position, Tile targetTile, IEnumerable<GrabableItem> items, ActionStateX action) : base(targetTile, position)
+        public HolderButtonActuator(Vector3 position, Tile targetTile, IEnumerable<GrabableItem> items, ActionStateX action) : base(targetTile, action, position)
         {
-            TargetAction = action;
             this.items = new List<GrabableItem>(items);
             Activated = items.Any();
         }
@@ -33,7 +31,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 if (items.Any())
                 {
                     Activated = true;
-                    SendMessageAsync();
+                    SendMessageAsync(Activated);
                 }
             }
         }
@@ -46,7 +44,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 if (!items.Any()) //hold message
                 {
                     Activated = false;
-                    SendMessageAsync();
+                    SendMessageAsync(Activated);
                 }
             }
         }

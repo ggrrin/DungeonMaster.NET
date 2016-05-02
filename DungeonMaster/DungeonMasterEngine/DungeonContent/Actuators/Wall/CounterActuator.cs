@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class CounterActuator : RemoteActuator
+    public class CounterActuator : SimpleRemoteActuator
     {
         private int count;
         public int Count
@@ -16,16 +16,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 {
                     count = value;
                     if (Count == 0)
-                        SendMessageAsync();
+                        SendMessageAsync(activated: true);
                 }
             }
         }
 
-        public override ActionStateX TargetAction { get; }
 
-        public CounterActuator(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile, position)
+        public CounterActuator(Tile targetTile, ActionStateX action, int startCount, Vector3 position) : base(targetTile,action, position)
         {
-            TargetAction = action;
             count = startCount;
         }
 

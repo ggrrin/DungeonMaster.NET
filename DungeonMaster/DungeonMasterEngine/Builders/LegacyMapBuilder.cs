@@ -37,24 +37,16 @@ namespace DungeonMasterEngine.Builders
         private Texture2D[] floorTextures;
 
         public DungeonData Data { get; }
-
         public DungeonMap CurrentMap { get; private set; }
-
         public Dictionary<Point, Tile> TilesPositions { get; private set; }
-
-        public LegacyItemCreator ItemCreator { get; private set; }
         public WallActuatorCreator WallActuatorCreator { get; private set; }
-
+        public FloorActuatorCreator FloorActuatorCreator { get; private set; }
+        public LegacyItemCreator ItemCreator { get; private set; }
         public Texture2D defaultDoorTexture { get; private set; }
-
         public Texture2D defaultMapDoorTypeTexture { get; private set; }
-
         public IReadOnlyList<Texture2D> DoorTextures => doorTextures;
-
         public IReadOnlyList<Texture2D> WallTextures => wallTextures;
-
         public IReadOnlyList<Texture2D> FloorTextures => floorTextures;
-
         public int CurrentLevel { get; private set; }
 
         public LegacyMapBuilder()
@@ -68,9 +60,10 @@ namespace DungeonMasterEngine.Builders
         {
             CurrentLevel = level;
             CurrentMap = Data.Maps[level];
-            ItemCreator = new LegacyItemCreator(this);
             legacyTileCreator = new LegacyTileCreator(this);
             WallActuatorCreator = new WallActuatorCreator(this);
+            FloorActuatorCreator = new FloorActuatorCreator(this);
+            ItemCreator = new LegacyItemCreator(this);
             InitializeMapTextures();
 
             outputTiles = new List<Tile>();
@@ -157,40 +150,21 @@ namespace DungeonMasterEngine.Builders
             foreach (var tile in outputTiles)
             {
                 WallActuatorCreator.CreateSetupActuators(tile);
-                //TODO
                 SetupFloorItems(tile);
             }
         }
 
-        //private void SetupWallItems(Tile tile)
-        //{
-        //    Func<ItemData, Point, bool> isValid = (o, p) => !o.Processed && o.TilePosition == (new Point(-1) * p).ToDirection();
-        //    foreach (var neighbour in tile.Neighbours.Where(p => p.Key == null))
-        //    {
-        //        var wall = CurrentMap.GetTileData(tile.GridPosition + neighbour.Value) as WallTileData;
-        //        if (wall != null && wall.HasItemsList)
-        //        {
-        //            var validActuators = wall.Actuators.Where(x => isValid(x, neighbour.Value) && x.AcutorType != 5 && x.AcutorType != 6); //do not evaluate And/Or gate, counters
-        //            foreach (ActuatorItemData o in validActuators)
-        //                LegacyItemCreator.AddWallItem(o, tile, wall);
-
-        //            foreach (var t in wall.TextTags.Where(x => isValid(x, neighbour.Value)))
-        //                LegacyItemCreator.AddWallItem(t, tile, wall);
-        //        }
-        //    }
-        //}
+    
 
         private void SetupFloorItems(Tile tile)
         {
-            //TODO 24 22 target tile null
+            FloorActuatorCreator.CreateSetupActuators(tile);
+
+            var itemCreator = new LegacyItemCreator(this);
             var tileData = CurrentMap[tile.GridPosition.X, tile.GridPosition.Y];
+            tileData.GrabableItems.ForEach(x => tile.SubItems.Add(itemCreator.CreateItem(x,tile)));
 
-            foreach (var actuator in tileData.Actuators.Where(act => !act.Processed))
-                ItemCreator.AddFloorItem(actuator, tile);
-
-            foreach (var item in tileData.GrabableItems.Where(i => !i.Processed))
-                ItemCreator.AddFloorItem(item, tile);
-
+            //TODO creatures
             //foreach (var creatre in tileData.Creatures.Where(i => !i.Processed))
             //    ItemCreator.AddFloorItem(creatre, tile);
         }
@@ -330,18 +304,16 @@ namespace DungeonMasterEngine.Builders
 
             if (i.IsLocal)
                 throw new NotSupportedException("yet");
-
-            if (i.Decoration > 0)
-                decoration = putOnWall ? WallTextures[i.Decoration - 1] : FloorTextures[i.Decoration - 1];
+            decoration = GetTexture(i, putOnWall);
 
             return true;
         }
-    }
 
-    public struct TileInfo<T> where T : TileData
-    {
-        public T Tile { get; set; }
-
-        public Point Position { get; set; }
+        public Texture2D GetTexture(ActuatorItemData i, bool putOnWall)
+        {
+            if (i.Decoration > 0)
+                return  putOnWall ? WallTextures[i.Decoration - 1] : FloorTextures[i.Decoration - 1];
+            return null;
+        }
     }
 }

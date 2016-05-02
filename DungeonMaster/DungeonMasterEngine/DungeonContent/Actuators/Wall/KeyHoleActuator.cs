@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
@@ -10,6 +13,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class KeyHoleActuator : RemoteActuator
     {
+        private readonly IEnumerable<Tile> targetTile;
+        private readonly IEnumerable<ActionStateX> action;
         public IConstrain Constrain { get; }
 
         private Texture2D decorationTexture;
@@ -22,11 +27,10 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public bool DestroyItem { get; }
 
-        public override ActionStateX TargetAction { get; }
-
-        public KeyHoleActuator(Vector3 position, Tile targetTile, ActionStateX action, IConstrain constrain, bool destroyItem) : base(targetTile, position)
+        public KeyHoleActuator(Vector3 position, IEnumerable<Tile> targetTile, IEnumerable<ActionStateX> action, IConstrain constrain, bool destroyItem) : base(position)
         {
-            TargetAction = action;
+            this.targetTile = targetTile;
+            this.action = action;
             Constrain = constrain;
             DestroyItem = destroyItem;
         }
@@ -42,7 +46,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             {
                 //TODO how to disable eating stuffs when job is done ???
                 //Active = false;
-                SendMessageAsync();
+                SendMessageAsync(activated: true);
                 return DestroyItem ? null : item;
             }
             else
@@ -51,6 +55,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
+        private async void SendMessageAsync(bool activated )
+        {
+            await Task.WhenAll(targetTile.Zip(action, (x,y) => SendOneMessageAsync(x,y,activated)));
+
+        }
 
         public override string ToString()
         {

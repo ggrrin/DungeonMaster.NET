@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class Button : RemoteActuator 
+    public class Button : SimpleRemoteActuator 
     {
         public Texture2D Texture
         {
@@ -14,16 +14,13 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             set { ((CubeGraphic) Graphics).Texture = value; }
         }
 
-        public override ActionStateX TargetAction { get; }
 
-        public Button(Vector3 position, Tile targetTile, ActionStateX action) : base(targetTile, position)
-        {
-            TargetAction = action;
-        }
+        public Button(Vector3 position, Tile targetTile, ActionStateX action) : base(targetTile, action, position)
+        { }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
         {
-            SendMessageAsync();
+            SendMessageAsync(activated: true);
             return base.ExchangeItems(item);
         }
     }

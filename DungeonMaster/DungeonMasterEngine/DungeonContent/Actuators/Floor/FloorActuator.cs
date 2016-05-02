@@ -1,28 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Security.Policy;
+using System.Threading.Tasks;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
     public class FloorActuator : RemoteActuator
     {
+        private readonly IEnumerable<Tile> targetTile;
+        private readonly IEnumerable<ActionStateX> action;
 
         public Tile CurrentTile { get; }
 
-        public override ActionStateX TargetAction { get; }
 
         public bool Enabled { get; private set; } = true;
 
         public virtual IConstrain Constrain { get; }
 
-        public FloorActuator(Vector3 position, Tile currentTile, Tile targetTile, IConstrain constrain, ActionStateX action) : base(targetTile, position)
+        public FloorActuator(Vector3 position, Tile currentTile, IConstrain constrain, IEnumerable<Tile> targetTile, IEnumerable<ActionStateX> action) : base(position)
         {
+            this.targetTile = targetTile.ToArray();
+            this.action = action.ToArray();
             Activated = false;
             CurrentTile = currentTile;
-            TargetAction = action;
             Constrain = constrain;
 
             currentTile.ObjectEntered += CurrentTile_ObjectEntered;
@@ -36,9 +40,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
                 if (TriggerCondition())
                 {
                     Activated = true;
-                    SendMessageAsync();
+                    SendMessageAsync(Activated);
                 }
             }
+        }
+
+        private async void SendMessageAsync(bool activated)
+        {
+            await Task.WhenAll(targetTile.Zip(action, (x,y) => SendOneMessageAsync(x,y,activated)));
         }
 
         private void CurrentTile_ObjectLeft(object sender, object e)
@@ -48,7 +57,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
                 if (!TriggerCondition()) //hold message
                 {
                     Activated = false;
-                    SendMessageAsync();
+                    SendMessageAsync(Activated);
                 }
             }
         }
@@ -57,7 +66,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 
         public override string ToString()
         {
-            return $"{base.ToString()} {GetType().Name} action: {TargetAction}\r\n {Constrain}";
+            return $"{base.ToString()} {GetType().Name} actions: {string.Join(Environment.NewLine, action)}\r\n {Constrain}";
         }
     }
 }
