@@ -1,18 +1,13 @@
-﻿using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Player;
-using DungeonMasterParser;
+﻿using DungeonMasterEngine.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Tiles;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders.WallActuatorFactories
@@ -20,6 +15,11 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
     public class ChampoinFactory : ActuatorFactoryBase
     {
         public override bool? RequireItem { get; } = true;
+
+        public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
+        {
+            ActuatorType = 127
+        }};
 
         private int GetValueOfDMHexEncoding(string encodedValue)
         {
@@ -51,17 +51,11 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             }
         }
 
-
-        public override IReadOnlyList<ActuatorState> MatchingSequence { get; } = new[] {new ActuatorState
-        {
-            ActuatorType = 127
-        }};
-
         public override Actuator CreateItem(LegacyMapBuilder context, Tile currentTile, IReadOnlyList<ActuatorItemData> matchedSequence)
         {
             string[] descriptor = FindChampionDescriptor(context).Split('|');
 
-            var champion = new Champoin
+            var champion = new Champoin(context.ChampionToken, context.CreatureToken.ToEnumerable())
             {
                 Name = descriptor[0],
                 Title = descriptor[1] + descriptor[2],

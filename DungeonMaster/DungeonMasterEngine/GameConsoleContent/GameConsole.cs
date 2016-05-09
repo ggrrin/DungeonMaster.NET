@@ -4,11 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.GameConsoleContent.Factories;
 
@@ -60,11 +58,11 @@ namespace DungeonMasterEngine.GameConsoleContent
         private GameConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories) : base(game)
         {
             In = new StreamReader(input = new KeyboardStream());
-            var s = new StreamWriter(ouput = new ScreenStream());
-            s.AutoFlush = true;
+            var s = new StreamWriter(ouput = new ScreenStream())
+            { AutoFlush = true };
             Out = s;
-            interpreter = new BaseInterpreter(defaultFactories.Concat(thirdPartyFactories), In, Out, input);
-            interpreter.ConsoleContext = new ConsoleContext<Dungeon>(defaultFactories.Concat(thirdPartyFactories), dungeon);
+            interpreter = new BaseInterpreter(defaultFactories.Concat(thirdPartyFactories), In, Out, input)
+            { ConsoleContext = new ConsoleContext<Dungeon>(defaultFactories.Concat(thirdPartyFactories), dungeon) };
             new Action(async () =>
             {
                 await interpreter.Run();

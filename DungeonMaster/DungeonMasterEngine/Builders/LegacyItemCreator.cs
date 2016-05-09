@@ -1,20 +1,8 @@
 ﻿using System;
 using System.Linq;
 using DungeonMasterParser;
-using Microsoft.Xna.Framework;
-using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Helpers;
-using Microsoft.Xna.Framework.Graphics;
-using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using System.Diagnostics;
-using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
-using DungeonMasterParser.Tiles;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 

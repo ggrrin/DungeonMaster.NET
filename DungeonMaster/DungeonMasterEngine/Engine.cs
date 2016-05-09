@@ -1,14 +1,10 @@
 ﻿using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Threading;
 using System;
 using DungeonMasterEngine.GameConsoleContent;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 
@@ -22,16 +18,18 @@ namespace DungeonMasterEngine
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private Dungeon dungeon;
-        private Queue<Tuple<SendOrPostCallback, object>> taskQueue = new Queue<Tuple<SendOrPostCallback, object>>();
+        private readonly Queue<Tuple<SendOrPostCallback, object>> taskQueue = new Queue<Tuple<SendOrPostCallback, object>>();
 
         public Engine()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 800,
+                PreferredBackBufferHeight = 600,
+                IsFullScreen = false
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            graphics.IsFullScreen = false;
             SynchronizationContext.SetSynchronizationContext(new GameSynchronizationContext(taskQueue));
         }
 
@@ -44,19 +42,21 @@ namespace DungeonMasterEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
-            dungeon = new Dungeon(this, new LegacyMapBuilder()) { DrawOrder = 0 }; 
+            dungeon = new Dungeon(this, new LegacyMapBuilder()) { DrawOrder = 0 };
             GameConsole.InitializeConsole(this, dungeon);
-            GameConsole.Instance.DrawOrder = 1;             
+            GameConsole.Instance.DrawOrder = 1;
         }
 
         protected override void Update(GameTime gameTime)
         {
             while (taskQueue.Count > 0)
             {
-                var task = taskQueue.Dequeue();
+                Tuple<SendOrPostCallback, object> task;
+                lock (taskQueue)
+                    task = taskQueue.Dequeue();
+
                 task.Item1(task.Item2);
             }
-
             base.Update(gameTime);
         }
 

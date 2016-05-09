@@ -1,8 +1,5 @@
-﻿using System;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Interfaces;
+﻿using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
-using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
 {
@@ -20,10 +17,5 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
             var theron = item as Theron;
             return theron?.PartyGroup.Count == 4 && theron.MapDirection == AcceptDirection;
         }
-    }
-
-    public enum MapDirection
-    {
-        North = 0, East, South, West
     }
 }

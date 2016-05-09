@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
-using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Helpers;
 

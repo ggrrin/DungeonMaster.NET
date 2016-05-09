@@ -2,98 +2,192 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.Helpers
 {
-    class BreadthFirstSearch
+    public class BreadthFirstSearch<TTile, TBundle> where TTile : class, INeighbourable<TTile>
     {
-        private int[][,] processedTiles;
+        private SearchFabricElement<TTile, TBundle>[][,] processedTiles;
 
-        private int currentFlag;
-        private Tile startTile;
-        private Action<Tile> action;
-        private int dimension { get { var res = processedTiles[0]?.GetLength(0); if (res.HasValue) return res.Value; else return 0; } }
+        protected int currentFlag { get; private set; }
+        protected TTile originTile { get; private set; }
+        private Action<TTile, int, TBundle> action;
 
-        private Queue<Tile> queue = new Queue<Tile>();
-        private int startLevel;
+        private int dimension => processedTiles[0]?.GetLength(0) ?? 0;
+        private int maxDistance => (dimension - 1) / 2;
 
-        public void StartSearch(Tile startTile, int dimension, Action<Tile> action)
+        private readonly Queue<TTile> queue = new Queue<TTile>();
+        private int originLevel;
+        private bool searchStopped = false;
+
+        public bool Searching { get; private set; } = false;
+
+        public void StartSearch(TTile originTile, TTile startTile, int maxDistance, Action<TTile, int, TBundle> action)
         {
-            this.startTile = startTile;
+            this.originTile = originTile;
             currentFlag++;
 
-            if (processedTiles == null || this.dimension != dimension)
+            if (processedTiles == null || this.maxDistance <= maxDistance)
             {
-                processedTiles = new int[3][,];
+                processedTiles = new SearchFabricElement<TTile, TBundle>[3][,];
                 for (int i = 0; i < 3; i++)
-                    processedTiles[i] = new int[dimension, dimension];
+                    processedTiles[i] = new SearchFabricElement<TTile, TBundle>[2 * maxDistance + 1, 2 * maxDistance + 1];
             }
 
             this.action = action;
-            startLevel = startTile.LevelIndex;
-            Enqueue(startTile);
+            originLevel = originTile.LevelIndex;
+
+            var startTileDistance = startTile.GridPosition - originTile.GridPosition;
+            if (startTileDistance.X > maxDistance || startTileDistance.Y > maxDistance)
+                throw new IndexOutOfRangeException("Start Tile is not in searching range");
+
+            Enqueue(startTile, 0, null);
+            if (!queue.Any())
+                throw new Exception();
             Search();
         }
 
-
         private void Search()
         {
-
+            OnSearchStart();
+            int layer = 0;
+            int tileCount = 0;
             while (queue.Count > 0)
             {
-                Tile currentTile = queue.Dequeue();
-                action(currentTile);
+                TTile currentTile = queue.Dequeue();
+                if (currentTile == null)
+                    throw new Exception();
 
-                Enqueue(currentTile.Neighbours.North);
-                Enqueue(currentTile.Neighbours.West);
-                Enqueue(currentTile.Neighbours.East);
-                Enqueue(currentTile.Neighbours.South);
+
+                var element = GetElement(currentTile);
+                action(currentTile, element.Layer, element.Bundle);
+
+
+                if (searchStopped)
+                {
+                    searchStopped = false;
+                    queue.Clear();
+                    break;
+                }
+
+                AddSucessors(++layer, currentTile);
+
+                tileCount++;
+            }
+            if (tileCount == 0)
+                throw new Exception();
+
+            OnSearchFinished();
+        }
+
+        protected virtual void OnSearchStart()
+        {
+            Searching = true;
+        }
+
+        protected virtual void OnSearchFinished()
+        {
+            Searching = false;
+        }
+
+        protected virtual void AddSucessors(int layer, TTile currentTile)
+        {
+            foreach (var neighbour in currentTile.Neighbours)
+                Enqueue(neighbour.Item1, layer, currentTile);
+        }
+
+        protected void Enqueue(TTile descendant, int layer, TTile previousTile)
+        {
+            if (descendant != null)
+            {
+                int? flag = GetFlag(descendant.GridPosition, descendant.LevelIndex);
+                if (flag != null && flag != currentFlag)
+                {
+                    queue.Enqueue(descendant);
+                    SetFlag(descendant.GridPosition, descendant.LevelIndex, currentFlag, layer, previousTile);
+                }
             }
         }
 
-        private void Enqueue(Tile descendant)
+        public IEnumerable<TTile> GetShortestRouteReverse(TTile destinationTile)
         {
-            if (descendant != null && this[descendant.GridPosition, descendant.LevelIndex] != null && this[descendant.GridPosition, descendant.LevelIndex] != currentFlag)
+            if (destinationTile == null)
+                throw new ArgumentNullException();
+
+            var curElement = GetElement(destinationTile);
+            yield return destinationTile;
+            while (curElement.PreviousTile != null)
             {
-                queue.Enqueue(descendant);
-                this[descendant.GridPosition, descendant.LevelIndex] = currentFlag;
+                yield return curElement.PreviousTile;
+                curElement = GetElement(curElement.PreviousTile);
             }
         }
 
-
-        private int? this[Point pos, int level]
+        public IReadOnlyList<TTile> GetShortestRoute(TTile destTile)
         {
-            get
-            {
-                var relative = GetRelativePos(pos);
+            if (destTile == null)
+                throw new ArgumentNullException();
 
-                if (relative.X >= 0 && relative.X < dimension && relative.Y >= 0 && relative.Y < dimension && level >= startLevel - 1 && level <= startLevel + 1)
-                    return processedTiles[startLevel - level + 1][relative.X, relative.Y];
-                else
-                    return null;
-            }
+            var res = GetShortestRouteReverse(destTile).ToArray();
+            Array.Reverse(res);
+            return res;
+        }
 
-            set
-            {
-                if (!value.HasValue) throw new ArgumentNullException();
+        public void StopSearch()
+        {
+            if (!Searching)
+                throw new InvalidOperationException("Searching is not running!");
+            searchStopped = true;
+        }
 
-                var relative = GetRelativePos(pos);
+        private int? GetFlag(Point pos, int level)
+        {
+            var relative = GetRelativePos(pos);
 
-                processedTiles[startLevel - level + 1][relative.X, relative.Y] = value.Value;
-            }
+            if (relative.X >= 0 && relative.X < dimension && relative.Y >= 0 && relative.Y < dimension && level >= originLevel - 1 && level <= originLevel + 1)
+                return processedTiles[originLevel - level + 1][relative.X, relative.Y].Flag;
+            else
+                return null;
+        }
+
+        private void SetFlag(Point pos, int level, int flag, int layer, TTile previousTile)
+        {
+            var relative = GetRelativePos(pos);
+            processedTiles[originLevel - level + 1][relative.X, relative.Y].Flag = flag;
+            processedTiles[originLevel - level + 1][relative.X, relative.Y].Layer = layer;
+            processedTiles[originLevel - level + 1][relative.X, relative.Y].PreviousTile = previousTile;
         }
 
         private Point GetRelativePos(Point pos)
         {
-            var relative = pos - startTile.GridPosition;
+            var relative = pos - originTile.GridPosition;
             relative += new Point(dimension / 2);//shift to natural position
             return relative;
         }
 
+        private SearchFabricElement<TTile, TBundle> GetElement(TTile tile)
+        {
+            var relative = GetRelativePos(tile.GridPosition);
+
+            var res = processedTiles[originLevel - tile.LevelIndex + 1][relative.X, relative.Y];
+            if (res.Flag != currentFlag)
+                throw new InvalidOperationException("Invalid reading location. Old data.");
+            return res;
+        }
+
+
+        public TBundle GetBundle(TTile tile)
+        {
+            var relative = GetRelativePos(tile.GridPosition);
+            return processedTiles[originLevel - tile.LevelIndex + 1][relative.X, relative.Y].Bundle;
+        }
+
+        public void SetBundle(TTile tile, TBundle bundle)
+        {
+            var relative = GetRelativePos(tile.GridPosition);
+            processedTiles[originLevel - tile.LevelIndex + 1][relative.X, relative.Y].Bundle = bundle;
+        }
+
     }
-
-
 }

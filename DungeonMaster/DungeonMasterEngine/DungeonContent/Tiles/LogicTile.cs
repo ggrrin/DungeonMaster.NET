@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles

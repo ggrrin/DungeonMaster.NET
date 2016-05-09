@@ -3,13 +3,11 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterParser;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
-using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 using DungeonMasterParser.Items;
 using DungeonMasterEngine.DungeonContent.Actuators;
 
@@ -17,6 +15,23 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+        public static IEnumerable<MapDirection> ToDirections(this TilePosition x)
+        {
+            switch (x)
+            {
+                case TilePosition.North_TopLeft:
+                    return new[] {MapDirection.West, MapDirection.North, };
+                case TilePosition.East_TopRight:
+                    return new[] {MapDirection.East, MapDirection.North, };
+                case TilePosition.South_BottomLeft:
+                    return new[] {MapDirection.West, MapDirection.South, };
+                case TilePosition.West_BottomRight:
+                    return new[] {MapDirection.East, MapDirection.South, };
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(x), x, null);
+            }
+        }
+
         public static IEnumerable<T> ToEnumerable<T>(this T val)
         {
             return Enumerable.Repeat(val, 1);
@@ -28,21 +43,32 @@ namespace DungeonMasterEngine.Helpers
             switch (tag.TilePosition)
             {
                 case TilePosition.North_TopLeft:
-                    relativePos = new Point { Y =  -1};
+                    relativePos = new Point
+                    {
+                        Y = -1
+                    };
                     break;
                 case TilePosition.East_TopRight:
-                    relativePos = new Point { X =  1};
+                    relativePos = new Point
+                    {
+                        X = 1
+                    };
                     break;
                 case TilePosition.South_BottomLeft:
-                    relativePos = new Point { Y =  1};
+                    relativePos = new Point
+                    {
+                        Y = 1
+                    };
                     break;
                 case TilePosition.West_BottomRight:
-                    relativePos = new Point { X =  -1};
+                    relativePos = new Point
+                    {
+                        X = -1
+                    };
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
 
             return parentDataPosition + relativePos;
         }
@@ -54,7 +80,7 @@ namespace DungeonMasterEngine.Helpers
             if (location != null)
                 specifer = (int) location.Position.Direction;
 
-            return new ActionStateX((ActionState) actuator.Action, actuator.ActionDelay * 1000 / 6, actuator.IsOnceOnly, specifer);
+            return new ActionStateX((ActionState) actuator.Action, actuator.ActionDelay*1000/6, actuator.IsOnceOnly, specifer);
         }
 
         public static Point ToAbsolutePosition(this Position p, DungeonMap map)
@@ -120,29 +146,15 @@ namespace DungeonMasterEngine.Helpers
             return new Vector3(p.X, -level, p.Y);
         }
 
-        public static MapDirection ToMapDirection(this Point p)
+        public static TilePosition ToTilePosition(this MapDirection mapDirection)
         {
-            if (p == new Point(0, -1))
-                return MapDirection.North;
-            else if (p == new Point(1, 0))
-                return MapDirection.East;
-            else if (p == new Point(0, 1))
-                return MapDirection.South;
-            else if (p == new Point(-1, 0))
-                return MapDirection.West;
-            else
-                throw new ArgumentException();
-        }
-
-        public static TilePosition ToTilePosition(this Point p)
-        {
-            if (p == new Point(0, -1))
+            if (mapDirection == MapDirection.North)
                 return TilePosition.North_TopLeft;
-            else if (p == new Point(1, 0))
+            else if (mapDirection == MapDirection.East)
                 return TilePosition.East_TopRight;
-            else if (p == new Point(0, 1))
+            else if (mapDirection == MapDirection.South)
                 return TilePosition.South_BottomLeft;
-            else if (p == new Point(-1, 0))
+            else if (mapDirection == MapDirection.West)
                 return TilePosition.West_BottomRight;
             else
                 throw new ArgumentException();
@@ -178,20 +190,5 @@ namespace DungeonMasterEngine.Helpers
         {
             return ObjectDumper.Dump(o);
         }
-
-        //var q = from item in wall.GetItems(data).OrderBy(x => x, Comparer<SuperItem>.Create((x, y) =>
-        //{
-        //    bool xAct = x.GetType() == typeof(ActuatorItem);
-        //    bool yAct = y.GetType() == typeof(ActuatorItem);
-        //    if (xAct && yAct)
-        //        return -((ActuatorItem)x).AcutorType.CompareTo(((ActuatorItem)y).AcutorType);
-        //    else if (xAct && !yAct)
-        //        return -1;
-        //    else if (!xAct && yAct)
-        //        return 1;
-        //    else
-        //        return 0;
-        //}))
-        //        select item;
     }
 }

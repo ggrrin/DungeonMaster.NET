@@ -1,12 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 
 namespace DungeonMasterEngine.Player
 {
@@ -14,6 +11,7 @@ namespace DungeonMasterEngine.Player
     {
         private readonly Animator<PointOfViewCamera, Tile> animator = new Animator<PointOfViewCamera, Tile>();
         private IPOVInputProvider inputProvider = new DefaultPOVInput();
+        private MapDirection mapDirection = MapDirection.South;
 
         public IPOVInputProvider InputProvider
         {
@@ -26,7 +24,22 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public MapDirection MapDirection => GetShift(ForwardDirection).ToMapDirection();
+        public MapDirection MapDirection
+        {
+            get
+            {
+                return mapDirection;
+            }
+            private set
+            {
+                var oldDirection = mapDirection;
+                if (mapDirection != value)
+                {
+                    mapDirection = value;
+                    OnMapDirectionChanged(oldDirection, mapDirection);
+                }
+            }
+        }
 
         public Point GridPosition => location.GridPosition;
 
@@ -40,7 +53,6 @@ namespace DungeonMasterEngine.Player
             {
                 return location;
             }
-
             set
             {
                 var oldLocation = location;
@@ -52,15 +64,26 @@ namespace DungeonMasterEngine.Player
             }
         }
 
+        public PointOfViewCamera(Game game) : base(game)
+        {
+            LocationChanged += (d, s) => $"{Location.Position} {Location.Neighbours}".Dump();
+        }
+
         protected virtual void OnLocationChanged(Tile oldLocation, Tile newLocation)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
         }
 
-        public PointOfViewCamera(Game game) : base(game)
+        protected virtual void OnLocationChanging(Tile oldLocation, Tile newLocation)
+        { }
+
+        protected virtual void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
+        { }
+
+        protected virtual bool CanMoveToTile(Tile tile)
         {
-            LocationChanged += (d, s) => $"{Location.Position} {Location.Neighbours}".Dump();
-        }        
+            return tile != null && tile.IsAccessible;
+        }
 
         protected override Vector3 GetTranslation(GameTime time)
         {
@@ -71,24 +94,27 @@ namespace DungeonMasterEngine.Player
             else
             {
                 var translation = GetTranslation();
-
-                if (translation.ToVector2().LengthSquared() == 1) //translation is not in oblique direction or zero
+                if (translation != null)
                 {
-                    var newLocation = location.Neighbours.GetTile(translation);
-
-                    if (newLocation != null && newLocation.IsAccessible)
+                    var newLocation = location.Neighbours.GetTile(new MapDirection(translation.Value));
+                    if (CanMoveToTile(newLocation))
                     {
+                        OnLocationChanging(Location, newLocation);
                         animator.MoveTo(this, newLocation);
                         return animator.GetTranslation(time);
                     }
                 }
-
-                return Vector3.Zero;
             }
+
+            return Vector3.Zero;
         }
 
-        private Point GetTranslation()
+        private Point? GetTranslation()
         {
+            Point? shift = GetShift(ForwardDirection);
+            if (shift != null)
+                MapDirection = new MapDirection(shift.Value);
+
             Vector3 moveDirection = Vector3.Zero;
 
             switch (inputProvider.CurrentDirection)
@@ -110,53 +136,24 @@ namespace DungeonMasterEngine.Player
                     break;
 
                 default:
-                    return Point.Zero;
+                    return null;
             }
             return GetShift(moveDirection);
         }
 
-        public Point GetShift(Vector3 direction)
+        private Point? GetShift(Vector3 direction)
         {
+            if (direction == Vector3.Zero)
+                return null;
+
             direction = Vector3.Normalize(new Vector3(direction.X, 0, direction.Z));//let direction be always horizontal of unit length
             direction += Position;//destination position
-            return direction.ToGrid() - GridPosition;
-        }
+            var translation = direction.ToGrid() - GridPosition;
 
-        private class DefaultPOVInput : IPOVInputProvider
-        {
-            public WalkDirection CurrentDirection
-            {
-                get
-                {
-                    var keyboardState = Keyboard.GetState();
-
-                    if (keyboardState.IsKeyDown(Keys.A))
-                        return WalkDirection.Left;
-
-                    if (keyboardState.IsKeyDown(Keys.D))
-                        return WalkDirection.Right;
-
-                    if (keyboardState.IsKeyDown(Keys.S))
-                        return WalkDirection.Backward;
-
-                    if (keyboardState.IsKeyDown(Keys.W))
-                        return WalkDirection.Forward;
-
-                    return WalkDirection.None;
-                }
-            }
-        }
-
-        private class LocationChangedEventArgs : EventArgs
-        {
-            public Tile NewLocation { get; }
-            public Tile OldLocation { get; }
-
-            public LocationChangedEventArgs(Tile oldLocation, Tile newLocation)
-            {
-                OldLocation = oldLocation;
-                NewLocation = newLocation;
-            }
+            if (translation.ToVector2().LengthSquared() != 1) //translation is in oblique direction or zero
+                return null;
+            else
+                return translation;
         }
     }
 }

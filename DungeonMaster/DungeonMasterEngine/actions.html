@@ -1,0 +1,523 @@
+<h3 id="toc0">Actions</h3>
+<p>The following table lists all the possible actions in the game.</p>
+<p>Notes:<br>
+<strong>Improved Skill</strong>: The skill associated with the action.<br>
+<strong>Experience Gain</strong>: The base value of the experience you gain when you use the action.<br>
+<strong>Defense Modifier</strong>: Defense modifier applied until the champion can make an action again.<br>
+<strong>Stamina</strong>: The base value of stamina used when making the action.<br>
+<strong>Hit probability</strong>: The probability to hit (0..75, 75 means automatic hit).<br>
+<strong>Damage</strong>: Damage modifier (in 1/32's). A value of 16 then would be "half normal damage".<br>
+<strong>Fatigue</strong>: The amount of time before you can make another action (1/6ths of a second).</p>
+<table>
+<tbody><tr>
+<th>Number</th>
+<th>Name</th>
+<th>Improved<br>
+Skill</th>
+<th>Experience<br>
+Gain</th>
+<th>Defense<br>
+Modifier</th>
+<th>Stamina</th>
+<th>Hit probability</th>
+<th>Damage</th>
+<th>Fatigue</th>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>N</td>
+<td>00: Fighter</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Block</td>
+<td>07: Parry (Hidden Fighter skill)</td>
+<td>8</td>
+<td>36</td>
+<td>4</td>
+<td>22</td>
+<td>15</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Chop</td>
+<td>06: Club (Hidden Fighter skill)</td>
+<td>10</td>
+<td>0</td>
+<td>8</td>
+<td>48</td>
+<td>48</td>
+<td>8 </td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>X</td>
+<td>00: Fighter</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Blow Horn </td>
+<td>14: Influence (Hidden Priest skill)</td>
+<td>0</td>
+<td>-4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Flip</td>
+<td>12: Identify (Hidden Priest skill)</td>
+<td>0</td>
+<td>-10</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Punch</td>
+<td>09: Fight (Hidden Ninja skill)</td>
+<td>8</td>
+<td>-10</td>
+<td>1</td>
+<td>38</td>
+<td>32</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Kick</td>
+<td>09: Fight (Hidden Ninja skill)</td>
+<td>13</td>
+<td>-5</td>
+<td>3</td>
+<td>28</td>
+<td>48</td>
+<td>5 </td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>War Cry </td>
+<td>14: Influence (Hidden Priest skill) <br>
+07: Parry (Hidden Fighter skill) </td>
+<td>7</td>
+<td>4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Stab</td>
+<td>09: Fight (Hidden Ninja skill)</td>
+<td>15</td>
+<td>-20</td>
+<td>3</td>
+<td>30</td>
+<td>48</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>Climb Down</td>
+<td>08: Steal (Hidden Ninja skill)</td>
+<td>15</td>
+<td>-15</td>
+<td>40</td>
+<td>0</td>
+<td>0</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>Freeze Life</td>
+<td>14: Influence (Hidden Priest skill)</td>
+<td>22</td>
+<td>-10</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>20</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>Hit</td>
+<td>09: Fight (Hidden Ninja skill)</td>
+<td>10</td>
+<td>16</td>
+<td>3</td>
+<td>20</td>
+<td>20</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>Swing</td>
+<td>04: Swing (Hidden Fighter skill)</td>
+<td>6</td>
+<td>5</td>
+<td>2</td>
+<td>32</td>
+<td>16</td>
+<td>6 </td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>Stab (unused)</td>
+<td>05: Thrust (Hidden Fighter skill)</td>
+<td>12</td>
+<td>-15</td>
+<td>4</td>
+<td>42</td>
+<td>60</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>Thrust</td>
+<td>05: Thrust (Hidden Fighter skill)</td>
+<td>19</td>
+<td>-17</td>
+<td>13</td>
+<td>57</td>
+<td>66</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>Jab</td>
+<td>05: Thrust (Hidden Fighter skill)</td>
+<td>11</td>
+<td>-5</td>
+<td>3</td>
+<td>70</td>
+<td>8</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>Parry</td>
+<td>07: Parry (Hidden Fighter skill)</td>
+<td>17</td>
+<td>29</td>
+<td>1</td>
+<td>18</td>
+<td>8</td>
+<td>18</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td>Hack</td>
+<td>04: Swing (Hidden Fighter skill)</td>
+<td>9</td>
+<td>10</td>
+<td>6</td>
+<td>27</td>
+<td>25</td>
+<td>8 </td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>Berzerk</td>
+<td>04: Swing (Hidden Fighter skill)</td>
+<td>40</td>
+<td>-10</td>
+<td>26</td>
+<td>46</td>
+<td>96</td>
+<td>30 </td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>Fireball</td>
+<td>16: Fire (Hidden Wizard skill)</td>
+<td>35</td>
+<td>-7</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>42</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>Dispell</td>
+<td>17: Air (Hidden Wizard skill)</td>
+<td>25</td>
+<td>-7</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>31</td>
+</tr>
+<tr class="odd">
+<td>22</td>
+<td>Confuse </td>
+<td>14: Influence (Hidden Priest skill)</td>
+<td>0</td>
+<td>-7</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>Lightning</td>
+<td>17: Air (Hidden Wizard skill)</td>
+<td>30</td>
+<td>-7</td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>38</td>
+</tr>
+<tr class="odd">
+<td>24</td>
+<td>Disrupt</td>
+<td>17: Air (Hidden Wizard skill)</td>
+<td>10</td>
+<td>-7</td>
+<td>5</td>
+<td>46</td>
+<td>55</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>25</td>
+<td>Melee</td>
+<td>06: Club (Hidden Fighter skill)</td>
+<td>24</td>
+<td>-5</td>
+<td>17</td>
+<td>64</td>
+<td>60</td>
+<td>20</td>
+</tr>
+<tr class="odd">
+<td>26</td>
+<td>X</td>
+<td>08: Steal (Hidden Ninja skill)</td>
+<td>0</td>
+<td>-15</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>Invoke</td>
+<td>03: Wizard</td>
+<td>25</td>
+<td>-9</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>28</td>
+<td>Slash</td>
+<td>04: Swing (Hidden Fighter skill)</td>
+<td>9</td>
+<td>4</td>
+<td>2</td>
+<td>26</td>
+<td>16</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>29</td>
+<td>Cleave</td>
+<td>04: Swing (Hidden Fighter skill)</td>
+<td>12</td>
+<td>0</td>
+<td>10</td>
+<td>40</td>
+<td>48</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td>30</td>
+<td>Bash</td>
+<td>06: Club (Hidden Fighter skill)</td>
+<td>11</td>
+<td>0</td>
+<td>9</td>
+<td>32</td>
+<td>50</td>
+<td>20 </td>
+</tr>
+<tr class="even">
+<td>31</td>
+<td>Stun</td>
+<td>06: Club (Hidden Fighter skill)</td>
+<td>10</td>
+<td>5</td>
+<td>2</td>
+<td>50</td>
+<td>16</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>32</td>
+<td>Shoot</td>
+<td>11: Shoot (Hidden Ninja skill)</td>
+<td>9</td>
+<td>-15</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td>33</td>
+<td>Spellshield</td>
+<td>15: Defend (Hidden Priest skill)</td>
+<td>20</td>
+<td>-7</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>34</td>
+<td>Fireshield</td>
+<td>15: Defend (Hidden Priest skill)</td>
+<td>20</td>
+<td>-7</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>35</td>
+<td>Fluxcage</td>
+<td>03: Wizard</td>
+<td>12</td>
+<td>8</td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>36</td>
+<td>Heal</td>
+<td>13: Heal (Hidden Priest skill)</td>
+<td>0</td>
+<td>-20</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>19</td>
+</tr>
+<tr class="even">
+<td>37</td>
+<td>Calm </td>
+<td>14: Influence (Hidden Priest skill)</td>
+<td>0</td>
+<td>-5</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>38</td>
+<td>Light</td>
+<td>17: Air (Hidden Wizard skill)</td>
+<td>20</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>39</td>
+<td>Window</td>
+<td>18: Earth (Hidden Wizard skill)</td>
+<td>30</td>
+<td>-15</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td>40</td>
+<td>Spit</td>
+<td>16: Fire (Hidden Wizard skill)</td>
+<td>25</td>
+<td>-7</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>41</td>
+<td>Brandish </td>
+<td>14: Influence (Hidden Priest skill)</td>
+<td>0</td>
+<td>-4</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>42</td>
+<td>Throw</td>
+<td>10: Throw (Hidden Ninja skill)</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>43</td>
+<td>Fuse </td>
+<td>03: Wizard</td>
+<td>1</td>
+<td>8</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<p>(a): Dungeon Master for Atari ST versions 1.0 English (1987-12-08) and 1.0 English (1987-12-11).<br>
+(b): Dungeon Master for Atari ST versions 1.1 English.<br>
+(c): Dungeon Master for Atari ST versions 1.2 English, 1.2 German, 1.3 French, Chaos Strikes Back for Atari ST versions 2.0 English and 2.1 English, Dungeon Master for Amiga version 2.0 English.<br>
+(d): In addition to the normal 'Experience gain' in the 'Improved skill' as defined in the table, these actions trigger an additional and special experience gain if there is a creature currently under attack. This special experience gain is hard coded in skill 14 Influence (Hidden Priest skill) and with the following values: War Cry (12), Calm (35), Brandish (30), Blow Horn (20), Confuse (45). These values are fixed and not influenced by experience multipliers or any other factors. These actions test the creature's bravery. If the creature fails the test, the hard coded experience value is added to the champion. If the creature passes the test, only half of the experience is added.<br>
+This means that:
+</p><ul>
+<li>In Dungeon Master for Atari ST version 1.1 and before, War Cry gives experience in the Priest skill only (for both the normal and special experience additions).</li>
+<li>In Dungeon Master for Atari ST version 1.2 and above, War Cry gives experience in Fighter (normal addition) and also Priest (special addition) skills.</li>
+<li>For actions other than 'War Cry', both the normal and special additions apply to the skill 14 Influence (Hidden Priest skill). However, as the experience gain is 0 in the table for these actions, this means only the special addition will effectively add experience.</li>
+</ul>
+<p></p><p>(e): A hard coded fatigue value of 6 is used when attacking a door. These are the only actions that can used to destroy a door.<br>
+(f): The Fuse action casts a powerful Weaken Nonmaterial Beings spell and can thus be used against that kind of creatures.</p>

@@ -6,22 +6,26 @@ namespace DungeonMasterEngine
 {
     internal class GameSynchronizationContext : SynchronizationContext
     {
-        private Queue<Tuple<SendOrPostCallback, object>> executionQueue;
+        private readonly Queue<Tuple<SendOrPostCallback, object>> executionQueue;
 
-        public GameSynchronizationContext(Queue<Tuple<SendOrPostCallback,object>> executionQueue)
+        public GameSynchronizationContext(Queue<Tuple<SendOrPostCallback, object>> executionQueue)
         {
             this.executionQueue = executionQueue;
         }
 
         public override void Post(SendOrPostCallback d, object state)
         {
-            executionQueue.Enqueue(new Tuple<SendOrPostCallback, object>(d, state));
+            var t = Tuple.Create(d, state);
+            if (t == null)
+                throw new Exception();
+
+            lock (executionQueue)
+                executionQueue.Enqueue(t);
         }
 
         public override void Send(SendOrPostCallback d, object state)
         {
             d(state);
         }
-
     }
 }

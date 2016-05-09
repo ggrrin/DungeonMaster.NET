@@ -1,5 +1,4 @@
-﻿using System;
-using DungeonMasterEngine.DungeonContent.Items;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 

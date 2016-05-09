@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DungeonMasterEngine.Builders.FloorActuatorFactories;
-using DungeonMasterEngine.Builders.WallActuatorFactories;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Actuators.Floor;
-using DungeonMasterEngine.DungeonContent.Constrains;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using DungeonMasterEngine.Player;
 
 namespace DungeonMasterEngine.Builders
 {

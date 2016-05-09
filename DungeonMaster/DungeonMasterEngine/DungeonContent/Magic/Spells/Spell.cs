@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {
-    public abstract class Spell : LivingItem, ISpell
+    public abstract class Spell : Item, ISpell
     {
-        public abstract float TranslationVeloctiy { get; protected set; }
+        public abstract float TranslationVelocity { get; protected set; }
 
         public bool Finished { get; private set; } = false;
 

@@ -19,36 +19,14 @@ namespace DungeonMasterEngine.DungeonContent.Items
             Graphics = new CubeGraphic
             {
                 Position = Position,
-                Texture = DrawRenderTarget(),
+                Outter =  true,
+                Texture = ResourceProvider.Instance.DrawRenderTarget(Text, Color.Black, Color.White),
                 Scale = new Vector3(0.3f, 0.3f, 0.1f),
                 Rotation = isWestEast ? new Vector3(0, MathHelper.PiOver2, 0) : Vector3.Zero
             };
             
 
         }
-
-        private Texture2D DrawRenderTarget()
-        {
-            var device = ResourceProvider.Instance.Device;
-            RenderTarget2D target = new RenderTarget2D(device, 128, 128);
-            SpriteBatch spriteBatch = new SpriteBatch(device);
-
-            // Set the device to the render target
-            device.SetRenderTarget(target);
-
-            device.Clear(Color.Gray);
-
-            spriteBatch.Begin();
-
-            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, Text , new Vector2(10), Color.White);
-            spriteBatch.End();
-
-            // Reset the device to the back buffer
-            device.SetRenderTarget(null);
-
-            return target;
-        }
-
 
     }
 }

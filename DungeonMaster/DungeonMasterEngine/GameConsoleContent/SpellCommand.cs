@@ -1,11 +1,8 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Magic.Spells;
+﻿using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols.Factories;
 using DungeonMasterEngine.GameConsoleContent.Base;
-using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
@@ -32,7 +29,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             var theron = ConsoleContext.AppContext.Theron;
             var spellFactory = symbolParser.ParseSpell(Parameters);
             if (spellFactory != null)
-                spellFactory.CastSpell(theron.Location, theron.GetShift(theron.ForwardDirection));
+                spellFactory.CastSpell(theron.Location, theron.MapDirection);
             else
                 Output.WriteLine("Invalid spell symbols.");
 

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Floor;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -10,7 +8,6 @@ using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

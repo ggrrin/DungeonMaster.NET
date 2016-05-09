@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
@@ -19,7 +18,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 
         public abstract Task Run();
 
-        protected async Task<T> GetFromItemIndex<T>(IList<T> list, bool result = true) where T : class
+        protected async Task<T> GetFromItemIndex<T>(IReadOnlyList<T> list, bool result = true) where T : class
         {
             Output.WriteLine("Selecet index:");
             int j = 0;

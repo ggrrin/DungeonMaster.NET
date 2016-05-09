@@ -1,4 +1,7 @@
-﻿using DungeonMasterParser.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DungeonMasterParser.Enums;
 
 namespace DungeonMasterParser.Items
 {
@@ -72,6 +75,16 @@ namespace DungeonMasterParser.Items
         //    In Dungeon Master, the direction of each creature can be different. The program manages this at runtime only and the values stored in the dungeon file are ignored.
         //    In Dungeon Master II, items like trees and tables are considered as creatures.
         //    In order to correctly display Black Flames, it is required to add the adequate circular floor decoration.
+        public IEnumerable<Tuple<TilePosition, int>> GetCreaturesInfo() => GetAllCreaturesInfo().Take(CreaturesCount + 1);
+
+        private IEnumerable<Tuple<TilePosition, int>> GetAllCreaturesInfo()
+        {
+            yield return Tuple.Create(Creature1Position, HitPointsCreature1);
+            yield return Tuple.Create(Creature2Position, HitPointsCreature2);
+            yield return Tuple.Create(Creature3Position, HitPointsCreature3);
+            yield return Tuple.Create(Creature4Position, HitPointsCreature4);
+
+        }
 
 
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall

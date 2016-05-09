@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Magic.Spells;
-using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
 {
@@ -27,47 +24,195 @@ namespace DungeonMasterEngine.Player
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
 
-        public List<Champoin> PartyGroup { get; } = new List<Champoin> {
-            //TODO remove champion mocap
-            new Champoin() { Name = "pepa mocap 0" },
-            new Champoin { Name = "Pepa Mocap 1" },
-            new Champoin { Name = "Pepa Mocap 2 "},
-            new Champoin { Name = "Pepa Mocap 3" }};//TODO remove champion mocap
+        public List<Champoin> partyGoup = new List<Champoin>();
+
+        public IReadOnlyList<Champoin> PartyGroup => partyGoup;
 
         public GrabableItem Hand { get; private set; }
 
-        public Theron(Game game) : base(game)
-        { }
+        public Theron(Tile location, Game game) : base(game)
+        {
+            Location = location;
+
+            var x = new[]{
+            //TODO remove champion mocap
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
+            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            {
+                throw new Exception();
+            }
+        }
+
+        protected override bool CanMoveToTile(Tile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
+
+        protected override void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
+        {
+            base.OnMapDirectionChanged(oldDirection, newDirection);
+            $"Direction changed: {oldDirection} -> {newDirection}".Dump();
+
+            if (oldDirection != newDirection.Opposite)
+                RotateParty(oldDirection, newDirection);
+            else
+            {
+                var midle = oldDirection.NextClockWise;
+                RotateParty(oldDirection, midle);
+                RotateParty(midle, newDirection);
+            }
+        }
+
+        protected override void OnLocationChanging(Tile oldLocation, Tile newLocation)
+        {
+            base.OnLocationChanging(oldLocation, newLocation);
+
+            oldLocation?.OnObjectLeaving(this);
+            newLocation?.OnObjectEntering(this);
+
+            MovePartyToRight(newLocation);
+        }
+
+        private void MovePartyToRight(Tile newLocation)
+        {
+            Debug.Assert(newLocation.LayoutManager.WholeTileEmpty);
+
+            foreach (var champion in PartyGroup)
+            {
+                var prevLocation = champion.Location;
+                newLocation.LayoutManager.TryGetSpace(champion, prevLocation.Space);
+                champion.Location = new FourthSpaceRouteElement(prevLocation.Space, newLocation);
+                prevLocation.SpaceParent.LayoutManager.FreeSpace(champion, prevLocation.Space);
+            } 
+        }
 
         protected override void OnLocationChanged(Tile oldLocation, Tile newLocation)
         {
             base.OnLocationChanged(oldLocation, newLocation);
 
-            oldLocation?.SubItems.Remove(this);
             oldLocation?.OnObjectLeft(this);
-
-            newLocation?.SubItems.Add(this);
             newLocation?.OnObjectEntered(this);
+
+
         }
 
-        public GrabableItem ExchangeItems(GrabableItem item)
+        private void RotateParty(MapDirection oldDirection, MapDirection newDirection)
         {
-            throw new NotImplementedException();
+            var targetLocation = partyGoup.FirstOrDefault()?.Location?.SpaceParent;
+
+            if (targetLocation != null)
+            {
+
+                var counterClockWiseGridPoints = new[]
+                {
+                    Tuple.Create(new Point(0, 0), new Point(0, 1)),
+                    Tuple.Create(new Point(0, 1), new Point(1, 1)),
+                    Tuple.Create(new Point(1, 1), new Point(1, 0)),
+                    Tuple.Create(new Point(1, 0), new Point(0, 0)),
+                };
+
+                Func<Point, Point> nextGridPoint = p =>
+                {
+                    if (oldDirection.NextCounterClockWise == newDirection)
+                        return Array.Find(counterClockWiseGridPoints, t => t.Item1 == p).Item2;
+                    else if (oldDirection.NextClockWise == newDirection)
+                        return Array.Find(counterClockWiseGridPoints, t => t.Item2 == p).Item1;
+                    else
+                        throw new Exception();
+                };
+
+                foreach (var champoin in PartyGroup)
+                    targetLocation.LayoutManager.FreeSpace(champoin, champoin.Location.Space);
+
+                foreach (var champoin in PartyGroup)
+                {
+                    var newSpace = champoin.GroupLayout.AllSpaces.First(s => s.GridPosition == nextGridPoint(champoin.Location.Space.GridPosition));
+                    champoin.Location = new FourthSpaceRouteElement(newSpace, targetLocation);
+                    Debug.Assert(targetLocation.LayoutManager.TryGetSpace(champoin, champoin.Location.Space));
+                }
+            }
         }
+
+        public GrabableItem ExchangeItems(GrabableItem item) => item;
+
+
 
         void IItem.Update(GameTime gameTime)
         {
-            //Do NOT update fromtile, because Theron is component
+            /*Do NOT update fromtile, because Theron is component*/
+            foreach (var champoin in PartyGroup)
+            {
+                champoin.Update(gameTime);
+            }
+        }
+
+        public bool ThrowOutItem(uint distance = 0)
+        {
+            if (Hand != null)
+            {
+                var targetLocation = CheckRoute(distance);
+
+                if (targetLocation != null)
+                {
+                    Hand.Location = targetLocation;
+                    Hand = null;
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+
+        private Tile CheckRoute(uint distance)
+        {
+            var direction = MapDirection;
+            var curLocation = Location;
+            for (int i = 0; i < distance; i++)
+            {
+                curLocation = curLocation.Neighbours.GetTile(direction);
+                if (curLocation == null || !curLocation.IsAccessible)
+                    return null;
+            }
+            return curLocation;
+        }
+
+        public void PutToHand(GrabableItem item, Champoin ch)
+        {
+            Hand = item;
+
+            ch?.Inventory.Remove(item);
+        }
+
+        public void HandToInventory(Champoin ch)
+        {
+            if (Hand == null)
+                throw new InvalidOperationException("Hand is empty.");
+            ch.Inventory.Add(Hand);
+            Hand = null;
+        }
+
+        public bool AddChampoinToGroup(Champoin champoin)
+        {
+            if (partyGoup.Count == 4)
+                return false;
+
+            var freeSpace = Small4GroupLayout.Instance.AllSpaces.Except(partyGoup.Select(ch => ch.Location?.Space).Where(x => x != null)).First();
+            champoin.Location = new FourthSpaceRouteElement(freeSpace, Location);
+            partyGoup.Add(champoin);
+            return true;
         }
 
         public override void Update(GameTime time)
         {
             base.Update(time);
 
-            if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released /*|| Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter)*/)
+            if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
+                || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
                 var tiles = new List<Tile> { Location };
-                var aimingTile = Location.Neighbours.GetTile(GetShift(ForwardDirection));
+                var aimingTile = Location.Neighbours.GetTile(MapDirection);
                 if (aimingTile != null)
                     tiles.Add(aimingTile);
 
@@ -110,55 +255,14 @@ namespace DungeonMasterEngine.Player
             prevKeyboard = Keyboard.GetState();
         }
 
-
-        public bool ThrowOutItem(uint distance = 0)
+        public void Draw(BasicEffect effect)
         {
-            if (Hand != null)
+
+            foreach (var champoin in PartyGroup)
             {
-                var targetLocation = CheckRoute(distance);
+                champoin.GraphicsProvider?.Draw(effect);
 
-                if (targetLocation != null)
-                {
-                    Hand.Location = targetLocation;
-                    Hand = null;
-                    return true;
-                }
-                else
-                    return false;
             }
-            else
-                return false;
         }
-
-        private Tile CheckRoute(uint distance)
-        {
-            var direction = GetShift(ForwardDirection);
-            var curLocation = Location;
-            for (int i = 0; i < distance; i++)
-            {
-                curLocation = curLocation.Neighbours.GetTile(direction);
-                if (curLocation == null || !curLocation.IsAccessible)
-                    return null;
-            }
-            return curLocation;
-        }
-
-        public void PutToHand(GrabableItem item) => PutToHand(item, null);
-
-        public void PutToHand(GrabableItem item, Champoin ch)
-        {
-            Hand = item;
-
-            ch?.Inventory.Remove(item);
-        }
-
-        public void HandToInventory(Champoin ch)
-        {
-            if (Hand == null)
-                throw new InvalidOperationException("Hand is empty.");
-            ch.Inventory.Add(Hand);
-            Hand = null;
-        }
-
     }
 }

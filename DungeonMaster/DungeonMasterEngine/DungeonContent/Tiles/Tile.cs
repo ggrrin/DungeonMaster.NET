@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
@@ -9,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public abstract class Tile : WorldObject, IStopable
+    public abstract class Tile : WorldObject, IStopable, INeighbourable<Tile>
     {
         protected Tile(Vector3 position) : base(position)
         {
@@ -17,7 +18,11 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             graphicsProviders.AddListOfDrawables(SubItems = new List<IItem>());
         }
 
-        public virtual INeighbours Neighbours { get; set; }
+        public virtual LayoutManager LayoutManager { get; } = new LayoutManager();
+
+        public virtual TileNeighbours Neighbours { get; set; }
+
+        INeighbours<Tile> INeighbourable<Tile>.Neighbours => Neighbours;
 
         public abstract bool IsAccessible { get; }
 
@@ -39,7 +44,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             ContentActivated = true;
             foreach (var i in SubItems.Where(x => x.AcceptMessages))
-                ((TextTag) i).Visible = true;
+                ((TextTag)i).Visible = true;
             $"Activating message received at {GridPosition}".Dump();
         }
 
@@ -47,7 +52,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             ContentActivated = false;
             foreach (var i in SubItems.Where(x => x.AcceptMessages))
-                ((TextTag) i).Visible = false;
+                ((TextTag)i).Visible = false;
             $"Deactivating message recived at {GridPosition}".Dump();
         }
 
@@ -56,20 +61,30 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             //throw new InvalidOperationException("Activator not implemented!");
         }
 
-
-        public virtual void OnObjectEntered(object obj)
+        public virtual void OnObjectEntering(IItem obj)
         {
+            
+        }
+
+        public virtual void OnObjectLeaving(IItem obj)
+        {
+            
+        }
+
+        public virtual void OnObjectEntered(IItem obj)
+        {
+            SubItems.Add(obj);
             ObjectEntered?.Invoke(this, obj);
         }
 
-        public event EventHandler<object> ObjectEntered;
-
-        public virtual void OnObjectLeft(object obj)
+        public virtual void OnObjectLeft(IItem obj)
         {
+            SubItems.Remove(obj);
             ObjectLeft?.Invoke(this, obj);
         }
 
-        public event EventHandler<object> ObjectLeft;
+        public event EventHandler<IItem> ObjectEntered;
+        public event EventHandler<IItem> ObjectLeft;
 
         public void Update(GameTime gameTime)
         {
@@ -79,6 +94,4 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
         }
     }
-
-
 }

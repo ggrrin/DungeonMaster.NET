@@ -1,20 +1,21 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.Interfaces
 {
-    public interface INeighbours : IEnumerable<KeyValuePair<Tile,Point>>
+    public interface INeighbours<TTile> : IEnumerable<Tuple<TTile,MapDirection>> where TTile : INeighbourable<TTile>
     {
 
-        Tile North { get; }
+        //TTile North { get; }
 
-        Tile South { get; }
+        //TTile South { get; }
 
-        Tile East { get; }
+        //TTile East { get; }
 
-        Tile West { get; }
+        //TTile West { get; }
 
-        Tile GetTile(Point shift);
+        //TTile GetTile(Point shift);
     }
 }

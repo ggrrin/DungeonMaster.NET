@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DungeonMasterEngine.Builders.WallActuatorFactories;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
@@ -56,16 +51,18 @@ namespace DungeonMasterEngine.Builders
         {
             CurrentTile = currentTile;
 
-            var sides = currentTile.Neighbours
-                .Where(n => n.Key == null) //only side where is a wall
-                .Select(n =>
+            var sides = 
+                MapDirection.AllSides
+                .Except(currentTile.Neighbours.Select(t => t.Item2))//sides with walls
+                .Select(side =>
                 {
-                    var pos = CurrentTile.GridPosition + n.Value;
+                    var pos = CurrentTile.GridPosition + side;
                     var wall = builder.CurrentMap.GetTileData(pos); //get appropriate WallData
                     return wall == null ? null : new Tuple<TileData,Point,IReadOnlyList<ActuatorItemData>>(wall,pos,
-                        wall.Actuators.Where(x => x.TilePosition == (new Point(-1) * n.Value).ToTilePosition()).ToArray());//select appropriate side
+                        wall.Actuators.Where(x => x.TilePosition == side.Opposite.ToTilePosition())
+                        .ToArray());//select appropriate side
                 })
-                .Where(x => x != null );//filter border nonexisting tiles
+                .Where(x => x != null );//filter map border nonexisting tiles
 
             foreach (var tuple in sides)
             {

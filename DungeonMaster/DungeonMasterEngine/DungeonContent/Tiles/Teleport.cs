@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Interfaces;
@@ -64,51 +65,27 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 DrawFaces = CubeFaces.All,
                 Outter = false,
                 Scale = new Vector3(0.5f, 0.5f, 0.5f),
-                Texture = DrawRenderTarget(),
+                Texture = ResourceProvider.Instance.DrawRenderTarget($"open:{IsOpen};\r\nvisible:{Visible}\r\nscp:{ScopeConstrain}\r\n{TargetTilePosition}\r\n{NextLevelIndex}", Color.Blue, Color.White),
                 Position = Position
             });
         }
 
-        private Texture2D DrawRenderTarget()
+
+
+
+
+        public override void OnObjectEntered(IItem item)
         {
-            var device = ResourceProvider.Instance.Device;
-            RenderTarget2D target = new RenderTarget2D(device, 128, 128);
-            SpriteBatch spriteBatch = new SpriteBatch(device);
-
-            // Set the device to the render target
-            device.SetRenderTarget(target);
-
-            device.Clear(Color.Gray);
-
-            spriteBatch.Begin();
-
-            spriteBatch.DrawString(ResourceProvider.Instance.DefaultFont, $"open:{IsOpen};\r\nvisible:{Visible}\r\nscp:{ScopeConstrain}\r\n{TargetTilePosition}\r\n{NextLevelIndex}", new Vector2(10), Color.White);
-            spriteBatch.End();
-
-            // Reset the device to the back buffer
-            device.SetRenderTarget(null);
-
-            return target;
+            base.OnObjectEntered(item);
+            TeleportItem(item);
         }
 
 
-
-        public override void OnObjectEntered(object obj)
-        {
-            base.OnObjectEntered(obj);
-            TeleportItem(obj);
-        }
-
-
-        private void TeleportItem(object obj)
+        private void TeleportItem(IItem obj)
         {
             if (IsOpen && ScopeConstrain.IsAcceptable(obj))
             {
-                var item = obj as ILocalizable<Tile>;
-                if (item != null)
-                {
-                    item.Location = NextLevelEnter; //TODO rename in interface property
-                }
+                obj.Location = NextLevelEnter; //TODO rename in interface property
             }
         }
 

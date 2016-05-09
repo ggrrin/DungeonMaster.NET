@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators

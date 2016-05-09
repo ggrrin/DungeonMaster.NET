@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Items;
+﻿using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
-using DungeonMasterParser.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

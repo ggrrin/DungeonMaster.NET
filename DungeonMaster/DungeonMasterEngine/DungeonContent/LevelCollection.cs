@@ -8,38 +8,32 @@ namespace DungeonMasterEngine.DungeonContent
     {
         private Queue<DungeonLevel> queue = new Queue<DungeonLevel>();
 
-        public int Count
-        {
-            get
-            {
-                return queue.Count;
-            }
-        }
+        public int Count => queue.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         public IEnumerator<DungeonLevel> GetEnumerator()
         {
             return queue.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)queue).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
 
         public void Add(DungeonLevel item)
         {
             queue.Enqueue(item);
+            foreach (var creature in item.Creatures)
+            {
+                creature.Living = true;
+            }
 
             if (Count > 3)
-                queue.Dequeue();
+            {
+                foreach (var creature in queue.Dequeue().Creatures)
+                {
+                    creature.Living = false;
+                }
+            }
         }
 
         public void Clear()

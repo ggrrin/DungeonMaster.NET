@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Graphics.ResourcesProvides
 {
@@ -66,5 +66,26 @@ namespace DungeonMasterEngine.Graphics.ResourcesProvides
         }
 
         protected virtual void Initialize() { }
+
+        public Texture2D DrawRenderTarget(string text, Color backColor, Color textColor)
+        {
+            RenderTarget2D target = new RenderTarget2D(device, 128, 128);
+            SpriteBatch spriteBatch = new SpriteBatch(device);
+
+            // Set the device to the render target
+            device.SetRenderTarget(target);
+
+            device.Clear(backColor);
+
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(DefaultFont, text , new Vector2(10), textColor );
+            spriteBatch.End();
+
+            // Reset the device to the back buffer
+            device.SetRenderTarget(null);
+
+            return target;
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +17,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             graphicsProviders.SubProviders.Add(wallGraphic);
         }
 
-        public override INeighbours Neighbours
+        public override TileNeighbours Neighbours
         {
             get
             {

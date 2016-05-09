@@ -1,9 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DungeonMasterEngine.DungeonContent.GroupSupport;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
-    public class LivingItem : Item
+    public abstract class LivingItem : Item
     {
-        public LivingItem(Vector3 position) : base(position) {}
+        public abstract IRelationManager RelationManager { get; }
+
+        protected  LivingItem(Vector3 position) : base(position) { }
     }
 }

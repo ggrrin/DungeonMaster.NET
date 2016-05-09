@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
@@ -23,7 +19,7 @@ namespace DungeonMasterEngine.Builders
                 Tile south = null;
                 Tile west = null;
 
-                var neighbours = new Neighbours();
+                var neighbours = new TileNeighbours();
                 if (tilesPositions.TryGetValue(t.GridPosition + new Point(0, -1), out north))
                     neighbours.North = north;
 

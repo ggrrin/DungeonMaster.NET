@@ -11,7 +11,6 @@ using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterParser.Enums;
-using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
 using Door = DungeonMasterEngine.DungeonContent.Tiles.Door;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;

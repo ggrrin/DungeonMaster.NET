@@ -60,6 +60,7 @@
     <Compile Include="Builders\BuilderBase.cs" />
     <Compile Include="Builders\ActuatorFactoryBase.cs" />
     <Compile Include="Builders\ActuatorState.cs" />
+    <Compile Include="Builders\CreatureCreator.cs" />
     <Compile Include="Builders\FloorActuatorFactories\FloorDecorationFactory.cs" />
     <Compile Include="Builders\FloorActuatorFactories\MultiFloorDirectionFactory.cs" />
     <Compile Include="Builders\FloorActuatorFactories\TPCFactory.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Builders\WallActuatorFactories\BasicKeyHoleFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\TimerMultiSwitchFactory.cs" />
     <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\ButtonActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Button.cs" />
     <Compile Include="Builders\WallActuatorFactories\ButtonFactory.cs" />
     <Compile Include="Builders\WallActuatorFactories\ChampoinFactory.cs" />
     <Compile Include="Builders\FloorActuatorCreator.cs" />
@@ -98,11 +99,24 @@
     <Compile Include="DungeonContent\Actuators\ActionState.cs" />
     <Compile Include="DungeonContent\Actuators\ActionStateX.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\CounterActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\LogicGateActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\LogicGate.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LogicTileActivator.cs" />
     <Compile Include="DungeonContent\Actuators\SimpleRemoteActuator.cs" />
+    <Compile Include="DungeonContent\GroupSupport\FourthSpace.cs" />
+    <Compile Include="DungeonContent\GroupSupport\FourthSpaceRouteElement.cs" />
+    <Compile Include="DungeonContent\GroupSupport\GroupLayoutSearcher.cs" />
+    <Compile Include="DungeonContent\GroupSupport\ILayoutable.cs" />
+    <Compile Include="DungeonContent\GroupSupport\ISpaceRouteElement.cs" />
+    <Compile Include="DungeonContent\GroupSupport\N4.cs" />
+    <Compile Include="DungeonContent\Items\DefaultRelationManager.cs" />
     <Compile Include="DungeonContent\Items\IItem.cs" />
+    <Compile Include="DungeonContent\Items\IRelationManager.cs" />
+    <Compile Include="DungeonContent\Items\Large1GroupLayout.cs" />
     <Compile Include="DungeonContent\Items\LivingItem.cs" />
+    <Compile Include="DungeonContent\GroupSupport\Medium2GroupLayout.cs" />
+    <Compile Include="DungeonContent\GroupSupport\Small4GroupLayout.cs" />
+    <Compile Include="DungeonContent\Items\RelationToken.cs" />
+    <Compile Include="DungeonContent\Items\RelationTokenFactory.cs" />
     <Compile Include="DungeonContent\IWorldObject.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\ISpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorSpellFactory.cs" />
@@ -115,17 +129,22 @@
     <Compile Include="DungeonContent\Magic\Symbols\SpellSymbol.cs" />
     <Compile Include="DungeonContent\Magic\Symbols\Factories\SymbolFactory.cs" />
     <Compile Include="DungeonContent\Magic\Symbols\ZoSymbol.cs" />
+    <Compile Include="DungeonContent\GroupSupport\LayoutManager.cs" />
+    <Compile Include="DungeonContent\GroupSupport\IGroupLayout.cs" />
+    <Compile Include="DungeonContent\Tiles\INeighbourable.cs" />
+    <Compile Include="DungeonContent\GroupSupport\ISpace.cs" />
     <Compile Include="DungeonContent\Tiles\ITileContentActivator.cs" />
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\AlcoveActuator.cs" />
     <Compile Include="DungeonContent\Constrains\GrabableItemConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\DirectionPartyActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Floor\PartDirectionConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\FloorActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\KeyHoleActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LeverActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\PartyPossesionActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SwitchActuator.cs" />
     <Compile Include="DungeonContent\Items\DecorationItem.cs" />
+    <Compile Include="DungeonContent\MapDirection.cs" />
     <Compile Include="DungeonContent\Tiles\TileContentActivator.cs" />
     <Compile Include="GameConsoleContent\Base\BaseInterpreter.cs" />
     <Compile Include="GameConsoleContent\Base\CommandParser.cs" />
@@ -157,6 +176,7 @@
     <Compile Include="GameConsoleContent\Factories\TeleportFactory.cs" />
     <Compile Include="GameSynchronizationContext.cs" />
     <Compile Include="Graphics\CubeFaces.cs" />
+    <Compile Include="Helpers\SearchFabricElement.cs" />
     <Compile Include="Interfaces\IConstrain.cs" />
     <Compile Include="Interfaces\IMovable.cs" />
     <Compile Include="Helpers\WalkDirection.cs" />
@@ -177,7 +197,7 @@
     <Compile Include="DungeonContent\Items\Item.cs" />
     <Compile Include="DungeonContent\LevelCollection.cs" />
     <Compile Include="DungeonContent\Items\Miscellaneous.cs" />
-    <Compile Include="DungeonContent\MultiNeighbours.cs" />
+    <Compile Include="DungeonContent\MultiTileNeighbours.cs" />
     <Compile Include="Interfaces\ILevelConnector.cs" />
     <Compile Include="Helpers\Animator.cs" />
     <Compile Include="DungeonContent\Dungeon.cs" />
@@ -191,6 +211,8 @@
     <Compile Include="Interfaces\IPOVInputProvider.cs" />
     <Compile Include="Interfaces\IStopable.cs" />
     <Compile Include="Helpers\ObjectDumper.cs" />
+    <Compile Include="Player\DefaultPOVInput.cs" />
+    <Compile Include="Player\LocationChangedEventArgs.cs" />
     <Compile Include="Player\PointOfViewCamera.cs" />
     <Compile Include="Player\FreeLookCamera.cs" />
     <Compile Include="Engine.cs" />
@@ -200,7 +222,7 @@
     <Compile Include="Interfaces\IGraphicProvider.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IViewStatus.cs" />
-    <Compile Include="DungeonContent\Neighbours.cs" />
+    <Compile Include="DungeonContent\TileNeighbours.cs" />
     <Compile Include="Builders\LegacyMapBuilder.cs" />
     <Compile Include="DungeonContent\Items\Potion.cs" />
     <Compile Include="Player\Theron.cs" />
@@ -230,6 +252,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="actions.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="combos.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="creatures.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,8 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     internal class ScreenStream : Stream
     {
+        StreamWriter fileOutput = new StreamWriter("console_output.log");
+
         public override bool CanRead => false;
 
         public override bool CanSeek => false;
@@ -49,8 +51,22 @@ namespace DungeonMasterEngine.GameConsoleContent
             line += new string(text, offset, count);
 
             var s = line.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            lines.AddRange(s.TakeWhile((str, index) => index < (s.Length - 1)));
+            var newEntries = s.TakeWhile((str, index) => index < (s.Length - 1));
+            lines.AddRange(newEntries);
+            LogToFile(newEntries);
             line = s[s.Length - 1];//TODO Lengt bounds
+        }
+
+        private void LogToFile(IEnumerable<string> newEntries)
+        {
+            foreach (var entry in newEntries)
+                fileOutput.WriteLine(entry);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            fileOutput.Dispose();
         }
     }
 }

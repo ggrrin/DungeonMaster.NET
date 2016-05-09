@@ -1,5 +1,3 @@
-using System;
-
 namespace DungeonMasterEngine.DungeonContent.Magic.Symbols
 {
     public abstract class SpellSymbol

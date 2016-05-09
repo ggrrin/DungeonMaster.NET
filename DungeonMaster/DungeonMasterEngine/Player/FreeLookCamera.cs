@@ -1,10 +1,6 @@
-﻿
-using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.Player
 {
@@ -34,7 +30,7 @@ namespace DungeonMasterEngine.Player
         public Vector3 RighDirection => -LeftDirection; 
         protected Point sceenCenter => new Point(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2); 
 
-        public float TranslationVeloctiy { get; set; } = 2 * 2.2f;
+        public float TranslationVelocity { get; set; } = 2 * 2.2f;
 
 
         public Matrix View { get; private set; }
@@ -55,7 +51,7 @@ namespace DungeonMasterEngine.Player
             {
                 var move = GetTranslation(time);
                 if (move != Vector3.Zero)
-                    Position += TranslationVeloctiy * (float)time.ElapsedGameTime.TotalSeconds * Vector3.Normalize(move);//same speed for oblique direction 
+                    Position += TranslationVelocity * (float)time.ElapsedGameTime.TotalSeconds * Vector3.Normalize(move);//same speed for oblique direction 
 
                 var rotation = GetRotation(time);
 
@@ -65,9 +61,16 @@ namespace DungeonMasterEngine.Player
 
                 ForwardDirection = Vector3.Transform(ForwardDirection, rotation);
                 ForwardDirection.Normalize();
+                var t = ForwardDirection;
+                if (t.Y > 0.75f)
+                    t.Y = 0.75f;
+                if (t.Y < -0.75f)
+                    t.Y = -0.75f;
+
+                t.Normalize();
+                ForwardDirection = t;
 
                 View = Matrix.CreateLookAt(Position, Position + ForwardDirection, Up);
-
             }
             base.Update(time);
         }
@@ -119,11 +122,13 @@ namespace DungeonMasterEngine.Player
                 if (keys.IsKeyDown(Keys.Down))
                     horizontalAngle = move;
             }
+
+
+
+            horizontalAngle = MathHelper.Clamp(horizontalAngle, -0.13f, 0.13f);
             
             Quaternion rotationUp = Quaternion.CreateFromAxisAngle(Up, verticalAngle);
             Quaternion rotationLeft = Quaternion.CreateFromAxisAngle(-Vector3.Normalize(Vector3.Cross(ForwardDirection, Up)), horizontalAngle);
-
-
 
             return Quaternion.Concatenate(rotationUp, rotationLeft);
         }

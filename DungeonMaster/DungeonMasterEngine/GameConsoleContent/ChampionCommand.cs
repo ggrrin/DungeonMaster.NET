@@ -1,11 +1,6 @@
 ﻿using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 
 namespace DungeonMasterEngine.GameConsoleContent
@@ -67,7 +62,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             if(champoin != null)
             {
                 Actuator.RemoveChampoin();
-                ConsoleContext.AppContext.Theron.PartyGroup.Add(champoin);
+                ConsoleContext.AppContext.Theron.AddChampoinToGroup(champoin);
                 Output.WriteLine("Champoin succesfully added to group.");
             }
         }

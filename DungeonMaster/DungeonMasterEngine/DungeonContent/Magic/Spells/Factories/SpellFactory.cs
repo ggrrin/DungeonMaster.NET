@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 {
@@ -11,6 +10,6 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 
         public abstract IEnumerable<SpellSymbol> CastingSequence { get; }
 
-        public abstract  ISpell CastSpell(Tile location, Point startDirection);
+        public abstract  ISpell CastSpell(Tile location, MapDirection startDirection);
     }
 }

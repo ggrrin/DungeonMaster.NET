@@ -7,9 +7,13 @@ namespace DungeonMasterEngine.DungeonContent.Items
 {
     public abstract class Item : WorldObject,  IItem
     {
+        private Tile location;
         public Graphic Graphics { get; set; }
-
         public bool Visible { get; set; } = true;
+        public bool AcceptMessages { get; set; }
+
+        public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
+        public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
 
         public override Vector3 Position
         {
@@ -26,29 +30,6 @@ namespace DungeonMasterEngine.DungeonContent.Items
             }
         }
 
-        protected Item(Vector3 position) : base(position)
-        {
-            Graphics = new CubeGraphic
-            {
-                Position = position,
-                Scale = new Vector3(0.2f),
-                DrawFaces = CubeFaces.All ^ CubeFaces.Floor,
-                Outter = true
-            };
-        }
-
-        public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
-        public bool AcceptMessages { get; set; }
-
-        public virtual GrabableItem ExchangeItems(GrabableItem item)
-        {
-            return item;
-        }
-
-        public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
-
-        private Tile location;
-
         public Tile Location
         {
             get
@@ -59,19 +40,37 @@ namespace DungeonMasterEngine.DungeonContent.Items
             set
             {
                 //old
-                location?.SubItems.Remove(this);
                 location?.OnObjectLeft(this);
 
                 location = value;
                 
-                //new
-                location?.SubItems.Add(this);
-                Position = value?.Position ?? Vector3.Zero;
                 location?.OnObjectEntered(this);
-
+                OnLocationChanged();
             }
         }
 
-        public virtual void Update(GameTime gameTime) { }
+        protected Item(Vector3 position) : base(position)
+        {
+            Graphics = new CubeGraphic
+            {
+                Position = position,
+                Scale = new Vector3(0.25f),
+                DrawFaces = CubeFaces.All ^ CubeFaces.Floor,
+                Outter = true
+            };
+        }
+
+        public virtual GrabableItem ExchangeItems(GrabableItem item)
+        {
+            return item;
+        }
+
+        protected virtual void OnLocationChanged()
+        {
+            Position = location?.Position ?? Vector3.Zero;
+        }
+
+        public virtual void Update(GameTime gameTime)
+        { }
     }
 }

@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterParser.Enums;
-using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 {
@@ -11,6 +9,6 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
     {
         public override IEnumerable<SpellSymbol> CastingSequence { get; } = new[] { SymbolFactory<ZoSymbol>.Instance.Symbol};
 
-        public override ISpell CastSpell(Tile location, Point startDirection) => new OpenDoorSpell(location, startDirection);
+        public override ISpell CastSpell(Tile location, MapDirection startDirection) => new OpenDoorSpell(location, startDirection);
     }
 }

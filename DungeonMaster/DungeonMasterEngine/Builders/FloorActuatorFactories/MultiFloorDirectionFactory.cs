@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 using DungeonMasterEngine.DungeonContent.Constrains;

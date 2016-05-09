@@ -79,7 +79,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 if (value != null)
                 {
                     nextLevelEnter = value;
-                    Neighbours = new MultiNeighbours(new Neighbours(Neighbours), new Neighbours(value.Neighbours));
+                    Neighbours = new MultiTileNeighbours(new TileNeighbours(Neighbours), new TileNeighbours(value.Neighbours));
                     NextLevelEnter.Neighbours = Neighbours;
                 }
             }

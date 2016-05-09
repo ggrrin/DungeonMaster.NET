@@ -7,12 +7,12 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {
     public class OpenDoorSpell : Spell
     {
-        private readonly Point startDirection;
+        private readonly MapDirection startDirection;
         private readonly Animator<OpenDoorSpell, Tile> animator = new Animator<OpenDoorSpell, Tile>();
 
-        public override float TranslationVeloctiy { get; protected set; } = 2 * 2.2f;
+        public override float TranslationVelocity { get; protected set; } = 2 * 2.2f;
 
-        public OpenDoorSpell(Tile location, Point startDirection) : base(location.Position)
+        public OpenDoorSpell(Tile location, MapDirection startDirection) : base(location.Position)
         {
             this.startDirection = startDirection;
             Location = location;
@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         protected override void OnSpellUpdate(GameTime gameTime)
         {
             if (animator.IsAnimating)
-                animator.GetTranslation(gameTime);
+                Position += animator.GetTranslation(gameTime);
             else
             {
                 if (!TryFinishSpell())

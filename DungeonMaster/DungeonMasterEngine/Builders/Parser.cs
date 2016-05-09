@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.Builders.WallActuatorFactories;
 using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.Builders
@@ -20,7 +19,7 @@ namespace DungeonMasterEngine.Builders
             if (!sequence.Any())
                 return null;
 
-            return Factories.SingleOrDefault(x => x.RequireItem.OptionalyEquals(hasItems) && x.MatchLine(sequence)); //TODO optimize
+            return Factories.FirstOrDefault(x => x.RequireItem.OptionalyEquals(hasItems) && x.MatchLine(sequence)); //TODO optimize
         }
     }
 }

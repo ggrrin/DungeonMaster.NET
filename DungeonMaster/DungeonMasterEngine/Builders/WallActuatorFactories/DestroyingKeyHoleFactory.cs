@@ -6,7 +6,6 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders.WallActuatorFactories
