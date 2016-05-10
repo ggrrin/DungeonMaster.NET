@@ -15,7 +15,9 @@ namespace DungeonMasterEngine.Helpers
         private Action<TTile, int, TBundle> action;
 
         private int dimension => processedTiles[0]?.GetLength(0) ?? 0;
-        private int maxDistance => (dimension - 1) / 2;
+        private int maxRememberedDistance => (dimension - 1) / 2;
+        private int maxSpecifedDistance;
+        private int maxSpecifiedDimension => (maxSpecifedDistance*2) + 1;
 
         private readonly Queue<TTile> queue = new Queue<TTile>();
         private int originLevel;
@@ -27,8 +29,9 @@ namespace DungeonMasterEngine.Helpers
         {
             this.originTile = originTile;
             currentFlag++;
+            maxSpecifedDistance = maxDistance;
 
-            if (processedTiles == null || this.maxDistance <= maxDistance)
+            if (processedTiles == null || this.maxRememberedDistance <= maxDistance)
             {
                 processedTiles = new SearchFabricElement<TTile, TBundle>[3][,];
                 for (int i = 0; i < 3; i++)
@@ -52,7 +55,6 @@ namespace DungeonMasterEngine.Helpers
         {
             OnSearchStart();
             int layer = 0;
-            int tileCount = 0;
             while (queue.Count > 0)
             {
                 TTile currentTile = queue.Dequeue();
@@ -73,10 +75,7 @@ namespace DungeonMasterEngine.Helpers
 
                 AddSucessors(++layer, currentTile);
 
-                tileCount++;
             }
-            if (tileCount == 0)
-                throw new Exception();
 
             OnSearchFinished();
         }
@@ -89,6 +88,14 @@ namespace DungeonMasterEngine.Helpers
         protected virtual void OnSearchFinished()
         {
             Searching = false;
+        }
+
+        public void ClearBundles()
+        {
+            foreach (var layer in processedTiles)
+                for (int i = 0; i < layer.GetLength(0); i++)
+                    for (int j = 0; j < layer.GetLength(1); j++)
+                        layer[i, j].Bundle = default(TBundle);
         }
 
         protected virtual void AddSucessors(int layer, TTile currentTile)
@@ -145,7 +152,7 @@ namespace DungeonMasterEngine.Helpers
         {
             var relative = GetRelativePos(pos);
 
-            if (relative.X >= 0 && relative.X < dimension && relative.Y >= 0 && relative.Y < dimension && level >= originLevel - 1 && level <= originLevel + 1)
+            if (relative.X >= 0 && relative.X < maxSpecifiedDimension && relative.Y >= 0 && relative.Y < maxSpecifiedDimension && level >= originLevel - 1 && level <= originLevel + 1)
                 return processedTiles[originLevel - level + 1][relative.X, relative.Y].Flag;
             else
                 return null;
@@ -162,7 +169,7 @@ namespace DungeonMasterEngine.Helpers
         private Point GetRelativePos(Point pos)
         {
             var relative = pos - originTile.GridPosition;
-            relative += new Point(dimension / 2);//shift to natural position
+            relative += new Point(maxSpecifiedDimension/ 2);//shift to natural position
             return relative;
         }
 

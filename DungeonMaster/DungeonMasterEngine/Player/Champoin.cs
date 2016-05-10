@@ -64,7 +64,7 @@ namespace DungeonMasterEngine.Player
                 }
                 else//set Position at first
                 {
-                    if (!value.SpaceParent.LayoutManager.TryGetSpace(this, value.Space))
+                    if (!value.Tile.LayoutManager.TryGetSpace(this, value.Space))
                         throw new ArgumentException("Location is not accessable!");
 
                     Position = value.StayPoint;

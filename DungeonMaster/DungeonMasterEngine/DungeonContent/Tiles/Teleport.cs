@@ -17,7 +17,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public bool IsOpen => ContentActivated;
 
-        public override bool ContentActivated
+        public sealed override bool ContentActivated
         {
             get
             {
@@ -83,7 +83,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void TeleportItem(IItem obj)
         {
-            if (IsOpen && ScopeConstrain.IsAcceptable(obj))
+            if (IsOpen && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)//TODO how to set taget location creatures
             {
                 obj.Location = NextLevelEnter; //TODO rename in interface property
             }

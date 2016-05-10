@@ -34,5 +34,13 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
                 throw new InvalidOperationException("Record is not in collection.");
             entitiesSpaces.RemoveAt(index);
         }
+
+        public IEnumerable<ILayoutable> GetEntities(ISpace space)
+        {
+            return entitiesSpaces
+                .Where(t => t.Item2.Area.Intersects(space.Area))
+                .Select(t => t.Item1);
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
@@ -11,6 +12,7 @@ using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
+using DungeonMasterParser;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
@@ -34,16 +36,16 @@ namespace DungeonMasterEngine.Player
         {
             Location = location;
 
-            var x = new[]{
-            //TODO remove champion mocap
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
-            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
-            {
-                throw new Exception();
-            }
+            //var x = new[]{
+            ////TODO remove champion mocap
+            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
+            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
+            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
+            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
+            //if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            //{
+            //    throw new Exception();
+            //}
         }
 
         protected override bool CanMoveToTile(Tile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
@@ -82,8 +84,8 @@ namespace DungeonMasterEngine.Player
                 var prevLocation = champion.Location;
                 newLocation.LayoutManager.TryGetSpace(champion, prevLocation.Space);
                 champion.Location = new FourthSpaceRouteElement(prevLocation.Space, newLocation);
-                prevLocation.SpaceParent.LayoutManager.FreeSpace(champion, prevLocation.Space);
-            } 
+                prevLocation.Tile.LayoutManager.FreeSpace(champion, prevLocation.Space);
+            }
         }
 
         protected override void OnLocationChanged(Tile oldLocation, Tile newLocation)
@@ -98,7 +100,7 @@ namespace DungeonMasterEngine.Player
 
         private void RotateParty(MapDirection oldDirection, MapDirection newDirection)
         {
-            var targetLocation = partyGoup.FirstOrDefault()?.Location?.SpaceParent;
+            var targetLocation = partyGoup.FirstOrDefault()?.Location?.Tile;
 
             if (targetLocation != null)
             {
@@ -249,10 +251,36 @@ namespace DungeonMasterEngine.Player
                         Hand = closest.Item1.ExchangeItems(Hand);
                     }
                 }
+                else
+                {
+                    Fight();
+                }
             }
 
             prevMouse = Mouse.GetState();
             prevKeyboard = Keyboard.GetState();
+        }
+
+        private void Fight()
+        {
+            var enemyTile = Location.Neighbours.GetTile(MapDirection);
+            var GroupLayout = partyGoup.First().GroupLayout;
+            if (enemyTile != null)
+            {
+                var sortedEnemyLocation = GroupLayout.AllSpaces
+                    .Where(s => s.Sides.Contains(MapDirection.Opposite))
+                    .Concat(GroupLayout.AllSpaces
+                        .Where(s => s.Sides.Contains(MapDirection)))
+                    .Where(s => !enemyTile.LayoutManager.IsFree(s));
+
+                var hitLocation = sortedEnemyLocation.FirstOrDefault();
+
+                var enemy = enemyTile.LayoutManager.GetEntities(hitLocation).FirstOrDefault();
+                if (enemy != null)
+                {
+                    ((Creature)enemy).Kill();
+                }
+            }
         }
 
         public void Draw(BasicEffect effect)
