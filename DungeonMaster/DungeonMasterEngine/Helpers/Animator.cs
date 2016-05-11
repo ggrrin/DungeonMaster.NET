@@ -2,72 +2,72 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Player;
 
 namespace DungeonMasterEngine.Helpers
 {
     public class Animator<Movable, Stopable> where Stopable : IStopable where Movable : IMovable<Stopable>
     {
-        public bool IsAnimating => NewLocation != null;
-        public Stopable NewLocation { get; private set; }
+        private Stopable newLocation, oldLocation;
         private Movable movableObject;
-        private Vector3 animationTranslation;
         private TaskCompletionSource<bool> animationPromise;
-        private bool setTargetLocation;
+        private bool setLocation;
 
-        public async Task MoveToAsync(Movable movableObject, Stopable newLocation)
+        public bool IsAnimating { get; private set; }
+        private double time; //ms
+        private Vector3 translation;
+        private double timeDuration;
+
+        public async Task MoveToAsync(Movable movableObject, Stopable newLocation, bool setLocation)
         {
-            MoveTo(movableObject, newLocation);
-
             animationPromise = new TaskCompletionSource<bool>();
+            MoveTo(movableObject, newLocation, setLocation);
             await animationPromise.Task;
         }
 
-        public void MoveTo(Movable movableObject, Stopable newLocation, bool setTargetLocation = true)
+        public void MoveTo(Movable movableObject, Stopable newLocation, bool setLocation)
         {
             if (IsAnimating)
-                throw new InvalidOperationException("Animation in progress.");
+                FinsihAnimation();
+
+            this.newLocation = newLocation;
             this.movableObject = movableObject;
-            this.setTargetLocation = setTargetLocation;
+            this.oldLocation = movableObject.Location;
+            this.setLocation = setLocation;
 
-            NewLocation = newLocation;
-
-            animationTranslation = NewLocation.StayPoint - movableObject.Position;
+            IsAnimating = true;
+            time = 0;
+            translation = this.newLocation.StayPoint - oldLocation.StayPoint;
+            timeDuration =1000 * translation.Length() / movableObject.TranslationVelocity;
         }
 
-        public Vector3 GetTranslation(GameTime time)
-        {
-            if (!IsAnimating)
-                throw new InvalidOperationException("Animation NOT in progress.");
 
-            var translation = movableObject.TranslationVelocity * (float)time.ElapsedGameTime.TotalSeconds * Vector3.Normalize(animationTranslation);
-
-            if (translation.LengthSquared() >= animationTranslation.LengthSquared())
-            {
-                return FinishAnimation();
-            }
-            else
-            {//animate
-                animationTranslation -= translation;
-                return translation;
-            }
-        }
-
-        private Vector3 FinishAnimation()
-        {
-            if (setTargetLocation)
-                movableObject.Location = NewLocation;
-            NewLocation = default(Stopable);//to notify animation stopped
-            animationPromise?.SetResult(true);
-            return animationTranslation;
-        }
-
-        public void QuickFinish()
+        public void Update(GameTime gameTime)
         {
             if (IsAnimating)
             {
-                FinishAnimation();
+                time += gameTime.ElapsedGameTime.TotalMilliseconds;
+                double timeFactor = time / timeDuration;
+
+                if (timeFactor <= 1 && timeFactor > 0)
+                {
+                    movableObject.Position = oldLocation.StayPoint + translation * (float)timeFactor;
+                }
+                else
+                {
+                    FinsihAnimation();
+                }
             }
         }
 
+        private void FinsihAnimation()
+        {
+            if (setLocation)
+                movableObject.Location = newLocation;
+
+            movableObject.Position = newLocation.StayPoint;
+            IsAnimating = false;
+            animationPromise?.SetResult(true); 
+        }
     }
 }

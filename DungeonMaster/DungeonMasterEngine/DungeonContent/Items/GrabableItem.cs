@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
@@ -12,6 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
         public GrabableItem(Vector3 position) : base(position)
         {
+            ((CubeGraphic) Graphics).Texture = ResourceProvider.Instance.DrawRenderTarget(this.GetType().Name, Color.Green, Color.White);
 
         }
 

@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
         public IEnumerable<ISpaceRouteElement> GetToSide(ILayoutable entity, Tile currentTile, MapDirection mapDirection)
         {
             //TODO remake
-            ISpace currentSpace = currentTile.LayoutManager.FindCurrentSpace(entity);
+            ISpace currentSpace = entity.Location.Space;// currentTile.LayoutManager.FindCurrentSpace(entity);
             ISpace destSpace = null;
 
             searcher.LayoutManager = currentTile.LayoutManager;
@@ -42,13 +42,12 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
                 }
             });
 
-            Debug.Assert(destSpace != null);
-            return searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile));
+            return destSpace != null ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile)) : null;
         }
         private IEnumerable<ISpaceRouteElement> GetToSpace(ILayoutable entity, Tile currentTile, ISpace destSpace)
         {
             bool found = false;
-            ISpace currentSpace = currentTile.LayoutManager.FindCurrentSpace(entity);
+            ISpace currentSpace = entity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
 
             if (currentSpace == destSpace)
                 return new FourthSpaceRouteElement(currentSpace, currentTile).ToEnumerable();
@@ -69,7 +68,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
         public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILayoutable entity, Tile currentTile, Tile targetTile)
         {
             var moveDirection = currentTile.Neighbours.Single(t => t.Item1 == targetTile).Item2;
-            var currentSpace = currentTile.LayoutManager.FindCurrentSpace(entity);
+            var currentSpace = entity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
 
             var curTileBridges = entity.GroupLayout.AllSpaces
                 .Where(s => s.Sides.Contains(moveDirection))

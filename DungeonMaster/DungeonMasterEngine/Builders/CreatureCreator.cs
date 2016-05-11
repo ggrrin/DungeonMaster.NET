@@ -7,6 +7,7 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -23,6 +24,7 @@ namespace DungeonMasterEngine.Builders
         {
             var creatureDescriptor = builder.Data.CreatureDescriptors[(int)creature.Type];
             var duration = creatureDescriptor.MovementDuration * 1000 / 6;
+            duration = MathHelper.Clamp(duration, 500, 1200);
             var layout = GetGroupLayout(creature);
             var res = new List<Creature>();
 

@@ -17,7 +17,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (Parameters.Length == 0)
             {
                 if (theron.Hand != null)
-                    Output.WriteLine(theron.Hand.DumpString());
+                    Output.WriteLine(theron.Hand.ToString());
                 else
                     Output.WriteLine("Empty");
             }

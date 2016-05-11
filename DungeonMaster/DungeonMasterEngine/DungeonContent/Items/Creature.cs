@@ -83,6 +83,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
             ((ILocalizable<ISpaceRouteElement>)this).Location = location;
             RelationManager = new DefaultRelationManager(relationToken, enemiesTokens);
+            ((CubeGraphic) Graphics).Texture = ResourceProvider.Instance.DrawRenderTarget("creature", Color.Red, Color.White);
         }
 
         public override GrabableItem ExchangeItems(GrabableItem item)
@@ -178,7 +179,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
             {
                 //free previous location
                 location?.Tile.LayoutManager.FreeSpace(this, location.Space);
-                await animator.MoveToAsync(this, destination);
+                await animator.MoveToAsync(this, destination, setLocation: true);
                 return true;
             }
             else
@@ -314,7 +315,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
                 }
 
                 whileLoop:
-                await Task.Yield();
+                await Task.Delay(100);
             }
         }
 
@@ -328,11 +329,10 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
             var locEnum = sortedEnemyLocation.GetEnumerator();
 
-            await Task.Yield();
 
             while (locEnum.MoveNext() && living)
             {
-                await Task.Yield();
+                await Task.Delay(100);
 
                 if (enemyTile.LayoutManager.WholeTileEmpty)
                     break;
@@ -360,8 +360,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
         public override void Update(GameTime time)
         {
             base.Update(time);
-            if (animator.IsAnimating)
-                Position += animator.GetTranslation(time);
+            animator.Update(time);
         }
 
         protected override void OnLocationChanged()

@@ -4,7 +4,7 @@ namespace DungeonMasterEngine.Interfaces
 {
     public interface IMovable<U> : ILocalizable<U> where U : IStopable
     {
-        Vector3 Position { get; }
+        Vector3 Position { get; set; }
         float TranslationVelocity { get; }
     }
 }

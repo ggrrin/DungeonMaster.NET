@@ -24,8 +24,8 @@ namespace DungeonMasterEngine.Player
             set
             {
                 name = value;
-                ((CubeGraphic) GraphicsProvider).Outter = true;
-                ((CubeGraphic) GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget(name, Color.Blue, Color.White);
+                ((CubeGraphic)GraphicsProvider).Outter = true;
+                ((CubeGraphic)GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget(name, Color.Blue, Color.White);
             }
         }
 
@@ -58,9 +58,7 @@ namespace DungeonMasterEngine.Player
             {
                 if (location != null)
                 {
-                    animator.QuickFinish();
-                    Position = location.StayPoint;
-                    animator.MoveTo(this, value, setTargetLocation: false);
+                    animator.MoveTo(this, value, setLocation: false);
                 }
                 else//set Position at first
                 {
@@ -86,9 +84,7 @@ namespace DungeonMasterEngine.Player
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if (animator.IsAnimating)
-                Position += animator.GetTranslation(gameTime);
+            animator.Update(gameTime);
         }
 
         public override string ToString()

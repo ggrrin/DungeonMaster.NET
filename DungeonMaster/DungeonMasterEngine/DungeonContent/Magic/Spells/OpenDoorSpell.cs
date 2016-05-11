@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
@@ -19,33 +20,19 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         }
 
 
-        public override void Run()
+        public override async void Run()
         {
-            if (animator.IsAnimating)
-                throw new InvalidOperationException();
-            StartNextMove();
-        }
-
-        private void StartNextMove()
-        {
-            var moveTile = Location.Neighbours.GetTile(startDirection);
-            if (moveTile != null)
-                animator.MoveTo(this, moveTile);
-            else
-                FinishSpell();
+            Tile moveTile = null; 
+            while (!TryFinishSpell() && null != (moveTile = Location.Neighbours.GetTile(startDirection)))
+            {
+                await animator.MoveToAsync(this, moveTile, setLocation: true);
+            }
+            FinishSpell();
         }
 
         protected override void OnSpellUpdate(GameTime gameTime)
         {
-            if (animator.IsAnimating)
-                Position += animator.GetTranslation(gameTime);
-            else
-            {
-                if (!TryFinishSpell())
-                    StartNextMove();
-                else
-                    FinishSpell();
-            }
+            animator.Update(gameTime);
         }
 
         private bool TryFinishSpell()

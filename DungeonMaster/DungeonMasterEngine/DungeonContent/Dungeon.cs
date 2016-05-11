@@ -22,7 +22,6 @@ namespace DungeonMasterEngine.DungeonContent
 
         public BasicEffect Effect { get; private set; }
 
-
         public IDungonBuilder Builder { get; }
 
         public LevelCollection ActiveLevels { get; }
@@ -39,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(0, null);//new Point(3, 14));
+            var l = LoadLevel(2, new Point(9, 40));
             Theron = new Theron(l.StartTile, Game);
             Game.Components.Add(Theron);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;

@@ -87,22 +87,19 @@ namespace DungeonMasterEngine.Player
 
         protected override Vector3 GetTranslation(GameTime time)
         {
+            animator.Update(time);
+
             if (animator.IsAnimating)
+                return Vector3.Zero;
+
+            Point? translation = GetTranslation();
+            if (translation != null)
             {
-                return animator.GetTranslation(time);
-            }
-            else
-            {
-                var translation = GetTranslation();
-                if (translation != null)
+                var newLocation = location.Neighbours.GetTile(new MapDirection(translation.Value));
+                if (CanMoveToTile(newLocation))
                 {
-                    var newLocation = location.Neighbours.GetTile(new MapDirection(translation.Value));
-                    if (CanMoveToTile(newLocation))
-                    {
-                        OnLocationChanging(Location, newLocation);
-                        animator.MoveTo(this, newLocation);
-                        return animator.GetTranslation(time);
-                    }
+                    OnLocationChanging(Location, newLocation);
+                    animator.MoveTo(this, newLocation, setLocation: true);
                 }
             }
 

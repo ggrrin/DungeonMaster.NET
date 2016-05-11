@@ -36,16 +36,16 @@ namespace DungeonMasterEngine.Player
         {
             Location = location;
 
-            //var x = new[]{
-            ////TODO remove champion mocap
-            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
-            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
-            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
-            //new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
-            //if (x.Any(champoin => !AddChampoinToGroup(champoin)))
-            //{
-            //    throw new Exception();
-            //}
+            var x = new[]{
+            //TODO remove champion mocap
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
+            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
+            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            {
+                throw new Exception();
+            }
         }
 
         protected override bool CanMoveToTile(Tile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
@@ -77,7 +77,8 @@ namespace DungeonMasterEngine.Player
 
         private void MovePartyToRight(Tile newLocation)
         {
-            Debug.Assert(newLocation.LayoutManager.WholeTileEmpty);
+            if(!newLocation.LayoutManager.WholeTileEmpty)
+                throw  new InvalidOperationException();
 
             foreach (var champion in PartyGroup)
             {

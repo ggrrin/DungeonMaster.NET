@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             var theron = ConsoleContext.AppContext.Theron;
             var spellFactory = symbolParser.ParseSpell(Parameters);
             if (spellFactory != null)
-                spellFactory.CastSpell(theron.Location, theron.MapDirection);
+                spellFactory.CastSpell(theron.Location, theron.MapDirection).Run();
             else
                 Output.WriteLine("Invalid spell symbols.");
 
