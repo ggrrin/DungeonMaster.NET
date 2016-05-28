@@ -30,14 +30,23 @@ namespace DungeonMasterEngine.Player
             {
                 return mapDirection;
             }
-            private set
+            set
             {
-                var oldDirection = mapDirection;
-                if (mapDirection != value)
-                {
-                    mapDirection = value;
-                    OnMapDirectionChanged(oldDirection, mapDirection);
-                }
+                SetMapDirection(value, setForwardDirection: true);
+            }
+        }
+
+        private void SetMapDirection(MapDirection value, bool setForwardDirection)
+        {
+            var oldDirection = mapDirection;
+            if (mapDirection != value)
+            {
+                mapDirection = value;
+
+                if(setForwardDirection)
+                    ForwardDirection = new Vector3(mapDirection.RelativeShift.X, 0, mapDirection.RelativeShift.Y);
+
+                OnMapDirectionChanged(oldDirection, mapDirection);
             }
         }
 
@@ -110,7 +119,7 @@ namespace DungeonMasterEngine.Player
         {
             Point? shift = GetShift(ForwardDirection);
             if (shift != null)
-                MapDirection = new MapDirection(shift.Value);
+                SetMapDirection(new MapDirection(shift.Value), setForwardDirection: false);
 
             Vector3 moveDirection = Vector3.Zero;
 

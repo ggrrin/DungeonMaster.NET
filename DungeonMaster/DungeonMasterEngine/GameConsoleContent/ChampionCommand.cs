@@ -45,29 +45,29 @@ namespace DungeonMasterEngine.GameConsoleContent
                 return;
             }
 
-            Output.WriteLine(Actuator.Champoin);
+            Output.WriteLine(Actuator.Champion);
 
             var getOption = new string[] { "Reincarnate", "rescue" };
             var res = await GetFromItemIndex(getOption);
 
-            Champoin champoin = null;
+            Champion champion = null;
             if (res == getOption[0])
-                champoin = await ReincarnateInterpreter();
+                champion = await ReincarnateInterpreter();
             else if (res == getOption[1])
-                champoin = Actuator.Champoin;
+                champion = Actuator.Champion;
             else            
                 return;
             
 
-            if(champoin != null)
+            if(champion != null)
             {
                 Actuator.RemoveChampoin();
-                ConsoleContext.AppContext.Theron.AddChampoinToGroup(champoin);
+                ConsoleContext.AppContext.Theron.AddChampoinToGroup(champion);
                 Output.WriteLine("Champoin succesfully added to group.");
             }
         }
 
-        private async Task<Champoin> ReincarnateInterpreter()
+        private async Task<Champion> ReincarnateInterpreter()
         {
             Output.WriteLine("Write first name.");
             string firstName = await Input.ReadLineAsync();
@@ -78,9 +78,9 @@ namespace DungeonMasterEngine.GameConsoleContent
             Output.WriteLine("Write title.");
             string title = await Input.ReadLineAsync();
 
-            Actuator.Champoin.Name = $"{firstName} {lastName}";
-            Actuator.Champoin.Title = title;
-            return Actuator.Champoin;
+            Actuator.Champion.Name = $"{firstName} {lastName}";
+            Actuator.Champion.Title = title;
+            return Actuator.Champion;
 
         }
     }

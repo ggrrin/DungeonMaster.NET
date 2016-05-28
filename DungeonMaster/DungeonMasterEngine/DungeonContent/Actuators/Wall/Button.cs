@@ -18,7 +18,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public Button(Vector3 position, Tile targetTile, ActionStateX action) : base(targetTile, action, position)
         { }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             SendMessageAsync(activated: true);
             return base.ExchangeItems(item);

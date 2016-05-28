@@ -52,8 +52,8 @@
     <Compile Include="DMEncoding.cs" />
     <Compile Include="Enums\ActionType.cs" />
     <Compile Include="Enums\CarrryLocations.cs" />
-    <Compile Include="FightAction.cs" />
-    <Compile Include="FightCombo.cs" />
+    <Compile Include="FightActionDescriptor.cs" />
+    <Compile Include="FightComboDescriptor.cs" />
     <Compile Include="ItemSorter.cs" />
     <Compile Include="Support\ItemDescriptor.cs" />
     <Compile Include="Items\ActuatorItemData.cs" />

@@ -39,7 +39,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             ((CubeGraphic)Graphics).Texture = decorationTexture;
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if (Activated && Constrain.IsAcceptable(item))
             {

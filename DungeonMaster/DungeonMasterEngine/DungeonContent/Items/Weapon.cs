@@ -7,5 +7,8 @@ namespace DungeonMasterEngine.DungeonContent.Items
         public Weapon(Vector3 position) : base(position)
         {
         }
+
+        public int Strength { get; set; }
+        public WeaponClass Class { get; set; }
     }
 }

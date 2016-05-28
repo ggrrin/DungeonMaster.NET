@@ -7,8 +7,8 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
     {
         IEnumerable<ISpace> AllSpaces { get; }
 
-        IEnumerable<ISpaceRouteElement> GetToSide(ILayoutable entity, Tile currentTile, MapDirection mapDirection);
+        IEnumerable<ISpaceRouteElement> GetToSide(IEntity entity, Tile currentTile, MapDirection mapDirection);
 
-        IEnumerable<ISpaceRouteElement> GetToNeighbour(ILayoutable entity, Tile currentTile,  Tile targetTile);
+        IEnumerable<ISpaceRouteElement> GetToNeighbour(IEntity entity, Tile currentTile,  Tile targetTile);
     }
 }

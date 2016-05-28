@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class AlcoveActuator : Actuator
     {
-        private List<GrabableItem> storage;
+        private List<IGrabableItem> storage;
 
         public bool Hidden { get; set; }
 
@@ -39,12 +39,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         }
 
 
-        public AlcoveActuator(Vector3 position, IEnumerable<GrabableItem> storage) : base(position)
+        public AlcoveActuator(Vector3 position, IEnumerable<IGrabableItem> storage) : base(position)
         {
             this.storage = storage.ToList();
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if (Hidden)
             {

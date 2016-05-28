@@ -34,11 +34,12 @@ namespace DungeonMasterEngine.GameConsoleContent
         private static readonly IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> defaultFactories =
         new ICommandFactory<ConsoleContext<Dungeon>>[] {
             HelpFactory.Instance,
-            HandFactory.Instance,
+            HandCommandFactory.Instance,
             ChampoinFactory.Instance,
             ItemFactory.Instance,
             TeleportFactory.Instance,
-            SpellCommandFactory.Instance
+            SpellCommandFactory.Instance,
+            FightCommandFactory.Instance
             //TODO add default factories
         };
         private ScreenStream ouput;     

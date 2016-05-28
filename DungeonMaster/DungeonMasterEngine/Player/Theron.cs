@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -26,11 +27,21 @@ namespace DungeonMasterEngine.Player
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
 
-        public List<Champoin> partyGoup = new List<Champoin>();
+        public List<Champion> partyGoup = new List<Champion>();
+        private IGrabableItem hand;
 
-        public IReadOnlyList<Champoin> PartyGroup => partyGoup;
+        public IReadOnlyList<Champion> PartyGroup => partyGoup;
 
-        public GrabableItem Hand { get; private set; }
+        public IGrabableItem Hand
+        {
+            get { return hand; }
+            set
+            {
+                if(hand != value && hand != null && value != null)
+                    throw new InvalidOperationException("Assign null first;");
+                hand = value;
+            }
+        }
 
         public Theron(Tile location, Game game) : base(game)
         {
@@ -38,10 +49,10 @@ namespace DungeonMasterEngine.Player
 
             var x = new[]{
             //TODO remove champion mocap
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
-            new Champoin(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
+            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
+            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
+            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
+            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
             if (x.Any(champoin => !AddChampoinToGroup(champoin)))
             {
                 throw new Exception();
@@ -136,7 +147,7 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public GrabableItem ExchangeItems(GrabableItem item) => item;
+        public IGrabableItem ExchangeItems(IGrabableItem item) => item;
 
 
 
@@ -181,29 +192,28 @@ namespace DungeonMasterEngine.Player
             return curLocation;
         }
 
-        public void PutToHand(GrabableItem item, Champoin ch)
+        public void PutToHand(IGrabableItem item)
         {
             Hand = item;
-
-            ch?.Inventory.Remove(item);
         }
 
-        public void HandToInventory(Champoin ch)
+        public IGrabableItem TakeFromHand()
         {
             if (Hand == null)
                 throw new InvalidOperationException("Hand is empty.");
-            ch.Inventory.Add(Hand);
+            var res = Hand;
             Hand = null;
+            return res;
         }
 
-        public bool AddChampoinToGroup(Champoin champoin)
+        public bool AddChampoinToGroup(Champion champion)
         {
             if (partyGoup.Count == 4)
                 return false;
 
             var freeSpace = Small4GroupLayout.Instance.AllSpaces.Except(partyGoup.Select(ch => ch.Location?.Space).Where(x => x != null)).First();
-            champoin.Location = new FourthSpaceRouteElement(freeSpace, Location);
-            partyGoup.Add(champoin);
+            champion.Location = new FourthSpaceRouteElement(freeSpace, Location);
+            partyGoup.Add(champion);
             return true;
         }
 
@@ -262,6 +272,12 @@ namespace DungeonMasterEngine.Player
             prevKeyboard = Keyboard.GetState();
         }
 
+        public IEntity GetEnemy(IEntity champoin)
+        {
+            var enemyTile = Location.Neighbours.GetTile(MapDirection);
+            return enemyTile.LayoutManager.Entities.MinObj(e => Vector3.Distance(e.Position, champoin.Position));
+        }
+
         private void Fight()
         {
             var enemyTile = Location.Neighbours.GetTile(MapDirection);
@@ -277,10 +293,7 @@ namespace DungeonMasterEngine.Player
                 var hitLocation = sortedEnemyLocation.FirstOrDefault();
 
                 var enemy = enemyTile.LayoutManager.GetEntities(hitLocation).FirstOrDefault();
-                if (enemy != null)
-                {
-                    ((Creature)enemy).Kill();
-                }
+                ((Creature) enemy)?.Kill();
             }
         }
 

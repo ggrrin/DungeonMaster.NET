@@ -22,9 +22,9 @@ namespace DungeonMasterParser
 
         public IList<CreatureData> CreatureDescriptors { get; }
 
-        public IList<FightAction> FightActions { get; }
+        public IList<FightActionDescriptor> FightActions { get; }
 
-        public IList<FightCombo> FightCombos { get; }
+        public IList<FightComboDescriptor> FightCombos { get; }
 
         public DungeonData()
         {
@@ -40,7 +40,7 @@ namespace DungeonMasterParser
         }
 
 
-        private IList<FightCombo> ParseFightCombos()
+        private IList<FightComboDescriptor> ParseFightCombos()
         {
             var documet = new HtmlDocument();
             documet.LoadHtml(File.ReadAllText("combos.html"));
@@ -51,7 +51,7 @@ namespace DungeonMasterParser
                 .Select(tr => tr.Elements("td").Select(td => td.InnerText).ToArray())
                 .ToArray();
 
-            var res = new List<FightCombo>();
+            var res = new List<FightComboDescriptor>();
             for (int i = 0; i < data.Length; i += 3)
             {
                 var entries = new List<ComboEntry>();
@@ -65,13 +65,13 @@ namespace DungeonMasterParser
 
                     entries.Add(new ComboEntry
                     {
-                        Action = FightActions[fightActionIndex],
+                        ActionDescriptor = FightActions[fightActionIndex],
                         UseCharges = int.Parse(data[j][offset + 2]),
                         MinimumSkillLevel = int.Parse(data[j][offset + 3])
                     });
                 }
 
-                res.Add(new FightCombo
+                res.Add(new FightComboDescriptor
                 {
                     ComboIndex = i/3,
                     Actions = entries
@@ -81,21 +81,21 @@ namespace DungeonMasterParser
             return res;
         }
 
-        private IList<FightAction> ParseFightActions()
+        private IList<FightActionDescriptor> ParseFightActions()
         {
             var documet = new HtmlDocument();
             documet.LoadHtml(File.ReadAllText("actions.html"));
 
-            string x = DungeonMasterParser.FightAction.GenerateClassString(documet);
+            string x = DungeonMasterParser.FightActionDescriptor.GenerateClassString(documet);
 
-            var properties = DungeonMasterParser.FightAction.GetPropertyNames(documet);
+            var properties = DungeonMasterParser.FightActionDescriptor.GetPropertyNames(documet);
 
             return documet.DocumentNode.SelectSingleNode("//table")
                 .Descendants("tr")
                 .Skip(1)
                 .Select(tr =>
                 {
-                    var res = new FightAction();
+                    var res = new FightActionDescriptor();
                     foreach (var tuple in tr.Elements("td").Select(td => td.InnerText).Zip(properties, Tuple.Create))
                     {
                         int val;

@@ -1,6 +1,7 @@
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
     public interface ISpaceRouteElement : IStopable 
     {

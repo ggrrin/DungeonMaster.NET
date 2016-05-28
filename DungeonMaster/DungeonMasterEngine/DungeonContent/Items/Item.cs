@@ -12,6 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
         public Graphic Graphics { get; set; }
         public bool Visible { get; set; } = true;
         public bool AcceptMessages { get; set; }
+        public MapDirection MapDirection { get; set; }
 
         public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
         public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
@@ -61,7 +62,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
             };
         }
 
-        public virtual GrabableItem ExchangeItems(GrabableItem item)
+        public virtual IGrabableItem ExchangeItems(IGrabableItem item)
         {
             return item;
         }

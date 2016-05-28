@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
 
@@ -18,18 +19,18 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 
         public abstract Task Run();
 
-        protected async Task<T> GetFromItemIndex<T>(IReadOnlyList<T> list, bool result = true) where T : class
+        protected async Task<T> GetFromItemIndex<T>(IEnumerable<T> list, bool result = true) where T : class
         {
             Output.WriteLine("Selecet index:");
             int j = 0;
             foreach (var i in list)
-                Output.WriteLine($"{j++} {i}");
+                Output.WriteLine($"{j++} {i?.ToString() ?? "--slot_empty--"}");
 
             if (result)
             {
                 int index = -1;
-                if (int.TryParse(await Input.ReadLineAsync(), out index) && index >= 0 && index < list.Count)
-                    return list[index];
+                if (int.TryParse(await Input.ReadLineAsync(), out index) && index >= 0 && index < list.Count())
+                    return list.ElementAt(index);
                 else
                 {
                     Output.WriteLine("Invalid index!");
@@ -38,6 +39,27 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
             }
             else
                 return default(T);
+        }
+        protected async Task<int?> GetItemIndex<T>(IEnumerable<T> list, bool result = true) where T : class
+        {
+            Output.WriteLine("Selecet index:");
+            int j = 0;
+            foreach (var i in list)
+                Output.WriteLine($"{j++} {i?.ToString() ?? "--slot_empty--"}");
+
+            if (result)
+            {
+                int index = -1;
+                if (int.TryParse(await Input.ReadLineAsync(), out index) && index >= 0 && index < list.Count())
+                    return index;
+                else
+                {
+                    Output.WriteLine("Invalid index!");
+                    return null;
+                }
+            }
+            else
+                return null;
         }
     }
 }

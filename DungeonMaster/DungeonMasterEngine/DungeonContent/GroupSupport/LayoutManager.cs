@@ -7,19 +7,17 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
     public class LayoutManager
     {
-        private readonly List<Tuple<ILayoutable, ISpace>> entitiesSpaces = new List<Tuple<ILayoutable, ISpace>>();
+        private readonly List<Tuple<IEntity, ISpace>> entitiesSpaces = new List<Tuple<IEntity, ISpace>>();
 
         private IEnumerable<ISpace> FullSpaces => entitiesSpaces.Select(x => x.Item2);
 
-        public IEnumerable<ILayoutable> Entities => entitiesSpaces.Select(x => x.Item1);
-
-        public ISpace FindCurrentSpace(ILayoutable enitiy) => entitiesSpaces.Find(t => t.Item1 == enitiy).Item2;
+        public IEnumerable<IEntity> Entities => entitiesSpaces.Select(x => x.Item1);
 
         public bool IsFree(ISpace space) => FullSpaces.All(s => !s.Area.Intersects(space.Area));
 
         public bool WholeTileEmpty => !FullSpaces.Any();
 
-        public bool TryGetSpace(ILayoutable entity, ISpace dreamPosition)
+        public bool TryGetSpace(IEntity entity, ISpace dreamPosition)
         {
             var res = FullSpaces.Any(s => s.Area.Intersects(dreamPosition.Area));
             if (!res)
@@ -27,7 +25,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             return !res;
         }
 
-        public void FreeSpace(ILayoutable entity, ISpace space)
+        public void FreeSpace(IEntity entity, ISpace space)
         {
             int index = entitiesSpaces.FindIndex(t => t.Item1 == entity && t.Item2 == space);
             if(index == -1 )
@@ -35,7 +33,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             entitiesSpaces.RemoveAt(index);
         }
 
-        public IEnumerable<ILayoutable> GetEntities(ISpace space)
+        public IEnumerable<IEntity> GetEntities(ISpace space)
         {
             return entitiesSpaces
                 .Where(t => t.Item2.Area.Intersects(space.Area))

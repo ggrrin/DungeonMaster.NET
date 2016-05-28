@@ -4,6 +4,7 @@ using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Interfaces;
+using DungeonMasterParser.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,11 +44,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public Point TargetTilePosition { get; }
 
-        public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position)
+        public MapDirection Direction { get; }
+
+        public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, MapDirection direction, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position)
         {
             InitializeGraphics();
             NextLevelIndex = targetMapIndex;
             TargetTilePosition = targetGridPosition;
+            Direction = direction;
             ContentActivated = teleportOpen;
             Visible = teleportVisible;
             ScopeConstrain = scopeConstrain;
@@ -86,6 +90,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             if (IsOpen && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)//TODO how to set taget location creatures
             {
                 obj.Location = NextLevelEnter; //TODO rename in interface property
+                obj.MapDirection = Direction;
             }
         }
 

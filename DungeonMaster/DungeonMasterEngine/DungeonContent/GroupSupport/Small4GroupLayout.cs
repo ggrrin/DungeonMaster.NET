@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 
         public IEnumerable<ISpace> AllSpaces => fabric.Cast<FourthSpace>();
 
-        public IEnumerable<ISpaceRouteElement> GetToSide(ILayoutable entity, Tile currentTile, MapDirection mapDirection)
+        public IEnumerable<ISpaceRouteElement> GetToSide(IEntity entity, Tile currentTile, MapDirection mapDirection)
         {
             //TODO remake
             ISpace currentSpace = entity.Location.Space;// currentTile.LayoutManager.FindCurrentSpace(entity);
@@ -44,7 +44,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 
             return destSpace != null ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile)) : null;
         }
-        private IEnumerable<ISpaceRouteElement> GetToSpace(ILayoutable entity, Tile currentTile, ISpace destSpace)
+        private IEnumerable<ISpaceRouteElement> GetToSpace(IEntity entity, Tile currentTile, ISpace destSpace)
         {
             bool found = false;
             ISpace currentSpace = entity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
@@ -65,7 +65,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             return found ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile)) : null;
         }
 
-        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILayoutable entity, Tile currentTile, Tile targetTile)
+        public IEnumerable<ISpaceRouteElement> GetToNeighbour(IEntity entity, Tile currentTile, Tile targetTile)
         {
             var moveDirection = currentTile.Neighbours.Single(t => t.Item1 == targetTile).Item2;
             var currentSpace = entity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);

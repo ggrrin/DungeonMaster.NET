@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
     public interface ISpace : INeighbourable<ISpace>
     {

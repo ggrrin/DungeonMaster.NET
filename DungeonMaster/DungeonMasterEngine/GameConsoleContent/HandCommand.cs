@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
 using DungeonMasterEngine.DungeonContent.Items;
@@ -28,17 +30,17 @@ namespace DungeonMasterEngine.GameConsoleContent
                     case "take":
                         await TakeItem();
                         break;
+                    case "takesub":
+                        await TakeSubItem();
+                        break;
                     case "put":
                         await PutItem();
                         break;
+                    case "putsub":
+                        await PutSubItem();
+                        break;
                     case "throw":
                         ThrowItem();
-                        break;
-                    case "list":
-                        ListContainer();
-                        break;
-                    case "extract":
-                        await ExtractContainer();
                         break;
                     default:
                         Output.WriteLine("invalid command!");
@@ -65,37 +67,38 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
         }
 
-        private async Task ExtractContainer()
+        private async Task PutSubItem()
         {
-            var container = theron.Hand as Container;
-            if (container != null)
+            if (theron.Hand == null)
             {
                 var ch = await GetFromItemIndex(theron.PartyGroup);
+
                 if (ch != null)
                 {
-                    var items = ((Container)theron.Hand).SubItems;
-                    ch.Inventory.AddRange(items);
-                    items.Clear();
+                    var inventory = await GetFromItemIndex(ch.Body.Storages);
+                    if (inventory != null)
+                    {
+                        var chest = await GetFromItemIndex(inventory.Storage.OfType<IInventory>());
+                        if (chest != null)
+                        {
+                            var itemIndex = await GetItemIndex(chest.Storage);
+                            if (itemIndex != null)
+                            {
+                                var item = chest.TakeItemFrom(itemIndex.Value);
+                                if (item != null)
+                                    theron.Hand = item;
+                                else
+                                {
+                                    Output.WriteLine("Slot is empty.");
+                                }
+
+                            }
+                        }
+                    }
                 }
             }
             else
-            {
-                Output.WriteLine("Item is not container");
-            }
-        }
-
-        private void ListContainer()
-        {
-            var container = theron.Hand as Container;
-            if (container != null)
-            {
-                foreach (var i in ((Container)theron.Hand).SubItems)
-                    Output.WriteLine(i.DumpString());
-            }
-            else
-            {
-                Output.WriteLine("Item is not container");
-            }
+                Output.WriteLine("Hand is not empty!");
         }
 
         private async Task PutItem()
@@ -106,17 +109,46 @@ namespace DungeonMasterEngine.GameConsoleContent
 
                 if (ch != null)
                 {
-                    var item = await GetFromItemIndex(ch.Inventory);
-                    if (item != null)
+                    var inventory = await GetFromItemIndex(ch.Body.Storages);
+                    if (inventory != null)
                     {
-                        theron.PutToHand(item, ch);
+                        var itemIndex = await GetItemIndex(inventory.Storage);
+                        if (itemIndex != null)
+                        {
+                            theron.Hand = inventory.TakeItemFrom(itemIndex.Value);
+                        }
                     }
                 }
             }
             else
-            {
                 Output.WriteLine("Hand is not empty!");
+        }
+
+        private async Task TakeSubItem()
+        {
+            if (theron.Hand != null)
+            {
+                var ch = await GetFromItemIndex(theron.PartyGroup);
+
+                if (ch != null)
+                {
+                    var inventory = await GetFromItemIndex(ch.Body.Storages);
+                    if (inventory != null)
+                    {
+                        var chest = await GetFromItemIndex(inventory.Storage.OfType<IInventory>());
+                        if (chest != null)
+                        {
+                            var itemIndex = await GetItemIndex(chest.Storage);
+                            if (itemIndex != null)
+                            {
+                                theron.Hand = chest.TakeItemFrom(itemIndex.Value);
+                            }
+                        }
+                    }
+                }
             }
+            else
+                Output.WriteLine("Hand is empty!");
         }
 
         private async Task TakeItem()
@@ -127,7 +159,19 @@ namespace DungeonMasterEngine.GameConsoleContent
 
                 if (ch != null)
                 {
-                    theron.HandToInventory(ch);
+                    var inventory = await GetFromItemIndex(ch.Body.Storages);
+                    if (inventory != null)
+                    {
+                        if (inventory.AddItem(theron.Hand))
+                        {
+                            theron.Hand = null;
+                        }
+                        else
+                        {
+                            Output.WriteLine("Unable to add item to inventory.");
+                        }
+
+                    }
                 }
             }
             else

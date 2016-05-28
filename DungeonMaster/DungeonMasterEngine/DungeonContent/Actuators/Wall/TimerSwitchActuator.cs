@@ -63,7 +63,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             await Task.WhenAll(t1, t2);
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             Pressed ^= true;
             UpdateTextures();

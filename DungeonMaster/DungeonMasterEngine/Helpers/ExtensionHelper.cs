@@ -15,18 +15,62 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+        public static TSource MinObj<TSource>(this IEnumerable<TSource> source, Func<TSource, float> getValue)
+        {
+            var min = Tuple.Create(default(TSource), float.MaxValue);
+            foreach (var t in source.Select(e => Tuple.Create(e, getValue(e))))
+            {
+                if (t.Item2 < min.Item2)
+                    min = t;
+            }
+            return min.Item1;
+        }
+
+        public static MapDirection ToMapDirection(this Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.North:
+                    return MapDirection.North;
+                case Direction.East:
+                    return MapDirection.East;
+                case Direction.South:
+                    return MapDirection.South;
+                case Direction.West:
+                    return MapDirection.West;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
         public static IEnumerable<MapDirection> ToDirections(this TilePosition x)
         {
             switch (x)
             {
                 case TilePosition.North_TopLeft:
-                    return new[] {MapDirection.West, MapDirection.North, };
+                    return new[]
+                    {
+                        MapDirection.West,
+                        MapDirection.North,
+                    };
                 case TilePosition.East_TopRight:
-                    return new[] {MapDirection.East, MapDirection.North, };
+                    return new[]
+                    {
+                        MapDirection.East,
+                        MapDirection.North,
+                    };
                 case TilePosition.South_BottomLeft:
-                    return new[] {MapDirection.West, MapDirection.South, };
+                    return new[]
+                    {
+                        MapDirection.West,
+                        MapDirection.South,
+                    };
                 case TilePosition.West_BottomRight:
-                    return new[] {MapDirection.East, MapDirection.South, };
+                    return new[]
+                    {
+                        MapDirection.East,
+                        MapDirection.South,
+                    };
                 default:
                     throw new ArgumentOutOfRangeException(nameof(x), x, null);
             }
@@ -78,9 +122,9 @@ namespace DungeonMasterEngine.Helpers
             int specifer = -1;
             var location = actuator.ActionLocation as RemoteTarget;
             if (location != null)
-                specifer = (int) location.Position.Direction;
+                specifer = (int)location.Position.Direction;
 
-            return new ActionStateX((ActionState) actuator.Action, actuator.ActionDelay*1000/6, actuator.IsOnceOnly, specifer);
+            return new ActionStateX((ActionState)actuator.Action, actuator.ActionDelay * 1000 / 6, actuator.IsOnceOnly, specifer);
         }
 
         public static Point ToAbsolutePosition(this Position p, DungeonMap map)
@@ -168,10 +212,10 @@ namespace DungeonMasterEngine.Helpers
         private static int LeastWholeNumber(float p)
         {
             int x;
-            if (p < 0 && p != (int) p)
-                x = (int) p - 1;
+            if (p < 0 && p != (int)p)
+                x = (int)p - 1;
             else
-                x = (int) p;
+                x = (int)p;
 
             return x;
         }

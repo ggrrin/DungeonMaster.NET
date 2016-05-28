@@ -31,7 +31,8 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             var data = matchedSequence[1];
             var constrain = new GrabableItemConstrain(data.Data, invertConstraion: false);
             var item = context.WallActuatorCreator.CurrentGrabableItems.Select(k => new LegacyItemCreator(context).CreateItem(k, currentTile)).SingleOrDefault();
-            return new ExchangerActuator(context.GetWallPosition(data.TilePosition, context.WallActuatorCreator.CurrentTile), item, constrain, data.IsOnceOnly)
+            return new ExchangerActuator(context.GetWallPosition(data.TilePosition, context.WallActuatorCreator.CurrentTile), 
+                item, constrain, data.IsOnceOnly)
             {
                 DecorationDeactived = context.WallTextures[data.Decoration - 1],
                 DecorationActivated = context.WallTextures[matchedSequence[0].Decoration - 1]

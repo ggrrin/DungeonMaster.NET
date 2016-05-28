@@ -55,7 +55,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
         {
             string[] descriptor = FindChampionDescriptor(context).Split('|');
 
-            var champion = new Champoin(context.ChampionToken, context.CreatureToken.ToEnumerable())
+            var champion = new Champion(context.ChampionToken, context.CreatureToken.ToEnumerable())
             {
                 Name = descriptor[0],
                 Title = descriptor[1] + descriptor[2],
@@ -77,7 +77,10 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
             };
 
             var items = context.WallActuatorCreator.CurrentGrabableItems.Select(k => context.ItemCreator.CreateItem(k, currentTile ));
-            champion.Inventory.AddRange(items);
+
+
+#warning
+
 
 
             var res = new ChampoinActuator(context.GetWallPosition(matchedSequence[0].TilePosition, context.WallActuatorCreator.CurrentTile), champion);

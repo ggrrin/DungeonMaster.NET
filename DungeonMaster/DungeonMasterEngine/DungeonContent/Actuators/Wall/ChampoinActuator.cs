@@ -7,18 +7,18 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class ChampoinActuator : Actuator
     {
-        public Champoin Champoin { get; private set; }
+        public Champion Champion { get; private set; }
 
-        public bool Empty => Champoin == null;
+        public bool Empty => Champion == null;
 
-        public ChampoinActuator(Vector3 position, Champoin champoin) :  base(position)
+        public ChampoinActuator(Vector3 position, Champion champion) :  base(position)
         {
-            Champoin = champoin;
+            Champion = champion;
         }
 
-        public void RemoveChampoin() => Champoin = null;
+        public void RemoveChampoin() => Champion = null;
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if(!Empty)
             {

@@ -20,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Floor
             if (theron != null)
             {
                 var items = new[] { theron.Hand }
-                    .Concat(theron.PartyGroup.SelectMany(x => x.Inventory))
+                    .Concat(theron.PartyGroup.SelectMany(x => x.Body.Storages.SelectMany(s => s.Storage)))
                     .Concat(CurrentTile.SubItems.OfType<GrabableItem>());
 
                 return items.Any(Constrain.IsAcceptable);

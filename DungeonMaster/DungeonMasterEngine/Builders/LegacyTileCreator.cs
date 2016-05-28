@@ -80,7 +80,7 @@ namespace DungeonMasterEngine.Builders
                         Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
                     }};
                 }
-                return new Teleport(tilePosition, t.Teleport.MapIndex, destinationPosition, t.IsOpen, t.IsVisible, GetTeleportScopeType(t.Teleport.Scope));
+                return new Teleport(tilePosition, t.Teleport.MapIndex, destinationPosition, t.Teleport.Rotation.ToMapDirection(), t.IsOpen, t.IsVisible, GetTeleportScopeType(t.Teleport.Scope));
             }
             else
             {

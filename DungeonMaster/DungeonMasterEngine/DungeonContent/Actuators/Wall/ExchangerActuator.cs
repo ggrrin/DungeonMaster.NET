@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
     public class ExchangerActuator : Actuator
     {
         private bool used = false;
-        private GrabableItem Storage;
+        private IGrabableItem Storage;
         private Texture2D decorationDeactived;
         private Texture2D decorationActivated;
 
@@ -39,14 +39,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public ExchangerActuator(Vector3 position, GrabableItem storage, IConstrain exchangeConstrain, bool onceOnly) : base(position)
+        public ExchangerActuator(Vector3 position, IGrabableItem storage, IConstrain exchangeConstrain, bool onceOnly) : base(position)
         {
             Constrain = exchangeConstrain;
             Storage = storage;
             OnceOnly = onceOnly;
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if (OnceOnly && used)
                 return item;

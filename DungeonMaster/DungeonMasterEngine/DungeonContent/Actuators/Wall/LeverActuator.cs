@@ -53,7 +53,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             OnceOnly = onceOnly;
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if (OnceOnly && !used)
                 Switch();

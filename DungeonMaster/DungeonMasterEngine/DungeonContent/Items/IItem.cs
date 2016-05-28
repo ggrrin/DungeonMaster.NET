@@ -6,10 +6,10 @@ namespace DungeonMasterEngine.DungeonContent.Items
 {
     public interface IItem : ILocalizable<Tile> , IWorldObject
     {
-        GrabableItem ExchangeItems(GrabableItem item);
+        IGrabableItem ExchangeItems(IGrabableItem item);
         void Update(GameTime gameTime);
         BoundingBox Bounding { get; }
         bool AcceptMessages { get; set; }
-
+        MapDirection MapDirection { get; set; }
     }
 }

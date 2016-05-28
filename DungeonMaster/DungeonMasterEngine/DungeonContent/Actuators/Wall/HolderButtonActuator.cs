@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class HolderButtonActuator : SimpleRemoteActuator
     {
-        private readonly List<GrabableItem> items;
+        private readonly List<IGrabableItem> items;
         public Texture2D Texture
         {
             get { return ((CubeGraphic) Graphics).Texture; }
@@ -18,9 +18,9 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         }
 
 
-        public HolderButtonActuator(Vector3 position, Tile targetTile, IEnumerable<GrabableItem> items, ActionStateX action) : base(targetTile, action, position)
+        public HolderButtonActuator(Vector3 position, Tile targetTile, IEnumerable<IGrabableItem> items, ActionStateX action) : base(targetTile, action, position)
         {
-            this.items = new List<GrabableItem>(items);
+            this.items = new List<IGrabableItem>(items);
             Activated = items.Any();
         }
 
@@ -49,7 +49,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             if (item == null)
             {

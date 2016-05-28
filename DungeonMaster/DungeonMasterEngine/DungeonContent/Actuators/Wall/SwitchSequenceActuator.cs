@@ -58,7 +58,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             await Task.WhenAll(targetTiles.Zip(actions, (x,y) => SendOneMessageAsync(x,y,activated)));
         }
 
-        public override GrabableItem ExchangeItems(GrabableItem item)
+        public override IGrabableItem ExchangeItems(IGrabableItem item)
         {
             Pressed ^= true;
             UpdateTextures();

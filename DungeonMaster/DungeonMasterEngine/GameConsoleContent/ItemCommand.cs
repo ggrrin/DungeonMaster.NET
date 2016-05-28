@@ -30,9 +30,8 @@ namespace DungeonMasterEngine.GameConsoleContent
 
                                 item.Identifer = identifer;
                                 item.Name = "Artifical fake item";
-                                theron.PutToHand(item, null);
+                                theron.Hand = item;
                                 Output.Write($"Item: {item} added to hand.");
-
                             }
                         }
                         else
