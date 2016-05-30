@@ -2,7 +2,11 @@ using System.Collections.Generic;
 using DungeonMasterEngine.Builders.FloorActuatorFactories;
 using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
+using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.EntitySupport.Properties;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Properties.@base;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Skills;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Skills.@base;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
@@ -16,7 +20,8 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
         IRelationManager RelationManager { get; }
         IBody Body { get; }
 
-        IEntityProperty GetProperty(IEntityPropertyFactory propertyType);
+        IProperty GetProperty(IPropertyFactory propertyType);
+        ISkill GetSkill(ISkillFactory propertyType);
         IEnumerable<IFightAction> FightActions { get; }
         CreatureInfo Type { get; }
     }

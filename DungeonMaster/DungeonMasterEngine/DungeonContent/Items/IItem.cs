@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Tiles;
+﻿using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 

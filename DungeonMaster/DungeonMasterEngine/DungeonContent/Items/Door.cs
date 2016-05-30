@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
         public Vector3 Size => Graphic.Scale;
 
-        public Door(Vector3 position, bool hasButton) : base(position)
+        public Door(Vector3 position, bool hasButton) 
         {
             HasButton = hasButton;
             Graphics = new CubeGraphic { DrawFaces = CubeFaces.All, Outter = true, Scale = new Vector3(0.66f, 0.65f, 0.15f) };

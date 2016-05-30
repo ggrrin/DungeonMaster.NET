@@ -29,6 +29,6 @@
         Scroll,
         Potion,
         Container,
-        Miscelaneous
+        Miscellenaous
     }
 }

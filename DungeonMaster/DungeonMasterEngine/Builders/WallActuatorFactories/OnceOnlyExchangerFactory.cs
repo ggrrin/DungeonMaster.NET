@@ -18,7 +18,7 @@ namespace DungeonMasterEngine.Builders.WallActuatorFactories
         public override Actuator CreateItem(LegacyMapBuilder context, Tile currentTile, IReadOnlyList<ActuatorItemData> matchedSequence)
         {
             var data = matchedSequence[0];
-            var constrain = new GrabableItemConstrain(data.Data, invertConstraion: false);
+            var constrain = new GrabableItemConstrain(context.GetItemFactory(data.Data), invertConstraion: false);
             var item = context.WallActuatorCreator.CurrentGrabableItems.Select(k => new LegacyItemCreator(context).CreateItem(k, currentTile)).SingleOrDefault();
             return new ExchangerActuator(context.GetWallPosition(data.TilePosition, context.WallActuatorCreator.CurrentTile), item, constrain, onceOnly:true)
             {

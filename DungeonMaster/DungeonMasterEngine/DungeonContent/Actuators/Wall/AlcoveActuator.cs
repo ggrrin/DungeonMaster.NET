@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
@@ -39,7 +40,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         }
 
 
-        public AlcoveActuator(Vector3 position, IEnumerable<IGrabableItem> storage) : base(position)
+        public AlcoveActuator(Vector3 position, IEnumerable<IGrabableItem> storage)
         {
             this.storage = storage.ToList();
         }

@@ -27,7 +27,7 @@ namespace DungeonMasterParser
 
         public void Parse()
         {
-            using (var r = new BinaryReader(new FileStream("DUNGEON.DAT", mode: FileMode.Open)))
+            using (var r = new BinaryReader(new FileStream("Data/DUNGEON.DAT", mode: FileMode.Open)))
             {
                 ReadHeader(r);
                 Debug.Assert(r.BaseStream.Position == 44);
@@ -459,7 +459,7 @@ namespace DungeonMasterParser
             c.IsBroken = ((data >> 13) & oneBitMask) == 1;
             c.IsCursed = ((data >> 8) & oneBitMask) == 1;
             c.IsImportant = ((data >> 7) & oneBitMask) == 1;
-            c.ItemTypeIndex = data & sixBitsMask;
+            c.ItemTypeIndex = data & sevenBitsMask;
 
             return c;
         }

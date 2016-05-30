@@ -1,4 +1,5 @@
 ﻿using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -39,7 +40,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public ExchangerActuator(Vector3 position, IGrabableItem storage, IConstrain exchangeConstrain, bool onceOnly) : base(position)
+        public ExchangerActuator(Vector3 position, IGrabableItem storage, IConstrain exchangeConstrain, bool onceOnly) 
         {
             Constrain = exchangeConstrain;
             Storage = storage;

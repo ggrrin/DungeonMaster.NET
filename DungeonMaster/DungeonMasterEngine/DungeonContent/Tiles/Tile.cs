@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public abstract class Tile : WorldObject, IStopable, INeighbourable<Tile>
     {
-        protected Tile(Vector3 position) : base(position)
+        protected Tile(Vector3 position) 
         {
             graphicsProviders = new GraphicsCollection();
             graphicsProviders.AddListOfDrawables(SubItems = new List<IItem>());

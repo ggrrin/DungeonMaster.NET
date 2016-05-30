@@ -43,7 +43,7 @@ namespace DungeonMasterParser
                 case ObjectCategory.Doors:
                     return d.Doors[ObjectNumber];
 
-                case ObjectCategory.Miscelaneous:
+                case ObjectCategory.Miscellenaous:
                     return d.MiscellaneousItems[ObjectNumber];
 
                 case ObjectCategory.Potion:

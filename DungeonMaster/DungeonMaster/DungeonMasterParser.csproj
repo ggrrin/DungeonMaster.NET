@@ -47,13 +47,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComboEntry.cs" />
-    <Compile Include="CreatureData.cs" />
+    <Compile Include="Descriptors\ArmorDescriptor.cs" />
+    <Compile Include="Descriptors\ComboEntry.cs" />
+    <Compile Include="Descriptors\ContainerDescriptor.cs" />
+    <Compile Include="Descriptors\CreatureDescriptor.cs" />
+    <Compile Include="Descriptors\DescriptorBase.cs" />
+    <Compile Include="Descriptors\MiscDescriptor.cs" />
+    <Compile Include="Descriptors\PotionDescriptor.cs" />
+    <Compile Include="Descriptors\ScrollDescriptor.cs" />
+    <Compile Include="Descriptors\WeaponDescriptor.cs" />
     <Compile Include="DMEncoding.cs" />
     <Compile Include="Enums\ActionType.cs" />
     <Compile Include="Enums\CarrryLocations.cs" />
-    <Compile Include="FightActionDescriptor.cs" />
-    <Compile Include="FightComboDescriptor.cs" />
+    <Compile Include="Descriptors\FightActionDescriptor.cs" />
+    <Compile Include="Descriptors\FightComboDescriptor.cs" />
     <Compile Include="ItemSorter.cs" />
     <Compile Include="Support\ItemDescriptor.cs" />
     <Compile Include="Items\ActuatorItemData.cs" />
@@ -106,19 +113,40 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DUNGEON.DAT">
+    <None Include="Data\DUNGEON.DAT">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="actions.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Data\actions.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="combos.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Data\armor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="creatures.html">
+    <Content Include="Data\combos.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\container.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\creatures.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\itemDescriptors.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\misc.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\potions.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\scroll.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\weapons.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

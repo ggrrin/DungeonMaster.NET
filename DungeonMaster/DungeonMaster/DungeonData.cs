@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using DungeonMasterParser.Descriptors;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
@@ -12,6 +16,8 @@ namespace DungeonMasterParser
 {
     public class DungeonData
     {
+        private readonly Dictionary<string, DescriptorBase> descriptorMaping = new Dictionary<string, DescriptorBase>();
+
         public IList<string> WallDecorations { get; }
 
         public IList<string> FloorDecorations { get; }
@@ -20,11 +26,19 @@ namespace DungeonMasterParser
 
         public IList<ItemDescriptor> ItemDescriptors { get; }
 
-        public IList<CreatureData> CreatureDescriptors { get; }
+        public IList<CreatureDescriptor> CreatureDescriptors { get; }
 
         public IList<FightActionDescriptor> FightActions { get; }
 
         public IList<FightComboDescriptor> FightCombos { get; }
+
+        public IList<WeaponDescriptor> WeaponDescriptors { get; }
+        public IList<ArmorDescriptor> ArmorDescriptors { get; }
+        public IList<ScrollDescriptor> ScrollDescriptors { get; }
+        public IList<ContainerDescriptor> ContainerDescriptors { get; }
+        public IList<PotionDescriptor> PotionDescriptors { get; }
+        public IList<MiscDescriptor> MiscDescriptors { get; }
+
 
         public DungeonData()
         {
@@ -33,17 +47,175 @@ namespace DungeonMasterParser
             DoorDecorations = GetDoorTexturNames();
 
             ItemDescriptors = GetItemsDescriptors();
+
+            WeaponDescriptors = ParseWeaponDescriptors();
+            ArmorDescriptors = ParseArmorDescriptors();
+            ScrollDescriptors = ParseScrollDescriptors();
+            ContainerDescriptors = ParseContainerDescriptors();
+            PotionDescriptors = ParsePotionDescriptors();
+            MiscDescriptors = ParseMiscDescriptors();
+
+            ConnectDescriptorToItemDescriptor();
+
             FightActions = ParseFightActions();
             FightCombos = ParseFightCombos();
 
             CreatureDescriptors = ParseCreatureDatas();
         }
 
+        private IList<MiscDescriptor> ParseMiscDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/misc.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new MiscDescriptor()
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+                })
+                .ToArray();
+        }
+
+        private IList<PotionDescriptor> ParsePotionDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/potions.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new PotionDescriptor()
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+                })
+                .ToArray();
+        }
+
+        private IList<ContainerDescriptor> ParseContainerDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/container.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new ContainerDescriptor()
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+                })
+                .ToArray();
+        }
+
+        private IList<ScrollDescriptor> ParseScrollDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/scroll.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new ScrollDescriptor()
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+                })
+                .ToArray();
+        }
+
+        private IList<ArmorDescriptor> ParseArmorDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/armor.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var classDelta = columns[3].Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    int val;
+                    var res = new ArmorDescriptor
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        ArmorStrength = int.Parse(classDelta[0]),
+                        SharpResistance = int.Parse(classDelta[1])
+
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+                })
+                .ToArray();
+        }
+
+
+
+        private void ConnectDescriptorToItemDescriptor()
+        {
+            foreach (var desc in ItemDescriptors)
+            {
+                var key = GetKey(desc.Name);
+                var descriptor = descriptorMaping[key];
+                if (descriptor != null)
+                    descriptor.Identifer = desc.InCategoryIndex;
+            }
+            var comparer = Comparer<DescriptorBase>.Create((w1, w2) => w1.Identifer.CompareTo(w2.Identifer));
+            Array.Sort((DescriptorBase[])WeaponDescriptors, comparer);
+            Array.Sort((DescriptorBase[])ArmorDescriptors, comparer);
+            Array.Sort((DescriptorBase[])ScrollDescriptors, comparer);
+            Array.Sort((DescriptorBase[])ContainerDescriptors, comparer);
+            Array.Sort((DescriptorBase[])PotionDescriptors, comparer);
+            Array.Sort((DescriptorBase[])MiscDescriptors, comparer);
+        }
+
+        private static string GetKey(string s)
+        {
+            Func<string, int> getLength = str =>
+            {
+                var length = str.IndexOfAny(new[] { '/', '\n', '\r', '(' });
+
+                if (length == -1)
+                    length = str.Length;
+                return length;
+            };
+
+            return s.Substring(0, getLength(s)).Trim();
+        }
 
         private IList<FightComboDescriptor> ParseFightCombos()
         {
             var documet = new HtmlDocument();
-            documet.LoadHtml(File.ReadAllText("combos.html"));
+            documet.LoadHtml(File.ReadAllText("Data/combos.html"));
 
             var data = documet.DocumentNode.SelectSingleNode("//table")
                 .Descendants("tr")
@@ -73,7 +245,7 @@ namespace DungeonMasterParser
 
                 res.Add(new FightComboDescriptor
                 {
-                    ComboIndex = i/3,
+                    ComboIndex = i / 3,
                     Actions = entries
                 });
             }
@@ -84,11 +256,11 @@ namespace DungeonMasterParser
         private IList<FightActionDescriptor> ParseFightActions()
         {
             var documet = new HtmlDocument();
-            documet.LoadHtml(File.ReadAllText("actions.html"));
+            documet.LoadHtml(File.ReadAllText("Data/actions.html"));
 
-            string x = DungeonMasterParser.FightActionDescriptor.GenerateClassString(documet);
+            string x = FightActionDescriptor.GenerateClassString(documet);
 
-            var properties = DungeonMasterParser.FightActionDescriptor.GetPropertyNames(documet);
+            var properties = FightActionDescriptor.GetPropertyNames(documet);
 
             return documet.DocumentNode.SelectSingleNode("//table")
                 .Descendants("tr")
@@ -109,11 +281,10 @@ namespace DungeonMasterParser
                 .ToArray();
         }
 
-
-        public IList<CreatureData> ParseCreatureDatas()
+        public IList<CreatureDescriptor> ParseCreatureDatas()
         {
             HtmlDocument d = new HtmlDocument();
-            d.LoadHtml(File.ReadAllText("creatures.html"));
+            d.LoadHtml(File.ReadAllText("Data/creatures.html"));
 
             var data = d.DocumentNode.SelectSingleNode("//table")
                 .Descendants("tr")
@@ -131,18 +302,48 @@ namespace DungeonMasterParser
 
             return names.Select((x, i) =>
             {
-                var res = new CreatureData(x);
+                var res = new CreatureDescriptor(x);
 
                 foreach (var row in data)
                 {
-                    res.GetType().GetProperty(CreatureData.ConvertToPopertyName(row[0]))
+                    res.GetType().GetProperty(CreatureDescriptor.ConvertToPopertyName(row[0]))
                         .SetValue(res, int.Parse(row[i + 1]));
                 }
                 return res;
             }).ToArray();
         }
 
-        public int GetTableIndex(ObjectCategory category, int categoryIndexType)
+        private IList<WeaponDescriptor> ParseWeaponDescriptors()
+        {
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/weapons.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var classDelta = columns[6].Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    int val;
+                    var res = new WeaponDescriptor
+                    {
+                        Name = columns[0].Trim(),
+                        Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        Strength = int.Parse(columns[3]),
+                        KineticEnergy = int.Parse(columns[4]),
+                        ShootDamage = int.Parse(columns[5]),
+                        Class = int.Parse(classDelta[0]),
+                        DeltaEnergy = int.TryParse(classDelta[1], out val) ? (int?)val : null
+                    };
+                    descriptorMaping.Add(GetKey(res.Name), res);
+                    return res;
+
+                })
+                .ToArray();
+        }
+
+        public ItemDescriptor  GetItemDescriptor(ObjectCategory category, int categoryIndexType)
         {
             int baseIndex = 0;
             switch (category)
@@ -168,200 +369,44 @@ namespace DungeonMasterParser
                     baseIndex = 69;
                     break;
                 //                    +127(53 item types)
-                case Miscelaneous:
+                case Miscellenaous:
                     baseIndex = 127;
                     break;
 
                 default: throw new NotSupportedException();
             }
-            return baseIndex + categoryIndexType;
+            var index = baseIndex + categoryIndexType;
+            return ItemDescriptors[index];
         }
 
         private IList<ItemDescriptor> GetItemsDescriptors()
         {
-            return new[]
-            {
-                new ItemDescriptor(30, 1, 0, 1280, Chest | Pouch, 0, 0, Scroll, "Scroll"),
-                new ItemDescriptor(144, 0, 0, 512, HandsAndBackpack, 1, 0, Container, "Chest"),
-                new ItemDescriptor(148, 67, 0, 1280, Chest | Pouch, 2, 0, Potion, "Mon Potion "),
-                new ItemDescriptor(149, 67, 0, 1280, Chest | Pouch, 3, 1, Potion, "Um Potion "),
-                new ItemDescriptor(150, 67, 0, 1280, Chest | Pouch, 4, 2, Potion, "Des Potion "),
-                new ItemDescriptor(151, 67, 42, 1280, Chest | Pouch, 5, 3, Potion, "Ven Potion"),
-                new ItemDescriptor(152, 67, 0, 1280, Chest | Pouch, 6, 4, Potion, "Sar Potion "),
-                new ItemDescriptor(153, 67, 0, 1280, Chest | Pouch, 7, 5, Potion, "Zo Potion "),
-                new ItemDescriptor(154, 2, 0, 1281, Chest | Pouch | Consumable, 8, 6, Potion, "Ros Potion"),
-                new ItemDescriptor(155, 2, 0, 1281, Chest | Pouch | Consumable, 9, 7, Potion, "Ku Potion"),
-                new ItemDescriptor(156, 2, 0, 1281, Chest | Pouch | Consumable, 10, 8, Potion, "Dane Potion"),
-                new ItemDescriptor(157, 2, 0, 1281, Chest | Pouch | Consumable, 11, 9, Potion, "Neta Potion"),
-                new ItemDescriptor(158, 2, 0, 1281, Chest | Pouch | Consumable, 12, 10, Potion, "Bro Potion / Antivenin"),
-                new ItemDescriptor(159, 2, 0, 1281, Chest | Pouch | Consumable, 13, 11, Potion, "Ma Potion / Mon Potion"),
-                new ItemDescriptor(160, 2, 0, 1281, Chest | Pouch | Consumable, 14, 12, Potion, "Ya Potion"),
-                new ItemDescriptor(161, 2, 0, 1281, Chest | Pouch | Consumable, 15, 13, Potion, "Ee Potion"),
-                new ItemDescriptor(162, 2, 0, 1281, Chest | Pouch | Consumable, 16, 14, Potion, "Vi Potion"),
-                new ItemDescriptor(163, 2, 0, 1281, Chest | Pouch | Consumable, 17, 15, Potion, "Water Flask"),
-                new ItemDescriptor(164, 68, 0, 1280, Chest | Pouch, 18, 16, Potion, "Kath Bomb "),
-                new ItemDescriptor(165, 68, 0, 1280, Chest | Pouch, 19, 17, Potion, "Pew Bomb "),
-                new ItemDescriptor(166, 68, 0, 1280, Chest | Pouch, 20, 18, Potion, "Ra Bomb "),
-                new ItemDescriptor(167, 68, 42, 1280, Chest | Pouch, 21, 19, Potion, "Ful Bomb"),
-                new ItemDescriptor(195, 80, 0, 1280, Chest | Pouch, 22, 20, Potion, "Empty Flask"),
-                new ItemDescriptor(16, 38, 43, 1280, Chest | Pouch, 23, 0, Weapon, "Eye Of Time"),
-                new ItemDescriptor(18, 38, 7, 1280, Chest | Pouch, 24, 1, Weapon, "Stormring"),
-                new ItemDescriptor(4, 35, 5, 1024, Chest, 25, 2, Weapon, "Torch"),
-                new ItemDescriptor(14, 37, 6, 1024, Chest, 26, 3, Weapon, "Flamitt"),
-                new ItemDescriptor(20, 11, 8, 64, Quiver1, 27, 4, Weapon, "Staff Of Claws"),
-                new ItemDescriptor(23, 12, 9, 64, Quiver1, 28, 5, Weapon, "Bolt Blade / Storm"),
-                new ItemDescriptor(25, 12, 10, 64, Quiver1, 29, 6, Weapon, "Fury / Ra Blade"),
-                new ItemDescriptor(27, 39, 11, 64, Quiver1, 30, 7, Weapon, "The Firestaff"),
-                new ItemDescriptor(32, 17, 12, 1472, Chest | Pouch | Quiver2, 31, 8, Weapon, "Dagger"),
-                new ItemDescriptor(33, 12, 13, 64, Quiver1, 32, 9, Weapon, "Falchion"),
-                new ItemDescriptor(34, 12, 13, 64, Quiver1, 33, 10, Weapon, "Sword"),
-                new ItemDescriptor(35, 12, 14, 64, Quiver1, 34, 11, Weapon, "Rapier"),
-                new ItemDescriptor(36, 12, 15, 64, Quiver1, 35, 12, Weapon, "Sabre / Biter"),
-                new ItemDescriptor(37, 12, 15, 64, Quiver1, 36, 13, Weapon, "Samurai Sword"),
-                new ItemDescriptor(38, 12, 16, 64, Quiver1, 37, 14, Weapon, "Delta / Side Splitter"),
-                new ItemDescriptor(39, 12, 17, 64, Quiver1, 38, 15, Weapon, "Diamond Edge"),
-                new ItemDescriptor(40, 42, 18, 64, Quiver1, 39, 16, Weapon, "Vorpal Blade"),
-                new ItemDescriptor(41, 12, 19, 64, Quiver1, 40, 17, Weapon, "The Inquisitor / Dragon Fang"),
-                new ItemDescriptor(42, 13, 20, 64, Quiver1, 41, 18, Weapon, "Axe"),
-                new ItemDescriptor(43, 13, 21, 64, Quiver1, 42, 19, Weapon, "Hardcleave / Executioner"),
-                new ItemDescriptor(44, 21, 22, 64, Quiver1, 43, 20, Weapon, "Mace"),
-                new ItemDescriptor(45, 21, 22, 64, Quiver1, 44, 21, Weapon, "Mace Of Order"),
-                new ItemDescriptor(46, 33, 23, 1088, Chest | Quiver1, 45, 22, Weapon, "Morningstar"),
-                new ItemDescriptor(47, 43, 24, 64, Quiver1, 46, 23, Weapon, "Club"),
-                new ItemDescriptor(48, 44, 24, 64, Quiver1, 47, 24, Weapon, "Stone Club"),
-                new ItemDescriptor(49, 14, 27, 64, Quiver1, 48, 25, Weapon, "Bow / Claw Bow"),
-                new ItemDescriptor(50, 45, 27, 64, Quiver1, 49, 26, Weapon, "Crossbow"),
-                new ItemDescriptor(51, 16, 26, 1472, Chest | Pouch | Quiver2, 50, 27, Weapon, "Arrow"),
-                new ItemDescriptor(52, 46, 26, 1472, Chest | Pouch | Quiver2, 51, 28, Weapon, "Slayer"),
-                new ItemDescriptor(53, 11, 27, 1088, Chest | Quiver1, 52, 29, Weapon, "Sling"),
-                new ItemDescriptor(54, 47, 42, 1472, Chest | Pouch | Quiver2, 53, 30, Weapon, "Rock"),
-                new ItemDescriptor(55, 48, 40, 1472, Chest | Pouch | Quiver2, 54, 31, Weapon, "Poison Dart"),
-                new ItemDescriptor(56, 49, 42, 1472, Chest | Pouch | Quiver2, 55, 32, Weapon, "Throwing Star"),
-                new ItemDescriptor(57, 50, 5, 64, Quiver1, 56, 33, Weapon, "Stick"),
-                new ItemDescriptor(58, 11, 5, 64, Quiver1, 57, 34, Weapon, "Staff"),
-                new ItemDescriptor(59, 31, 28, 1344, Chest | Pouch | Quiver1, 58, 35, Weapon, "Wand"),
-                new ItemDescriptor(60, 31, 29, 1344, Chest | Pouch | Quiver1, 59, 36, Weapon, "Teowand"),
-                new ItemDescriptor(61, 11, 30, 64, Quiver1, 60, 37, Weapon, "Yew Staff"),
-                new ItemDescriptor(62, 11, 31, 64, Quiver1, 61, 38, Weapon, "Staff Of Manar / Staff Of Irra"),
-                new ItemDescriptor(63, 11, 32, 64, Quiver1, 62, 39, Weapon, "Snake Staff / Cross Of Neta"),
-                new ItemDescriptor(64, 51, 33, 64, Quiver1, 63, 40, Weapon, "The Conduit / Serpent Staff"),
-                new ItemDescriptor(65, 32, 5, 1088, Chest | Quiver1, 64, 41, Weapon, "Dragon Spit"),
-                new ItemDescriptor(66, 30, 35, 64, Quiver1, 65, 42, Weapon, "Sceptre Of Lyf"),
-                new ItemDescriptor(135, 65, 36, 1088, Chest | Quiver1, 66, 43, Weapon, "Horn Of Fear"),
-                new ItemDescriptor(143, 45, 27, 64, Quiver1, 67, 44, Weapon, "Speedbow"),
-                new ItemDescriptor(28, 82, 1, 64, Quiver1, 68, 45, Weapon, "The Firestaff Complete"),
-                new ItemDescriptor(80, 23, 0, 1036, Chest | Neck | Torso, 69, 0, Clothe, "Cape"),
-                new ItemDescriptor(81, 23, 0, 1036, Chest | Neck | Torso, 70, 1, Clothe, "Cloak Of Night"),
-                new ItemDescriptor(82, 23, 0, 1040, Chest | Legs, 71, 2, Clothe, "Barbarian Hide / Tattered Pants"),
-                new ItemDescriptor(112, 55, 0, 1056, Chest | Feet, 72, 3, Clothe, "Sandals"),
-                new ItemDescriptor(114, 8, 0, 1056, Chest | Feet, 73, 4, Clothe, "Leather Boots"),
-                new ItemDescriptor(67, 24, 0, 1032, Chest | Torso, 74, 5, Clothe, "Robe Body / Tattered Shirt"),
-                new ItemDescriptor(83, 24, 0, 1040, Chest | Legs, 75, 6, Clothe, "Robe Legs"),
-                new ItemDescriptor(68, 24, 0, 1032, Chest | Torso, 76, 7, Clothe, "Fine Robe Body"),
-                new ItemDescriptor(84, 24, 0, 1040, Chest | Legs, 77, 8, Clothe, "Fine Robe Legs"),
-                new ItemDescriptor(69, 69, 0, 1032, Chest | Torso, 78, 9, Clothe, "Kirtle"),
-                new ItemDescriptor(70, 24, 0, 1032, Chest | Torso, 79, 10, Clothe, "Silk Shirt"),
-                new ItemDescriptor(85, 24, 0, 1040, Chest | Legs, 80, 11, Clothe, "Tabard"),
-                new ItemDescriptor(86, 69, 0, 1040, Chest | Legs, 81, 12, Clothe, "Gunna"),
-                new ItemDescriptor(71, 7, 0, 1032, Chest | Torso, 82, 13, Clothe, "Elven Doublet"),
-                new ItemDescriptor(87, 7, 0, 1040, Chest | Legs, 83, 14, Clothe, "Elven Huke"),
-                new ItemDescriptor(119, 57, 0, 1056, Chest | Feet, 84, 15, Clothe, "Elven Boots"),
-                new ItemDescriptor(72, 23, 0, 1032, Chest | Torso, 85, 16, Clothe, "Leather Jerkin"),
-                new ItemDescriptor(88, 23, 0, 1040, Chest | Legs, 86, 17, Clothe, "Leather Pants"),
-                new ItemDescriptor(113, 29, 0, 1056, Chest | Feet, 87, 18, Clothe, "Suede Boots"),
-                new ItemDescriptor(89, 69, 0, 1040, Chest | Legs, 88, 19, Clothe, "Blue Pants"),
-                new ItemDescriptor(73, 69, 0, 1032, Chest | Torso, 89, 20, Clothe, "Tunic"),
-                new ItemDescriptor(74, 24, 0, 1032, Chest | Torso, 90, 21, Clothe, "Ghi"),
-                new ItemDescriptor(90, 24, 0, 1040, Chest | Legs, 91, 22, Clothe, "Ghi Trousers"),
-                new ItemDescriptor(103, 53, 0, 1026, Chest | Head, 92, 23, Clothe, "Calista"),
-                new ItemDescriptor(104, 53, 0, 1026, Chest | Head, 93, 24, Clothe, "Crown Of Nerra"),
-                new ItemDescriptor(96, 9, 0, 1026, Chest | Head, 94, 25, Clothe, "Bezerker Helm"),
-                new ItemDescriptor(97, 9, 0, 1026, Chest | Head, 95, 26, Clothe, "Helmet"),
-                new ItemDescriptor(98, 9, 0, 1026, Chest | Head, 96, 27, Clothe, "Basinet"),
-                new ItemDescriptor(105, 54, 41, 1024, Chest, 97, 28, Clothe, "Buckler / Neta Shield"),
-                new ItemDescriptor(106, 54, 41, 512, HandsAndBackpack, 98, 29, Clothe, "Hide Shield / Crystal Shield"),
-                new ItemDescriptor(108, 10, 41, 512, HandsAndBackpack, 99, 30, Clothe, "Wooden Shield"),
-                new ItemDescriptor(107, 54, 41, 512, HandsAndBackpack, 100, 31, Clothe, "Small Shield"),
-                new ItemDescriptor(75, 19, 0, 1032, Chest | Torso, 101, 32, Clothe, "Mail Aketon"),
-                new ItemDescriptor(91, 19, 0, 1040, Chest | Legs, 102, 33, Clothe, "Leg Mail"),
-                new ItemDescriptor(76, 19, 0, 1032, Chest | Torso, 103, 34, Clothe, "Mithral Aketon"),
-                new ItemDescriptor(92, 19, 0, 1040, Chest | Legs, 104, 35, Clothe, "Mithral Mail"),
-                new ItemDescriptor(99, 9, 0, 1026, Chest | Head, 105, 36, Clothe, "Casque'n Coif"),
-                new ItemDescriptor(115, 19, 0, 1056, Chest | Feet, 106, 37, Clothe, "Hosen"),
-                new ItemDescriptor(100, 52, 0, 1026, Chest | Head, 107, 38, Clothe, "Armet"),
-                new ItemDescriptor(77, 20, 0, 8, Torso, 108, 39, Clothe, "Torso Plate"),
-                new ItemDescriptor(93, 22, 0, 16, Legs, 109, 40, Clothe, "Leg Plate"),
-                new ItemDescriptor(116, 56, 0, 1056, Chest | Feet, 110, 41, Clothe, "Foot Plate"),
-                new ItemDescriptor(109, 10, 41, 512, HandsAndBackpack, 111, 42, Clothe, "Large Shield / Sar Shield"),
-                new ItemDescriptor(101, 52, 0, 1026, Chest | Head, 112, 43, Clothe, "Helm Of Lyte / Helm Of Ra"),
-                new ItemDescriptor(78, 20, 0, 8, Torso, 113, 44, Clothe, "Plate Of Lyte / Plate Of Ra"),
-                new ItemDescriptor(94, 22, 0, 16, Legs, 114, 45, Clothe, "Poleyn Of Lyte / Poleyn Of Ra"),
-                new ItemDescriptor(117, 56, 0, 1056, Chest | Feet, 115, 46, Clothe, "Greave Of Lyte / Greave Of Ra"),
-                new ItemDescriptor(110, 10, 41, 512, HandsAndBackpack, 116, 47, Clothe, "Shield Of Lyte / Shield Of Ra"),
-                new ItemDescriptor(102, 52, 0, 1026, Chest | Head, 117, 48, Clothe, "Helm Of Darc / Dragon Helm"),
-                new ItemDescriptor(79, 20, 0, 8, Torso, 118, 49, Clothe, "Plate Of Darc / Dragon Plate"),
-                new ItemDescriptor(95, 22, 0, 16, Legs, 119, 50, Clothe, "Poleyn Of Darc / Dragon Poleyn"),
-                new ItemDescriptor(118, 56, 0, 1056, Chest | Feet, 120, 51, Clothe, "Greave Of Darc / Dragon Greave"),
-                new ItemDescriptor(111, 10, 41, 512, HandsAndBackpack, 121, 52, Clothe, "Shield Of Darc / Dragon Shield"),
-                new ItemDescriptor(140, 52, 0, 1026, Chest | Head, 122, 53, Clothe, "Dexhelm"),
-                new ItemDescriptor(141, 19, 0, 1032, Chest | Torso, 123, 54, Clothe, "Flamebain"),
-                new ItemDescriptor(142, 22, 0, 16, Legs, 124, 55, Clothe, "Powertowers"),
-                new ItemDescriptor(194, 81, 0, 1056, Chest | Feet, 125, 56, Clothe, "Boots Of Speed"),
-                new ItemDescriptor(196, 84, 0, 1032, Chest | Torso, 126, 57, Clothe, "Halter"),
-                new ItemDescriptor(0, 34, 0, 1280, Chest | Pouch, 127, 0, Miscelaneous, "Compass"),
-                new ItemDescriptor(8, 6, 0, 1281, Chest | Pouch | Consumable, 128, 1, Miscelaneous, "Water / Waterskin"),
-                new ItemDescriptor(10, 15, 0, 1284, Chest | Pouch | Neck, 129, 2, Miscelaneous, "Jewel Symal"),
-                new ItemDescriptor(12, 15, 0, 1284, Chest | Pouch | Neck, 130, 3, Miscelaneous, "Illumulet"),
-                new ItemDescriptor(146, 40, 0, 1280, Chest | Pouch, 131, 4, Miscelaneous, "Ashes"),
-                new ItemDescriptor(147, 41, 0, 1024, Chest, 132, 5, Miscelaneous, "Bones"),
-                new ItemDescriptor(125, 4, 37, 1280, Chest | Pouch, 133, 6, Miscelaneous, "Copper Coin / Sar Coin"),
-                new ItemDescriptor(126, 83, 37, 1280, Chest | Pouch, 134, 7, Miscelaneous, "Silver Coin"),
-                new ItemDescriptor(127, 4, 37, 1280, Chest | Pouch, 135, 8, Miscelaneous, "Gold Coin / Gor Coin"),
-                new ItemDescriptor(176, 18, 0, 1280, Chest | Pouch, 136, 9, Miscelaneous, "Iron Key"),
-                new ItemDescriptor(177, 18, 0, 1280, Chest | Pouch, 137, 10, Miscelaneous, "Key Of B"),
-                new ItemDescriptor(178, 18, 0, 1280, Chest | Pouch, 138, 11, Miscelaneous, "Solid Key"),
-                new ItemDescriptor(179, 18, 0, 1280, Chest | Pouch, 139, 12, Miscelaneous, "Square Key"),
-                new ItemDescriptor(180, 18, 0, 1280, Chest | Pouch, 140, 13, Miscelaneous, "Tourquoise Key"),
-                new ItemDescriptor(181, 18, 0, 1280, Chest | Pouch, 141, 14, Miscelaneous, "Cross Key"),
-                new ItemDescriptor(182, 18, 0, 1280, Chest | Pouch, 142, 15, Miscelaneous, "Onyx Key"),
-                new ItemDescriptor(183, 18, 0, 1280, Chest | Pouch, 143, 16, Miscelaneous, "Skeleton Key"),
-                new ItemDescriptor(184, 62, 0, 1280, Chest | Pouch, 144, 17, Miscelaneous, "Gold Key"),
-                new ItemDescriptor(185, 62, 0, 1280, Chest | Pouch, 145, 18, Miscelaneous, "Winged Key"),
-                new ItemDescriptor(186, 62, 0, 1280, Chest | Pouch, 146, 19, Miscelaneous, "Topaz Key"),
-                new ItemDescriptor(187, 62, 0, 1280, Chest | Pouch, 147, 20, Miscelaneous, "Sapphire Key"),
-                new ItemDescriptor(188, 62, 0, 1280, Chest | Pouch, 148, 21, Miscelaneous, "Emerald Key"),
-                new ItemDescriptor(189, 62, 0, 1280, Chest | Pouch, 149, 22, Miscelaneous, "Ruby Key"),
-                new ItemDescriptor(190, 62, 0, 1280, Chest | Pouch, 150, 23, Miscelaneous, "Ra Key"),
-                new ItemDescriptor(191, 62, 0, 1280, Chest | Pouch, 151, 24, Miscelaneous, "Master Key"),
-                new ItemDescriptor(128, 76, 0, 512, HandsAndBackpack, 152, 25, Miscelaneous, "Boulder"),
-                new ItemDescriptor(129, 3, 0, 1280, Chest | Pouch, 153, 26, Miscelaneous, "Blue Gem"),
-                new ItemDescriptor(130, 60, 0, 1280, Chest | Pouch, 154, 27, Miscelaneous, "Orange Gem"),
-                new ItemDescriptor(131, 61, 0, 1280, Chest | Pouch, 155, 28, Miscelaneous, "Green Gem"),
-                new ItemDescriptor(168, 27, 0, 1281, Chest | Pouch | Consumable, 156, 29, Miscelaneous, "Apple"),
-                new ItemDescriptor(169, 28, 0, 1281, Chest | Pouch | Consumable, 157, 30, Miscelaneous, "Corn"),
-                new ItemDescriptor(170, 25, 0, 1281, Chest | Pouch | Consumable, 158, 31, Miscelaneous, "Bread"),
-                new ItemDescriptor(171, 26, 0, 1281, Chest | Pouch | Consumable, 159, 32, Miscelaneous, "Cheese"),
-                new ItemDescriptor(172, 71, 0, 1025, Chest | Consumable, 160, 33, Miscelaneous, "Screamer Slice"),
-                new ItemDescriptor(173, 70, 0, 1025, Chest | Consumable, 161, 34, Miscelaneous, "Worm Round"),
-                new ItemDescriptor(174, 5, 0, 1281, Chest | Pouch | Consumable, 162, 35, Miscelaneous, "Drumstick / Shank"),
-                new ItemDescriptor(175, 66, 0, 1281, Chest | Pouch | Consumable, 163, 36, Miscelaneous, "Dragon Steak"),
-                new ItemDescriptor(120, 15, 0, 1284, Chest | Pouch | Neck, 164, 37, Miscelaneous, "Gem Of Ages"),
-                new ItemDescriptor(121, 15, 0, 1284, Chest | Pouch | Neck, 165, 38, Miscelaneous, "Ekkhard Cross"),
-                new ItemDescriptor(122, 58, 0, 1284, Chest | Pouch | Neck, 166, 39, Miscelaneous, "Moonstone"),
-                new ItemDescriptor(123, 59, 0, 1284, Chest | Pouch | Neck, 167, 40, Miscelaneous, "The Hellion"),
-                new ItemDescriptor(124, 59, 0, 1284, Chest | Pouch | Neck, 168, 41, Miscelaneous, "Pendant Feral"),
-                new ItemDescriptor(132, 79, 38, 1280, Chest | Pouch, 169, 42, Miscelaneous, "Magical Box Blue"),
-                new ItemDescriptor(133, 63, 38, 1280, Chest | Pouch, 170, 43, Miscelaneous, "Magical Box Green"),
-                new ItemDescriptor(134, 64, 0, 1280, Chest | Pouch, 171, 44, Miscelaneous, "Mirror Of Dawn"),
-                new ItemDescriptor(136, 72, 39, 1024, Chest, 172, 45, Miscelaneous, "Rope"),
-                new ItemDescriptor(137, 73, 0, 1280, Chest | Pouch, 173, 46, Miscelaneous, "Rabbit's Foot"),
-                new ItemDescriptor(138, 74, 0, 1280, Chest | Pouch, 174, 47, Miscelaneous, "Corbamite / Corbum"),
-                new ItemDescriptor(139, 75, 0, 1284, Chest | Pouch | Neck, 175, 48, Miscelaneous, "Choker"),
-                new ItemDescriptor(192, 77, 0, 1280, Chest | Pouch, 176, 49, Miscelaneous, "Lock Picks"),
-                new ItemDescriptor(193, 78, 0, 1280, Chest | Pouch, 177, 50, Miscelaneous, "Magnifier"),
-                new ItemDescriptor(197, 74, 0, 0, None, 178, 51, Miscelaneous, "Zokathra Spell"),
-                new ItemDescriptor(198, 41, 0, 1024, Chest, 179, 52, Miscelaneous, "Bones")
-            };
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/itemDescriptors.html"));
+
+            var decimalVal = new Regex(@"\((0|[1-9][0-9]*)\)");
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Skip(1)//skipp header
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new ItemDescriptor()
+                    {
+                        GlobalItemIndex = int.Parse(decimalVal.Match(columns[0]).Groups[1].Value),
+                        FloorGraphicsIndex = int.Parse(decimalVal.Match(columns[1]).Groups[1].Value),
+                        AttackCombo = int.Parse(decimalVal.Match(columns[2]).Groups[1].Value),
+                        CarryLocation = (CarrryLocations)int.Parse(decimalVal.Match(columns[3]).Groups[1].Value),
+                        TableIndex = int.Parse(columns[5]),
+                        InCategoryIndex = int.Parse(columns[6]),
+                        Category = (ObjectCategory)Enum.Parse(typeof(ObjectCategory), columns[7].Trim(), ignoreCase: true),
+                        Name = columns[8].Trim()
+                    };
+                    return res;
+
+                })
+                .ToArray();
         }
 
         private IList<string> GetWallTextureNames()

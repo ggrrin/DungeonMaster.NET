@@ -10,6 +10,7 @@ using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;

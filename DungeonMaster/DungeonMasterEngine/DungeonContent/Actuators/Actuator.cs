@@ -7,12 +7,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
     {
         public string DebugString { get; }
 
-        public Actuator(Vector3 position, string s) : base(position)
+        public Actuator(Vector3 position, string s) 
         {
             DebugString = s;
         }
 
-        protected Actuator(Vector3 position) : base(position) { }
+        protected Actuator() { }
 
         public override string ToString() => DebugString;
 

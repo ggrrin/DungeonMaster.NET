@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;

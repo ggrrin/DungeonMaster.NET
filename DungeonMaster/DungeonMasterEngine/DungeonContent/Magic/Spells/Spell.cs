@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         public bool Finished { get; private set; } = false;
 
 
-        protected Spell(Vector3 position) : base(position) { }
+        protected Spell(Vector3 position) { } 
 
         public abstract void Run();
 

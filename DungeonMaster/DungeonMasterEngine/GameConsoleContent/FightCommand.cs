@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;

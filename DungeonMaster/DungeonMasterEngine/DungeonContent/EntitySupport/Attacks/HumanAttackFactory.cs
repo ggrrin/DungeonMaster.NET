@@ -1,9 +1,10 @@
 using DungeonMasterEngine.DungeonContent.EntitySupport.Skills;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 
 namespace DungeonMasterEngine.DungeonContent.EntitySupport.Attacks
 {
-    class HumanAttackFactory
+    public class HumanAttackFactory : IAttackFactory
     {
         public string Name { get; }
         public int ExperienceGain { get; }
@@ -16,6 +17,19 @@ namespace DungeonMasterEngine.DungeonContent.EntitySupport.Attacks
 
         public int MapDifficulty { get; set; }
 
-        public IAttack CreateAttack(IEntity entity) => new HumanAttack(this, entity);
+        public HumanAttackFactory(string name, int experienceGain, int defenseModifer, int hitProbability, int damage, int fatigue, ISkillFactory skillIndex, int stamina, int mapDifficulty)
+        {
+            Name = name;
+            ExperienceGain = experienceGain;
+            DefenseModifer = defenseModifer;
+            HitProbability = hitProbability;
+            Damage = damage;
+            Fatigue = fatigue;
+            SkillIndex = skillIndex;
+            Stamina = stamina;
+            MapDifficulty = mapDifficulty;
+        }
+
+        public IAttack CreateAttackAction(IEntity attackProvider)=> new HumanAttack(this, attackProvider);
     }
 }

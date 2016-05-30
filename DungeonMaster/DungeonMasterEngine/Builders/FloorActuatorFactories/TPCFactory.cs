@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 using DungeonMasterEngine.DungeonContent.Constrains;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;

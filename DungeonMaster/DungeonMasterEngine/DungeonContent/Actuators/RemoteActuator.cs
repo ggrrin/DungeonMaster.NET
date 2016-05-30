@@ -9,9 +9,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
     public class RemoteActuator : Actuator
     {
         public bool Activated { get; protected set; } = true;
-        public RemoteActuator(Vector3 position, string s) : base(position) { }
 
-        public RemoteActuator(Vector3 position) : base(position) { }
+        public RemoteActuator(Vector3 position) { } 
         
         protected async Task SendOneMessageAsync(Tile targetTile, ActionStateX action, bool activated)
         {

@@ -2,7 +2,13 @@
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Builders;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Attacks;
+using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
+using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
@@ -26,12 +32,15 @@ namespace DungeonMasterEngine.GameConsoleContent
                                 Output.WriteLine("Hand is not empty.");
                             else
                             {
-                                var item = new Miscellaneous(Vector3.Zero);
+                                var factory = new MiscItemFactory("Fake item", 0, new IAttackFactory[0], BackPackStorageType.Instance.ToEnumerable());
+                                //TODO
 
-                                item.Identifer = identifer;
-                                item.Name = "Artifical fake item";
-                                theron.Hand = item;
-                                Output.Write($"Item: {item} added to hand.");
+
+                                theron.Hand = factory.Create(new MiscInitializator
+                                {
+                                    Attribute = 0
+                                });
+                                Output.Write($"Item: {theron.Hand} added to hand.");
                             }
                         }
                         else

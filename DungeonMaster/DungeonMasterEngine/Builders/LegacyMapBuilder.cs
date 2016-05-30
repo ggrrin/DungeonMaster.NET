@@ -8,7 +8,9 @@ using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.EntitySupport;
+using DungeonMasterEngine.DungeonContent.EntitySupport.Attacks;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,11 +53,95 @@ namespace DungeonMasterEngine.Builders
         public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
         public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
 
+        //item factories
+        public IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
+        public IReadOnlyList<ClothItemFactory> ClothFactories { get; }
+        public IReadOnlyList<ContainerItemFactory> ContainerFactories { get; }
+        public IReadOnlyList<ScrollItemFactory> ScrollFactories { get; }
+        public IReadOnlyList<PotionItemFactory> PotionFactories { get; }
+
+        public IReadOnlyList<MiscItemFactory> MiscFactories { get; }
+
         public LegacyMapBuilder()
         {
-            var p = new DungeonParser();
-            p.Parse();
-            Data = p.Data;
+            var parser = new DungeonParser();
+            parser.Parse();
+            Data = parser.Data;
+
+
+            WeaponFactories = Data.WeaponDescriptors
+                .Select(wd =>
+                {
+                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Weapon, wd.Identifer);
+                    return new WeaponItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor),
+                        ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation),
+                        wd.DeltaEnergy, (WeaponClass)wd.Class, wd.KineticEnergy, wd.ShootDamage, wd.Strength);
+                })
+                .ToArray();
+
+            ClothFactories = Data.ArmorDescriptors
+               .Select(wd =>
+               {
+                   var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Clothe, wd.Identifer);
+                   return new ClothItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                       , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation));
+               })
+               .ToArray(); ;
+
+            ContainerFactories = Data.ContainerDescriptors
+               .Select(wd =>
+               {
+                   var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Container, wd.Identifer);
+                   return new ContainerItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                       , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation));
+               })
+               .ToArray();
+
+            ScrollFactories = Data.ScrollDescriptors
+               .Select(wd =>
+               {
+                   var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Scroll, wd.Identifer);
+                   return new ScrollItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                       , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation));
+               })
+               .ToArray();
+
+
+            MiscFactories = Data.MiscDescriptors
+                .Select(wd =>
+                {
+                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Miscellenaous, wd.Identifer);
+                    return new MiscItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                        , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation));
+                })
+                .ToArray();
+
+            PotionFactories = Data.PotionDescriptors
+                .Select(p =>
+                {
+                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Potion, p.Identifer);
+                    return new PotionItemFactory(p.Name, p.Weight, GetAttackFactories(itemDescriptor)
+                        , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation));
+                })
+                .ToArray();
+
+        }
+
+        private IList<IAttackFactory> GetAttackFactories(ItemDescriptor itemsDescriptor)
+        {
+            // ReSharper disable once CoVariantArrayConversion
+            return Data.FightCombos[itemsDescriptor.AttackCombo].Actions
+               .Select(a =>
+                   new HumanAttackFactory(a.ActionDescriptor.Name,
+                   a.ActionDescriptor.ExperienceGain,
+                   a.ActionDescriptor.DefenseModifier,
+                   a.ActionDescriptor.HitProbability,
+                   a.ActionDescriptor.Damage,
+                   a.ActionDescriptor.Fatigue,
+                   null,
+                   a.ActionDescriptor.Stamina,
+                   -1))//TODO
+               .ToArray();
         }
 
         private void Initialize(int level, Point? startTile)
@@ -75,6 +161,8 @@ namespace DungeonMasterEngine.Builders
             TilesPositions = new Dictionary<Point, Tile>();
             bitMap = new BitMapMemory(CurrentMap.OffsetX, CurrentMap.OffsetY, CurrentMap.Width, CurrentMap.Height);
         }
+
+
 
         public override DungeonLevel GetLevel(int level, Dungeon dungeon, Point? startTile)
         {
@@ -279,14 +367,40 @@ namespace DungeonMasterEngine.Builders
             return currentTile.Position + offset;
         }
 
+        public IGrabableItemFactoryBase GetItemFactory(int identifer)
+        {
+            var factoreis = new IReadOnlyList<IGrabableItemFactoryBase>[]
+            {
+                ScrollFactories,
+                ContainerFactories,
+                PotionFactories,
+                WeaponFactories,
+                ClothFactories,
+                MiscFactories
+            };
+
+            int index = 0;
+            int previousListCount = 0;
+            foreach (var factory in factoreis)
+            {
+                if (index - previousListCount + factory.Count < 0)
+                {
+                    return factory[index - previousListCount];
+                }
+                previousListCount += factory.Count;
+            }
+            throw new IndexOutOfRangeException();
+        }
+
         public bool PrepareActuatorData(ActuatorItemData i, out Tile targetTile, out IConstrain constrain, out Texture2D decoration, bool putOnWall)
         {
             targetTile = GetTargetTile(i);
             constrain = null;
             decoration = null;
 
+
             if (i.Data > 0)
-                constrain = new GrabableItemConstrain(i.Data, i.IsRevertable);
+                constrain = new GrabableItemConstrain(GetItemFactory(i.Data), i.IsRevertable);
             else
                 constrain = new NoConstrain();
 

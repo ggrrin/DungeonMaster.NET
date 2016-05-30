@@ -1,4 +1,6 @@
-﻿using DungeonMasterEngine.DungeonContent.Items;
+﻿using DungeonMasterEngine.DungeonContent.EntitySupport;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
@@ -11,7 +13,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public bool Empty => Champion == null;
 
-        public ChampoinActuator(Vector3 position, Champion champion) :  base(position)
+        public ChampoinActuator(Vector3 position, Champion champion)   
         {
             Champion = champion;
         }

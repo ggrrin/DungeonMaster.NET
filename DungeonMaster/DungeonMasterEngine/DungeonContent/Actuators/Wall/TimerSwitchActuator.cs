@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;

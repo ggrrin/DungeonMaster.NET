@@ -1,6 +1,6 @@
 namespace DungeonMasterEngine.DungeonContent.Items
 {
-    internal enum WeaponClass
+    public enum WeaponClass
     {
         /* Weapon info class */
         C000_CLASS_SWING_WEAPON = 0, /* Class 0: SWING weapons */

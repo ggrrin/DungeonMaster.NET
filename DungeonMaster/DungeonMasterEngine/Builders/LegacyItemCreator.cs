@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
+using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
 using DungeonMasterParser;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Player;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItem;
+using DungeonMasterParser.Support;
+using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
@@ -16,7 +19,8 @@ namespace DungeonMasterEngine.Builders
     public class LegacyItemCreator : IItemCreator<IGrabableItem>
     {
         private readonly LegacyMapBuilder builder;
-        
+        private ItemDescriptor descriptor;
+
         public Tile CurrentTile { get; private set; }
 
         public LegacyItemCreator(LegacyMapBuilder builder )
@@ -28,21 +32,10 @@ namespace DungeonMasterEngine.Builders
         {
             CurrentTile = parentTile;
             itemData.Processed = true;
-            var res = itemData.CreateItem(this);
-
-            if (res != null)
-                SetupGrabableItem(res, itemData);
-            return res;
+            descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData) itemData).ItemTypeIndex);
+            return itemData.CreateItem(this);
         }
 
-        private void SetupGrabableItem(IGrabableItem item, ItemData i)
-        {
-            var descriptor = builder.Data.ItemDescriptors[builder.Data.GetTableIndex(i.ObjectID.Category, ((GrabableItemData) i).ItemTypeIndex)];
-            item.Identifer = descriptor.GlobalItemIndex;
-            item.Name = descriptor.Name;
-            item.TableIndex = descriptor.TableIndex;
-            item.PossibleStorages = GetStorageTypes(descriptor.CarryLocation);
-        }
 
         public IEnumerable<IStorageType> GetStorageTypes(CarrryLocations locations)
         {
@@ -86,32 +79,69 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateContainer(ContainerItemData container)
         {
             container.Processed = true;
-            return new Container(builder.GetFloorPosition(container.TilePosition, CurrentTile), container.GetEnumerator(builder.Data).Select(x => CreateItem(x, CurrentTile)).ToList());
+            var initializator = new ContainerInitiator
+            { 
+                content = container
+                    .GetEnumerator(builder.Data)
+                    .Select(x => CreateItem(x, CurrentTile))
+                    .ToArray()
+            };
+            return builder.ContainerFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreatePotion(PotionItemData potion)
         {
-            return new Potion(builder.GetFloorPosition(potion.TilePosition, CurrentTile));
+            potion.Processed = true;
+            var initializator = new PotionInitializer
+            {
+                PotionPower = potion.PotionPower
+            };
+            return builder.PotionFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateWeapon(WeaponItemData weapon)
         {
-            return new Weapon(builder.GetFloorPosition(weapon.TilePosition, CurrentTile));
+            weapon.Processed = true;
+            var initializator = new WeaponInitializator
+            {
+                IsBroken = weapon.IsBroken,
+                ChargeCount = weapon.ChargeCount,
+                IsCursed = weapon.IsCursed,
+                IsPoisoned = weapon.IsPoisoned
+            };
+            return builder.WeaponFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateScrool(ScrollItemData scroll)
         {
-            return new Scroll(builder.GetFloorPosition(scroll.TilePosition, CurrentTile), scroll.Text);
+            scroll.Processed = true;
+            var initializator = new ScrollInitializator
+            {
+                Text = scroll.Text
+            };
+            return builder.ScrollFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateMisc(MiscellaneousItemData misc)
         {
-            return new Miscellaneous(builder.GetFloorPosition(misc.TilePosition, CurrentTile));
+            misc.Processed = true;
+            var initializator = new MiscInitializator
+            {
+                Attribute = misc.AttributeValueIndex
+            };
+            return builder.MiscFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateCloth(ClothItemData cloth)
         {
-            return new Cloth(builder.GetFloorPosition(cloth.TilePosition, CurrentTile));
+            cloth.Processed = true;
+            var initalizator = new ClothInitializator
+            {
+                IsCruised = cloth.IsCursed,
+                IsBroken =  cloth.IsBroken
+            };
+
+            return builder.ClothFactories[descriptor.InCategoryIndex].Create(initalizator);
         }
 
         public IGrabableItem CreateCreature(CreatureItem creature)

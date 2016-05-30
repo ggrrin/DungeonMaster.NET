@@ -3,6 +3,7 @@ using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Floor;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;

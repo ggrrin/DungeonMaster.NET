@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
+using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
 using DungeonMasterEngine.DungeonContent.Items;

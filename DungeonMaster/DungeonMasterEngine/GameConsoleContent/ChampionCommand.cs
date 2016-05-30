@@ -2,6 +2,7 @@
 using DungeonMasterEngine.Player;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.EntitySupport;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

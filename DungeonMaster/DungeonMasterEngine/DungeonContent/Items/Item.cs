@@ -1,4 +1,5 @@
 ﻿using System;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
@@ -51,11 +52,10 @@ namespace DungeonMasterEngine.DungeonContent.Items
             }
         }
 
-        protected Item(Vector3 position) : base(position)
+        protected Item() 
         {
             Graphics = new CubeGraphic
             {
-                Position = position,
                 Scale = new Vector3(0.25f),
                 DrawFaces = CubeFaces.All ^ CubeFaces.Floor,
                 Outter = true

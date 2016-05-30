@@ -5,11 +5,6 @@ namespace DungeonMasterEngine.DungeonContent
 {
     public abstract class WorldObject : IWorldObject
     {
-        protected WorldObject(Vector3 position)
-        {
-            Position = position;
-        }
-
         public abstract IGraphicProvider GraphicsProvider { get; }
 
         public virtual Vector3 Position { get; set; }
