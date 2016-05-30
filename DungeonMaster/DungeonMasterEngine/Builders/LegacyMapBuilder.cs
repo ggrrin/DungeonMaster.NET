@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
-using DungeonMasterEngine.DungeonContent.EntitySupport;
-using DungeonMasterEngine.DungeonContent.EntitySupport.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.Skills;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -53,6 +55,30 @@ namespace DungeonMasterEngine.Builders
         public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
         public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
 
+        public IReadOnlyList<ISkillFactory> Skills { get; } = new ISkillFactory[]
+        {
+            SkillFactory<FighterSkill>.Instance,
+            SkillFactory<NinjaSkill>.Instance,
+            SkillFactory<PriestSkill>.Instance,
+            SkillFactory<WizardSkill>.Instance,
+            SkillFactory<SwingSkill>.Instance,
+            SkillFactory<ThrustSkill>.Instance,
+            SkillFactory<ClubSkill>.Instance,
+            SkillFactory<ParrySkill>.Instance,
+            SkillFactory<StealSkill>.Instance,
+            SkillFactory<FightSkill>.Instance,
+            SkillFactory<ThrowSkill>.Instance,
+            SkillFactory<ShootSkill>.Instance,
+            SkillFactory<IdentifySkill>.Instance,
+            SkillFactory<HealSkill>.Instance,
+            SkillFactory<InfluenceSkill>.Instance,
+            SkillFactory<DeffendSkill>.Instance,
+            SkillFactory<FireSkill>.Instance,
+            SkillFactory<AirSkill>.Instance,
+            SkillFactory<EarthSkill>.Instance,
+            SkillFactory<WaterSkill>.Instance,
+        };
+
         //item factories
         public IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
         public IReadOnlyList<ClothItemFactory> ClothFactories { get; }
@@ -68,6 +94,7 @@ namespace DungeonMasterEngine.Builders
             parser.Parse();
             Data = parser.Data;
 
+            ItemCreator = new LegacyItemCreator(this);
 
             WeaponFactories = Data.WeaponDescriptors
                 .Select(wd =>
@@ -132,17 +159,19 @@ namespace DungeonMasterEngine.Builders
             // ReSharper disable once CoVariantArrayConversion
             return Data.FightCombos[itemsDescriptor.AttackCombo].Actions
                .Select(a =>
-                   new HumanAttackFactory(a.ActionDescriptor.Name,
-                   a.ActionDescriptor.ExperienceGain,
-                   a.ActionDescriptor.DefenseModifier,
-                   a.ActionDescriptor.HitProbability,
-                   a.ActionDescriptor.Damage,
-                   a.ActionDescriptor.Fatigue,
-                   null,
-                   a.ActionDescriptor.Stamina,
-                   -1))//TODO
+                    new ComboAttackFactory(a.UseCharges == 1, a.MinimumSkillLevel,
+                       new HumanAttackFactory(a.ActionDescriptor.Name,
+                           a.ActionDescriptor.ExperienceGain,
+                           a.ActionDescriptor.DefenseModifier,
+                           a.ActionDescriptor.HitProbability,
+                           a.ActionDescriptor.Damage,
+                           a.ActionDescriptor.Fatigue,
+                           Skills[a.ActionDescriptor.ImprovedSkill],
+                           a.ActionDescriptor.Stamina,
+                           -1)))
                .ToArray();
         }
+
 
         private void Initialize(int level, Point? startTile)
         {
@@ -379,11 +408,11 @@ namespace DungeonMasterEngine.Builders
                 MiscFactories
             };
 
-            int index = 0;
+            int index = identifer;
             int previousListCount = 0;
             foreach (var factory in factoreis)
             {
-                if (index - previousListCount + factory.Count < 0)
+                if (index - (previousListCount + factory.Count) < 0)
                 {
                     return factory[index - previousListCount];
                 }

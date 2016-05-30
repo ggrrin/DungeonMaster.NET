@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Initializers;
 using DungeonMasterEngine.Player;

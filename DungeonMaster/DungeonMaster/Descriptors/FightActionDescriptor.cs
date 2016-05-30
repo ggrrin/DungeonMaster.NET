@@ -35,7 +35,7 @@ namespace DungeonMasterParser.Descriptors
 
         public int Number { get; set; }
         public string Name { get; set; }
-        public string ImprovedSkill { get; set; }
+        public int ImprovedSkill { get; set; }
         public int ExperienceGain { get; set; }
         public int DefenseModifier { get; set; }
         public int Stamina { get; set; }

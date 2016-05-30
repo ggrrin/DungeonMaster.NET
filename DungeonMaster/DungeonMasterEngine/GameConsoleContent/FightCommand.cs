@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.EntitySupport;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
@@ -28,40 +28,42 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            Theron t = ConsoleContext.AppContext.Theron;
-            Champion champoin = null;
-            IFightAction action = null;
-            if (Parameters.Length == 0)
-            {
-                champoin = await GetFromItemIndex(t.PartyGroup);
-                action = await GetFromItemIndex(champoin.FightActions.ToArray());
-            }
-            else if (Parameters.Length == 1)
-            {
-                champoin = GetItemAt(t.partyGoup, 0);
-                action = await GetFromItemIndex(champoin?.FightActions.ToArray());
+            //todo
+            //Theron t = ConsoleContext.AppContext.Theron;
+            //Champion champoin = null;
+            //IFightAction action = null;
+            //if (Parameters.Length == 0)
+            //{
+            //    champoin = await GetFromItemIndex(t.PartyGroup);
+            //    action = await GetFromItemIndex(champoin.FightActions.ToArray());
+            //}
+            //else if (Parameters.Length == 1)
+            //{
+            //    champoin = GetItemAt(t.partyGoup, 0);
+            //    action = await GetFromItemIndex(champoin?.FightActions.ToArray());
 
-            }
-            else if (Parameters.Length == 2)
-            {
-                champoin = GetItemAt(t.partyGoup, 0);
-                action = GetItemAt(champoin?.FightActions.ToArray(), 1);
-            }
+            //}
+            //else if (Parameters.Length == 2)
+            //{
+            //    champoin = GetItemAt(t.partyGoup, 0);
+            //    action = GetItemAt(champoin?.FightActions.ToArray(), 1);
+            //}
 
-            if (champoin != null && action != null)
-            {
-                Fight(champoin, action);
-            }
-            else
-            {
-                Output.WriteLine("Invalid arguments.");
-            }
+            //if (champoin != null && action != null)
+            //{
+            //    Fight(champoin, action);
+            //}
+            //else
+            //{
+            //    Output.WriteLine("Invalid arguments.");
+            //}
         }
 
         public void Fight(IEntity champion, IFightAction action)
         {
-            if(!champion.FightActions.Contains(action))
-                throw new ArgumentException();
+            //TODO
+            //if(!champion.FightActions.Contains(action))
+            //    throw new ArgumentException();
 
             action.Apply(champion, ConsoleContext.AppContext.Theron.GetEnemy(champion));
         }

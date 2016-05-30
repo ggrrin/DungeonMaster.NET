@@ -271,6 +271,13 @@ namespace DungeonMasterParser
                     foreach (var tuple in tr.Elements("td").Select(td => td.InnerText).Zip(properties, Tuple.Create))
                     {
                         int val;
+
+                        if (tuple.Item2 == nameof(res.ImprovedSkill))
+                        {
+                            res.ImprovedSkill = int.Parse(tuple.Item1.Split(':')[0]); 
+                            continue;
+                        }
+
                         if (int.TryParse(tuple.Item1, out val))
                             res.GetType().GetProperty(tuple.Item2).SetValue(res, val);
                         else

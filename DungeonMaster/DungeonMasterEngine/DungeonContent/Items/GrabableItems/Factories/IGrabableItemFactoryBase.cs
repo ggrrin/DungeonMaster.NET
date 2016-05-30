@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.EntitySupport.Attacks;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 
 namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {

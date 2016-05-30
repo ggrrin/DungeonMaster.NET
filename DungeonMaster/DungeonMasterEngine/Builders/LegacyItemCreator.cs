@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
+using DungeonMasterEngine.Builders.Initializators;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterParser;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
@@ -79,7 +80,7 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateContainer(ContainerItemData container)
         {
             container.Processed = true;
-            var initializator = new ContainerInitiator
+            var initializator = new ContainerInitializer
             { 
                 content = container
                     .GetEnumerator(builder.Data)

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.EntitySupport.Attacks;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory;
-using DungeonMasterEngine.DungeonContent.EntitySupport.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 
 namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
@@ -21,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
             Name = name;
             Weight = weight;
             combos = new HashSet<IAttackFactory>(attackCombo);
-            locations = new HashSet<IStorageType>(CarryLocation);
+            locations = new HashSet<IStorageType>(carryLocation);
         }
 
         public bool CanBeStoredIn(IStorageType storage) => locations.Contains(storage);

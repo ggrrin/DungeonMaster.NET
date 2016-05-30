@@ -1,4 +1,4 @@
-﻿using DungeonMasterEngine.DungeonContent.EntitySupport;
+﻿using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.GameConsoleContent;

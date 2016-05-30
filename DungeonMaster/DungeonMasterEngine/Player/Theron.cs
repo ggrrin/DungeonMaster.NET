@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.EntitySupport;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -48,16 +48,16 @@ namespace DungeonMasterEngine.Player
         {
             Location = location;
 
-            var x = new[]{
+            //var x = new[]{
             //TODO remove champion mocap
-            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
-            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
-            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
-            new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
-            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
-            {
-                throw new Exception();
-            }
+            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
+            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
+            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
+            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
+            //if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            //{
+            //    throw new Exception();
+            //}
         }
 
         protected override bool CanMoveToTile(Tile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
