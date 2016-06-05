@@ -3,6 +3,7 @@ using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ActionState = DungeonMasterEngine.DungeonContent.Actuators.ActionState;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {

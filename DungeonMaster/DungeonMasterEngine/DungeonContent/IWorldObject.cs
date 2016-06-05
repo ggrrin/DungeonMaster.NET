@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.Interfaces;
+﻿using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent
@@ -7,5 +8,6 @@ namespace DungeonMasterEngine.DungeonContent
     {
         IGraphicProvider GraphicsProvider { get; }
         Vector3 Position { get; set; }
+        IRenderer Renderer { get; set; }
     }
 }

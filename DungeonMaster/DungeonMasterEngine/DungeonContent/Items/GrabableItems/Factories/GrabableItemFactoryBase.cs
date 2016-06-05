@@ -25,5 +25,6 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 
         public bool CanBeStoredIn(IStorageType storage) => locations.Contains(storage);
 
+        public abstract IGrabableItem Create();
     }
 }

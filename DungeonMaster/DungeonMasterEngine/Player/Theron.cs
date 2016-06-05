@@ -25,6 +25,9 @@ namespace DungeonMasterEngine.Player
         private KeyboardState prevKeyboard;
 
         public IGraphicProvider GraphicsProvider => null;
+
+        public IRenderer Renderer { get; set; }
+
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
 
@@ -43,6 +46,8 @@ namespace DungeonMasterEngine.Player
                 hand = value;
             }
         }
+
+        public Champion Leader { get; private set; }
 
         public Theron(Tile location, Game game) : base(game)
         {

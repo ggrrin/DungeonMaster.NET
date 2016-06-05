@@ -19,14 +19,5 @@ namespace DungeonMasterEngine.Graphics.ResourcesProvides
             get { InitCheck(); return indexBuffer; }
             protected set { indexBuffer = value; }
         }
-
-        private List<Texture2D> textures;
-        public IReadOnlyList<Texture2D> Textures { get { return textures; } }
-        
-        protected override void Initialize()
-        {
-            base.Initialize();
-            textures = new List<Texture2D>();
-        }      
     }
 }

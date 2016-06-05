@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
@@ -39,6 +43,19 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
                 .Where(t => t.Item2.Area.Intersects(space.Area))
                 .Select(t => t.Item1);
         }
+    }
 
+
+    public interface ILocationHolder<in TSourceConstrain, in TRequestor> 
+    {
+        IList<TSource> Intersects<TSource>(TRequestor requestor, IEnumerable<TSource> items ) where TSource : TSourceConstrain;
+    }
+
+    public class ActuatorLocationHolder3D : ILocationHolder<Item,Ray>
+    {
+        public IList<TSource> Intersects<TSource>(Ray requestor, IEnumerable<TSource> items) where TSource : Item
+        {
+            throw new NotImplementedException();
+        }
     }
 }

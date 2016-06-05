@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DungeonMasterEngine.Builders.Initializators;
 using DungeonMasterEngine.DungeonContent.Entity.Attacks;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Initializers;
@@ -25,6 +26,15 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
         public Weapon Create<TItemInitiator>(TItemInitiator initiator) where TItemInitiator : IWeaponInitializer
         {
             return new Weapon(initiator, this);
+        }
+
+        public override IGrabableItem Create()
+        {
+            return Create(new WeaponInitializator
+            {
+                ChargeCount = 15
+            });
+
         }
     }
 }

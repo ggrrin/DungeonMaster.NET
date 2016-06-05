@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
     public class LogicTileActivator : TileContentActivator
     {
         public int BitIndex { get; }
-        public ActionState BitAction { get; }
+        public Actuators.ActionState BitAction { get; }
 
         public LogicTileActivator( ActionStateX action)
         {
@@ -20,16 +20,16 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             {
                 switch (BitAction)
                 {
-                    case ActionState.Clear:
+                    case Actuators.ActionState.Clear:
                         gate[BitIndex] = false;
                         break;
-                    case ActionState.Set:
+                    case Actuators.ActionState.Set:
                         gate[BitIndex] = true;
                         break;
-                    case ActionState.Toggle:
+                    case Actuators.ActionState.Toggle:
                         gate[BitIndex] ^= true;
                         break;
-                    case ActionState.Hold:
+                    case Actuators.ActionState.Hold:
                         throw new InvalidOperationException();
                 }
             }
@@ -38,14 +38,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             {
                 switch (BitAction)
                 {
-                    case ActionState.Set:
+                    case Actuators.ActionState.Set:
                         counter.Increase();
                         break;
-                    case ActionState.Clear:
-                    case ActionState.Toggle:
+                    case Actuators.ActionState.Clear:
+                    case Actuators.ActionState.Toggle:
                         counter.Decrease();
                         break;
-                    case ActionState.Hold:
+                    case Actuators.ActionState.Hold:
                         throw new InvalidOperationException();
                 }
             }

@@ -57,6 +57,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DungeonContent\Actuators\Wall\X.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializator.cs" />
     <Compile Include="DungeonContent\Entity\Properties\ExperienceProperty.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />

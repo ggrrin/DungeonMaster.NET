@@ -12,5 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
         IEnumerable<IAttackFactory> AttackCombo { get; }
         IEnumerable<IStorageType> CarryLocation { get; }
         bool CanBeStoredIn(IStorageType storage);
+
+        IGrabableItem Create();
     }
 }
