@@ -14,7 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 
         public N4(Point gridPosition, FourthSpace[,] fabric)
         {
-            neighbours = MapDirection.AllSides
+            neighbours = MapDirection.Sides
                 .Select(side => Tuple.Create<MapDirection, Point>(side, gridPosition + side))
                 .Where(p => p.Item2.X >= 0 && p.Item2.Y >= 0)
                 .Where(p => p.Item2.X < fabric.GetLength(0) && p.Item2.Y < fabric.GetLength(1))

@@ -37,7 +37,16 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -76,7 +85,7 @@
     <Compile Include="Items\GrabableItemData.cs" />
     <Compile Include="Items\ItemData.cs" />
     <Compile Include="ITileCreator.cs" />
-    <Compile Include="Support\LocTrg.cs" />
+    <Compile Include="Support\LocalTarget.cs" />
     <Compile Include="ObjectDumper.cs" />
     <Compile Include="Support\RemoteTarget.cs" />
     <Compile Include="Support\Target.cs" />
@@ -134,6 +143,9 @@
     <Content Include="Data\creatures.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\doorgraphics.html" />
+    <Content Include="Data\floorgraphics.html" />
+    <Content Include="Data\wallgraphics.html" />
     <Content Include="Data\itemDescriptors.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

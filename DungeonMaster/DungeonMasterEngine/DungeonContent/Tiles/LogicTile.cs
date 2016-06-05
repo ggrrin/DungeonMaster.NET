@@ -7,20 +7,15 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     //TODO look how the activation of "normal" actuators is done !!!!!!!
 
 
-    public class LogicMessage : Message
+    public class LogicTileInitializer : TileInitializer
     {
-        public int Specifer { get; }
-
-        public LogicMessage(MessageAction action, int specifer) : base(action)
-        {
-            Specifer = specifer;
-        }
+        public new event Initializer<LogicTileInitializer> Initializing;
+        public ActuatorX Actuator { get; }
     }
-    
 
-    public sealed class LogicTile : Tile<LogicMessage>
+    public sealed class LogicTile : Tile<Message>
     {
-        public override void AcceptMessage(LogicMessage message)
+        public override void AcceptMessage(Message message)
         {
             //TODO logic with specifier 
         }
@@ -29,10 +24,18 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public IEnumerable<LogicGate> Gates { get; set; }
 
-        public IEnumerable<CounterActuator> Counters { get; internal set; }
+        //public IEnumerable<CounterActuator> Counters { get; internal set; }
 
-        public LogicTile(Vector3 position) : base(position)
-        { }
+        public LogicTile(LogicTileInitializer initializer) : base(initializer)
+        {
+            initializer.Initializing += Initialize;
+
+        }
+
+        private void Initialize(LogicTileInitializer initializer)
+        {
+            initializer.Initializing -= Initialize;
+        }
 
         public override void ActivateTileContent() { }
 

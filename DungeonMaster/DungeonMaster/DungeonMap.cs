@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DungeonMasterParser.Enums;
+using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
@@ -106,7 +107,7 @@ namespace DungeonMasterParser
         //            Other values: Unknown
         
         //        Bits 11-8: Index for door type 0 (Same possible values as door type 1)
-        public int DoorType0Index { get; set; }
+        public DoorType DoorType0Index { get; set; }
         
         //        Bits 7-4: Map graphics style.Must be 0h in Dungeon Master and Chaos Strikes Back because there is only one style available(other values cause graphical glitches or crashes). Here are the possible values in Dungeon Master 2:
         //            0: Blue zone
@@ -115,10 +116,11 @@ namespace DungeonMasterParser
         //            3: Interior
         //            4: Skullkeep roof
         //            5: Mist
+        public int WallSet { get; set; }
 
 
         //        Bits 3-0: 00 : Floor and ceiling graphics style.Must be 0h in Dungeon Master and Chaos Strikes Back because there is only one style available(other values cause graphical glitches or crashes). Unused in Dungeon Master II(always 0h).
-        
+        public int FloorSet { get; set; }
         //------------------------------------------------------------------------------------------
         //MAP_DATA  
         //------------------------------------------------------------------------------------------
@@ -144,10 +146,10 @@ namespace DungeonMasterParser
 
         public byte[] CreaturesDecoration { get; set; }
 
-        public string[] WallDecorations { get; set; }
+        public GraphicsDescriptor[] WallDecorations { get; set; }
 
-        public string[] FloorDecorations { get; set; }
+        public GraphicsDescriptor[] FloorDecorations { get; set; }
 
-        public string[] DoorDecorations { get; set; }
+        public GraphicsDescriptor[] DoorDecorations { get; set; }
     }
 }

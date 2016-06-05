@@ -18,11 +18,11 @@ namespace DungeonMasterParser
     {
         private readonly Dictionary<string, DescriptorBase> descriptorMaping = new Dictionary<string, DescriptorBase>();
 
-        public IList<string> WallDecorations { get; }
+        public IList<GraphicsDescriptor> WallDecorations { get; }
 
-        public IList<string> FloorDecorations { get; }
+        public IList<GraphicsDescriptor> FloorDecorations { get; }
 
-        public IList<string> DoorDecorations { get; }
+        public IList<GraphicsDescriptor> DoorDecorations { get; }
 
         public IList<ItemDescriptor> ItemDescriptors { get; }
 
@@ -416,104 +416,64 @@ namespace DungeonMasterParser
                 .ToArray();
         }
 
-        private IList<string> GetWallTextureNames()
+        private IList<GraphicsDescriptor> GetWallTextureNames()
         {
-            var wallDecorations = new string[60];
-            wallDecorations[0] = "Unreadable Wall Inscription";
-            wallDecorations[1] = "Square Alcove";
-            wallDecorations[2] = "Vi Altar";
-            wallDecorations[3] = "Arched Alcove";
-            wallDecorations[4] = "Hook";
-            wallDecorations[5] = "Iron Lock";
-            wallDecorations[6] = "Wood Ring";
-            wallDecorations[7] = "Small Switch";
-            wallDecorations[8] = "Dent 1";
-            wallDecorations[9] = "Dent 2";
-            wallDecorations[10] = "Iron Ring";
-            wallDecorations[11] = "Crack";
-            wallDecorations[12] = "Slime Outlet";
-            wallDecorations[13] = "Dent 3";
-            wallDecorations[14] = "Tiny Switch";
-            wallDecorations[15] = "Green Switch Out";
-            wallDecorations[16] = "Blue Switch Out";
-            wallDecorations[17] = "Coin Slot";
-            wallDecorations[18] = "Double Iron Lock";
-            wallDecorations[19] = "Square Lock";
-            wallDecorations[20] = "Winged Lock";
-            wallDecorations[21] = "Onyx Lock";
-            wallDecorations[22] = "Stone Lock";
-            wallDecorations[23] = "Cross Lock";
-            wallDecorations[24] = "Topaz Lock";
-            wallDecorations[25] = "Skeleton Lock";
-            wallDecorations[26] = "Gold Lock";
-            wallDecorations[27] = "Tourquoise Lock";
-            wallDecorations[28] = "Emerald Lock";
-            wallDecorations[29] = "Ruby Lock";
-            wallDecorations[30] = "Ra Lock";
-            wallDecorations[31] = "Master Lock";
-            wallDecorations[32] = "Gem Hole";
-            wallDecorations[33] = "Slime";
-            wallDecorations[34] = "Grate";
-            wallDecorations[35] = "Fountain";
-            wallDecorations[36] = "Manacles";
-            wallDecorations[37] = "Ghoul's Head";
-            wallDecorations[38] = "Empty Torch Holder";
-            wallDecorations[39] = "Scratches";
-            wallDecorations[40] = "Poison Holes";
-            wallDecorations[41] = "Fireball Holes";
-            wallDecorations[42] = "Dagger Holes";
-            wallDecorations[43] = "Champion Mirror";
-            wallDecorations[44] = "Lever Up";
-            wallDecorations[45] = "Lever Down";
-            wallDecorations[46] = "Full Torch Holder";
-            wallDecorations[47] = "Red Switch Out";
-            wallDecorations[48] = "Eye Switch";
-            wallDecorations[49] = "Big Switch Out";
-            wallDecorations[50] = "Crack Switch Out";
-            wallDecorations[51] = "Green Switch In";
-            wallDecorations[52] = "Blue Switch In";
-            wallDecorations[53] = "Red Switch In";
-            wallDecorations[54] = "Big Switch In";
-            wallDecorations[55] = "Crack Switch In";
-            wallDecorations[56] = "Amalgam (Encased Gem)";
-            wallDecorations[57] = "Amalgam (Free Gem)";
-            wallDecorations[58] = "Amalgam (Without Gem)";
-            wallDecorations[59] = "Lord Order (Outside)";
-            return wallDecorations;
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/wallgraphics.html"));
 
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new GraphicsDescriptor()
+                    {
+                        Name = columns[0],
+                        Type = (GraphicsItemState)int.Parse(columns[1])
+                    };
+                    return res;
+                })
+                .ToArray();
         }
 
-        private IList<string> GetDoorTexturNames()
+        private IList<GraphicsDescriptor> GetDoorTexturNames()
         {
-            var doorDecorations = new string[12];
-            doorDecorations[0] = "Square Grid";
-            doorDecorations[1] = "Iron Bars";
-            doorDecorations[2] = "Jewels";
-            doorDecorations[3] = "Wooden Bars";
-            doorDecorations[4] = "Arched Grid";
-            doorDecorations[5] = "Block Lock";
-            doorDecorations[6] = "Corner Lock";
-            doorDecorations[7] = "Black door (Dungeon Entrance)";
-            doorDecorations[8] = "Red Triangle Lock";
-            doorDecorations[9] = "Triangle Lock";
-            doorDecorations[10] = "Ra Door Energy";
-            doorDecorations[11] = "Iron Door Damages";
-            return doorDecorations;
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/doorgraphics.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new GraphicsDescriptor()
+                    {
+                        Name = columns[0],
+                        Type = (GraphicsItemState)int.Parse(columns[1])
+                    };
+                    return res;
+                })
+                .ToArray();
         }
 
-        private IList<string> GetFloorTextureNames()
+        private IList<GraphicsDescriptor> GetFloorTextureNames()
         {
-            var floorDecorations = new string[9];
-            floorDecorations[0] = "Square Grate";
-            floorDecorations[1] = "Square Pressure Pad";
-            floorDecorations[2] = "Moss";
-            floorDecorations[3] = "Round Grate";
-            floorDecorations[4] = "Round Pressure Plate";
-            floorDecorations[5] = "Black Flame Pit";
-            floorDecorations[6] = "Crack";
-            floorDecorations[7] = "Tiny Pressure Pad";
-            floorDecorations[8] = "Puddle";
-            return floorDecorations;
+            var documet = new HtmlDocument();
+            documet.LoadHtml(File.ReadAllText("Data/floorgraphics.html"));
+
+            return documet.DocumentNode.SelectSingleNode("//table")
+                .Descendants("tr")
+                .Select(tr =>
+                {
+                    var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    var res = new GraphicsDescriptor()
+                    {
+                        Name = columns[0],
+                        Type = (GraphicsItemState)int.Parse(columns[1])
+                    };
+                    return res;
+                })
+                .ToArray();
         }
 
 

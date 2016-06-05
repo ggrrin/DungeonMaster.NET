@@ -1,16 +1,26 @@
-﻿using DungeonMasterEngine.Graphics;
+﻿using System;
+using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class WallIlusion: WallIlusion<Message>
     {
-        public WallIlusion(Vector3 position, bool isImaginary, bool isOpen) : base(position, isImaginary, isOpen) {}
+        public WallIlusion(WallIlusionInitializer initalizer) : base(initalizer) {}
     }
+
+    public class WallIlusionInitializer : FloorInitializer 
+    {
+        public new event Initializer<WallIlusionInitializer> Initializing;
+
+        public bool Imaginary { get; set; }
+        public bool Open { get; set; }
+    }
+
 
     public class WallIlusion<TMessage> : Floor<TMessage> where TMessage : Message
     {
-        public bool IsImaginary { get; } //TODO  what does it mean ???
+        public bool IsImaginary { get; } 
 
         private bool isOpen;
         public bool IsOpen
@@ -25,14 +35,15 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override bool IsAccessible => IsImaginary || IsOpen;
 
-        public WallIlusion(Vector3 position, bool isImaginary, bool isOpen) : base(position)
+        public WallIlusion(WallIlusionInitializer initalizer) : base(initalizer)
         {
-            IsImaginary = isImaginary;
-            this.isOpen = isOpen;
+            initalizer.Initializing += Initialize;
+        }
 
-            //todo illusion wall face
-            wallGraphic.Texture = wallGraphic.Resources.DefaultTexture;
-            wallGraphic.Outter = true;
+        private void Initialize(WallIlusionInitializer initializer)
+        {
+            //TODO initalization
+            initializer.Initializing -= Initialize;
         }
 
         public override void ActivateTileContent()
@@ -49,10 +60,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         protected override void UpdateWall()
         {
-            base.UpdateWall();
-            wallGraphic.Outter = !IsOpen;
-            if (!IsOpen)
-                wallGraphic.DrawFaces |= CubeFaces.Sides;
+            //base.UpdateWall();
+            //wallGraphic.Outter = !IsOpen;
+            //if (!IsOpen)
+            //    wallGraphic.DrawFaces |= CubeFaces.Sides;
         }
 
     }

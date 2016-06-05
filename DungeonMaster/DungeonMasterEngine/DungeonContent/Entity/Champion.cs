@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.Builders.WallActuatorFactories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
@@ -53,8 +52,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             set
             {
                 name = value;
-                ((CubeGraphic)GraphicsProvider).Outter = true;
-                ((CubeGraphic)GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget(name, Color.Blue, Color.White);
+                //((CubeGraphic)GraphicsProvider).Outter = true;
+                //TODO
+                //((CubeGraphic)GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget(name, Color.Blue, Color.White);
             }
         }
 

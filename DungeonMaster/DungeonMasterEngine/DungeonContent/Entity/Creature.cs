@@ -129,7 +129,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
 
             Location.Tile.LayoutManager.FreeSpace(this, location.Space);
-            ((CubeGraphic) GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget("DEAD", Color.Black, Color.Red);
+            //TODO
+            //((CubeGraphic) GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget("DEAD", Color.Black, Color.Red);
         }
 
         private async Task GoHome()

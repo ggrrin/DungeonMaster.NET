@@ -42,7 +42,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         public IEnumerator<Tuple<Tile, MapDirection>> GetEnumerator()
         {
-            return MapDirection.AllSides
+            return MapDirection.Sides
                 .Select(s => Tuple.Create(GetTile(s), s))
                 .Where(t => t.Item1 != null)
                 .GetEnumerator();

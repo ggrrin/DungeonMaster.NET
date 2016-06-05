@@ -150,7 +150,7 @@ namespace DungeonMasterEngine.DungeonContent
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             foreach (var t in currentVisibleTiles.ReverseLazy())
-                t.GraphicsProvider?.Draw(Effect);
+                throw new NotImplementedException();
 
             Theron.Draw(Effect);
 

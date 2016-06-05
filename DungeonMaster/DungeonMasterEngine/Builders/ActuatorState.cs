@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.Builders
             if (i == null)
                 throw new ArgumentNullException();
 
-            return ActuatorType == i.ActuatorType && IsLocal.OptionalyEquals(i.IsLocal) && RotateActuator.OptionalyEquals((i.ActionLocation as LocTrg)?.RotateAutors);
+            return ActuatorType == i.ActuatorType && IsLocal.OptionalyEquals(i.IsLocal) && RotateActuator.OptionalyEquals((i.ActionLocation as LocalTarget)?.RotateAutors);
         }
     }
 }

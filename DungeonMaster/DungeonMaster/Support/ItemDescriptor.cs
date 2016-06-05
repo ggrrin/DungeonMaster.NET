@@ -27,4 +27,15 @@ namespace DungeonMasterParser.Support
         //    Name = name;
         //}
     }
+
+    public struct GraphicsDescriptor
+    {
+        public string Name { get; set; }
+        public GraphicsItemState Type { get; set; } 
+    }
+
+    public enum GraphicsItemState 
+    {
+        GraphicOnly, Alcove, ViAltair, Fountain
+    }
 }

@@ -7,16 +7,23 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Stairs : Stairs<Message>
     {
-        public Stairs(Vector3 position) : base(position) {}
+        public Stairs(StairsInitializer initializer) : base(initializer) {}
+    }
 
-        public Stairs(Vector3 position, bool westEast, bool shapeL) : base(position, westEast, shapeL) {}
+    public class StairsInitializer : TileInitializer
+    {
+        public event Initializer<StairsInitializer> Initializer; 
+        //look direction from stairs
+        public MapDirection UpperLevelDirection { get; set; }
+        public MapDirection LowerLevelDirection { get; set; }
+        public bool Up { get; set; }
     }
 
     public class Stairs<TMessage> : Tile<TMessage>, ILevelConnector where TMessage : Message
     {
         public GraphicsCollection graphics;
 
-        private bool up = false;
+        private readonly bool up = false;
 
         public int NextLevelIndex => LevelIndex + (up ? -1 : +1);
 
@@ -24,15 +31,21 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         /// Creates fake stairs
         /// </summary>
         /// <param name="position"></param>
-        public Stairs(Vector3 position) : base(position)
+        public Stairs(StairsInitializer initializer) : base(initializer)
         {
-            Position = position;
-            up = true;
+            initializer.Initializer += Initialize;
         }
 
-        public Stairs(Vector3 position, bool westEast, bool shapeL) : base(position)
+        private void Initialize(StairsInitializer initializer)
         {
-            Position = position;
+            //TODO initalize
+
+            initializer.Initializer -= Initialize;
+        }
+
+        void lStairs(Vector3 position, bool westEast, bool shapeL) 
+        {
+            //Position = position;
 
             var original = new CubeGraphic { Position = position, DrawFaces = CubeFaces.All ^ CubeFaces.Front ^ CubeFaces.Floor };
             var nextFloor = new CubeGraphic { Position = original.Position + Vector3.Down, DrawFaces = CubeFaces.Sides ^ CubeFaces.Front };
@@ -63,7 +76,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
 
             graphics = new GraphicsCollection(original, nextFloor, stairs);
-            graphicsProviders.SubProviders.Add(graphics);
+            //graphicsProviders.SubProviders.Add(graphics);
         }
 
         public override bool IsAccessible

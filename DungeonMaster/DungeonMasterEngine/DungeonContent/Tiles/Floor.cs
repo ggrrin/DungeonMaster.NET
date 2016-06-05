@@ -5,23 +5,39 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
+    public class FloorInitializer : TileInitializer
+    {
+        public new event Initializer<FloorInitializer> Initializing;
+
+        public TileSide NorthSide { get; set; }
+        public TileSide EastSide { get; set; }
+        public TileSide SouthSide{ get; set; }
+        public TileSide WestSide { get; set; }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            Initializing?.Invoke(this);
+        }
+    }
+
     public class Floor : Floor<Message>
     {
-        public Floor(Vector3 position) : base(position) {}
+        public Floor(FloorInitializer initializer ) : base(initializer) {}
     }
 
     public class Floor<TMessage> : Tile<TMessage> where TMessage : Message 
     {
-
-        protected CubeGraphic wallGraphic;
-
-        public Floor(Vector3 position) : base(position)
+        public Floor(FloorInitializer initializer) : base(initializer)
         {
-            Position = position;
-            wallGraphic = new CubeGraphic { Position = position };
-            wallGraphic.Texture = wallGraphic.Resources.Content.Load<Texture2D>("Textures/Wall");
+            initializer.Initializing += Initialize;
+        }
 
-            graphicsProviders.SubProviders.Add(wallGraphic);
+        private void Initialize(FloorInitializer initializer)
+        {
+            //TODO
+
+            initializer.Initializing -= Initialize;
         }
 
         public override TileNeighbours Neighbours
@@ -40,33 +56,30 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         protected virtual void UpdateWall()
         {
-            wallGraphic.DrawFaces = CubeFaces.All; //reset
+            //TODO
+            //wallGraphic.DrawFaces = CubeFaces.All; //reset
 
-            if (Neighbours.North != null)
-                wallGraphic.DrawFaces ^= CubeFaces.Back;
-            if (Neighbours.East != null)
-                wallGraphic.DrawFaces ^= CubeFaces.Right;
-            if (Neighbours.South != null)
-                wallGraphic.DrawFaces ^= CubeFaces.Front;
-            if (Neighbours.West != null)
-                wallGraphic.DrawFaces ^= CubeFaces.Left;
+            //if (Neighbours.North != null)
+            //    wallGraphic.DrawFaces ^= CubeFaces.Back;
+            //if (Neighbours.East != null)
+            //    wallGraphic.DrawFaces ^= CubeFaces.Right;
+            //if (Neighbours.South != null)
+            //    wallGraphic.DrawFaces ^= CubeFaces.Front;
+            //if (Neighbours.West != null)
+            //    wallGraphic.DrawFaces ^= CubeFaces.Left;
         }
         public override bool IsAccessible => true;
     }
 
-    public class FloorMessage :Message {
-        public FloorMessage(MessageAction action) : base(action)
-        {
-            
-        }
-    }
 
-    abstract class InitializerBase
+
+
+    public abstract class InitializerBase
     {
         public abstract void Initialize();
     }
 
-    delegate void Initializer<TObject>(TObject initializer) where TObject : InitializerBase;
+    public delegate void Initializer<TObject>(TObject initializer) where TObject : InitializerBase;
 
     class MocapBaseInitializer : InitializerBase
     {

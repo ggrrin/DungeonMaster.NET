@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public interface IWorldObject
+    public interface IWorldObject 
     {
-        IGraphicProvider GraphicsProvider { get; }
-        Vector3 Position { get; set; }
+        Vector3 Position { get; }
         IRenderer Renderer { get; set; }
+        IInteractor Inter { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace DungeonMasterEngine.Graphics
 
         public IList<IGraphicProvider> SubProviders { get; }
 
-        public IList<WorldObject> SubDrawable { get; }  = new List<WorldObject>();
+        public IList<IWorldObject> SubDrawable { get; }  = new List<IWorldObject>();
 
         public GraphicsCollection()
         {
@@ -42,15 +42,15 @@ namespace DungeonMasterEngine.Graphics
 
         public void Draw(BasicEffect status)
         {
-            foreach (var i in listOfdrawableList)
-                foreach (var g in i)
-                    g?.GraphicsProvider?.Draw(status);
+            //foreach (var i in listOfdrawableList)
+            //    foreach (var g in i)
+            //        g?.GraphicsProvider?.Draw(status);
 
-            foreach (var p in SubProviders)            
-                p?.Draw(status);
+            //foreach (var p in SubProviders)            
+            //    p?.Draw(status);
 
-            foreach (var d in SubDrawable)
-                d.GraphicsProvider?.Draw(status);
+            //foreach (var d in SubDrawable)
+            //    d.GraphicsProvider?.Draw(status);
         }
     }
 }

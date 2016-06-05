@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Actuators;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
@@ -9,7 +10,18 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Door : Door<Message>
     {
-        public Door(Vector3 position, bool isWestEast, bool isOpen, Items.DoorItem doorItem) : base(position, isWestEast, isOpen, doorItem) {}
+        public Door(DoorInitializer initializer) : base(initializer) {}
+    }
+
+    public class DoorInitializer : FloorInitializer
+    {
+        public new event Initializer<DoorInitializer> Initializing;
+
+        public MapDirection Direction { get; set;  }
+        public bool Open { get; set; }
+
+        //...
+        //TODO
     }
 
 
@@ -17,9 +29,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     {
         private readonly GraphicsCollection graphics;
 
-        private readonly ModelGraphic doorFrame;
+        private ModelGraphic doorFrame;
 
-        private readonly Items.DoorItem doorItem;
+        private Items.DoorItem doorItem;
 
         public bool HasButton => doorItem.HasButton;
 
@@ -36,7 +48,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
         }
 
-        public Door(Vector3 position, bool isWestEast, bool isOpen, Items.DoorItem doorItem) : base(position)
+        public void oor(Vector3 position, bool isWestEast, bool isOpen, Items.DoorItem doorItem) 
         {
             doorFrame = new ModelGraphic();
             doorFrame.Model = doorFrame.Resources.Content.Load<Model>("Models/outterDoor");
@@ -49,21 +61,32 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             doorItem.Position = position + new Vector3((1 - doorItem.Size.X) / 2f, 0, (1 - doorItem.Size.Z) / 2f);
             SubItems.Add(doorItem);
 
-            graphics = new GraphicsCollection(wallGraphic, doorFrame);
             graphics.SubDrawable.Add(doorItem);
-            graphicsProviders.SubProviders.Add(graphics);
 
             ContentActivated = isOpen;
 
             if (doorItem.HasButton)
             {
                 Vector3 shift = !isWestEast ? new Vector3(0, 0, 0.4f) : new Vector3(0.4f, 0, 0);
-                var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle, 0, isOnceOnly: false));
-                SubItems.Add(t);
+                //TODO
+                //var t = new SwitchActuator(position + new Vector3(0, 0.2f, 0) + shift, this, new ActionStateX(ActionState.Toggle, 0, isOnceOnly: false));
+                //SubItems.Add(t);
             }
         }
 
 
         public override bool IsAccessible => ContentActivated;
+
+        public Door(DoorInitializer initializer) : base(initializer)
+        {
+            initializer.Initializing += Initialize;
+
+        }
+
+        private void Initialize(DoorInitializer initializer)
+        {
+            //TODO initialize
+            initializer.Initializing -= Initialize;
+        }
     }
 }

@@ -192,9 +192,10 @@ namespace DungeonMasterParser
 
             ushort doorIndicesData = r.ReadUInt16();
             m.DoorType = (DoorType)((doorIndicesData >> 12) & fourBitsMask);
-            m.DoorType0Index = (doorIndicesData >> 8) & fourBitsMask;
+            m.DoorType0Index = (DoorType)((doorIndicesData >> 8) & fourBitsMask);
+            m.WallSet = (doorIndicesData >> 4) & fourBitsMask;
+            m.FloorSet = doorIndicesData & fourBitsMask;
 
-            //TODO
             return m;
         }
 
@@ -348,7 +349,7 @@ namespace DungeonMasterParser
             if (a.IsLocal)
             {
                 int action = (data2 >> 4);
-                a.ActionLocation = new LocTrg
+                a.ActionLocation = new LocalTarget
                 {
                     RotateAutors = (action == 1 || action == 2),
                     ExperienceGain = action == 10
@@ -562,9 +563,9 @@ namespace DungeonMasterParser
             }
         }
 
-        public string[] SetupDecoration(IList<string> data, byte[] bytes)
+        public GraphicsDescriptor[] SetupDecoration(IList<GraphicsDescriptor> data, byte[] bytes)
         {
-            var res = new string[bytes.Length];
+            var res = new GraphicsDescriptor[bytes.Length];
             for (int i = 0; i < bytes.Length; i++)
                 res[i] = data[bytes[i]];
 

@@ -19,7 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
 {
-    public class Theron : PointOfViewCamera, IItem
+    public class Theron : PointOfViewCamera, IItem, ILeader
     {
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
@@ -27,6 +27,7 @@ namespace DungeonMasterEngine.Player
         public IGraphicProvider GraphicsProvider => null;
 
         public IRenderer Renderer { get; set; }
+        public IInteractor Inter { get; set; }
 
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
@@ -35,6 +36,11 @@ namespace DungeonMasterEngine.Player
         private IGrabableItem hand;
 
         public IReadOnlyList<Champion> PartyGroup => partyGoup;
+
+
+        public object Interactor => Ray; 
+
+        IReadOnlyList<IEntity> ILeader.PartyGroup => PartyGroup;
 
         public IGrabableItem Hand
         {
@@ -48,6 +54,19 @@ namespace DungeonMasterEngine.Player
         }
 
         public Champion Leader { get; private set; }
+
+        GrabableItem ILeader.Hand
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public Theron(Tile location, Game game) : base(game)
         {
@@ -198,19 +217,9 @@ namespace DungeonMasterEngine.Player
             return curLocation;
         }
 
-        public void PutToHand(IGrabableItem item)
-        {
-            Hand = item;
-        }
+    
 
-        public IGrabableItem TakeFromHand()
-        {
-            if (Hand == null)
-                throw new InvalidOperationException("Hand is empty.");
-            var res = Hand;
-            Hand = null;
-            return res;
-        }
+ 
 
         public bool AddChampoinToGroup(Champion champion)
         {
@@ -308,7 +317,8 @@ namespace DungeonMasterEngine.Player
 
             foreach (var champoin in PartyGroup)
             {
-                champoin.GraphicsProvider?.Draw(effect);
+                throw new NotImplementedException();
+                //champoin.GraphicsProvider?.Draw(effect);
 
             }
         }

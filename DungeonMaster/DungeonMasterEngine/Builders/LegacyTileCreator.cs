@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
@@ -46,20 +47,36 @@ namespace DungeonMasterEngine.Builders
             miniMapData = new Color[texture.Width * texture.Height];
         }
 
-        private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color; 
+        private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
 
         public Tile GetTile(TileInfo<TileData> tileInfo)
         {
             Successors = Enumerable.Empty<TileInfo<TileData>>();//reset sucessors
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
+            GridPosition = tileInfo.Position;
             return tileInfo.Tile.GetTile(this);
+        }
+
+        public Point GridPosition { get; private set; }
+
+        private WallCreator wallCreator;
+
+        public Tile GetTile(FloorTileData t)
+        {
+            SetMinimapTile(Color.White);
+
+            var initalizer = new FloorInitializer
+            { };
+
+            wallCreator.SetupSides(initalizer, GridPosition);
+            return new Floor(initalizer);
         }
 
         public Tile GetTile(PitTileData t)
         {
             SetMinimapTile(Color.Orange);
 
-            return new Pit(tilePosition);
+            throw new NotImplementedException();
         }
 
         public Tile GetTile(TeleporterTileData t)
@@ -80,7 +97,8 @@ namespace DungeonMasterEngine.Builders
                         Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
                     }};
                 }
-                return new Teleport(tilePosition, t.Teleport.MapIndex, destinationPosition, t.Teleport.Rotation.ToMapDirection(), t.IsOpen, t.IsVisible, GetTeleportScopeType(t.Teleport.Scope));
+
+                throw new NotImplementedException();
             }
             else
             {
@@ -96,7 +114,7 @@ namespace DungeonMasterEngine.Builders
         public Tile GetTile(TrickTileData t)
         {
             SetMinimapTile(Color.Green);
-            return new WallIlusion(tilePosition, t.IsImaginary, t.IsOpen);
+            throw new NotImplementedException();
         }
 
         public Tile GetTile(StairsTileData t)
@@ -107,23 +125,20 @@ namespace DungeonMasterEngine.Builders
             if (t.Direction == VerticalDirection.Up)
             {
                 stairs = FindStairs(tilePosition.ToGrid(), level - 1);
-                return new Stairs(tilePosition);//ghostStairs = to connect levels
+                //return new Stairs(tilePosition);//ghostStairs = to connect levels
             }
             else// take care of showing stairs in right direction
             {
                 stairs = FindStairs(tilePosition.ToGrid(), level + 1);
-                return new Stairs(tilePosition, t.Orientation != Orientation.NorthSouth, t.Orientation != stairs.Tile.Orientation);
-            }
-        }
+                //return new Stairs(tilePosition, t.Orientation != Orientation.NorthSouth, t.Orientation != stairs.Tile.Orientation);
 
-        public Tile GetTile(FloorTileData t)
-        {
-            SetMinimapTile(Color.White);
-            return new Floor(tilePosition);
+            }
+            throw new NotImplementedException();
         }
 
         public Tile GetTile(DoorTileData t)
         {
+
             SetMinimapTile(Color.Purple);
 
             if (t.Door != null)
@@ -139,7 +154,8 @@ namespace DungeonMasterEngine.Builders
                 if (t.Door.OrnamentationID != null)
                     door.Graphic.Texture = builder.DoorTextures[t.Door.OrnamentationID.Value - 1];
 
-                return new Door(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
+                //return new Door(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
+                throw new NotImplementedException();
             }
             else
             {

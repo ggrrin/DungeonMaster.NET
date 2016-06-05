@@ -7,31 +7,33 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
-    public abstract class Item : WorldObject,  IItem
+    public abstract class Item : IItem
     {
         private Tile location;
+        private Vector3 position;
         public Graphic Graphics { get; set; }
         public bool Visible { get; set; } = true;
         public bool AcceptMessages { get; set; }
         public MapDirection MapDirection { get; set; }
 
         public virtual BoundingBox Bounding => new BoundingBox(Position, Position + Graphics.Scale);
-        public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
+        //public sealed override IGraphicProvider GraphicsProvider => Visible ? Graphics : null;
 
-        public override Vector3 Position
+        public Vector3 Position
         {
-            get
-            {
-                return base.Position;
-            }
-
+            get { return position; }
             set
             {
-                base.Position = value;
+                position = value;
                 if (Graphics != null)
                     Graphics.Position = value;
             }
         }
+
+
+
+        public IRenderer Renderer { get; set; }
+        public IInteractor Inter { get; set; }
 
         public Tile Location
         {

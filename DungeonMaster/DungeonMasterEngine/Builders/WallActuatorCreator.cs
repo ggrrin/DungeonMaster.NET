@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.Builders.WallActuatorFactories;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Items;
@@ -29,21 +28,21 @@ namespace DungeonMasterEngine.Builders
             parser = new Parser<ActuatorState, ActuatorItemData, LegacyMapBuilder, Actuator>(new ActuatorFactoryBase[]
             {
                 //TODO add factories
-                new AlcoveHidingSwitchFactory(), 
-                new BasicAlcoveFactory(),
-                new BasicDecorationFactory(),
-                new BasicExchangerFactory(),
-                new BasicExchangerFactoryReverse(), 
-                new OnceOnlyExchangerFactory(), 
-                new BasicKeyHoleFactory(), 
-                new DestroyingKeyHoleFactory(), 
-                new ChampoinFactory(), 
-                new LeverSwitchFactory(), 
-                new TimerSwitchFactory(), 
-                new HolderButtonFactory(), 
-                new ButtonFactory(), 
-                new TimerMultiSwitchFactory(), 
-                new MultiKeyHoleFactory(), 
+                //new AlcoveHidingSwitchFactory(), 
+                //new BasicAlcoveFactory(),
+                //new BasicDecorationFactory(),
+                //new BasicExchangerFactory(),
+                //new BasicExchangerFactoryReverse(), 
+                //new OnceOnlyExchangerFactory(), 
+                //new BasicKeyHoleFactory(), 
+                //new DestroyingKeyHoleFactory(), 
+                //new ChampoinFactory(), 
+                //new LeverSwitchFactory(), 
+                //new TimerSwitchFactory(), 
+                //new HolderButtonFactory(), 
+                //new ButtonFactory(), 
+                //new TimerMultiSwitchFactory(), 
+                //new MultiKeyHoleFactory(), 
             });
         }
 
@@ -52,7 +51,7 @@ namespace DungeonMasterEngine.Builders
             CurrentTile = currentTile;
 
             var sides = 
-                MapDirection.AllSides
+                MapDirection.Sides
                 .Except(currentTile.Neighbours.Select(t => t.Item2))//sides with walls
                 .Select(side =>
                 {

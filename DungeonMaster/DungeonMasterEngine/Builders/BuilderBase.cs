@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.Builders
     {
         public abstract DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile);
 
-        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions, IList<Tile> tiles)
+        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions, IEnumerable<Tile> tiles)
         {
             foreach (var t in tiles)
             {

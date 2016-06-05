@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
@@ -12,11 +13,30 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Teleport : Teleport<Message>
     {
-        public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, MapDirection direction, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position, targetMapIndex, targetGridPosition, direction, teleportOpen, teleportVisible, scopeConstrain) {}
+        public Teleport(TeleprotInitializer initializer) : base(initializer) {}
+    }
+
+    public class TeleprotInitializer : FloorInitializer
+    {
+        public new event Initializer<TeleprotInitializer> Initializing;
+        
     }
 
     public class Teleport<TMessage> : Floor<TMessage>, ILevelConnector where TMessage : Message
     {
+
+        public Teleport(TeleprotInitializer initializer) : base(initializer)
+        {
+            initializer.Initializing += Initialize;
+
+        }
+
+        private void Initialize(TeleprotInitializer initializer)
+        {
+            //tODO
+            initializer.Initializing -= Initialize;
+        }
+
         public IConstrain ScopeConstrain { get; }
 
         public bool Visible { get; } //TODO use this value
@@ -51,32 +71,33 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public MapDirection Direction { get; }
 
-        public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, MapDirection direction, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position)
+        public void xTeleport(Vector3 position, int targetMapIndex, Point targetGridPosition, MapDirection direction, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) 
         {
             InitializeGraphics();
-            NextLevelIndex = targetMapIndex;
-            TargetTilePosition = targetGridPosition;
-            Direction = direction;
-            ContentActivated = teleportOpen;
-            Visible = teleportVisible;
-            ScopeConstrain = scopeConstrain;
+            //TODO uncoommment
+            //NextLevelIndex = targetMapIndex;
+            //TargetTilePosition = targetGridPosition;
+            //Direction = direction;
+            //ContentActivated = teleportOpen;
+            //Visible = teleportVisible;
+            //ScopeConstrain = scopeConstrain;
 
         }
 
         private void InitializeGraphics(bool reinit =false)
         {
-            if(reinit)
-                graphicsProviders.SubProviders.RemoveAt(graphicsProviders.SubProviders.Count-1);
+            //if(reinit)
+            //    graphicsProviders.SubProviders.RemoveAt(graphicsProviders.SubProviders.Count-1);
 
-            graphicsProviders.SubProviders.Add(
-            new CubeGraphic
-            {
-                DrawFaces = CubeFaces.All,
-                Outter = false,
-                Scale = new Vector3(0.5f, 0.5f, 0.5f),
-                Texture = ResourceProvider.Instance.DrawRenderTarget($"open:{IsOpen};\r\nvisible:{Visible}\r\nscp:{ScopeConstrain}\r\n{TargetTilePosition}\r\n{NextLevelIndex}", Color.Blue, Color.White),
-                Position = Position
-            });
+            //graphicsProviders.SubProviders.Add(
+            //new CubeGraphic
+            //{
+            //    DrawFaces = CubeFaces.All,
+            //    Outter = false,
+            //    Scale = new Vector3(0.5f, 0.5f, 0.5f),
+            //    Texture = ResourceProvider.Instance.DrawRenderTarget($"open:{IsOpen};\r\nvisible:{Visible}\r\nscp:{ScopeConstrain}\r\n{TargetTilePosition}\r\n{NextLevelIndex}", Color.Blue, Color.White),
+            //    Position = Position
+            //});
         }
 
 
@@ -100,4 +121,5 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         }
 
     }
+
 }

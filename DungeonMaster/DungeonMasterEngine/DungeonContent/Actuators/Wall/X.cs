@@ -11,6 +11,7 @@ using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Player;
+using Microsoft.Xna.Framework;
 using static DungeonMasterEngine.DungeonContent.Actuators.Wall.SensorEffect;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
@@ -26,12 +27,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
     public enum SensorEffect
     {
-        CM1_EFFECT_NONE = -1
-        , C00_EFFECT_SET = 0
+        //CM1_EFFECT_NONE = -1
+        C00_EFFECT_SET = 0
         , C01_EFFECT_CLEAR = 1
         , C02_EFFECT_TOGGLE = 2
         , C03_EFFECT_HOLD = 3
-        , C10_EFFECT_ADD_EXPERIENCE = 10
+        //, C10_EFFECT_ADD_EXPERIENCE = 10
     }
 
     enum ActuatorType
@@ -104,7 +105,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
 
 
-    class SubXC001 : Sensor
+    class Sensor1 : Sensor
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
@@ -116,15 +117,18 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             return true;
         }
 
+        public Sensor1(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXc002 : Sensor
+    class Sensor2 : Sensor
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
             L0753_B_DoNotTriggerSensor = ((theron.Hand == null) != RevertEffect);
             return true;
         }
+
+        public Sensor2(SensorInitializer initializer) : base(initializer) { }
     }
 
     abstract class SubXc017c011 : Sensor
@@ -143,9 +147,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
             return true;
         }
+
+        public SubXc017c011(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXc017 : SubXc017c011
+    class Sensor17 : SubXc017c011
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
@@ -161,9 +167,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
             return true;
         }
+
+        public Sensor17(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXc011 : SubXc017c011
+    class Sensor11 : SubXc017c011
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
@@ -176,11 +184,13 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
             return true;
         }
+
+        public Sensor11(SensorInitializer initializer) : base(initializer) { }
     }
 
 
 
-    class SubXc004 : Sensor
+    class Sensor4 : Sensor
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
@@ -189,19 +199,23 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 theron.Hand = null;
             return true; ;
         }
+
+        public Sensor4(SensorInitializer initializer) : base(initializer) { }
     }
 
 
-    class SubXc003 : Sensor
+    class Sensor3 : Sensor
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
             L0753_B_DoNotTriggerSensor = ((Data == theron.Hand.Factory) == RevertEffect);
             return true; ;
         }
+
+        public Sensor3(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXYc012 : Sensor
+    class Sensor12 : Sensor
     {
         protected override bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
@@ -217,9 +231,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
             return true;
         }
+
+        public Sensor12(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubSyc013 : Sensor
+    class Sensor13 : Sensor
     {
         public IGrabableItem Storage { get; private set; }
 
@@ -253,9 +269,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
             return true;
         }
+
+        public Sensor13(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXYc016 : Sensor
+    class Sensor16 : Sensor
     {
         public IGrabableItem Storage { get; private set; }
 
@@ -276,9 +294,11 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             L0753_B_DoNotTriggerSensor = false;
             return true;
         }
+
+        public Sensor16(SensorInitializer initializer) : base(initializer) { }
     }
 
-    class SubXYc127 : Sensor
+    public class Sensor127 : Sensor
     {
         public override bool TryTrigger(Theron theron, ActuatorX actuator, bool isLast)
         {
@@ -296,8 +316,31 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             return false;
         }
 
+        public Sensor127(SensorInitializer initializer) : base(initializer) { }
     }
 
+
+
+    public class SensorInitializer
+    {
+        public SensorEffect Effect { get; set; }
+        //local target
+        public bool ExperienceGain { get; set; }
+        public bool Rotate { get; set; }
+
+        //remote target
+        public EarthSides Specifer { get; set; }
+        public Tile TargetTile { get; set; }
+
+        public int TimeDelay { get; set; }
+        public bool LocalEffect { get; set; }
+        public bool RevertEffect { get; set; }
+        public bool OnceOnly { get; set; }
+        public bool Audible { get; set; }
+        public IGrabableItemFactoryBase Data { get; set; }
+
+
+    }
 
     public abstract class Sensor
     {
@@ -319,6 +362,21 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public bool Disabled { get; private set; }
 
         public IGrabableItemFactoryBase Data { get; }
+
+        protected Sensor(SensorInitializer initializer)
+        {
+            Effect = initializer.Effect;
+            ExperienceGain = initializer.ExperienceGain;
+            Rotate = initializer.Rotate;
+            Specifer = initializer.Specifer;
+            TargetTile = initializer.TargetTile;
+            TimeDelay = initializer.TimeDelay;
+            LocalEffect = initializer.LocalEffect;
+            RevertEffect = initializer.RevertEffect;
+            OnceOnly = initializer.OnceOnly;
+            Audible = initializer.Audible;
+            Data = initializer.Data;
+        }
 
         protected abstract bool Interact(Theron theron, ActuatorX actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor);
 
@@ -404,15 +462,25 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
     }
 
-    public abstract class ActuatorX
+
+    public interface IActuatorX  
     {
+        bool F275_aszz_SENSOR_IsTriggeredByClickOnWall(Theron theron);
+    }
+
+    public class ActuatorX : IActuatorX
+    {
+        public IRenderer Renderer { get; set; }
+
+        public ActuatorX(IEnumerable<Sensor> sensors)
+        {
+            Sensors = new List<Sensor>(sensors);
+        }
+
         public List<Sensor> Sensors { get; }
         public bool Rotate { get; set; }
-        public Tile Tile { get; }
-        public TileSide Side { get; }
 
-
-        bool F275_aszz_SENSOR_IsTriggeredByClickOnWall(Theron theron)
+        public bool F275_aszz_SENSOR_IsTriggeredByClickOnWall(Theron theron)
         {
             bool anyTriggered = false;
 
@@ -422,7 +490,6 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             F271_xxxx_SENSOR_ProcessRotationEffect();
             return anyTriggered;
         }
-
 
         void F271_xxxx_SENSOR_ProcessRotationEffect()
         {
@@ -438,6 +505,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
             Rotate = false;
         }
+
     }
 
 

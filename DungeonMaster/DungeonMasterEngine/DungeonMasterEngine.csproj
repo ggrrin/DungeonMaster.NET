@@ -57,6 +57,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Builders\WallCreator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ChampionActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\X.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializator.cs" />
     <Compile Include="DungeonContent\Entity\Properties\ExperienceProperty.cs" />
@@ -91,39 +93,18 @@
     <Compile Include="DungeonContent\Entity\Skills\StealSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ThrustSkill.cs" />
     <Compile Include="Builders\TileInfo.cs" />
-    <Compile Include="Builders\WallActuatorFactories\AlcoveHidingSwitchFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\BasicAlcoveFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\BasicDecorationFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\MultiKeyHoleFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\OnceOnlyExchangerFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\BasicExchangerFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\BasicExchangerFactoryReverse.cs" />
-    <Compile Include="Builders\WallActuatorFactories\BasicKeyHoleFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\TimerMultiSwitchFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\WaterSkill.cs" />
     <Compile Include="Builders\Initializators\WeaponInitializator.cs" />
     <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Button.cs" />
-    <Compile Include="Builders\WallActuatorFactories\ButtonFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\ChampoinFactory.cs" />
     <Compile Include="Builders\FloorActuatorCreator.cs" />
     <Compile Include="Builders\WallActuatorCreator.cs" />
-    <Compile Include="Builders\WallActuatorFactories\DestroyingKeyHoleFactory.cs" />
-    <Compile Include="Builders\WallActuatorFactories\HolderButtonFactory.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\HolderButtonActuator.cs" />
     <Compile Include="Builders\Parser.cs" />
     <Compile Include="Builders\FactoryBase.cs" />
-    <Compile Include="Builders\WallActuatorFactories\LeverSwitchFactory.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\SwitchSequenceActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\TimerSwitchActuator.cs" />
-    <Compile Include="Builders\WallActuatorFactories\TimerSwitchFactory.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\ActionState.cs" />
     <Compile Include="DungeonContent\Actuators\ActionStateX.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\CounterActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\LogicGate.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\LogicTileActivator.cs" />
     <Compile Include="DungeonContent\Actuators\SimpleRemoteActuator.cs" />
     <Compile Include="DungeonContent\Entity\Attacks\ComboAttackFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ShootSkill.cs" />
@@ -203,14 +184,10 @@
     <Compile Include="DungeonContent\GroupSupport\ISpace.cs" />
     <Compile Include="DungeonContent\Tiles\ITileContentActivator.cs" />
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\AlcoveActuator.cs" />
     <Compile Include="DungeonContent\Constrains\GrabableItemConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\PartDirectionConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\FloorActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\KeyHoleActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\LeverActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\PartyPossesionActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\SwitchActuator.cs" />
     <Compile Include="DungeonContent\Items\DecorationItem.cs" />
     <Compile Include="DungeonContent\MapDirection.cs" />
     <Compile Include="DungeonContent\Tiles\TileContentActivator.cs" />
@@ -230,7 +207,6 @@
     <Compile Include="GameConsoleContent\GameConsole.cs" />
     <Compile Include="DungeonContent\Constrains\NoConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\TypeConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\ExchangerActuator.cs" />
     <Compile Include="GameConsoleContent\HandCommand.cs" />
     <Compile Include="GameConsoleContent\Factories\HandCommandFactory.cs" />
     <Compile Include="GameConsoleContent\HelpCommand.cs" />
@@ -257,7 +233,6 @@
     <Compile Include="DungeonContent\Entity\BodyInventory\BigQuiverStorageType.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\BodyPart.cs" />
     <Compile Include="DungeonContent\Entity\Champion.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\ChampoinActuator.cs" />
     <Compile Include="Builders\LegacyItemCreator.cs" />
     <Compile Include="Builders\LegacyTileCreator.cs" />
     <Compile Include="DungeonContent\Actuators\Actuator.cs" />
@@ -369,6 +344,8 @@
     <Content Include="Data\creatures.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\doorgraphics.html" />
+    <Content Include="Data\floorgraphics.html" />
     <Content Include="Data\itemDescriptors.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -381,6 +358,7 @@
     <Content Include="Data\scroll.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\wallgraphics.html" />
     <Content Include="Data\weapons.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -413,7 +391,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Builders\WallActuatorFactories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
