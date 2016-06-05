@@ -13,7 +13,6 @@ using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Tiles;
-using Door = DungeonMasterEngine.DungeonContent.Tiles.Door;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
@@ -131,7 +130,7 @@ namespace DungeonMasterEngine.Builders
             {
                 t.Door.Processed = true;
 
-                var door = new DungeonContent.Items.Door(Vector3.Zero, t.Door.HasButton);
+                var door = new DungeonContent.Items.DoorItem(Vector3.Zero, t.Door.HasButton);
 
                 door.Graphic.Texture = builder.defaultDoorTexture;
                 if (t.Door.DoorAppearance)

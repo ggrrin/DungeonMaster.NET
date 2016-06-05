@@ -5,13 +5,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class Stairs : Tile, ILevelConnector
+    public class Stairs : Stairs<Message>
+    {
+        public Stairs(Vector3 position) : base(position) {}
+
+        public Stairs(Vector3 position, bool westEast, bool shapeL) : base(position, westEast, shapeL) {}
+    }
+
+    public class Stairs<TMessage> : Tile<TMessage>, ILevelConnector where TMessage : Message
     {
         public GraphicsCollection graphics;
 
         private bool up = false;
 
-        public int NextLevelIndex { get { return LevelIndex + (up ? -1 : +1); } }
+        public int NextLevelIndex => LevelIndex + (up ? -1 : +1);
 
         /// <summary>
         /// Creates fake stairs

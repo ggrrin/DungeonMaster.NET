@@ -14,52 +14,53 @@ namespace DungeonMasterEngine.Builders
         {
             var tiles = new List<Tile>();
 
-            if (i == 0)
-            {
-                tiles.Add(new Floor(new Vector3(0, 0, 2)));
+            //////removed becauso of changes in the project
+            //////if (i == 0)
+            //////{
+            //////    tiles.Add(new Floor(new Vector3(0, 0, 2)));
 
-                tiles.Add(new Stairs(new Vector3(2, 0, -3), false, true));
-                tiles.Add(new Floor(new Vector3(2, 0, -2)));
-                tiles.Add(new Floor(new Vector3(3, 0, -2)));
-                tiles.Add(new Floor(new Vector3(3, 0, -1)));
-                tiles.Add(new Floor(new Vector3(3, 0, 0)));
-                tiles.Add(new Floor(new Vector3(4, 0, 0)));
-                tiles.Add(new Floor(new Vector3(5, 0, 0)));
-                tiles.Add(new Floor(new Vector3(6, 0, 0)));
-                tiles.Add(new Floor(new Vector3(7, 0, 0)));
-                tiles.Add(new Floor(new Vector3(8, 0, 0)));
-                tiles.Add(new Floor(new Vector3(6, 0, -1)));
-                tiles.Add(new Floor(new Vector3(6, 0, -2)));
-                //Tiles.Add(new Floor(new Vector3(0, 0, 0), CubeFaces.Sides ^ CubeFaces.Back ^ CubeFaces.Left));
-                tiles.Add(new Stairs(new Vector3(0, 0, 1), false, false));
-                tiles.Add(new Floor(new Vector3(-1, 0, 2) ));
-                tiles.Add(new Stairs(new Vector3(-2, 0, 2), true, true));
-                tiles.Add(new Stairs(new Vector3(5, 0, -2), true, false));
-            }
-            else
-            {
-                tiles.Add(new Stairs(new Vector3(2, -1, -3)));
-                tiles.Add(new Floor(new Vector3(1, -1, -3)));
-                tiles.Add(new Floor(new Vector3(1, -1, -2)));
-                tiles.Add(new Floor(new Vector3(1, -1, -1)));
-                tiles.Add(new Floor(new Vector3(1, -1, 0)));
-                tiles.Add(new Floor(new Vector3(0, -1, -1)));
-                tiles.Add(new Floor(new Vector3(-1, -1, -1)));
-                tiles.Add(new Floor(new Vector3(0, -1, 0)));
+            //////    tiles.Add(new Stairs(new Vector3(2, 0, -3), false, true));
+            //////    tiles.Add(new Floor(new Vector3(2, 0, -2)));
+            //////    tiles.Add(new Floor(new Vector3(3, 0, -2)));
+            //////    tiles.Add(new Floor(new Vector3(3, 0, -1)));
+            //////    tiles.Add(new Floor(new Vector3(3, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(4, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(5, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(6, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(7, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(8, 0, 0)));
+            //////    tiles.Add(new Floor(new Vector3(6, 0, -1)));
+            //////    tiles.Add(new Floor(new Vector3(6, 0, -2)));
+            //////    //Tiles.Add(new Floor(new Vector3(0, 0, 0), CubeFaces.Sides ^ CubeFaces.Back ^ CubeFaces.Left));
+            //////    tiles.Add(new Stairs(new Vector3(0, 0, 1), false, false));
+            //////    tiles.Add(new Floor(new Vector3(-1, 0, 2) ));
+            //////    tiles.Add(new Stairs(new Vector3(-2, 0, 2), true, true));
+            //////    tiles.Add(new Stairs(new Vector3(5, 0, -2), true, false));
+            //////}
+            //////else
+            //////{
+            //////    tiles.Add(new Stairs(new Vector3(2, -1, -3)));
+            //////    tiles.Add(new Floor(new Vector3(1, -1, -3)));
+            //////    tiles.Add(new Floor(new Vector3(1, -1, -2)));
+            //////    tiles.Add(new Floor(new Vector3(1, -1, -1)));
+            //////    tiles.Add(new Floor(new Vector3(1, -1, 0)));
+            //////    tiles.Add(new Floor(new Vector3(0, -1, -1)));
+            //////    tiles.Add(new Floor(new Vector3(-1, -1, -1)));
+            //////    tiles.Add(new Floor(new Vector3(0, -1, 0)));
 
-                tiles.Add(new Stairs(new Vector3(0, -1, 1)));
-                tiles.Add(new Floor(new Vector3(-2, -1, -1)));
+            //////    tiles.Add(new Stairs(new Vector3(0, -1, 1)));
+            //////    tiles.Add(new Floor(new Vector3(-2, -1, -1)));
 
-                tiles.Add(new Floor(new Vector3(-2, -1, 0)));
-                tiles.Add(new Floor(new Vector3(-2, -1, 1)));
-                tiles.Add(new Stairs(new Vector3(-2, -1, 2)));
-                tiles.Add(new Floor(new Vector3(2, -1, 0)));
-                tiles.Add(new Floor(new Vector3(3, -1, 0)));
-                tiles.Add(new Floor(new Vector3(4, -1, 0)));
-                tiles.Add(new Floor(new Vector3(4, -1, -1)));
-                tiles.Add(new Floor(new Vector3(4, -1, -2)));
-                tiles.Add(new Stairs(new Vector3(5, -1, -2)));
-            }
+            //////    tiles.Add(new Floor(new Vector3(-2, -1, 0)));
+            //////    tiles.Add(new Floor(new Vector3(-2, -1, 1)));
+            //////    tiles.Add(new Stairs(new Vector3(-2, -1, 2)));
+            //////    tiles.Add(new Floor(new Vector3(2, -1, 0)));
+            //////    tiles.Add(new Floor(new Vector3(3, -1, 0)));
+            //////    tiles.Add(new Floor(new Vector3(4, -1, 0)));
+            //////    tiles.Add(new Floor(new Vector3(4, -1, -1)));
+            //////    tiles.Add(new Floor(new Vector3(4, -1, -2)));
+            //////    tiles.Add(new Stairs(new Vector3(5, -1, -2)));
+            //////}
 
             //if (i == 0)
             //{

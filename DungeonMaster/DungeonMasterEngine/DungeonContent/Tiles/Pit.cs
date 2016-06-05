@@ -4,7 +4,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class Pit : Floor
+
+    public class Pit : Pit<Message>
+    {
+        public Pit(Vector3 position) : base(position) {}
+    }
+
+    public class Pit<TMessage> : Floor<TMessage> where TMessage : Message
     {
         private GraphicsCollection graphics;
 

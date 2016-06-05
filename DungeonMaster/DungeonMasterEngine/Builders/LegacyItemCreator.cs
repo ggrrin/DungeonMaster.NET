@@ -12,6 +12,7 @@ using DungeonMasterEngine.Player;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
+using DoorItem = DungeonMasterParser.Items.DoorItem;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 

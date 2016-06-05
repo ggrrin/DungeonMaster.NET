@@ -89,11 +89,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             $"Deactivating message recived at {GridPosition}".Dump();
         }
 
-        public virtual void ExecuteContentActivator(ITileContentActivator contentActivator)
-        {
-            //throw new InvalidOperationException("Activator not implemented!");
-        }
-
         public virtual void OnObjectEntering(IItem obj) {}
 
         public virtual void OnObjectLeaving(IItem obj) {}

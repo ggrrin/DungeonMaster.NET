@@ -3,7 +3,12 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class WallIlusion : Floor
+    public class WallIlusion: WallIlusion<Message>
+    {
+        public WallIlusion(Vector3 position, bool isImaginary, bool isOpen) : base(position, isImaginary, isOpen) {}
+    }
+
+    public class WallIlusion<TMessage> : Floor<TMessage> where TMessage : Message
     {
         public bool IsImaginary { get; } //TODO  what does it mean ???
 

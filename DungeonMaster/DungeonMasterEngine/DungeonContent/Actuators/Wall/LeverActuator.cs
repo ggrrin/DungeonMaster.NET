@@ -74,7 +74,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         protected override void PerformMessage(Tile targetTile, ActionStateX action, bool activated)
         {
-            targetTile.ExecuteContentActivator(new LogicTileActivator(action));
+            //targetTile.ExecuteContentActivator(new LogicTileActivator(action));
             Toggle(targetTile);
         }
 

@@ -268,7 +268,7 @@
     <Compile Include="DungeonContent\Items\GrabableItems\Container.cs" />
     <Compile Include="DungeonContent\Entity\Creature.cs" />
     <Compile Include="Helpers\DepthFirstSearch.cs" />
-    <Compile Include="DungeonContent\Items\Door.cs" />
+    <Compile Include="DungeonContent\Items\DoorItem.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\GrabableItem.cs" />
     <Compile Include="DungeonContent\Items\Item.cs" />
     <Compile Include="DungeonContent\LevelCollection.cs" />

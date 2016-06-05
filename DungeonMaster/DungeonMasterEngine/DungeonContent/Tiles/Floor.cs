@@ -5,7 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class Floor : Tile//	 : Tile<TMessage> where TMessage : FloorMessage
+    public class Floor : Floor<Message>
+    {
+        public Floor(Vector3 position) : base(position) {}
+    }
+
+    public class Floor<TMessage> : Tile<TMessage> where TMessage : Message 
     {
 
         protected CubeGraphic wallGraphic;

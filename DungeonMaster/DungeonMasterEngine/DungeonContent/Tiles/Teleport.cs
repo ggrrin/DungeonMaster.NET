@@ -10,7 +10,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class Teleport : Floor, ILevelConnector
+    public class Teleport : Teleport<Message>
+    {
+        public Teleport(Vector3 position, int targetMapIndex, Point targetGridPosition, MapDirection direction, bool teleportOpen, bool teleportVisible, IConstrain scopeConstrain) : base(position, targetMapIndex, targetGridPosition, direction, teleportOpen, teleportVisible, scopeConstrain) {}
+    }
+
+    public class Teleport<TMessage> : Floor<TMessage>, ILevelConnector where TMessage : Message
     {
         public IConstrain ScopeConstrain { get; }
 
