@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DungeonMasterEngine.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,10 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     {
         public new event Initializer<FloorInitializer> Initializing;
 
-        public TileSide NorthSide { get; set; }
-        public TileSide EastSide { get; set; }
-        public TileSide SouthSide{ get; set; }
-        public TileSide WestSide { get; set; }
+        public IEnumerable<TileSide> Sides { get; set; }
 
         public override void Initialize()
         {
@@ -35,24 +33,13 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void Initialize(FloorInitializer initializer)
         {
-            //TODO
+            sides = initializer.Sides;
 
             initializer.Initializing -= Initialize;
         }
 
-        public override TileNeighbours Neighbours
-        {
-            get
-            {
-                return base.Neighbours;
-            }
-
-            set
-            {
-                base.Neighbours = value;
-                UpdateWall();
-            }
-        }
+        private IEnumerable<TileSide> sides;
+        public override IEnumerable<TileSide> Sides => sides; 
 
         protected virtual void UpdateWall()
         {

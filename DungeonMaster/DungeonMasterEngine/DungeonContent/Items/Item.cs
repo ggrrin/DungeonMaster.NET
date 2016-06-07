@@ -32,8 +32,8 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
 
 
-        public IRenderer Renderer { get; set; }
-        public IInteractor Inter { get; set; }
+        public Renderer Renderer { get; set; }
+        public Interactor Inter { get; set; }
 
         public Tile Location
         {

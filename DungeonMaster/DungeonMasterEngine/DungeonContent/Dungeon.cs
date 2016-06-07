@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(0,  new Point(10, 4));
+            var l = LoadLevel(0,  new Point(4 ,17));
             Theron = new Theron(l.StartTile, Game);
             Game.Components.Add(Theron);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;
@@ -81,6 +81,16 @@ namespace DungeonMasterEngine.DungeonContent
                 nextLevel = LoadLevel(e.NextLevelIndex, e.TargetTilePosition);//load level if necesarry    
 
             e.NextLevelEnter = nextLevel.TilesPositions[e.TargetTilePosition];//TODO unolad level disconect
+
+            var secondLevelConnector = e.NextLevelEnter as ILevelConnector;
+            //if changel is multiplexing set symetricaly 
+            if (secondLevelConnector != null)
+            {
+                secondLevelConnector.NextLevelEnter = (Tile)e;
+            }
+
+
+            
 
             UpdateVisibleTiles();
         }
@@ -149,8 +159,9 @@ namespace DungeonMasterEngine.DungeonContent
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
+            var mat = Matrix.Identity;
             foreach (var t in currentVisibleTiles.ReverseLazy())
-                throw new NotImplementedException();
+                t.Renderer.Render(ref mat, Effect, null);
 
             Theron.Draw(Effect);
 

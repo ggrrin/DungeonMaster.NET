@@ -45,6 +45,7 @@ namespace DungeonMasterEngine.Builders
 
             texture = new Texture2D(ResourceProvider.Instance.Device, this.builder.CurrentMap.OffsetX + this.builder.CurrentMap.Width, this.builder.CurrentMap.OffsetY + this.builder.CurrentMap.Height);
             miniMapData = new Color[texture.Width * texture.Height];
+            sidesCreator = new SidesCreator(builder);
         }
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
@@ -54,29 +55,37 @@ namespace DungeonMasterEngine.Builders
             Successors = Enumerable.Empty<TileInfo<TileData>>();//reset sucessors
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             GridPosition = tileInfo.Position;
-            return tileInfo.Tile.GetTile(this);
+            var tile = tileInfo.Tile.GetTile(this);
+            if (initalizer != null)
+            {
+                initalizer.GridPosition = GridPosition;
+                builder.TileInitializers.Add(initalizer);
+                initalizer = null;
+            }
+            return tile;
         }
 
         public Point GridPosition { get; private set; }
 
-        private WallCreator wallCreator;
+        private SidesCreator sidesCreator;
+        private FloorInitializer initalizer;
 
         public Tile GetTile(FloorTileData t)
         {
             SetMinimapTile(Color.White);
 
-            var initalizer = new FloorInitializer
-            { };
-
-            wallCreator.SetupSides(initalizer, GridPosition);
-            return new Floor(initalizer);
+            initalizer = new FloorInitializer();
+            sidesCreator.SetupSides(initalizer, GridPosition);
+            var res = new Floor(initalizer);
+            res.Interactor = builder.InteractorSource.GetTileInteractor(res);
+            return res;
         }
 
         public Tile GetTile(PitTileData t)
         {
             SetMinimapTile(Color.Orange);
 
-            throw new NotImplementedException();
+            return null;
         }
 
         public Tile GetTile(TeleporterTileData t)
@@ -98,7 +107,7 @@ namespace DungeonMasterEngine.Builders
                     }};
                 }
 
-                throw new NotImplementedException();
+                return null;
             }
             else
             {
@@ -108,13 +117,13 @@ namespace DungeonMasterEngine.Builders
 
         public Tile GetTile(WallTileData t)
         {
-            throw new InvalidOperationException();
+            return null;
         }
 
         public Tile GetTile(TrickTileData t)
         {
             SetMinimapTile(Color.Green);
-            throw new NotImplementedException();
+            return null;
         }
 
         public Tile GetTile(StairsTileData t)
@@ -133,7 +142,7 @@ namespace DungeonMasterEngine.Builders
                 //return new Stairs(tilePosition, t.Orientation != Orientation.NorthSouth, t.Orientation != stairs.Tile.Orientation);
 
             }
-            throw new NotImplementedException();
+            return null;
         }
 
         public Tile GetTile(DoorTileData t)
@@ -155,7 +164,7 @@ namespace DungeonMasterEngine.Builders
                     door.Graphic.Texture = builder.DoorTextures[t.Door.OrnamentationID.Value - 1];
 
                 //return new Door(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
-                throw new NotImplementedException();
+                return null;
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
@@ -36,6 +37,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             initializer.Initializing -= Initialize;
         }
+
+        public override IEnumerable<TileSide> Sides => Enumerable.Empty<TileSide>();
 
         public override void ActivateTileContent() { }
 

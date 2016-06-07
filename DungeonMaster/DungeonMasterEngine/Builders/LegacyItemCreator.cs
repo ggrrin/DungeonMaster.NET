@@ -14,7 +14,6 @@ using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using DoorItem = DungeonMasterParser.Items.DoorItem;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
-using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -23,16 +22,13 @@ namespace DungeonMasterEngine.Builders
         private readonly LegacyMapBuilder builder;
         private ItemDescriptor descriptor;
 
-        public Tile CurrentTile { get; private set; }
-
         public LegacyItemCreator(LegacyMapBuilder builder )
         {
             this.builder = builder;
         }
 
-        public IGrabableItem CreateItem(ItemData itemData, Tile parentTile)
+        public IGrabableItem CreateItem(ItemData itemData)
         {
-            CurrentTile = parentTile;
             itemData.Processed = true;
             descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData) itemData).ItemTypeIndex);
             return itemData.CreateItem(this);
@@ -85,7 +81,7 @@ namespace DungeonMasterEngine.Builders
             { 
                 content = container
                     .GetEnumerator(builder.Data)
-                    .Select(x => CreateItem(x, CurrentTile))
+                    .Select(x => CreateItem(x))
                     .ToArray()
             };
             return builder.ContainerFactories[descriptor.InCategoryIndex].Create(initializator);

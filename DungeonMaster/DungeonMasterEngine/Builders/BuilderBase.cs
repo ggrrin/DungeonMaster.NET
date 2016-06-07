@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
@@ -10,27 +12,20 @@ namespace DungeonMasterEngine.Builders
     {
         public abstract DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile);
 
-        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions, IEnumerable<Tile> tiles)
+        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions,  IEnumerable<TileInitializer> initializers)
         {
-            foreach (var t in tiles)
+            foreach (var t in initializers )
             {
                 Tile north = null;
                 Tile east = null;
                 Tile south = null;
                 Tile west = null;
 
-                var neighbours = new TileNeighbours();
-                if (tilesPositions.TryGetValue(t.GridPosition + new Point(0, -1), out north))
-                    neighbours.North = north;
-
-                if (tilesPositions.TryGetValue(t.GridPosition + new Point(1, 0), out east))
-                    neighbours.East = east;
-
-                if (tilesPositions.TryGetValue(t.GridPosition + new Point(0, 1), out south))
-                    neighbours.South = south;
-
-                if (tilesPositions.TryGetValue(t.GridPosition + new Point(-1, 0), out west))
-                    neighbours.West = west;
+                tilesPositions.TryGetValue(t.GridPosition + new Point(0, -1), out north);
+                tilesPositions.TryGetValue(t.GridPosition + new Point(1, 0), out east);
+                tilesPositions.TryGetValue(t.GridPosition + new Point(0, 1), out south);
+                tilesPositions.TryGetValue(t.GridPosition + new Point(-1, 0), out west);
+                var neighbours = new TileNeighbours(north, south, east, west);
                 t.Neighbours = neighbours;
             }
         }

@@ -98,9 +98,9 @@ namespace DungeonMasterEngine.Builders
             foreach (var t in tiles)            
                 tilePositions.Add(t.GridPosition, t);
 
-            SetupNeighbours(tilePositions, tiles);
+            SetupNeighbours(tilePositions,  null);
 
-            return new DungeonLevel(dungeon, tiles, new Creature[0], i, tilePositions, tiles.FirstOrDefault(), null);
+            return new DungeonLevel(dungeon, new Creature[0], i, tilePositions, tiles.FirstOrDefault(), null);
 
         }
     }

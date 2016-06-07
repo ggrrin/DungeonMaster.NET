@@ -57,9 +57,39 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Builders\WallCreator.cs" />
+    <Compile Include="Builders\SidesCreator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\IInteractable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Mess\ActuatorType.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ActuatorX.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ActuatorXRenderer.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Alcove.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Mess\BA.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Mess\BB.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Mess\BUninon.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ChampionActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\X.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\DecorationItem.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\EarthSides.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Fountain.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\IActuatorX.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\IMessageAcceptor.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\IRenderable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor0.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor1.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor11.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor12.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor127.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor13.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor16.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor17.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor2.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor3.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor4.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\SensorEffect.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\SensorInitializer.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\SubXc017c011.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ViAltairAlcove.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Mess\APart1.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializator.cs" />
     <Compile Include="DungeonContent\Entity\Properties\ExperienceProperty.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />
@@ -180,9 +210,17 @@
     <Compile Include="DungeonContent\Magic\Symbols\ZoSymbol.cs" />
     <Compile Include="DungeonContent\GroupSupport\LayoutManager.cs" />
     <Compile Include="DungeonContent\GroupSupport\IGroupLayout.cs" />
-    <Compile Include="DungeonContent\Tiles\INeighbourable.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\ActuatorSideRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\DecorationRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\DecorationResource.cs" />
+    <Compile Include="DungeonContent\Tiles\Sides\FloorTileSide.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\FloorTileRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\Interactor.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\ILeader.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\INeighbourable.cs" />
     <Compile Include="DungeonContent\GroupSupport\ISpace.cs" />
-    <Compile Include="DungeonContent\Tiles\ITileContentActivator.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\Renderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\ITile.cs" />
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Constrains\GrabableItemConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\Floor\PartDirectionConstrain.cs" />
@@ -190,7 +228,15 @@
     <Compile Include="DungeonContent\Actuators\Floor\PartyPossesionActuator.cs" />
     <Compile Include="DungeonContent\Items\DecorationItem.cs" />
     <Compile Include="DungeonContent\MapDirection.cs" />
-    <Compile Include="DungeonContent\Tiles\TileContentActivator.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\Message.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\MessageAction.cs" />
+    <Compile Include="DungeonContent\Tiles\Sides\ActuatorWallTileSide.cs" />
+    <Compile Include="DungeonContent\Tiles\Support\TileInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\TileRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Sides\TileSide.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\TileSideRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\TileWallSideRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\WallResource.cs" />
     <Compile Include="GameConsoleContent\Base\BaseInterpreter.cs" />
     <Compile Include="GameConsoleContent\Base\CommandParser.cs" />
     <Compile Include="GameConsoleContent\Base\ConsoleContext.cs" />
@@ -344,8 +390,12 @@
     <Content Include="Data\creatures.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\doorgraphics.html" />
-    <Content Include="Data\floorgraphics.html" />
+    <Content Include="Data\doorgraphics.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\floorgraphics.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\itemDescriptors.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -358,7 +408,9 @@
     <Content Include="Data\scroll.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\wallgraphics.html" />
+    <Content Include="Data\wallgraphics.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\weapons.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

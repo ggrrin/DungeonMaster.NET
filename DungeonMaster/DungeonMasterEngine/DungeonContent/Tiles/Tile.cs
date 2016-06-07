@@ -5,39 +5,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-
-    interface IInteractable<in TMessage> : IWorldObject  where TMessage : Message
-    {
-        void AcceptMessage(TMessage message);
-    }
-
-    public interface IInteractor
-    {
-        void Interact(ILeader group);
-    }
-
-    public interface ILeader
-    {
-        IReadOnlyList<IEntity> PartyGroup { get; }
-        GrabableItem Hand { get; set; }
-
-        object Interactor { get; }
-    }
-
-    public abstract class Tile<TMessage> : Tile, IInteractable<TMessage> where TMessage : Message
+    public abstract class Tile<TMessage> : Tile where TMessage : Message
     {
         protected Tile(TileInitializer initializer) : base(initializer) { }
 
@@ -62,27 +39,15 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            foreach (var tileSide in Sides)
+            {
+                tileSide.SendMessage(message);
+            }
         }
+
     }
 
-    public abstract class TileInitializer : InitializerBase
-    {
-        public event Initializer<TileInitializer> Initializing;
-        public DungeonLevel Level { get; set; }
-        public Point GridPosition { get; set; }
-
-        public Tile NorthNeighbour { get; set; }
-        public Tile EastNeighbour { get; set; }
-        public Tile SouthNeighbour { get; set; }
-        public Tile WestNeighbour { get; set; }
-
-        public override void Initialize()
-        {
-            Initializing?.Invoke(this);
-        }
-    }
-
-    public abstract class Tile : IWorldObject, IStopable, INeighbourable<Tile>
+    public abstract class Tile : IStopable, INeighbourable<Tile>, ITile
     {
         protected Tile(TileInitializer initializer)
         {
@@ -91,16 +56,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void Initialize(TileInitializer initializer)
         {
-
-
-
+            GridPosition = initializer.GridPosition;
+            Level = initializer.Level;
+            Neighbours = initializer.Neighbours;
+            Renderer.Initialize();
 
             initializer.Initializing -= Initialize;
         }
 
         public virtual LayoutManager LayoutManager { get; } = new LayoutManager();
 
-        public virtual TileNeighbours Neighbours { get; set; }
+        public virtual TileNeighbours Neighbours { get; protected set; }
 
         INeighbours<Tile> INeighbourable<Tile>.Neighbours => Neighbours;
 
@@ -142,13 +108,13 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual void OnObjectEntered(IItem obj)
         {
-            SubItems.Add(obj);
+            //SubItems.Add(obj);
             ObjectEntered?.Invoke(this, obj);
         }
 
         public virtual void OnObjectLeft(IItem obj)
         {
-            SubItems.Remove(obj);
+            //SubItems.Remove(obj);
             ObjectLeft?.Invoke(this, obj);
         }
 
@@ -157,194 +123,49 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public void Update(GameTime gameTime)
         {
-            foreach (var item in SubItems.ToArray()) //Enable modifing collection
-            {
-                item.Update(gameTime);
-            }
+            //foreach (var item in SubItems.ToArray()) //Enable modifing collection
+            //{
+            //    item.Update(gameTime);
+            //}
         }
 
-        public IEnumerable<TileSide> Sides { get; }
-
-        public IRenderer Renderer { get; set; }
-        public IInteractor Inter { get; set; }
+        public abstract IEnumerable<TileSide> Sides { get; }
+        public Renderer Renderer { get; set; }
+        public Interactor Interactor { get; set; }
     }
 
-    public class TileSide 
+
+    public class RayTileInteractor<TTile> : Interactor where TTile : ITile
     {
-        public MapDirection Face { get; }
-        public bool RandomDecoration { get; }
-
-        public TileSide(MapDirection face, bool randomDecoration)
-        {
-            Face = face;
-            RandomDecoration = randomDecoration;
-        }
-
-        public IRenderer Renderer { get; set; }
-    }
-
-    public class SubItemTileSide : TileSide
-    {
-        public IActuatorX Actuator { get; }
-
-        public SubItemTileSide(IActuatorX actuator, MapDirection direction) : base(direction, false)
-        {
-            Actuator = actuator;
-        }
-    }
-
-    public class TileWallSideRenderer : TileSideRenderer
-    {
-        public Texture2D Texture { get; }
-        public TileSide Side { get; }
-
         private Matrix transformation;
-
-        public WallResource Resource => WallResource.Instance;
-
-        public TileWallSideRenderer(Texture2D texture, TileSide side)
-        {
-            Texture = texture;
-            Side = side;
-
-            Matrix rotation;
-            GetTransformation(side.Face, out rotation);
-            Matrix translation;
-            var translationVector = new Vector3(0.5f);
-            Matrix.CreateTranslation(ref translationVector, out translation);
-            Matrix.Multiply(ref rotation, ref translation, out transformation);
-        }
-
-        public override void Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
-        {
-            Matrix finalTransformation;
-            Matrix.Multiply(ref transformation, ref currentTransformation, out finalTransformation);
-            RenderWall(effect, ref finalTransformation);
-
-            //TODO render
-            //Side.Actuator?.Renderer?.Render(ref finalTransformation, effect, parameter);
-        }
-
-        private void RenderWall(BasicEffect effect, ref Matrix finalTransformation)
-        {
-            effect.World = finalTransformation;
-            effect.Texture = Texture;
-            effect.GraphicsDevice.Indices = Resource.IndexBuffer;
-            effect.GraphicsDevice.SetVertexBuffer(Resource.VertexBuffer);
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                effect.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, Resource.VertexBuffer.VertexCount, 0, 2);
-            }
-        }
-    }
-
-    public abstract class TileSideRenderer : IRenderer
-    {
-        protected void GetTransformation(MapDirection faces, out Matrix matrix)
-        {
-            if (faces == MapDirection.North)
-                matrix = Matrix.Identity;
-
-            if (faces == MapDirection.East)
-                matrix = Matrix.CreateRotationY(-MathHelper.PiOver2);
-
-            if (faces == MapDirection.South)
-                matrix = Matrix.CreateRotationY(MathHelper.Pi);
-
-            if (faces == MapDirection.West)
-                matrix = Matrix.CreateRotationY(-MathHelper.PiOver2);
-
-            if (faces == MapDirection.Down)
-                matrix = Matrix.CreateRotationX(MathHelper.PiOver2);
-
-            if (faces == MapDirection.Up)
-                matrix = Matrix.CreateRotationX(-MathHelper.PiOver2);
-
-            throw new ArgumentOutOfRangeException(nameof(faces), faces, null);
-        }
-
-        public abstract void Render(ref Matrix currentTransformation, BasicEffect effect, object parameter);
-    }
-
-    public interface IRenderer
-    {
-        void Render(ref Matrix currentTransformation, BasicEffect effect, object parameter);
-    }
-
-    public class WallResource : BufferResourceProvider
-    {
-        public new static WallResource Instance { get; } = new WallResource();
-
-        private WallResource()
-        {
-            var lbf = -Vector3.UnitX / 2;
-            var rbf = Vector3.UnitX / 2;
-            var lbc = lbf + Vector3.Up;
-            var rbc = rbf + Vector3.Up;
-
-            var vertices = new VertexPositionNormalTexture[]
-            {
-                new VertexPositionNormalTexture(lbf, Vector3.UnitZ, new Vector2(0, 1)),
-                new VertexPositionNormalTexture(rbf, Vector3.UnitZ, new Vector2(1, 1)),
-                new VertexPositionNormalTexture(rbc, Vector3.UnitZ, new Vector2(1, 0)),
-                new VertexPositionNormalTexture(lbc, Vector3.UnitZ, new Vector2(0, 0)),
-            };
-
-            var indeices = new int[]
-            {
-                0,
-                2,
-                3,
-                0,
-                1,
-                2,
-            };
-
-            IndexBuffer = new IndexBuffer(Device, typeof(int), indeices.Length, BufferUsage.None);
-            IndexBuffer.SetData(indeices);
-
-            VertexBuffer = new VertexBuffer(Device, VertexPositionNormalTexture.VertexDeclaration, vertices.Length, BufferUsage.None);
-            VertexBuffer.SetData(vertices);
-        }
-    }
-
-    public class TileRenderer : IRenderer
-    {
-        private Matrix translation;
         public Tile Tile { get; }
 
-        public TileRenderer(Tile tile)
+        public RayTileInteractor(Tile tile)
         {
             Tile = tile;
-            translation = Matrix.CreateTranslation(tile.Position);
         }
 
-        public void Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
+        public override void Initialize()
         {
-            var finalTransformation = translation * currentTransformation;
-            foreach (var side in Tile.Sides)
-                side.Renderer.Render(ref finalTransformation, effect, parameter);
+            transformation = Matrix.CreateTranslation(Tile.Position);
         }
-    }
 
-    public enum MessageAction
-    {
-        Set,
-        Clear,
-        Toggle
-    }
-
-    public class Message
-    {
-        public int Specifier { get; }
-        public MessageAction Action { get; }
-
-        public Message(MessageAction action, int specifier)
+        public override void Interact(ILeader leader, ref Matrix matrix, object param)
         {
-            Action = action;
-            Specifier = specifier;
+            var ray = (Ray)leader.Interactor;
+            var res = ray.Intersects(new BoundingBox(Tile.Position, Tile.Position + new Vector3(1f)));
+
+            if (res != null)
+            {
+                Tile.Renderer.Highlight(500);
+
+                Matrix finalMatrix = transformation*matrix;
+                foreach (var tileSide in Tile.Sides)
+                {
+                    tileSide.Interactor?.Interact(leader, ref finalMatrix, param);
+                }
+            }
         }
     }
+
 }

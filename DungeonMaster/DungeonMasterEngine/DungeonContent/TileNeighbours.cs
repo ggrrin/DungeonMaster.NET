@@ -10,8 +10,15 @@ namespace DungeonMasterEngine.DungeonContent
 
     public class TileNeighbours : INeighbours<Tile>
     {
-        public TileNeighbours()
-        { }
+        protected TileNeighbours() { }
+
+        public TileNeighbours(Tile north, Tile south, Tile east, Tile west)
+        {
+            North = north;
+            South = south;
+            East = east;
+            West = west;
+        }
 
         public TileNeighbours(TileNeighbours neigbours)
         {
@@ -21,10 +28,10 @@ namespace DungeonMasterEngine.DungeonContent
             West = neigbours.West;
         }
 
-        public virtual Tile North { get; set; }
-        public virtual Tile South { get; set; }
-        public virtual Tile East { get; set; }
-        public virtual Tile West { get; set; }
+        public virtual Tile North { get;  }
+        public virtual Tile South { get; }
+        public virtual Tile East { get; }
+        public virtual Tile West { get; }
 
         public Tile GetTile(MapDirection mapDirection)
         {

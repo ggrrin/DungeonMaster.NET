@@ -22,12 +22,14 @@ using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
+using DecorationItem = DungeonMasterEngine.DungeonContent.Actuators.Wall.DecorationItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
     public class LegacyMapBuilder : BuilderBase
     {
+        private static Random rand = new Random();
         private readonly Dictionary<int, DungeonLevel> loadedLevels = new Dictionary<int, DungeonLevel>();
         private Point start;
         private TileInfo<TileData> currentTile;
@@ -49,11 +51,15 @@ namespace DungeonMasterEngine.Builders
         public IReadOnlyList<Texture2D> DoorTextures => doorTextures;
         public IReadOnlyList<Texture2D> WallTextures => wallTextures;
         public IReadOnlyList<Texture2D> FloorTextures => floorTextures;
+        public Texture2D WallTexture { get; private set; }
         public int CurrentLevel { get; private set; }
         public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
         public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
 
+        public List<TileInitializer> TileInitializers { get; private set; }
         private TaskCompletionSource<bool> tileInitialized;
+        private List<Tile> tiles;
+        public IWallGraphicSource WallGraphicSource { get; }
 
         public IReadOnlyList<ISkillFactory> Skills { get; } = new ISkillFactory[]
         {
@@ -87,6 +93,25 @@ namespace DungeonMasterEngine.Builders
         public IReadOnlyList<PotionItemFactory> PotionFactories { get; }
 
         public IReadOnlyList<MiscItemFactory> MiscFactories { get; }
+        public Texture2D RandomWallDecoration
+        {
+            get
+            {
+                int val = rand.Next(29);
+                return val < CurrentMap.WallDecorationGraphicsCount ? WallTextures[val] : null;
+            }
+        }
+
+        public Texture2D RandomFloorDecoration 
+        {
+            get
+            {
+                int val = rand.Next(29);
+                return val < CurrentMap.FloorDecorationGraphicsCount ? FloorTextures[val] : null;
+            }
+        }
+
+        public IInteractorSource InteractorSource { get; }
 
         public LegacyMapBuilder()
         {
@@ -152,6 +177,10 @@ namespace DungeonMasterEngine.Builders
                 })
                 .ToArray();
 
+
+
+            WallGraphicSource = new DefaultWallGrahicsSource();
+            InteractorSource = new DefaultInteractorSource();
         }
 
         private IList<IAttackFactory> GetAttackFactories(ItemDescriptor itemsDescriptor)
@@ -183,11 +212,13 @@ namespace DungeonMasterEngine.Builders
             ItemCreator = new LegacyItemCreator(this);
             creatures = new List<Creature>();
             InitializeMapTextures();
+            TileInitializers = new List<TileInitializer>();
+            tiles = new List<Tile>();
+            rand = new Random(1);
 
             start = startTile ?? new Point(Data.StartPosition.Position.X, Data.StartPosition.Position.Y);
             TilesPositions = new Dictionary<Point, Tile>();
         }
-
 
 
         public override DungeonLevel GetLevel(int level, Dungeon dungeon, Point? startTile)
@@ -200,14 +231,22 @@ namespace DungeonMasterEngine.Builders
 
             Initialize(level, startTile);
 
+
             tileInitialized = new TaskCompletionSource<bool>();
             ProcessMapData();
             tileInitialized.SetResult(true); 
 
-            //SetupNeighbours(TilesPositions, outputTiles);
+            SetupNeighbours(TilesPositions, TileInitializers);
             SetupItems();
 
-            dungeonLevel = new DungeonLevel(dungeon, /*outputTiles,*/null, creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
+            dungeonLevel = new DungeonLevel(dungeon, creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
+
+            foreach (var tileInitializer in TileInitializers)
+            {
+                tileInitializer.Level = dungeonLevel;
+                tileInitializer.Initialize();
+            }
+
             loadedLevels.Add(level, dungeonLevel);
             return dungeonLevel;
         }
@@ -228,14 +267,13 @@ namespace DungeonMasterEngine.Builders
 
                     if (tile != null)
                     {
-                        //TODO do something
-                        
+                        tile.Renderer = WallGraphicSource.GetTileRenderer(tile);
+
+                        TilesPositions.Add(pos, tile);
+                        tiles.Add(tile);
                     }
                 }
-                
             }
-
-
         }
 
         private IEnumerable<TileInfo<TileData>> CreateTile(TileInfo<TileData> currentTile)
@@ -275,13 +313,15 @@ namespace DungeonMasterEngine.Builders
 
             var itemCreator = new LegacyItemCreator(this);
             var tileData = CurrentMap[tile.GridPosition.X, tile.GridPosition.Y];
-            tileData.GrabableItems.ForEach(x => tile.SubItems.Add(itemCreator.CreateItem(x, tile)));
+            tileData.GrabableItems.ForEach(x => tile.SubItems.Add(itemCreator.CreateItem(x)));
 
             //TODO creatures
             var creatureCreator = new CreatureCreator(this);
             foreach (var creatre in tileData.Creatures.Where(i => !i.Processed))
                 creatures.AddRange(creatureCreator.AddCreature(creatre, tile));
         }
+
+
 
         private void InitializeMapTextures()
         {
@@ -294,15 +334,17 @@ namespace DungeonMasterEngine.Builders
 
             doorTextures = new Texture2D[CurrentMap.DoorDecorationCount];
             for (int i = 0; i < doorTextures.Length; i++)
-                doorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.DoorDecorations[i]}");
+                doorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.DoorDecorations[i].Name}");
 
             wallTextures = new Texture2D[CurrentMap.WallGraphicsCount];
             for (int i = 0; i < wallTextures.Length; i++)
-                wallTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.WallDecorations[i]}");
+                wallTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.WallDecorations[i].Name}");
 
             floorTextures = new Texture2D[CurrentMap.FloorGraphicsCount];
             for (int i = 0; i < floorTextures.Length; i++)
-                floorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.FloorDecorations[i]}");
+                floorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.FloorDecorations[i].Name}");
+
+            WallTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/Wall");
         }
 
 
@@ -410,27 +452,24 @@ namespace DungeonMasterEngine.Builders
 
         public IGrabableItemFactoryBase GetItemFactory(int identifer)
         {
-            var factoreis = new IReadOnlyList<IGrabableItemFactoryBase>[]
+            var itemDescriptor = Data.ItemGlobalIdentifers[identifer];
+            switch (itemDescriptor.Category)
             {
-                ScrollFactories,
-                ContainerFactories,
-                PotionFactories,
-                WeaponFactories,
-                ClothFactories,
-                MiscFactories
-            };
-
-            int index = identifer;
-            int previousListCount = 0;
-            foreach (var factory in factoreis)
-            {
-                if (index - (previousListCount + factory.Count) < 0)
-                {
-                    return factory[index - previousListCount];
-                }
-                previousListCount += factory.Count;
+                case ObjectCategory.Weapon:
+                    return WeaponFactories[itemDescriptor.InCategoryIndex];
+                case ObjectCategory.Clothe:
+                    return ClothFactories[itemDescriptor.InCategoryIndex];
+                case ObjectCategory.Scroll:
+                    return ScrollFactories[itemDescriptor.InCategoryIndex];
+                case ObjectCategory.Potion:
+                    return PotionFactories[itemDescriptor.InCategoryIndex];
+                case ObjectCategory.Container:
+                    return ContainerFactories[itemDescriptor.InCategoryIndex];
+                case ObjectCategory.Miscellenaous:
+                    return MiscFactories[itemDescriptor.InCategoryIndex];
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            throw new IndexOutOfRangeException();
         }
 
         public bool PrepareActuatorData(ActuatorItemData i, out Tile targetTile, out IConstrain constrain, out Texture2D decoration, bool putOnWall)
@@ -438,7 +477,6 @@ namespace DungeonMasterEngine.Builders
             targetTile = GetTargetTile(i);
             constrain = null;
             decoration = null;
-
 
             if (i.Data > 0)
                 constrain = new GrabableItemConstrain(GetItemFactory(i.Data), i.IsRevertable);
@@ -468,8 +506,70 @@ namespace DungeonMasterEngine.Builders
 
             Tile tile = null;
             TilesPositions.TryGetValue(target.Value + new Point(CurrentMap.OffsetX, CurrentMap.OffsetY), out tile);
+            //TODO find right tile when it is send to wall
 
             return tile;
+        }
+    }
+
+    public interface IInteractorSource
+    {
+        Interactor GetTileInteractor(Floor tile);
+    }
+
+    public class DefaultInteractorSource : IInteractorSource
+    {
+        public Interactor GetTileInteractor(Floor tile)
+        {
+            return new RayTileInteractor<Floor>(tile);
+        }
+    }
+
+    public class DefaultWallGrahicsSource : IWallGraphicSource
+    {
+        public Renderer GetRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture)
+        {
+            return new TileWallSideRenderer<TileSide>(side, wallTexture, decorationTexture);
+        }
+
+        public Renderer GetRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture)
+        {
+            return new ActuatorSideRenderer(side, wallTexture, decorationTexture);
+        }
+
+        public Renderer GetRenderer(ActuatorX res)
+        {
+            return new ActuatorXRenderer(res);
+        }
+
+        public Renderer GetAlcoveDecoration(Alcove alcove, Texture2D wallTexture)
+        {
+            return new DecorationRenderer<Alcove>(wallTexture, alcove);
+        }
+
+        public Renderer GetDecorationRenderer(DecorationItem decoration, Texture2D texture)
+        {
+            return new DecorationRenderer<DecorationItem>(texture, decoration);
+        }
+
+        public Renderer GetFountainDecoration(Fountain fountain, Texture2D texture)
+        {
+            return new DecorationRenderer<Fountain>(texture, fountain);
+        }
+
+        public Renderer GetTileRenderer(Tile tile)
+        {
+            return new TileRenderer(tile);
+        }
+
+        public Renderer GetCeelingRenderer(TileSide ceeling, Texture2D wallTexture)
+        {
+            return new TileWallSideRenderer<TileSide>(ceeling, wallTexture, null);
+        }
+
+        public Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
+        {
+            return new FloorTileRenderer(floorTile, wallTexture, decorationTexture);
         }
     }
 }

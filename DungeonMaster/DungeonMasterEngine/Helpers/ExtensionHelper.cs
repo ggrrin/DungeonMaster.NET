@@ -15,6 +15,18 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+        public static Ray Transform(this Ray ray, ref Matrix mat)
+        {
+            var p1 = ray.Position;
+            var p2 = p1 + ray.Direction;
+
+            var p1Transformed = Vector3.Transform(p1, mat);
+            var p2Transformed = Vector3.Transform(p2, mat);
+
+            return new Ray(p1Transformed, p2Transformed - p1Transformed);
+        }
+
+
         public static TSource MinObj<TSource>(this IEnumerable<TSource> source, Func<TSource, float> getValue)
         {
             var min = Tuple.Create(default(TSource), float.MaxValue);

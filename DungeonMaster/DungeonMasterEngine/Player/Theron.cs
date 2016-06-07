@@ -26,8 +26,8 @@ namespace DungeonMasterEngine.Player
 
         public IGraphicProvider GraphicsProvider => null;
 
-        public IRenderer Renderer { get; set; }
-        public IInteractor Inter { get; set; }
+        public Renderer Renderer { get; set; }
+        public Interactor Inter { get; set; }
 
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
@@ -53,20 +53,10 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public Champion Leader { get; private set; }
+        private Champion leader;
+        public IEntity Leader => leader;
 
-        GrabableItem ILeader.Hand
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
 
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         public Theron(Tile location, Game game) : base(game)
         {
@@ -239,47 +229,15 @@ namespace DungeonMasterEngine.Player
             if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
-                var tiles = new List<Tile> { Location };
-                var aimingTile = Location.Neighbours.GetTile(MapDirection);
-                if (aimingTile != null)
-                    tiles.Add(aimingTile);
+                var tiles =  Location.Neighbours
+                    .Select(x => x.Item1) 
+                    .Concat(new [] {Location})
+                    .ToArray();
 
-                var intersectingItems = new List<Tuple<IItem, Tile>>();
-
-                Tuple<IItem, Tile> closest = null;
-                float closestDistance = float.MaxValue;
-
+                var matrix = Matrix.Identity;
                 foreach (var tile in tiles)
-                    foreach (var item in tile.SubItems)
-                    {
-                        float? res = Ray.Intersects(item.Bounding);
-                        if (res != null)
-                        {
-                            intersectingItems.Add(new Tuple<IItem, Tile>(item, tile));
-                            if (res.Value < closestDistance)
-                            {
-                                closest = new Tuple<IItem, Tile>(item, tile);
-                                closestDistance = res.Value;
-                            }
-                        }
-                    }
-
-                if (closest != null)
                 {
-                    $"Click on Item: {closest.Item1}".Dump();
-                    if (closest.Item1 is GrabableItem && Hand == null)
-                    {
-                        Hand = (GrabableItem)closest.Item1;
-                        closest.Item1.Location = null;
-                    }
-                    else
-                    {
-                        Hand = closest.Item1.ExchangeItems(Hand);
-                    }
-                }
-                else
-                {
-                    Fight();
+                    tile.Renderer.Interact(this, ref matrix, null);
                 }
             }
 
@@ -320,6 +278,51 @@ namespace DungeonMasterEngine.Player
                 throw new NotImplementedException();
                 //champoin.GraphicsProvider?.Draw(effect);
 
+            }
+        }
+
+        private void ObsloteInteraction(List<Tile> tiles)
+        {
+            var aimingTile = Location.Neighbours.GetTile(MapDirection);
+            if (aimingTile != null)
+                tiles.Add(aimingTile);
+
+            var intersectingItems = new List<Tuple<IItem, Tile>>();
+
+            Tuple<IItem, Tile> closest = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var tile in tiles)
+                foreach (var item in tile.SubItems)
+                {
+                    float? res = Ray.Intersects(item.Bounding);
+                    if (res != null)
+                    {
+                        intersectingItems.Add(new Tuple<IItem, Tile>(item, tile));
+                        if (res.Value < closestDistance)
+                        {
+                            closest = new Tuple<IItem, Tile>(item, tile);
+                            closestDistance = res.Value;
+                        }
+                    }
+                }
+
+            if (closest != null)
+            {
+                $"Click on Item: {closest.Item1}".Dump();
+                if (closest.Item1 is GrabableItem && Hand == null)
+                {
+                    Hand = (GrabableItem)closest.Item1;
+                    closest.Item1.Location = null;
+                }
+                else
+                {
+                    Hand = closest.Item1.ExchangeItems(Hand);
+                }
+            }
+            else
+            {
+                Fight();
             }
         }
     }

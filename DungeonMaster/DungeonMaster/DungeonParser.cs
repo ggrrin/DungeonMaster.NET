@@ -100,12 +100,8 @@ namespace DungeonMasterParser
                 foreach (var item in tile.GetItems(Data))
                     itemSorter.CreateItem(item, tile);
 
-                //last actuator is active one thus revers => first actuator is active one now
-                tile.Actuators.Reverse();
             }
         }
-
-        
 
         private void ReadHeader(BinaryReader r)
         {

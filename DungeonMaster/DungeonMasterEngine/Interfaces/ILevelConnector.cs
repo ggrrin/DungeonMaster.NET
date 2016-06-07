@@ -3,12 +3,10 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Interfaces
 {
-    public interface ILevelConnector 
+    public interface ILevelConnector  : ITile
     {
         Tile NextLevelEnter { get; set; }
         int NextLevelIndex { get; }
         Point TargetTilePosition { get; }
-        Point GridPosition { get; }
-        
     }
 }

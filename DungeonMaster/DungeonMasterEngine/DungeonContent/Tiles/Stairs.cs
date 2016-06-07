@@ -1,4 +1,6 @@
-﻿using DungeonMasterEngine.Graphics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -87,6 +89,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
         }
 
+        public override IEnumerable<TileSide> Sides => Enumerable.Empty<TileSide>();
         public override Vector3 StayPoint { get { return base.StayPoint + 0.5f * (up ? Vector3.Up : Vector3.Down); } }
 
 
@@ -100,7 +103,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 {
                     nextLevelEnter = value;
                     Neighbours = new MultiTileNeighbours(new TileNeighbours(Neighbours), new TileNeighbours(value.Neighbours));
-                    NextLevelEnter.Neighbours = Neighbours;
+                    //instead assing symetricaly //NextLevelEnter.Neighbours = Neighbours;
+                  
+                    
                 }
             }
 

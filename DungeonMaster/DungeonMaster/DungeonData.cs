@@ -47,6 +47,7 @@ namespace DungeonMasterParser
             DoorDecorations = GetDoorTexturNames();
 
             ItemDescriptors = GetItemsDescriptors();
+            ItemGlobalIdentifers = CreateGlobalIndexLookup();
 
             WeaponDescriptors = ParseWeaponDescriptors();
             ArmorDescriptors = ParseArmorDescriptors();
@@ -62,6 +63,13 @@ namespace DungeonMasterParser
 
             CreatureDescriptors = ParseCreatureDatas();
         }
+
+        private Dictionary<int, ItemDescriptor> CreateGlobalIndexLookup()
+        {
+            return ItemDescriptors.ToDictionary(x => x.GlobalItemIndex);
+        }
+
+        public IReadOnlyDictionary<int, ItemDescriptor> ItemGlobalIdentifers { get; }
 
         private IList<MiscDescriptor> ParseMiscDescriptors()
         {
@@ -352,6 +360,13 @@ namespace DungeonMasterParser
 
         public ItemDescriptor  GetItemDescriptor(ObjectCategory category, int categoryIndexType)
         {
+            int baseIndex = GetCategoryBaseIndex(category);
+            var index = baseIndex + categoryIndexType;
+            return ItemDescriptors[index];
+        }
+
+        private static int GetCategoryBaseIndex(ObjectCategory category)
+        {
             int baseIndex = 0;
             switch (category)
             {
@@ -382,8 +397,8 @@ namespace DungeonMasterParser
 
                 default: throw new NotSupportedException();
             }
-            var index = baseIndex + categoryIndexType;
-            return ItemDescriptors[index];
+
+            return baseIndex;
         }
 
         private IList<ItemDescriptor> GetItemsDescriptors()

@@ -23,12 +23,12 @@ namespace DungeonMasterEngine.DungeonContent
 
         public IReadOnlyDictionary<Point, Tile> TilesPositions { get; }
 
-        public DungeonLevel(Dungeon d, IEnumerable<Tile> t, IEnumerable<Creature> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
+        public DungeonLevel(Dungeon d, IEnumerable<Creature> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
         {
             TilesPositions = positions;
 
             dungeon = d;
-            Tiles = t;
+            Tiles = positions.Values;
             StartTile = startTile;
             LevelIndex = levelIndex;
             MiniMap = minimap;
