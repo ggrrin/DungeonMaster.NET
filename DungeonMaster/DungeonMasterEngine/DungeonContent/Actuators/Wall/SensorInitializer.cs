@@ -1,19 +1,7 @@
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class StorageSensorInitializer : ItemConstrainSensorInitalizer 
-    {
-        public IGrabableItem StoredItem { get; set; }
-    }
-
-    public class ItemConstrainSensorInitalizer : SensorInitializer
-    {
-        public IGrabableItemFactoryBase Data { get; set; }
-    }
-
     public class SensorInitializer
     {
         public SensorEffect Effect { get; set; }

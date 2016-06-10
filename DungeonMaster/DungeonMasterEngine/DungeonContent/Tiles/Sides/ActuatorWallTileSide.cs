@@ -13,12 +13,4 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         }
     }
 
-    public class  RayTileSideInteractor<TSide> : Interactor where TSide : TileSide
-    {
-        public TSide Side { get; }
-        public override void Interact(ILeader leader, ref Matrix matrix, object param)
-        {
-             
-        }
-    }
 }

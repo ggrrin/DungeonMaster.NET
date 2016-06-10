@@ -6,7 +6,7 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public abstract class Sensor : IMessageAcceptor
+    public abstract class Sensor : IMessageAcceptor<Message>
     {
         public SensorEffect Effect { get; }
         //local target
@@ -124,7 +124,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
         }
 
-        public virtual void SendMessage(Message message)
+        public virtual void AcceptMessage(Message message)
         { }
     }
 }

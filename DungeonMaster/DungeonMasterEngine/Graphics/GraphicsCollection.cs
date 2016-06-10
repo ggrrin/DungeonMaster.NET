@@ -40,7 +40,7 @@ namespace DungeonMasterEngine.Graphics
             }
         }
 
-        public void Draw(BasicEffect status)
+        public void Draw(BasicEffect effect)
         {
             //foreach (var i in listOfdrawableList)
             //    foreach (var g in i)

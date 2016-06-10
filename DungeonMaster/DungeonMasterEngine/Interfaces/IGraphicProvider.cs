@@ -5,6 +5,6 @@ namespace DungeonMasterEngine.Interfaces
 
     public interface IGraphicProvider
     {        
-        void Draw(BasicEffect status);
+        void Draw(BasicEffect effect);
     }
 }

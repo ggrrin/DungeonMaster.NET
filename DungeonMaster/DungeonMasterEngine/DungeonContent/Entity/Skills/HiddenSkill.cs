@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
     {
         private SkillBase baseSkill;
 
-        protected HiddenSkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity)
+        protected HiddenSkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity)
         {
             Experience = GetExperience(skillLevel);
             BaseSkill = baseSkill;

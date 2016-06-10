@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class Fountain: IActuatorX
     {
-        public void SendMessage(Message message)
+        public void AcceptMessage(Message message)
         {
             throw new NotImplementedException();
         }
@@ -22,5 +22,10 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         }
 
         public Renderer Renderer { get; set; }
+
+        public bool Trigger(ILeader leader)
+        {
+            return false;
+        }
     }
 }

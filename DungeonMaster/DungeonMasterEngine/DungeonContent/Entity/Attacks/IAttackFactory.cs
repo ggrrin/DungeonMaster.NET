@@ -4,6 +4,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
 {
     public interface IAttackFactory
     {
-        IAttack CreateAttackAction(IEntity attackProvider);
+        IAttack CreateAttackAction(ILiveEntity attackProvider);
     }
 }

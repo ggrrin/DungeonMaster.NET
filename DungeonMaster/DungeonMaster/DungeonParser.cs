@@ -187,8 +187,8 @@ namespace DungeonMasterParser
             m.DoorDecorationCount = diffData & fourBitsMask;
 
             ushort doorIndicesData = r.ReadUInt16();
-            m.DoorType = (DoorType)((doorIndicesData >> 12) & fourBitsMask);
-            m.DoorType0Index = (DoorType)((doorIndicesData >> 8) & fourBitsMask);
+            m.DoorType0 = (DoorType)((doorIndicesData >> 12) & fourBitsMask);
+            m.DoorType1 = (DoorType)((doorIndicesData >> 8) & fourBitsMask);
             m.WallSet = (doorIndicesData >> 4) & fourBitsMask;
             m.FloorSet = doorIndicesData & fourBitsMask;
 
@@ -244,10 +244,8 @@ namespace DungeonMasterParser
             d.OpenDirection = (OpenDirection)((data >> 8) & oneBitMask);
 
             d.OrnamentationID = ((data >> 1) & fourBitsMask);
-            if (d.OrnamentationID == 0)
-                d.OrnamentationID = null;
 
-            d.DoorAppearance = (data & oneBitMask) == 1;
+            d.DoorType = (DoorTypeIndex)(data & oneBitMask);
             return d;
         }
 

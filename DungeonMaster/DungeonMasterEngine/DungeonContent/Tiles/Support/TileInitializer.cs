@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Point GridPosition { get; set; }
         public TileNeighbours Neighbours { get; set; }
 
-        public override void Initialize()
+        protected override void OnInitialize()
         {
             Initializing?.Invoke(this);
         }

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    public abstract class Entity : Item, IEntity
+    public abstract class LiveEntity : Item, ILiveEntity
     {
         public MapDirection FacingDirection { get; set; }
 
@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public abstract IRelationManager RelationManager { get; }
 
-        protected Entity(Vector3 position) { } 
+        protected LiveEntity(Vector3 position) { } 
 
         public new abstract ISpaceRouteElement Location { get; set; }
 

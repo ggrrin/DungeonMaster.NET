@@ -7,6 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         public override ISkillFactory Factory => SkillFactory<FireSkill>.Instance;
 
-        public FireSkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity, baseSkill, skillLevel) {}
+        public FireSkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity, baseSkill, skillLevel) {}
     }
 }

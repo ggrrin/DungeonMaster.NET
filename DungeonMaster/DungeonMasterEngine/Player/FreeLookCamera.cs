@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Xml.Schema;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.Interfaces;
 
@@ -62,10 +63,11 @@ namespace DungeonMasterEngine.Player
                 ForwardDirection = Vector3.Transform(ForwardDirection, rotation);
                 ForwardDirection.Normalize();
                 var t = ForwardDirection;
-                if (t.Y > 0.75f)
-                    t.Y = 0.75f;
-                if (t.Y < -0.75f)
-                    t.Y = -0.75f;
+                const float val = 0.93f;
+                if (t.Y > val)
+                    t.Y = val;
+                if (t.Y < -val)
+                    t.Y = -val;
 
                 t.Normalize();
                 ForwardDirection = t;
@@ -123,9 +125,7 @@ namespace DungeonMasterEngine.Player
                     horizontalAngle = move;
             }
 
-
-
-            horizontalAngle = MathHelper.Clamp(horizontalAngle, -0.13f, 0.13f);
+            //horizontalAngle = MathHelper.Clamp(horizontalAngle, -0.23f, 0.23f);
             
             Quaternion rotationUp = Quaternion.CreateFromAxisAngle(Up, verticalAngle);
             Quaternion rotationLeft = Quaternion.CreateFromAxisAngle(-Vector3.Normalize(Vector3.Cross(ForwardDirection, Up)), horizontalAngle);

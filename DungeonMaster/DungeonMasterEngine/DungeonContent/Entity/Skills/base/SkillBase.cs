@@ -10,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
     {
         protected static readonly Random rand = new Random();
 
-        protected readonly IEntity entity;
+        protected readonly ILiveEntity liveEntity;
 
         public abstract ISkillFactory Factory { get; }  
 
@@ -22,9 +22,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
         public int SkillLevel => F303_AA09_CHAMPION_GetSkillLevel(true) + 0;//TODO + modifers items
         public int BaseSkillLevel => F303_AA09_CHAMPION_GetSkillLevel(false);
 
-        protected SkillBase(IEntity entity)
+        protected SkillBase(ILiveEntity liveEntity)
         {
-            this.entity = entity;
+            this.liveEntity = liveEntity;
         }
 
         protected abstract void ApplySkills( int majorIncrease, int minorIncrease);
@@ -49,7 +49,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
 
             if (exp > 0)
             {
-                var mapDifficulty = entity.Location.Tile.LevelIndex; //TODO make it right int[14] { 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 5, 5, 6, 6 }
+                var mapDifficulty = liveEntity.Location.Tile.LevelIndex; //TODO make it right int[14] { 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 5, 5, 6, 6 }
                 if (mapDifficulty > 0)
                     exp *= mapDifficulty;
 
@@ -79,7 +79,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
         {
             int minorIncrease = rand.Next(2);
             int majorIncrease = 1 + rand.Next(2);
-            entity.GetProperty(PropertyFactory<AntiFireProperty>.Instance).BaseValue += rand.Next(2) & ~BaseSkillLevel;
+            liveEntity.GetProperty(PropertyFactory<AntiFireProperty>.Instance).BaseValue += rand.Next(2) & ~BaseSkillLevel;
             ApplySkills(majorIncrease, minorIncrease);
         }
 

@@ -7,7 +7,9 @@ using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
+using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
@@ -25,7 +27,7 @@ namespace DungeonMasterEngine.Builders
             this.builder = builder;
         }
 
-        public async void SetupSides(FloorInitializer initalizer, Point pos)
+        public async void SetupSides(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
         {
             var sides = await Task.WhenAll(
                 MapDirection.Sides
@@ -34,19 +36,37 @@ namespace DungeonMasterEngine.Builders
                 .Select(async t => await CreateWallSide(t.Item1, (WallTileData)t.Item2))
                 .ToArray());
 
-            var ceeling = new TileSide(MapDirection.Up, false);
-            ceeling.Renderer = builder.WallGraphicSource.GetCeelingRenderer(ceeling, builder.WallTexture);
-
-            var floor = new FloorTileSide(MapDirection.Down, true);
-            floor.Renderer = builder.WallGraphicSource.GetFloorRenderer(floor, builder.WallTexture, builder.RandomFloorDecoration);
-
             initalizer.Sides = sides
-                .Concat(new TileSide[]
-                {
-                    ceeling,
-                    floor
-                })
+                .Concat(SetupCurrentTile(pos, allowRandomDecoration) )
                 .ToArray();
+        }
+
+        private IEnumerable<TileSide> SetupCurrentTile(Point point, bool allowRandomDecoration)
+        {
+            var tile = builder.CurrentMap[point.X, point.Y];
+
+            var ceeling = new TileSide(MapDirection.Up, false);
+            ceeling.Renderer = builder.RendererSource.GetCeelingRenderer(ceeling, builder.WallTexture);
+            yield return ceeling;
+
+            Texture2D texture = allowRandomDecoration ? builder.RandomFloorDecoration : null;
+
+            var floor = new FloorTileSide(texture != null, MapDirection.Down,
+                tile.GrabableItems
+                    .Where(x => x.TilePosition == TilePosition.North_TopLeft)
+                    .Select(builder.ItemCreator.CreateItem),
+                tile.GrabableItems
+                    .Where(x => x.TilePosition == TilePosition.East_TopRight)
+                    .Select(builder.ItemCreator.CreateItem),
+                tile.GrabableItems
+                    .Where(x => x.TilePosition == TilePosition.South_BottomLeft)
+                    .Select(builder.ItemCreator.CreateItem),
+                tile.GrabableItems
+                    .Where(x => x.TilePosition == TilePosition.West_BottomRight)
+                    .Select(builder.ItemCreator.CreateItem)
+                );
+            floor.Renderer = builder.RendererSource.GetFloorRenderer(floor, builder.WallTexture, texture);
+            yield return floor;
         }
 
         private async Task<TileSide> CreateWallSide(MapDirection wallDirection, WallTileData wall)
@@ -57,10 +77,19 @@ namespace DungeonMasterEngine.Builders
             else
                 sensorsData = new ActuatorItemData[0];
 
-            if (!sensorsData.Any())
+            TextDataItem textData = wall?.TextTags.FirstOrDefault(x => x.TilePosition == wallDirection.Opposite.ToTilePosition());
+
+            if (textData != null)
             {
-                var res = new TileSide(wallDirection, AllowedRandomDecoration(wallDirection, wall));
-                res.Renderer = builder.WallGraphicSource.GetRenderer(res, builder.WallTexture, builder.RandomWallDecoration);
+                var res = new TextTileSide(wallDirection, textData.IsVisible, textData.Text); 
+                res.Renderer = builder.RendererSource.GetTextSideRenderer(res, builder.WallTexture);
+                return res;
+            }
+            else if (!sensorsData.Any())
+            {
+                Texture2D randomTexture;
+                var res = new TileSide(wallDirection, AllowedRandomDecoration(wallDirection, wall, out randomTexture));
+                res.Renderer = builder.RendererSource.GetRenderer(res, builder.WallTexture, randomTexture);
                 return res;
             }
             else
@@ -70,32 +99,43 @@ namespace DungeonMasterEngine.Builders
                     .ToList();
 
                 var res = new ActuatorWallTileSide(await ParseActuatorX(sensorsData, items), wallDirection);
-                res.Renderer = builder.WallGraphicSource.GetRenderer(res, builder.WallTexture, null);
+                res.Renderer = builder.RendererSource.GetRenderer(res, builder.WallTexture, null);
                 return res;
             }
         }
 
-        private bool AllowedRandomDecoration(MapDirection direction, WallTileData data)
+        private bool AllowedRandomDecoration(MapDirection direction, WallTileData data, out Texture2D texture)
         {
-            if (data == null)
-                return false;
+            bool res = false;
+            if (data != null)
+            {
+                if (direction == MapDirection.North)
+                    res = data.AllowNorthRandomDecoration;
+                if (direction == MapDirection.South)
+                    res = data.AllowSouthRandomDecoration;
+                if (direction == MapDirection.East)
+                    res = data.AllowEastRandomDecoration;
+                if (direction == MapDirection.West)
+                    res = data.AllowWestRandomDecoration;
+            }
 
-            if (direction == MapDirection.North)
-                return data.AllowNorthRandomDecoration;
-            if (direction == MapDirection.South)
-                return data.AllowSouthRandomDecoration;
-            if (direction == MapDirection.East)
-                return data.AllowEastRandomDecoration;
-            if (direction == MapDirection.West)
-                return data.AllowWestRandomDecoration;
-            throw new InvalidOperationException();
+            if (res)
+            {
+                texture = builder.RandomWallDecoration;
+                return texture != null;
+            }
+            else
+            {
+                texture = null;
+                return false;
+            }
         }
 
         private async Task<IActuatorX> ParseActuatorX(IEnumerable<ActuatorItemData> data, List<IGrabableItem> items)
         {
             var sensors = await Task.WhenAll(data.Select(async x => await ParseSensor(x, items)));
             var res = new ActuatorX(sensors);
-            res.Renderer = builder.WallGraphicSource.GetRenderer(res);
+            res.Renderer = builder.RendererSource.GetRenderer(res);
             return res;
         }
 
@@ -187,48 +227,29 @@ namespace DungeonMasterEngine.Builders
             {
                 case GraphicsItemState.GraphicOnly:
                     var decoration = new DecorationItem();
-                    decoration.Renderer = builder.WallGraphicSource.GetDecorationRenderer(decoration, texture);
+                    decoration.Renderer = builder.RendererSource.GetDecorationRenderer(decoration, texture);
                     return decoration;
 
                 case GraphicsItemState.Alcove:
                     var alcove = new Alcove(items);
                     items.Clear();
-                    alcove.Renderer = builder.WallGraphicSource.GetAlcoveDecoration(alcove, texture);
+                    alcove.Renderer = builder.RendererSource.GetAlcoveDecoration(alcove, texture);
                     return alcove;
 
                 case GraphicsItemState.ViAltair:
                     var altair = new ViAltairAlcove(items);
                     items.Clear();
-                    altair.Renderer = builder.WallGraphicSource.GetAlcoveDecoration(altair, texture);
+                    altair.Renderer = builder.RendererSource.GetAlcoveDecoration(altair, texture);
                     return altair;
 
                 case GraphicsItemState.Fountain:
                     var fountain = new Fountain();
-                    fountain.Renderer = builder.WallGraphicSource.GetFountainDecoration(fountain, texture);
+                    fountain.Renderer = builder.RendererSource.GetFountainDecoration(fountain, texture);
                     return fountain;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-    }
-
-    public interface IWallGraphicSource
-    {
-        Renderer GetRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture);
-        Renderer GetRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture);
-        Renderer GetRenderer(ActuatorX res);
-
-        Renderer GetAlcoveDecoration(Alcove alcove, Texture2D wallTexture);
-
-        Renderer GetDecorationRenderer(DecorationItem decoration, Texture2D wallTexture);
-
-        Renderer GetFountainDecoration(Fountain fountain, Texture2D texture);
-
-        Renderer GetTileRenderer(Tile tile);
-
-        Renderer GetCeelingRenderer(TileSide ceeling, Texture2D wallTexture);
-
-        Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture);
     }
 }

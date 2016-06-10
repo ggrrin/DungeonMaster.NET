@@ -20,16 +20,16 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
         private static Random rand = new Random();
 
         private readonly HumanAttackFactory factory;
-        private readonly IEntity attackProvider;
+        private readonly ILiveEntity attackProvider;
         private Weapon weapon;
 
-        public HumanAttack(HumanAttackFactory factory, IEntity attackProvider)
+        public HumanAttack(HumanAttackFactory factory, ILiveEntity attackProvider)
         {
             this.factory = factory;
             this.attackProvider = attackProvider;
         }
 
-        private IEntity GetAccesibleEnemies(MapDirection partyDirection)
+        private ILiveEntity GetAccesibleEnemies(MapDirection partyDirection)
         {
             //TODO rework using rectangle intersection
             var targetTile = attackProvider.Location.Tile.Neighbours.GetTile(partyDirection);
@@ -102,7 +102,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             }
         }
 
-        int F231_izzz_GROUP_GetMeleeActionDamage(IEntity enemy, ActionProbabilityInfo P501_i_ActionHitProbability, int P502_ui_ActionDamageFactor)
+        int F231_izzz_GROUP_GetMeleeActionDamage(ILiveEntity enemy, ActionProbabilityInfo P501_i_ActionHitProbability, int P502_ui_ActionDamageFactor)
         {
             int L0565_i_Damage;
             int L0568_i_Defense = 0;

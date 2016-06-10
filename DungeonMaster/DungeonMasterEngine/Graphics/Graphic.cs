@@ -151,7 +151,7 @@ namespace DungeonMasterEngine.Graphics
             }
         }    
 
-        public abstract void Draw(BasicEffect status);
+        public abstract void Draw(BasicEffect effect);
     }
 
 }

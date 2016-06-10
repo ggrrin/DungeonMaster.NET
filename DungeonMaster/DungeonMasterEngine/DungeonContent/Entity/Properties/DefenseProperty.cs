@@ -4,11 +4,12 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {
-    internal class DefenseProperty : IProperty {
-        public int MaxValue { get; }
-        public int BaseValue { get; set; }
-        public int Value { get; set; }
-        public IPropertyFactory Type => PropertyFactory<EmptyProperty>.Instance;
-        public ICollection<IEntityPropertyEffect> AdditionalValues { get; }
+    internal class DefenseProperty : Property {
+        public DefenseProperty(int value)
+        {
+            BaseValue = this.value = value;
+        }
+        public override int BaseValue { get; set; }
+        public override IPropertyFactory Type => PropertyFactory<DefenseProperty>.Instance;
     }
 }

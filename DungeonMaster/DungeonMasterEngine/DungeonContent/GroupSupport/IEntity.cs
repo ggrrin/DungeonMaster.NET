@@ -10,14 +10,19 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
-    public interface IEntity : IMovable<ISpaceRouteElement> 
+    public interface ILiveEntity : IEntity, IMovable<ISpaceRouteElement> 
     {
         MapDirection FacingDirection { get; }
-        IGroupLayout GroupLayout { get; }
         IRelationManager RelationManager { get; }
         IBody Body { get; }
 
-        IProperty GetProperty(IPropertyFactory propertyType);
         ISkill GetSkill(ISkillFactory skillType);
     }
+
+    public interface IEntity
+    {
+        IGroupLayout GroupLayout { get; }
+        IProperty GetProperty(IPropertyFactory propertyType);
+    }
+
 }

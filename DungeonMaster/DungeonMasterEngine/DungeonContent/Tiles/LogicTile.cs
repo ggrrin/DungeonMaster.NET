@@ -7,13 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     //TODO look how the activation of "normal" actuators is done !!!!!!!
 
-
-    public class LogicTileInitializer : TileInitializer
-    {
-        public new event Initializer<LogicTileInitializer> Initializing;
-        public ActuatorX Actuator { get; }
-    }
-
     public sealed class LogicTile : Tile<Message>
     {
         public override void AcceptMessage(Message message)

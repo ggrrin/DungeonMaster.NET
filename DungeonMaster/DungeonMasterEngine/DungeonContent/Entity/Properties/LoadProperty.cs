@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {
     internal class LoadProperty : Property
     {
-        private readonly IEntity entity;
+        private readonly ILiveEntity liveEntity;
         public override int MaxValue => F309_awzz_CHAMPION_GetMaximumLoad();
 
         public override int BaseValue
@@ -19,9 +19,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 
         public override IPropertyFactory Type  => PropertyFactory<LoadProperty>.Instance;
 
-        public LoadProperty(IEntity entity)
+        public LoadProperty(ILiveEntity liveEntity)
         {
-            this.entity = entity;
+            this.liveEntity = liveEntity;
         }
 
         int F309_awzz_CHAMPION_GetMaximumLoad( /*P647_ps_Champion*/)
@@ -29,12 +29,12 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
             int L0929_ui_MaximumLoad;
             int L0930_i_Wounds;
 
-            L0929_ui_MaximumLoad = (entity.GetProperty(PropertyFactory<StrengthProperty>.Instance).Value << 3) + 100;//  (P647_ps_Champion->Statistics[C1_STATISTIC_STRENGTH][C1_CURRENT] << 3) + 100;
-            L0929_ui_MaximumLoad = HumanAttack.F306_xxxx_CHAMPION_GetStaminaAdjustedValue(/*P647_ps_Champion,*/entity.GetProperty(PropertyFactory<StaminaProperty>.Instance), L0929_ui_MaximumLoad);
+            L0929_ui_MaximumLoad = (liveEntity.GetProperty(PropertyFactory<StrengthProperty>.Instance).Value << 3) + 100;//  (P647_ps_Champion->Statistics[C1_STATISTIC_STRENGTH][C1_CURRENT] << 3) + 100;
+            L0929_ui_MaximumLoad = HumanAttack.F306_xxxx_CHAMPION_GetStaminaAdjustedValue(/*P647_ps_Champion,*/liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance), L0929_ui_MaximumLoad);
             //if (L0930_i_Wounds = P647_ps_Champion->Wounds)
-            if (entity.Body.BodyParts.Any(b => b.IsWound))
+            if (liveEntity.Body.BodyParts.Any(b => b.IsWound))
             {
-                L0929_ui_MaximumLoad -= L0929_ui_MaximumLoad >> (entity.Body.BodyParts.First(b => b.Type == LegsStorageType.Instance).IsWound ? 2 : 3);// (M07_GET(L0930_i_Wounds, MASK0x0010_LEGS) ? 2 : 3);
+                L0929_ui_MaximumLoad -= L0929_ui_MaximumLoad >> (liveEntity.Body.BodyParts.First(b => b.Type == LegsStorageType.Instance).IsWound ? 2 : 3);// (M07_GET(L0930_i_Wounds, MASK0x0010_LEGS) ? 2 : 3);
             }
             //if (F033_aaaz_OBJECT_GetIconIndex(P647_ps_Champion->Slots[C05_SLOT_FEET]) == C119_ICON_ARMOUR_ELVEN_BOOTS)
             //{

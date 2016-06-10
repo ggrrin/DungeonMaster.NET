@@ -99,7 +99,7 @@ namespace DungeonMasterParser
 
         //    0Eh(14) 1 word: Door indices.These indices define both the graphic to use and the door characteristics (used as an index in the 'Door characteristics' in Item 559)
         //        Bits 15-12: Index for door type 1
-        public DoorType DoorType { get; set; }
+        public DoorType DoorType0 { get; set; }
         //            '0000' (0) Grate door
         //            '0001' (1) Wooden door
         //            '0010' (2) Iron door
@@ -107,7 +107,7 @@ namespace DungeonMasterParser
         //            Other values: Unknown
         
         //        Bits 11-8: Index for door type 0 (Same possible values as door type 1)
-        public DoorType DoorType0Index { get; set; }
+        public DoorType DoorType1 { get; set; }
         
         //        Bits 7-4: Map graphics style.Must be 0h in Dungeon Master and Chaos Strikes Back because there is only one style available(other values cause graphical glitches or crashes). Here are the possible values in Dungeon Master 2:
         //            0: Blue zone

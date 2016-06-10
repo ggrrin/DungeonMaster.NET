@@ -3,19 +3,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class TileRenderer : Renderer
+    public class TileRenderer<TTile> : Renderer where TTile : Tile
     {
         private Matrix translation;
-        public Tile Tile { get; }
+        public TTile Tile { get; }
 
-        public TileRenderer(Tile tile)
+        public TileRenderer(TTile tile)
         {
             Tile = tile;
         }
 
+        public override Matrix GetCurrentTransformation(ref Matrix parentTransformation) => translation * parentTransformation;
+
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            var finalTransformation = translation * currentTransformation;
+            var finalTransformation = GetCurrentTransformation(ref currentTransformation); 
             foreach (var side in Tile.Sides)
             {
                 var renderer = side.Renderer;
@@ -31,12 +33,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             var ray = (Ray)leader.Interactor;
             var distance = ray.Intersects(new BoundingBox(Tile.Position, Tile.Position + new Vector3(1f)));
 
+            var finalMatrix = GetCurrentTransformation(ref currentTransformation);
             bool res = false;
             if (distance != null)
             {
                 Tile.Renderer.Highlight(500);
 
-                Matrix finalMatrix = translation * currentTransformation;
                 foreach (var tileSide in Tile.Sides)
                 {
                     if (tileSide.Renderer?.Interact(leader, ref finalMatrix, param) ?? false)

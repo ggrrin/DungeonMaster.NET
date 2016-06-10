@@ -7,6 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         public override ISkillFactory Factory => SkillFactory<ParrySkill>.Instance;
 
-        public ParrySkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity, baseSkill, skillLevel) {}
+        public ParrySkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity, baseSkill, skillLevel) {}
     }
 }

@@ -21,12 +21,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public List<Sensor> Sensors { get; }
         public bool Rotate { get; set; }
 
-        public bool F275_aszz_SENSOR_IsTriggeredByClickOnWall(ILeader theron)
+        public bool Trigger(ILeader leader)
         {
             bool anyTriggered = false;
 
             foreach (var sensor in Sensors)
-                anyTriggered = anyTriggered || sensor.TryTrigger(theron, this, sensor == Sensors.Last());
+                anyTriggered = anyTriggered || sensor.TryTrigger(leader, this, sensor == Sensors.Last());
 
             F271_xxxx_SENSOR_ProcessRotationEffect();
             return anyTriggered;
@@ -47,17 +47,17 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             Rotate = false;
         }
 
-        public void SendMessage(Message message)
+        public void AcceptMessage(Message message)
         {
             foreach (var sensor in Sensors)
             {
-                sensor.SendMessage(message);
+                sensor.AcceptMessage(message);
             }
         }
 
         public void Interact(ILeader leader, ref Matrix matrix, object param)
         {
-            F275_aszz_SENSOR_IsTriggeredByClickOnWall(leader);
+            Trigger(leader);
         }
 
         public void Initialize()

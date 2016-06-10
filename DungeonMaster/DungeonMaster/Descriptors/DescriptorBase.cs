@@ -5,6 +5,7 @@ namespace DungeonMasterParser.Descriptors
         public int Identifer { get; set; } = -1;
         public string Name { get; set; }
         public float Weight { get; set; }
+        public string TexturePath { get; set; }
 
         public override string ToString() => $"{Identifer} {Name}";
     }

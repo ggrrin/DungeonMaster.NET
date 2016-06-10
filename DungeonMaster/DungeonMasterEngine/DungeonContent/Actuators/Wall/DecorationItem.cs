@@ -5,7 +5,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
     public class DecorationItem : IActuatorX
     {
-        public void SendMessage(Message message)
+        public void AcceptMessage(Message message)
         {
         }
 
@@ -19,5 +19,10 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         }
 
         public Renderer Renderer { get; set; }
+
+        public bool Trigger(ILeader leader)
+        {
+            return false;
+        }
     }
 }

@@ -27,7 +27,6 @@ namespace DungeonMasterEngine.Player
         public IGraphicProvider GraphicsProvider => null;
 
         public Renderer Renderer { get; set; }
-        public Interactor Inter { get; set; }
 
         public BoundingBox Bounding => default(BoundingBox);
         public bool AcceptMessages { get; set; } = false;
@@ -38,23 +37,23 @@ namespace DungeonMasterEngine.Player
         public IReadOnlyList<Champion> PartyGroup => partyGoup;
 
 
-        public object Interactor => Ray; 
+        public object Interactor => Ray;
 
-        IReadOnlyList<IEntity> ILeader.PartyGroup => PartyGroup;
+        IReadOnlyList<ILiveEntity> ILeader.PartyGroup => PartyGroup;
 
         public IGrabableItem Hand
         {
             get { return hand; }
             set
             {
-                if(hand != value && hand != null && value != null)
+                if (hand != value && hand != null && value != null)
                     throw new InvalidOperationException("Assign null first;");
                 hand = value;
             }
         }
 
         private Champion leader;
-        public IEntity Leader => leader;
+        public ILiveEntity Leader => leader;
 
 
 
@@ -103,8 +102,8 @@ namespace DungeonMasterEngine.Player
 
         private void MovePartyToRight(Tile newLocation)
         {
-            if(!newLocation.LayoutManager.WholeTileEmpty)
-                throw  new InvalidOperationException();
+            if (!newLocation.LayoutManager.WholeTileEmpty)
+                throw new InvalidOperationException();
 
             foreach (var champion in PartyGroup)
             {
@@ -207,9 +206,9 @@ namespace DungeonMasterEngine.Player
             return curLocation;
         }
 
-    
 
- 
+
+
 
         public bool AddChampoinToGroup(Champion champion)
         {
@@ -229,23 +228,22 @@ namespace DungeonMasterEngine.Player
             if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
-                var tiles =  Location.Neighbours
-                    .Select(x => x.Item1) 
-                    .Concat(new [] {Location})
+                var tiles = new[] { Location }.Concat(Location.Neighbours
+                    .Select(x => x.Item1))
                     .ToArray();
 
                 var matrix = Matrix.Identity;
                 foreach (var tile in tiles)
-                {
-                    tile.Renderer.Interact(this, ref matrix, null);
-                }
+                    if (tile.Renderer.Interact(this, ref matrix, null))
+                        break;
+
             }
 
             prevMouse = Mouse.GetState();
             prevKeyboard = Keyboard.GetState();
         }
 
-        public IEntity GetEnemy(IEntity champoin)
+        public ILiveEntity GetEnemy(ILiveEntity champoin)
         {
             var enemyTile = Location.Neighbours.GetTile(MapDirection);
             return enemyTile.LayoutManager.Entities.MinObj(e => Vector3.Distance(e.Position, champoin.Position));
@@ -266,7 +264,7 @@ namespace DungeonMasterEngine.Player
                 var hitLocation = sortedEnemyLocation.FirstOrDefault();
 
                 var enemy = enemyTile.LayoutManager.GetEntities(hitLocation).FirstOrDefault();
-                ((Creature) enemy)?.Kill();
+                ((Creature)enemy)?.Kill();
             }
         }
 

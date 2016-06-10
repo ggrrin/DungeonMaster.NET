@@ -11,18 +11,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Pit(PitInitializer initializer) : base(initializer) {}
     }
 
-
-    public class PitInitializer : FloorInitializer
-    {
-        public new event Initializer<PitInitializer> Initializing;
-        public bool IsImaginary { get; set; }
-
-        public bool IsVisible { get; set; }
-        
-        public bool IsOpen { get; set; }
-    }
-
-    public class Pit<TMessage> : Floor<TMessage> where TMessage : Message
+    public class Pit<TMessage> : FloorTile<TMessage> where TMessage : Message
     {
         private GraphicsCollection graphics;
 

@@ -7,10 +7,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     public interface ILeader
     {
 
-        IReadOnlyList<IEntity> PartyGroup { get; }
+        IReadOnlyList<ILiveEntity> PartyGroup { get; }
         IGrabableItem Hand { get; set; }
 
         object Interactor { get; }
-        IEntity Leader { get; }
+        ILiveEntity Leader { get; }
     }
 }

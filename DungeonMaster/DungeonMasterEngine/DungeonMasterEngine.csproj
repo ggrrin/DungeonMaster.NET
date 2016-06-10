@@ -57,8 +57,12 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Builders\DefaultWallGrahicsSource.cs" />
+    <Compile Include="Builders\IWallGraphicSource.cs" />
     <Compile Include="Builders\SidesCreator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IInteractable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ItemConstrainSensorInitalizer.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ITriggerable.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\ActuatorType.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ActuatorX.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ActuatorXRenderer.cs" />
@@ -73,6 +77,7 @@
     <Compile Include="DungeonContent\Actuators\Wall\IActuatorX.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IMessageAcceptor.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IRenderable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\Sensors\ItemConstrainSensor.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor0.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor1.cs" />
@@ -87,6 +92,7 @@
     <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor4.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SensorEffect.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SensorInitializer.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\StorageSensorInitializer.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SubXc017c011.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ViAltairAlcove.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\APart1.cs" />
@@ -151,13 +157,16 @@
     <Compile Include="DungeonContent\Entity\Skills\PriestSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\base\SkillBase.cs" />
     <Compile Include="DungeonContent\Entity\Skills\WizardSkill.cs" />
+    <Compile Include="DungeonContent\GroupSupport\ActuatorLocationHolder3D.cs" />
     <Compile Include="DungeonContent\GroupSupport\CreatureInfo.cs" />
     <Compile Include="DungeonContent\GroupSupport\FourthSpace.cs" />
     <Compile Include="DungeonContent\GroupSupport\FourthSpaceRouteElement.cs" />
     <Compile Include="DungeonContent\GroupSupport\GroupLayoutSearcher.cs" />
     <Compile Include="DungeonContent\GroupSupport\IEntity.cs" />
     <Compile Include="DungeonContent\GroupSupport\IFightAction.cs" />
+    <Compile Include="DungeonContent\GroupSupport\ILocationHolder.cs" />
     <Compile Include="DungeonContent\GroupSupport\ISpaceRouteElement.cs" />
+    <Compile Include="DungeonContent\GroupSupport\LayoutManagerX.cs" />
     <Compile Include="DungeonContent\GroupSupport\N4.cs" />
     <Compile Include="DungeonContent\Entity\ActionProbabilityInfo.cs" />
     <Compile Include="DungeonContent\Entity\DefaultRelationManager.cs" />
@@ -210,11 +219,26 @@
     <Compile Include="DungeonContent\Magic\Symbols\ZoSymbol.cs" />
     <Compile Include="DungeonContent\GroupSupport\LayoutManager.cs" />
     <Compile Include="DungeonContent\GroupSupport\IGroupLayout.cs" />
+    <Compile Include="DungeonContent\Tiles\DoorInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\FloorInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\Initializer.cs" />
+    <Compile Include="DungeonContent\Tiles\InitializerBase.cs" />
+    <Compile Include="DungeonContent\Tiles\LogicTileInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\MocapBase.cs" />
+    <Compile Include="DungeonContent\Tiles\MocapBaseInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\MocapDefensive.cs" />
+    <Compile Include="DungeonContent\Tiles\MocapDefensiveInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\PitInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\ActuatorSideRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\AlcoveRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DecorationRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DecorationResource.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\FloorItemStorage.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\IRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\TextureRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Sides\FloorTileSide.cs" />
-    <Compile Include="DungeonContent\Tiles\Renderers\FloorTileRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\Renderers\FloorTileSideRenderer.cs" />
+    <Compile Include="DungeonContent\Tiles\StairsInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\Support\Interactor.cs" />
     <Compile Include="DungeonContent\Tiles\Support\ILeader.cs" />
     <Compile Include="DungeonContent\Tiles\Support\INeighbourable.cs" />
@@ -234,9 +258,10 @@
     <Compile Include="DungeonContent\Tiles\Support\TileInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\TileRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Sides\TileSide.cs" />
-    <Compile Include="DungeonContent\Tiles\Renderers\TileSideRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\TileWallSideRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\WallResource.cs" />
+    <Compile Include="DungeonContent\Tiles\TeleprotInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\WallIlusionInitializer.cs" />
     <Compile Include="GameConsoleContent\Base\BaseInterpreter.cs" />
     <Compile Include="GameConsoleContent\Base\CommandParser.cs" />
     <Compile Include="GameConsoleContent\Base\ConsoleContext.cs" />
@@ -289,7 +314,7 @@
     <Compile Include="DungeonContent\Items\GrabableItems\Container.cs" />
     <Compile Include="DungeonContent\Entity\Creature.cs" />
     <Compile Include="Helpers\DepthFirstSearch.cs" />
-    <Compile Include="DungeonContent\Items\DoorItem.cs" />
+    <Compile Include="DungeonContent\Items\Door.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\GrabableItem.cs" />
     <Compile Include="DungeonContent\Items\Item.cs" />
     <Compile Include="DungeonContent\LevelCollection.cs" />
@@ -360,8 +385,8 @@
     <Compile Include="DungeonContent\Tiles\Tile.cs" />
     <Compile Include="DungeonContent\Tiles\Teleport.cs" />
     <Compile Include="DungeonContent\Tiles\Stairs.cs" />
-    <Compile Include="DungeonContent\Tiles\Floor.cs" />
-    <Compile Include="DungeonContent\Tiles\Door.cs" />
+    <Compile Include="DungeonContent\Tiles\FloorTile.cs" />
+    <Compile Include="DungeonContent\Tiles\DoorTile.cs" />
     <Compile Include="DungeonContent\Tiles\Pit.cs" />
     <Compile Include="DungeonContent\Tiles\WallIlusion.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\Weapon.cs" />

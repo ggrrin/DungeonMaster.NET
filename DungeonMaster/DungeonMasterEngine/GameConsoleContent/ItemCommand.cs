@@ -33,7 +33,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                                 Output.WriteLine("Hand is not empty.");
                             else
                             {
-                                var factory = new MiscItemFactory("Fake item", 0, new IAttackFactory[0], BackPackStorageType.Instance.ToEnumerable());
+                                MiscItemFactory factory = null;// new MiscItemFactory("Fake item", 0, new IAttackFactory[0], BackPackStorageType.Instance.ToEnumerable(), TODO);
                                 //TODO
 
 

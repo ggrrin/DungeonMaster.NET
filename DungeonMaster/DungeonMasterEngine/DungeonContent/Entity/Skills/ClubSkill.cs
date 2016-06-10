@@ -7,6 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         public override ISkillFactory Factory => SkillFactory<ClubSkill>.Instance;
 
-        public ClubSkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity, baseSkill, skillLevel) {}
+        public ClubSkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity, baseSkill, skillLevel) {}
     }
 }

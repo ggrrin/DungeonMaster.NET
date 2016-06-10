@@ -18,7 +18,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    public class Creature : Entity 
+    public class Creature : LiveEntity 
     {
         private static readonly Random random = new Random();
         private static readonly BreadthFirstSearch<Tile, object> globalSearcher = new BreadthFirstSearch<Tile, object>();
@@ -236,7 +236,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         private bool FindEnemies()
         {
-            IEntity enemy = null;
+            ILiveEntity enemy = null;
             globalSearcher.StartSearch(Location.Tile, Location.Tile, Math.Max(DetectRange, SightRange), (tile, layer, bundle) =>
             {
                 enemy = tile.LayoutManager.Entities.FirstOrDefault(e => RelationManager.IsEnemy(e.RelationManager.RelationToken));
@@ -357,7 +357,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if (enemyTile.LayoutManager.WholeTileEmpty)
                     break;
 
-                IEntity enemy;
+                ILiveEntity enemy;
                 do
                 {
                     enemy = enemyTile.LayoutManager.GetEntities(locEnum.Current).FirstOrDefault();

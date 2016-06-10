@@ -2,6 +2,6 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
     public interface IFightAction
     {
-        void Apply(IEntity selfEntity, IEntity enemyEntity);
+        void Apply(ILiveEntity selfLiveEntity, ILiveEntity enemyLiveEntity);
     }
 }

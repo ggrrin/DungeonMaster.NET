@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    public class Champion : Entity
+    public class Champion : LiveEntity
     {
         private readonly Animator<Champion, ISpaceRouteElement> animator = new Animator<Champion, ISpaceRouteElement>();
 

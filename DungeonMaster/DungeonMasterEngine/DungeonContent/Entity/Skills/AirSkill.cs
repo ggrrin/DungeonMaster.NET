@@ -7,6 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         public override ISkillFactory Factory => SkillFactory<AirSkill>.Instance;
 
-        public AirSkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity, baseSkill, skillLevel) {}
+        public AirSkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity, baseSkill, skillLevel) {}
     }
 }

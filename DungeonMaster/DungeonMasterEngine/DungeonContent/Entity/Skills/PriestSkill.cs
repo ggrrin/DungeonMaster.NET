@@ -13,17 +13,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         protected override void ApplySkills(int majorIncrease, int minorIncrease)
         {
-            entity.GetProperty(PropertyFactory<VitalityProperty>.Instance).BaseValue += rand.Next(2); 
-            int stamina = entity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue / 25;
+            liveEntity.GetProperty(PropertyFactory<VitalityProperty>.Instance).BaseValue += rand.Next(2); 
+            int stamina = liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue / 25;
             int skillLevelModifer = BaseSkillLevel;
-            entity.GetProperty(PropertyFactory<ManaProperty>.Instance).BaseValue += skillLevelModifer +  MathHelper.Min(rand.Next(4), skillLevelModifer - 1);
+            liveEntity.GetProperty(PropertyFactory<ManaProperty>.Instance).BaseValue += skillLevelModifer +  MathHelper.Min(rand.Next(4), skillLevelModifer - 1);
             skillLevelModifer += (skillLevelModifer + 1) >> 1;
-            entity.GetProperty(PropertyFactory<WisdomProperty>.Instance).BaseValue += minorIncrease; 
-            entity.GetProperty(PropertyFactory<AntiMagicProperty>.Instance).BaseValue += rand.Next(3); 
-            entity.GetProperty(PropertyFactory<HealthProperty>.Instance).BaseValue += skillLevelModifer + rand.Next((skillLevelModifer >> 1) + 1);
-            entity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue += stamina + rand.Next((stamina >> 1) + 1);
+            liveEntity.GetProperty(PropertyFactory<WisdomProperty>.Instance).BaseValue += minorIncrease; 
+            liveEntity.GetProperty(PropertyFactory<AntiMagicProperty>.Instance).BaseValue += rand.Next(3); 
+            liveEntity.GetProperty(PropertyFactory<HealthProperty>.Instance).BaseValue += skillLevelModifer + rand.Next((skillLevelModifer >> 1) + 1);
+            liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue += stamina + rand.Next((stamina >> 1) + 1);
         }
 
-        public PriestSkill(IEntity entity) : base(entity) {}
+        public PriestSkill(ILiveEntity liveEntity) : base(liveEntity) {}
     }
 }

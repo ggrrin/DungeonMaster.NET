@@ -29,6 +29,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             MapDifficulty = mapDifficulty;
         }
 
-        public IAttack CreateAttackAction(IEntity attackProvider)=> new HumanAttack(this, attackProvider);
+        public IAttack CreateAttackAction(ILiveEntity attackProvider)=> new HumanAttack(this, attackProvider);
     }
 }

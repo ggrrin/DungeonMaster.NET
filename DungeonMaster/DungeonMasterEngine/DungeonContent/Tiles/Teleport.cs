@@ -16,13 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Teleport(TeleprotInitializer initializer) : base(initializer) {}
     }
 
-    public class TeleprotInitializer : FloorInitializer
-    {
-        public new event Initializer<TeleprotInitializer> Initializing;
-        
-    }
-
-    public class Teleport<TMessage> : Floor<TMessage>, ILevelConnector where TMessage : Message
+    public class Teleport<TMessage> : FloorTile<TMessage>, ILevelConnector where TMessage : Message
     {
 
         public Teleport(TeleprotInitializer initializer) : base(initializer)

@@ -3,6 +3,7 @@ using DungeonMasterEngine.Builders.Initializators;
 using DungeonMasterEngine.DungeonContent.Entity.Attacks;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Initializers;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {
@@ -14,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
         public int ShootDamage { get;  }
         public int Strength { get; }
 
-        public WeaponItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass @class, int kineticEnergy, int shootDamage, int strength) : base(name, weight, attackCombo, carryLocation)
+        public WeaponItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass @class, int kineticEnergy, int shootDamage, int strength, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
         {
             DeltaEnergy = deltaEnergy;
             Class = @class;

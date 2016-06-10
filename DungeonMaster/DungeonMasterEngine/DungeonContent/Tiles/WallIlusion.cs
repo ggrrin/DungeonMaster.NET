@@ -9,16 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public WallIlusion(WallIlusionInitializer initalizer) : base(initalizer) {}
     }
 
-    public class WallIlusionInitializer : FloorInitializer 
-    {
-        public new event Initializer<WallIlusionInitializer> Initializing;
-
-        public bool Imaginary { get; set; }
-        public bool Open { get; set; }
-    }
-
-
-    public class WallIlusion<TMessage> : Floor<TMessage> where TMessage : Message
+    public class WallIlusion<TMessage> : FloorTile<TMessage> where TMessage : Message
     {
         public bool IsImaginary { get; } 
 

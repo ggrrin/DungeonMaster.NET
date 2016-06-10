@@ -12,15 +12,15 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         protected override void ApplySkills( int majorIncrease, int minorIncrease)
         {
-            entity.GetProperty(PropertyFactory<VitalityProperty>.Instance).BaseValue += rand.Next(2) & BaseSkillLevel;
-            int stamina = entity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue / 21;
+            liveEntity.GetProperty(PropertyFactory<VitalityProperty>.Instance).BaseValue += rand.Next(2) & BaseSkillLevel;
+            int stamina = liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue / 21;
             int skillLevelModifer = BaseSkillLevel * 2;
-            entity.GetProperty(PropertyFactory<StrengthProperty>.Instance).BaseValue += majorIncrease; 
-            entity.GetProperty(PropertyFactory<DextrityProperty>.Instance).BaseValue += minorIncrease;
-            entity.GetProperty(PropertyFactory<HealthProperty>.Instance).BaseValue += skillLevelModifer + rand.Next((skillLevelModifer >> 1) + 1);
-            entity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue += stamina + rand.Next((stamina >> 1) + 1);
+            liveEntity.GetProperty(PropertyFactory<StrengthProperty>.Instance).BaseValue += majorIncrease; 
+            liveEntity.GetProperty(PropertyFactory<DextrityProperty>.Instance).BaseValue += minorIncrease;
+            liveEntity.GetProperty(PropertyFactory<HealthProperty>.Instance).BaseValue += skillLevelModifer + rand.Next((skillLevelModifer >> 1) + 1);
+            liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance).BaseValue += stamina + rand.Next((stamina >> 1) + 1);
         }
 
-        public NinjaSkill(IEntity entity) : base(entity) {}
+        public NinjaSkill(ILiveEntity liveEntity) : base(liveEntity) {}
     }
 }

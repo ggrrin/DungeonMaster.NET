@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
@@ -14,7 +15,7 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public abstract class Tile<TMessage> : Tile where TMessage : Message
+    public abstract class Tile<TMessage> : Tile, IMessageAcceptor<TMessage> where TMessage : Message
     {
         protected Tile(TileInitializer initializer) : base(initializer) { }
 
@@ -41,7 +42,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
             foreach (var tileSide in Sides)
             {
-                tileSide.SendMessage(message);
+                tileSide.AcceptMessage(message);
             }
         }
 
@@ -52,6 +53,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         protected Tile(TileInitializer initializer)
         {
             initializer.Initializing += Initialize;
+            initializer.Initialized += AfterInitialized;
+        }
+
+        private void AfterInitialized(InitializerBase initializer)
+        {
+            Renderer.Initialize();
+
+            initializer.Initialized -= AfterInitialized;
         }
 
         private void Initialize(TileInitializer initializer)
@@ -59,7 +68,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             GridPosition = initializer.GridPosition;
             Level = initializer.Level;
             Neighbours = initializer.Neighbours;
-            Renderer.Initialize();
 
             initializer.Initializing -= Initialize;
         }
@@ -71,6 +79,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         INeighbours<Tile> INeighbourable<Tile>.Neighbours => Neighbours;
 
         public abstract bool IsAccessible { get; }
+        public virtual bool CanFlyItems => true;
+        public virtual bool IsTransparent => true;
 
         public Vector3 Position => new Vector3(GridPosition.X, -LevelIndex, GridPosition.Y);
 
@@ -89,16 +99,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public virtual void ActivateTileContent()
         {
             ContentActivated = true;
-            foreach (var i in SubItems.Where(x => x.AcceptMessages))
-                ((TextTag)i).Visible = true;
             $"Activating message received at {GridPosition}".Dump();
         }
 
         public virtual void DeactivateTileContent()
         {
             ContentActivated = false;
-            foreach (var i in SubItems.Where(x => x.AcceptMessages))
-                ((TextTag)i).Visible = false;
             $"Deactivating message recived at {GridPosition}".Dump();
         }
 
@@ -131,41 +137,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public abstract IEnumerable<TileSide> Sides { get; }
         public Renderer Renderer { get; set; }
-        public Interactor Interactor { get; set; }
     }
 
 
-    public class RayTileInteractor<TTile> : Interactor where TTile : ITile
-    {
-        private Matrix transformation;
-        public Tile Tile { get; }
-
-        public RayTileInteractor(Tile tile)
-        {
-            Tile = tile;
-        }
-
-        public override void Initialize()
-        {
-            transformation = Matrix.CreateTranslation(Tile.Position);
-        }
-
-        public override void Interact(ILeader leader, ref Matrix matrix, object param)
-        {
-            var ray = (Ray)leader.Interactor;
-            var res = ray.Intersects(new BoundingBox(Tile.Position, Tile.Position + new Vector3(1f)));
-
-            if (res != null)
-            {
-                Tile.Renderer.Highlight(500);
-
-                Matrix finalMatrix = transformation*matrix;
-                foreach (var tileSide in Tile.Sides)
-                {
-                    tileSide.Interactor?.Interact(leader, ref finalMatrix, param);
-                }
-            }
-        }
-    }
+ 
 
 }

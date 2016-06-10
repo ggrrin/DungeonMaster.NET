@@ -7,6 +7,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 
         public override ISkillFactory Factory => SkillFactory<StealSkill>.Instance;
 
-        public StealSkill(IEntity entity, SkillBase baseSkill, int skillLevel) : base(entity, baseSkill, skillLevel) {}
+        public StealSkill(ILiveEntity liveEntity, SkillBase baseSkill, int skillLevel) : base(liveEntity, baseSkill, skillLevel) {}
     }
 }

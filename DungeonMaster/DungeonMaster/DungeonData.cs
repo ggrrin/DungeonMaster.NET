@@ -39,6 +39,7 @@ namespace DungeonMasterParser
         public IList<PotionDescriptor> PotionDescriptors { get; }
         public IList<MiscDescriptor> MiscDescriptors { get; }
 
+        public IList<DoorDescriptor> DoorDescriptors { get; }
 
         public DungeonData()
         {
@@ -55,6 +56,7 @@ namespace DungeonMasterParser
             ContainerDescriptors = ParseContainerDescriptors();
             PotionDescriptors = ParsePotionDescriptors();
             MiscDescriptors = ParseMiscDescriptors();
+            DoorDescriptors = GetDoorDescriptors();
 
             ConnectDescriptorToItemDescriptor();
 
@@ -62,6 +64,43 @@ namespace DungeonMasterParser
             FightCombos = ParseFightCombos();
 
             CreatureDescriptors = ParseCreatureDatas();
+        }
+
+        private IList<DoorDescriptor> GetDoorDescriptors()
+        {
+            return new[]
+            {
+                new DoorDescriptor
+                {
+                    Type = DoorType.WoodenDoor,
+                    Animated = false,
+                    ItemsPassThrough = false,
+                    CreatureSeeThrough = false,
+                    Resistance = 0x2A,
+                },
+                new DoorDescriptor
+                {
+                    Type = DoorType.IronDoor,
+                    Animated = false,
+                    ItemsPassThrough = false,
+                    CreatureSeeThrough = false,
+                    Resistance = 0xE6,
+                },
+                new DoorDescriptor
+                {
+                    Type = DoorType.RaDoor,
+                    Animated = true,
+                    ItemsPassThrough = false,
+                    CreatureSeeThrough = true,
+                    Resistance = 0xFF,
+                }
+            };
+
+            //http://dmweb.free.fr/?q=node/1395#toc19
+            //03 6E Grate door: Not animated, items can pass through, creatures can see through, Resistance = 6E
+            //00 2A Wooden door: Not animated, items cannot pass through, creatures cannot see through, Resistance = 2A
+            //00 E6 Iron door: Not animated, items cannot pass through, creatures cannot see through, Resistance = E6
+            //05 FF Ra door: Animated, items cannot pass through, creatures can see through, Resistance = FF
         }
 
         private Dictionary<int, ItemDescriptor> CreateGlobalIndexLookup()
@@ -86,6 +125,7 @@ namespace DungeonMasterParser
                     {
                         Name = columns[0].Trim(),
                         Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -108,6 +148,7 @@ namespace DungeonMasterParser
                     {
                         Name = columns[0].Trim(),
                         Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -130,6 +171,7 @@ namespace DungeonMasterParser
                     {
                         Name = columns[0].Trim(),
                         Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -152,6 +194,7 @@ namespace DungeonMasterParser
                     {
                         Name = columns[0].Trim(),
                         Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -177,8 +220,8 @@ namespace DungeonMasterParser
                         Name = columns[0].Trim(),
                         Weight = float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture),
                         ArmorStrength = int.Parse(classDelta[0]),
-                        SharpResistance = int.Parse(classDelta[1])
-
+                        SharpResistance = int.Parse(classDelta[1]),
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -282,7 +325,7 @@ namespace DungeonMasterParser
 
                         if (tuple.Item2 == nameof(res.ImprovedSkill))
                         {
-                            res.ImprovedSkill = int.Parse(tuple.Item1.Split(':')[0]); 
+                            res.ImprovedSkill = int.Parse(tuple.Item1.Split(':')[0]);
                             continue;
                         }
 
@@ -328,6 +371,12 @@ namespace DungeonMasterParser
             }).ToArray();
         }
 
+        private string GetTextureName(HtmlNode tr)
+        {
+            var pathx = tr.Element("td").Element("img").GetAttributeValue("src",  null);
+            return "./Textures/GrabableItems/" + Path.GetFileNameWithoutExtension(pathx);
+        }
+
         private IList<WeaponDescriptor> ParseWeaponDescriptors()
         {
             var documet = new HtmlDocument();
@@ -349,16 +398,16 @@ namespace DungeonMasterParser
                         KineticEnergy = int.Parse(columns[4]),
                         ShootDamage = int.Parse(columns[5]),
                         Class = int.Parse(classDelta[0]),
-                        DeltaEnergy = int.TryParse(classDelta[1], out val) ? (int?)val : null
+                        DeltaEnergy = int.TryParse(classDelta[1], out val) ? (int?)val : null,
+                        TexturePath = GetTextureName(tr)
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
-
                 })
                 .ToArray();
         }
 
-        public ItemDescriptor  GetItemDescriptor(ObjectCategory category, int categoryIndexType)
+        public ItemDescriptor GetItemDescriptor(ObjectCategory category, int categoryIndexType)
         {
             int baseIndex = GetCategoryBaseIndex(category);
             var index = baseIndex + categoryIndexType;

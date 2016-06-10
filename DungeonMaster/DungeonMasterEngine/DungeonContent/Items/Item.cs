@@ -33,7 +33,6 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
 
         public Renderer Renderer { get; set; }
-        public Interactor Inter { get; set; }
 
         public Tile Location
         {

@@ -2,8 +2,8 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public interface IMessageAcceptor
+    public interface IMessageAcceptor<TMessage> where TMessage : Message
     {
-        void SendMessage(Message message);
+        void AcceptMessage(TMessage message);
     }
 }

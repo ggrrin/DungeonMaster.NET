@@ -12,10 +12,11 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private DecorationResource()
         {
-            var lbf = new Vector3(-0.33f, -0.33f, 0);
-            var rbf = new Vector3(0.33f, -0.33f, 0);
-            var lbc = lbf + Vector3.Up * 0.33f;
-            var rbc = rbf + Vector3.Up * 0.33f;
+            const float r= 0.5f;
+            var lbf = new Vector3(-r, -r, 0);
+            var rbf = new Vector3(r, -r, 0);
+            var lbc = lbf + Vector3.Up;// * r;
+            var rbc = rbf + Vector3.Up ;//* r;
 
             BoundingBox = new BoundingBox(lbf - Vector3.UnitZ * 0.05f, rbc);
 

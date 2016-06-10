@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
@@ -67,17 +68,46 @@ namespace DungeonMasterEngine.Builders
 
         public Point GridPosition { get; private set; }
 
-        private SidesCreator sidesCreator;
-        private FloorInitializer initalizer;
+        private readonly SidesCreator sidesCreator;
+        private TileInitializer initalizer;
 
         public Tile GetTile(FloorTileData t)
         {
             SetMinimapTile(Color.White);
 
-            initalizer = new FloorInitializer();
-            sidesCreator.SetupSides(initalizer, GridPosition);
-            var res = new Floor(initalizer);
-            res.Interactor = builder.InteractorSource.GetTileInteractor(res);
+            var initalizer = new FloorInitializer();
+            sidesCreator.SetupSides(initalizer, GridPosition, t.AllowRandomDecoration);
+            var res = new FloorTile(initalizer);
+            res.Renderer = builder.RendererSource.GetTileRenderer(res);
+            this.initalizer = initalizer;
+            return res;
+        }
+
+        public Tile GetTile(DoorTileData t)
+        {
+            if (t.Door == null)
+                throw new ArgumentNullException("Invalid map format. Door item should be at door tile.");
+
+            SetMinimapTile(Color.Purple);
+
+            var initalizer = new DoorInitializer { Door = CreateDoor(t) };
+            initalizer.HasButton = t.Door.HasButton;
+            
+            sidesCreator.SetupSides(initalizer, GridPosition, false);
+
+            initalizer.Direction = t.Orientation == Orientation.NorthSouth ? MapDirection.North : MapDirection.East;
+
+            var res = new DoorTile(initalizer);
+            res.Renderer = builder.RendererSource.GetDoorTileRenderer(res, builder.WallTexture, builder.DoorButtonTexture);
+            this.initalizer = initalizer;
+            return res;
+        }
+
+        public Door CreateDoor(DoorTileData tile)
+        {
+            var doorInfo = builder.GetCurrentDoor(tile.Door.DoorType);
+            var res = new Door(tile.State == DoorState.Open, doorInfo.Resistance, tile.Door.IsChoppingDestructible, tile.Door.IsFireballDestructible, doorInfo.ItemsPassThrough, doorInfo.CreatureSeeThrough);
+            res.Renderer = builder.RendererSource.GetDoorRenderer(tile.Door.OrnamentationID == 0 ? builder.defaultDoorTexture : builder.DoorTextures[tile.Door.OrnamentationID - 1]);
             return res;
         }
 
@@ -143,33 +173,6 @@ namespace DungeonMasterEngine.Builders
 
             }
             return null;
-        }
-
-        public Tile GetTile(DoorTileData t)
-        {
-
-            SetMinimapTile(Color.Purple);
-
-            if (t.Door != null)
-            {
-                t.Door.Processed = true;
-
-                var door = new DungeonContent.Items.DoorItem(Vector3.Zero, t.Door.HasButton);
-
-                door.Graphic.Texture = builder.defaultDoorTexture;
-                if (t.Door.DoorAppearance)
-                    door.Graphic.Texture = builder.defaultMapDoorTypeTexture;
-
-                if (t.Door.OrnamentationID != null)
-                    door.Graphic.Texture = builder.DoorTextures[t.Door.OrnamentationID.Value - 1];
-
-                //return new Door(tilePosition, t.Orientation == Orientation.WestEast, t.State == DoorState.Open || t.State == DoorState.Bashed, door);
-                return null;
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid map format. Door item should be at door tile.");
-            }
         }
 
         private TileInfo<StairsTileData> FindStairs(Point pos, int level)

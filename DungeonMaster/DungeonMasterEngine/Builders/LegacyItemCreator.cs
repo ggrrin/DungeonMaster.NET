@@ -8,6 +8,7 @@ using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterParser;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Player;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
@@ -22,7 +23,7 @@ namespace DungeonMasterEngine.Builders
         private readonly LegacyMapBuilder builder;
         private ItemDescriptor descriptor;
 
-        public LegacyItemCreator(LegacyMapBuilder builder )
+        public LegacyItemCreator(LegacyMapBuilder builder)
         {
             this.builder = builder;
         }
@@ -30,8 +31,10 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateItem(ItemData itemData)
         {
             itemData.Processed = true;
-            descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData) itemData).ItemTypeIndex);
-            return itemData.CreateItem(this);
+            descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData)itemData).ItemTypeIndex);
+            var item = itemData.CreateItem(this);
+            item.Renderer = builder.RendererSource.GetItemRenderer(item, item.Factory.Texture);
+            return item;
         }
 
 
@@ -42,35 +45,35 @@ namespace DungeonMasterEngine.Builders
             return values.Cast<CarrryLocations>()
                 .Where(c => (c & locations) == c && c != CarrryLocations.HandsAndBackpack
                 && c != CarrryLocations.Hands && c != CarrryLocations.None)
-                .Select<CarrryLocations,IStorageType>(c =>
-                {
-                    switch (c)
-                    {
-                        case CarrryLocations.Consumable:
-                            return ConsumableStorageType.Instance;
-                        case CarrryLocations.Head:
-                            return HeadStorageType.Instance;
-                        case CarrryLocations.Neck:
-                            return NeckStorageType.Instance;
-                        case CarrryLocations.Torso:
-                            return TorsoStorageType.Instance;
-                        case CarrryLocations.Legs:
-                            return LegsStorageType.Instance;
-                        case CarrryLocations.Feet:
-                            return FeetsStorageType.Instance;
-                        case CarrryLocations.Quiver1:
-                            return BigQuiverStorageType.Instance;
-                        case CarrryLocations.Quiver2:
-                            return SmallQuiverStorageType.Instance;
-                        case CarrryLocations.Pouch:
-                            return PouchStorageType.Instance;
-                        case CarrryLocations.Chest:
-                            return ChestStorageType.Instance;
-                        default:
-                            throw new InvalidOperationException();
-                    }
-                })
-                .Concat(new IStorageType[] { HandStorageType.Instance, BackPackStorageType.Instance})
+                .Select<CarrryLocations, IStorageType>(c =>
+                 {
+                     switch (c)
+                     {
+                         case CarrryLocations.Consumable:
+                             return ConsumableStorageType.Instance;
+                         case CarrryLocations.Head:
+                             return HeadStorageType.Instance;
+                         case CarrryLocations.Neck:
+                             return NeckStorageType.Instance;
+                         case CarrryLocations.Torso:
+                             return TorsoStorageType.Instance;
+                         case CarrryLocations.Legs:
+                             return LegsStorageType.Instance;
+                         case CarrryLocations.Feet:
+                             return FeetsStorageType.Instance;
+                         case CarrryLocations.Quiver1:
+                             return BigQuiverStorageType.Instance;
+                         case CarrryLocations.Quiver2:
+                             return SmallQuiverStorageType.Instance;
+                         case CarrryLocations.Pouch:
+                             return PouchStorageType.Instance;
+                         case CarrryLocations.Chest:
+                             return ChestStorageType.Instance;
+                         default:
+                             throw new InvalidOperationException();
+                     }
+                 })
+                .Concat(new IStorageType[] { HandStorageType.Instance, BackPackStorageType.Instance })
                 .ToArray();
         }
 
@@ -78,7 +81,7 @@ namespace DungeonMasterEngine.Builders
         {
             container.Processed = true;
             var initializator = new ContainerInitializer
-            { 
+            {
                 content = container
                     .GetEnumerator(builder.Data)
                     .Select(x => CreateItem(x))
@@ -136,7 +139,7 @@ namespace DungeonMasterEngine.Builders
             var initalizator = new ClothInitializator
             {
                 IsCruised = cloth.IsCursed,
-                IsBroken =  cloth.IsBroken
+                IsBroken = cloth.IsBroken
             };
 
             return builder.ClothFactories[descriptor.InCategoryIndex].Create(initalizator);

@@ -66,6 +66,7 @@
     <Compile Include="Descriptors\ScrollDescriptor.cs" />
     <Compile Include="Descriptors\WeaponDescriptor.cs" />
     <Compile Include="DMEncoding.cs" />
+    <Compile Include="Descriptors\DoorDescriptor.cs" />
     <Compile Include="Enums\ActionType.cs" />
     <Compile Include="Enums\CarrryLocations.cs" />
     <Compile Include="Descriptors\FightActionDescriptor.cs" />

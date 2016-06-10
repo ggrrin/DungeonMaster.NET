@@ -1,16 +1,17 @@
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class TileWallSideRenderer<TSide> : TileSideRenderer where TSide : TileSide
+    public class TileWallSideRenderer<TSide> : Renderer where TSide : TileSide
     {
         public Texture2D WallTexture { get; }
         public Texture2D DecorationTexture { get; }
         public TSide TileSide { get; }
 
         protected Matrix transformation;
-        private readonly DecorationRenderer<object> decorationRenderer;
+        private readonly DecorationRenderer<IActuatorX> decorationRenderer;
 
         public WallResource Resource => WallResource.Instance;
 
@@ -20,7 +21,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             DecorationTexture = decorationTexture;
             TileSide = tileSide;
 
-            decorationRenderer = new DecorationRenderer<object>(decorationTexture, null);
+            decorationRenderer = new DecorationRenderer<IActuatorX>(decorationTexture, null);
 
             Matrix rotation;
             GetTransformation(tileSide.Face, out rotation);
@@ -30,11 +31,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             Matrix.Multiply(ref rotation, ref translation, out transformation);
         }
 
-        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
+        public override Matrix GetCurrentTransformation(ref Matrix parentTransformation)
         {
             Matrix finalTransformation;
-            Matrix.Multiply(ref transformation, ref currentTransformation, out finalTransformation);
+            Matrix.Multiply(ref transformation, ref parentTransformation, out finalTransformation);
+            return finalTransformation;
+            
+        } 
 
+        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
+        {
+            Matrix finalTransformation = GetCurrentTransformation(ref currentTransformation);
             RenderWall(effect, ref finalTransformation);
 
             if (TileSide.RandomDecoration)
@@ -43,7 +50,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             return finalTransformation;
         }
 
-        public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
+
+        public override bool Interact(ILeader leader, ref Matrix currentTransformation,  object param)
         {
             return false;
         }

@@ -12,15 +12,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Stairs(StairsInitializer initializer) : base(initializer) {}
     }
 
-    public class StairsInitializer : TileInitializer
-    {
-        public event Initializer<StairsInitializer> Initializer; 
-        //look direction from stairs
-        public MapDirection UpperLevelDirection { get; set; }
-        public MapDirection LowerLevelDirection { get; set; }
-        public bool Up { get; set; }
-    }
-
     public class Stairs<TMessage> : Tile<TMessage>, ILevelConnector where TMessage : Message
     {
         public GraphicsCollection graphics;

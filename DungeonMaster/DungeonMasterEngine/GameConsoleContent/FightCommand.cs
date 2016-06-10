@@ -59,7 +59,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             //}
         }
 
-        public void Fight(IEntity champion, IFightAction action)
+        public void Fight(ILiveEntity champion, IFightAction action)
         {
             //TODO
             //if(!champion.FightActions.Contains(action))

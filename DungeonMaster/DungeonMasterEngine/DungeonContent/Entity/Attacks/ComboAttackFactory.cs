@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             FightAction = fightAction;
         }
 
-        public IAttack CreateAttackAction(IEntity attackProvider)
+        public IAttack CreateAttackAction(ILiveEntity attackProvider)
         {
             if(attackProvider == null)
                 throw new ArgumentNullException();

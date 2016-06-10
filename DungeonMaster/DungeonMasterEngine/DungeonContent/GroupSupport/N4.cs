@@ -22,6 +22,13 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
                 .ToArray();
         }
 
+        private N4()
+        {
+            neighbours = Enumerable.Empty<Tuple<ISpace, MapDirection>>();
+        }
+
+        public static N4 Empty { get; } = new N4();
+
         public IEnumerator<Tuple<ISpace, MapDirection>> GetEnumerator() => neighbours.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
