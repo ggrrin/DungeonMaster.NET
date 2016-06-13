@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {
     public class MiscItemFactory : GrabableItemFactoryBase
     {
-        public MiscItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation,texture)
+        public MiscItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation,texture)
         {
             
         }

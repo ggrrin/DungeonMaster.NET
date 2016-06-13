@@ -14,7 +14,7 @@ namespace DungeonMasterEngine.DungeonContent
         }
 
 
-        public override Tile East
+        public override ITile East
         {
             get
             {
@@ -25,7 +25,7 @@ namespace DungeonMasterEngine.DungeonContent
             }
         }
 
-        public override Tile North
+        public override ITile North
         {
             get
             {
@@ -36,7 +36,7 @@ namespace DungeonMasterEngine.DungeonContent
             }
         }
 
-        public override Tile South
+        public override ITile South
         {
             get
             {
@@ -47,7 +47,7 @@ namespace DungeonMasterEngine.DungeonContent
             }
         }
 
-        public override Tile West
+        public override ITile West
         {
             get
             {

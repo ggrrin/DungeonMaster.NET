@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
-    public class LayoutManagerX<TItem> where TItem  : class
+    public class LayoutManager<TItem> where TItem  : class
     {
         private readonly List<Tuple<TItem, ISpace>> entitiesSpaces = new List<Tuple<TItem, ISpace>>();
 

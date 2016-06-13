@@ -4,8 +4,5 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
-    public class LayoutManager : LayoutManagerX<ILiveEntity>
-    {
-        
-    }
+ 
 }

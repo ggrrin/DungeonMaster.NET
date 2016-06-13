@@ -13,11 +13,11 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 
         public Texture2D Texture { get; }
         public string Name { get; }
-        public float Weight { get; }
+        public int Weight { get; }
         public IEnumerable<IAttackFactory> AttackCombo => combos;
         public IEnumerable<IStorageType> CarryLocation => locations;
 
-        protected GrabableItemFactoryBase(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture)
+        protected GrabableItemFactoryBase(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture)
         {
             Name = name;
             Weight = weight;

@@ -5,10 +5,10 @@ namespace DungeonMasterEngine.Player
 {
     public class LocationChangedEventArgs : EventArgs
     {
-        public Tile NewLocation { get; }
-        public Tile OldLocation { get; }
+        public ITile NewLocation { get; }
+        public ITile OldLocation { get; }
 
-        public LocationChangedEventArgs(Tile oldLocation, Tile newLocation)
+        public LocationChangedEventArgs(ITile oldLocation, ITile newLocation)
         {
             OldLocation = oldLocation;
             NewLocation = newLocation;

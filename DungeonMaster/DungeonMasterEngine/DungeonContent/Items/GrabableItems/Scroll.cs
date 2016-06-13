@@ -14,5 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
             this.Text = initializator.Text;
             this.scrollItemFactory = scrollItemFactory;
         }
+
+        public override string ToString() => $"Scrool \"{Text}\"";
     }
 }

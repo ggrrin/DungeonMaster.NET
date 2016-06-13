@@ -8,8 +8,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     public class ChampionCommand : Interpreter
     {
-
-        public ChampoinActuator Actuator {get; set;}
+        public Sensor127 Actuator { get; set; }
 
         public override async Task Run()
         {
@@ -24,13 +23,11 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (Parameters.Length > 0)
             {
                 string parameter = Parameters[0];
-                switch(parameter)
+                switch (parameter)
                 {
                     case "list":
                         await GetFromItemIndex(ConsoleContext.AppContext.Theron.PartyGroup, false);
                         break;
-
-
                 }
             }
             else
@@ -56,13 +53,12 @@ namespace DungeonMasterEngine.GameConsoleContent
                 champion = await ReincarnateInterpreter();
             else if (res == getOption[1])
                 champion = Actuator.Champion;
-            else            
+            else
                 return;
-            
 
-            if(champion != null)
+            if (champion != null)
             {
-                Actuator.RemoveChampoin();
+                Actuator.Champion = null;
                 ConsoleContext.AppContext.Theron.AddChampoinToGroup(champion);
                 Output.WriteLine("Champoin succesfully added to group.");
             }

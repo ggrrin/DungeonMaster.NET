@@ -13,24 +13,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
     public class Pit<TMessage> : FloorTile<TMessage> where TMessage : Message
     {
-        private GraphicsCollection graphics;
-
+        public bool IsVisible { get; private  set; }
+        public bool IsImaginary { get; private set; }
 
         public bool IsOpen => ContentActivated;
-
-        public override bool ContentActivated
-        {
-            get
-            {
-                return base.ContentActivated;
-            }
-
-            protected set
-            {
-                base.ContentActivated = value;
-                UpdateWall();
-            }
-        }
 
         public override bool IsAccessible => true;
 
@@ -39,28 +25,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Pit(PitInitializer initializer) : base(initializer)
         {
             initializer.Initializing += Initialize;
-            //TODO uncomment
-            //wallGraphic.DrawFaces = CubeFaces.None;
-            //var pitGraphic = new CubeGraphic { Position = position - Vector3.Up, DrawFaces = CubeFaces.Sides };
-            //pitGraphic.Resources.Content.Load<Texture2D>("Textures/Wall");
-
-            //graphics = new GraphicsCollection(wallGraphic, pitGraphic);
-            //graphicsProviders.SubProviders.Add(graphics);
-            //base.ContentActivated = true;
         }
 
         private void Initialize(PitInitializer initializer)
         {
-            //TODO initalize
+            ContentActivated = true;
+            IsVisible = initializer.IsVisible;
+            IsImaginary = initializer.IsImaginary;
+
+
             initializer.Initializing -= Initialize;
         }
 
-        protected override void UpdateWall()
-        {
-            base.UpdateWall();
-
-            //TODO uncomment
-            //wallGraphic.DrawFaces = IsOpen ? wallGraphic.DrawFaces & ~CubeFaces.Floor : wallGraphic.DrawFaces | CubeFaces.Floor;
-        }
     }
 }

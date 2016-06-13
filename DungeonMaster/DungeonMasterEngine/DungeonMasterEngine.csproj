@@ -57,43 +57,57 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Builders\ChampionBuilder.cs" />
+    <Compile Include="Builders\ChampionMirrorRenderer.cs" />
     <Compile Include="Builders\DefaultWallGrahicsSource.cs" />
     <Compile Include="Builders\IWallGraphicSource.cs" />
     <Compile Include="Builders\SidesCreator.cs" />
+    <Compile Include="Builders\WallActuatorCreator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensor.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC01.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC02.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC03.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC04.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC07.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC08.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorX.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\FloorSensors\FloorSensorC06.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IInteractable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\ISensorInitializerX.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ItemConstrainSensorInitalizer.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ITriggerable.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\LogicActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\ActuatorType.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ActuatorX.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\ActuatorXRenderer.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallActuatorRenderer.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Alcove.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\BA.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\BB.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\BUninon.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\ChampionActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\DecorationItem.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\EarthSides.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Fountain.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IActuatorX.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IMessageAcceptor.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\IRenderable.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\ItemConstrainSensor.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor0.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor1.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor11.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor12.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor127.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor13.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor16.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor17.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor2.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor3.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\Sensors\Sensor4.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\ItemConstrainSensor.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor0.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor1.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor11.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor12.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor127.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor13.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor16.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor17.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor2.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor3.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\Sensor4.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SensorEffect.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\SensorInitializer.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\StorageSensorInitializer.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\SubXc017c011.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\WallSensors\SubXc017c011.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\ViAltairAlcove.cs" />
     <Compile Include="DungeonContent\Actuators\Wall\Mess\APart1.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializator.cs" />
@@ -101,8 +115,6 @@
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\AirSkill.cs" />
     <Compile Include="Builders\BuilderBase.cs" />
-    <Compile Include="Builders\ActuatorFactoryBase.cs" />
-    <Compile Include="Builders\ActuatorState.cs" />
     <Compile Include="Builders\Initializators\ClothInitializator.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ClubSkill.cs" />
     <Compile Include="Builders\Initializators\ContainerInitializer.cs" />
@@ -110,14 +122,6 @@
     <Compile Include="DungeonContent\Entity\Skills\DeffendSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\EarthSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FireSkill.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\FloorDecorationFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\MultiFloorDirectionFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\TPCFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\TPCIFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\FloorCreatureFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\FloorDirectionFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\ItemFactory.cs" />
-    <Compile Include="Builders\FloorActuatorFactories\PartyPossesionFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\HealSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\HiddenSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\IdentifySkill.cs" />
@@ -131,17 +135,10 @@
     <Compile Include="Builders\TileInfo.cs" />
     <Compile Include="DungeonContent\Entity\Skills\WaterSkill.cs" />
     <Compile Include="Builders\Initializators\WeaponInitializator.cs" />
-    <Compile Include="DungeonContent\Actuators\RemoteActuator.cs" />
     <Compile Include="Builders\FloorActuatorCreator.cs" />
-    <Compile Include="Builders\WallActuatorCreator.cs" />
-    <Compile Include="Builders\Parser.cs" />
-    <Compile Include="Builders\FactoryBase.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\ActionState.cs" />
-    <Compile Include="DungeonContent\Actuators\ActionStateX.cs" />
-    <Compile Include="DungeonContent\Actuators\Wall\LogicGate.cs" />
-    <Compile Include="DungeonContent\Actuators\SimpleRemoteActuator.cs" />
+    <Compile Include="DungeonContent\Actuators\Wall\LogicGateSensor.cs" />
     <Compile Include="DungeonContent\Entity\Attacks\ComboAttackFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ShootSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ThrowSkill.cs" />
@@ -157,7 +154,6 @@
     <Compile Include="DungeonContent\Entity\Skills\PriestSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\base\SkillBase.cs" />
     <Compile Include="DungeonContent\Entity\Skills\WizardSkill.cs" />
-    <Compile Include="DungeonContent\GroupSupport\ActuatorLocationHolder3D.cs" />
     <Compile Include="DungeonContent\GroupSupport\CreatureInfo.cs" />
     <Compile Include="DungeonContent\GroupSupport\FourthSpace.cs" />
     <Compile Include="DungeonContent\GroupSupport\FourthSpaceRouteElement.cs" />
@@ -186,7 +182,6 @@
     <Compile Include="DungeonContent\Items\GrabableItems\IGrabableItem.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\IInventory.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\Factories\IGrabableItemFactoryBase.cs" />
-    <Compile Include="DungeonContent\Items\IItem.cs" />
     <Compile Include="DungeonContent\Entity\IRelationManager.cs" />
     <Compile Include="DungeonContent\Entity\Skills\base\ISkillFactory.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\IStorageType.cs" />
@@ -247,10 +242,6 @@
     <Compile Include="DungeonContent\Tiles\Support\ITile.cs" />
     <Compile Include="DungeonContent\Tiles\LogicTile.cs" />
     <Compile Include="DungeonContent\Constrains\GrabableItemConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\PartDirectionConstrain.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\FloorActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Floor\PartyPossesionActuator.cs" />
-    <Compile Include="DungeonContent\Items\DecorationItem.cs" />
     <Compile Include="DungeonContent\MapDirection.cs" />
     <Compile Include="DungeonContent\Tiles\Support\Message.cs" />
     <Compile Include="DungeonContent\Tiles\Support\MessageAction.cs" />
@@ -306,7 +297,6 @@
     <Compile Include="DungeonContent\Entity\Champion.cs" />
     <Compile Include="Builders\LegacyItemCreator.cs" />
     <Compile Include="Builders\LegacyTileCreator.cs" />
-    <Compile Include="DungeonContent\Actuators\Actuator.cs" />
     <Compile Include="Helpers\BitMapMemory.cs" />
     <Compile Include="Helpers\BreadthFirstSearch.cs" />
     <Compile Include="Builders\BuilderMocap.cs" />
@@ -316,7 +306,6 @@
     <Compile Include="Helpers\DepthFirstSearch.cs" />
     <Compile Include="DungeonContent\Items\Door.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\GrabableItem.cs" />
-    <Compile Include="DungeonContent\Items\Item.cs" />
     <Compile Include="DungeonContent\LevelCollection.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\Miscellaneous.cs" />
     <Compile Include="DungeonContent\MultiTileNeighbours.cs" />
@@ -360,7 +349,6 @@
     <Compile Include="Graphics\ResourcesProvides\CubeResources.cs" />
     <Compile Include="Interfaces\IDungonBuilder.cs" />
     <Compile Include="Interfaces\IGraphicProvider.cs" />
-    <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IViewStatus.cs" />
     <Compile Include="DungeonContent\TileNeighbours.cs" />
     <Compile Include="Builders\LegacyMapBuilder.cs" />
@@ -380,10 +368,8 @@
     <Compile Include="Graphics\ResourcesProvides\ResourceProvider.cs" />
     <Compile Include="Interfaces\INeighbours.cs" />
     <Compile Include="DungeonContent\Items\GrabableItems\Scroll.cs" />
-    <Compile Include="DungeonContent\Items\Teleporter.cs" />
-    <Compile Include="DungeonContent\Items\TextTag.cs" />
     <Compile Include="DungeonContent\Tiles\Tile.cs" />
-    <Compile Include="DungeonContent\Tiles\Teleport.cs" />
+    <Compile Include="DungeonContent\Tiles\TeleportTile.cs" />
     <Compile Include="DungeonContent\Tiles\Stairs.cs" />
     <Compile Include="DungeonContent\Tiles\FloorTile.cs" />
     <Compile Include="DungeonContent\Tiles\DoorTile.cs" />
@@ -404,6 +390,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\armor.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\champions.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\combos.html">
@@ -469,7 +458,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Builders\WallActuatorFactories\" />
+    <Folder Include="DungeonContent\Actuators\Floor\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

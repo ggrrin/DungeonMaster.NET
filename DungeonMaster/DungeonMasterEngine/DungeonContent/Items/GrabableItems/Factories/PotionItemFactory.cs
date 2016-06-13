@@ -14,7 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
             return new Potion(initializator, this);
         }
 
-        public PotionItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
+        public PotionItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
         { }
 
         public override IGrabableItem Create()

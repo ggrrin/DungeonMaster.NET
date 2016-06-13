@@ -8,12 +8,12 @@ namespace DungeonMasterEngine.Helpers
     {
         private double[,] onStack;
         private double currentTimeFlag;
-        private Tile startTile;
-        private Action<Tile> action;
+        private ITile startTile;
+        private Action<ITile> action;
 
         private int dimension => onStack.GetLength(0);
 
-        public void StartSearch(Tile startTile, double currentTimeFlag, int dimension, Action<Tile> action)
+        public void StartSearch(ITile startTile, double currentTimeFlag, int dimension, Action<ITile> action)
         {
             this.startTile = startTile;
             this.currentTimeFlag = currentTimeFlag;
@@ -27,7 +27,7 @@ namespace DungeonMasterEngine.Helpers
         }
 
 
-        private void Search(Tile currentTile)
+        private void Search(ITile currentTile)
         {
             action(currentTile);
             this[currentTile.GridPosition] = currentTimeFlag;
@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.Helpers
             SolveDescendant(currentTile.Neighbours.South);
         }
 
-        private void SolveDescendant(Tile descendant)
+        private void SolveDescendant(ITile descendant)
         {
             if (descendant != null && this[descendant.GridPosition] != null && this[descendant.GridPosition] != currentTimeFlag)
                 Search(descendant);

@@ -4,23 +4,27 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    public abstract class LiveEntity : Item, ILiveEntity
+    public abstract class LiveEntity : ILiveEntity
     {
-        public MapDirection FacingDirection { get; set; }
 
         public abstract IGroupLayout GroupLayout { get; }
 
         public abstract IRelationManager RelationManager { get; }
 
-        protected LiveEntity(Vector3 position) { } 
+        public abstract ISpaceRouteElement Location { get; set; }
 
-        public new abstract ISpaceRouteElement Location { get; set; }
+        public MapDirection MapDirection { get; set; }
 
+        public Vector3 Position { get; set; }
         public abstract float TranslationVelocity { get; }
+
+        public virtual void Update(GameTime time) { }
 
         public abstract IBody Body { get; }
 

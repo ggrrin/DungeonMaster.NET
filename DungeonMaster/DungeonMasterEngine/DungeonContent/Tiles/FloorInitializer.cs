@@ -6,7 +6,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     {
         public new event Initializer<FloorInitializer> Initializing;
 
-        public IEnumerable<TileSide> Sides { get; set; }
+        public FloorTileSide FloorSide { get; set; }
+        public IEnumerable<TileSide> WallSides { get; set; }
 
         protected override void OnInitialize()
         {

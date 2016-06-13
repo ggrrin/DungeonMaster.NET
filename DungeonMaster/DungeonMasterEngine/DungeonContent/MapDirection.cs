@@ -14,10 +14,14 @@ namespace DungeonMasterEngine.DungeonContent
         public static MapDirection Down { get; } = new MapDirection(-1);
         public static MapDirection Up { get; } = new MapDirection(1);
 
-        public static MapDirection[] Sides { get; } = { North, East, South, West };
+        private static readonly MapDirection[] sides = { North, East, South, West };
+        public static IReadOnlyList<MapDirection> Sides { get; } = sides;
 
-        public static IEnumerable<MapDirection> AllDirections => Sides.Concat(new[] { Down, Up });
-        
+        private static readonly  MapDirection[] horizontalDirections = { Down, Up };
+        public static IReadOnlyList<MapDirection> HorizontalDirections => horizontalDirections;
+
+        public static IEnumerable<MapDirection> AllDirections => Sides.Concat(HorizontalDirections);
+
         public static Point operator +(MapDirection s, Point p) => s.RelativeShift + p;
         public static Point operator +(Point p, MapDirection s) => s.RelativeShift + p;
 
@@ -45,9 +49,21 @@ namespace DungeonMasterEngine.DungeonContent
             get
             {
                 if (HorizontalShift == 0)
-                    return Sides[(Array.IndexOf(Sides, this) + 1) % Sides.Length];
+                    return Sides[(Array.IndexOf(sides, this) + 1) % sides.Length];
                 else
                     return new MapDirection(-HorizontalShift);
+            }
+        }
+
+
+        public int Index
+        {
+            get
+            {
+                if (HorizontalShift == 0)
+                    return Array.IndexOf(sides, this);
+                else
+                    return 4 + Array.IndexOf(horizontalDirections, this);
             }
         }
 
@@ -77,6 +93,20 @@ namespace DungeonMasterEngine.DungeonContent
                 default:
                     return false;
             }
+        }
+
+        public MapDirection GetRotated(int count)
+        {
+            bool clockwise = count >= 0;
+            if (!clockwise)
+                count *= -1;
+
+            MapDirection res = this;
+            for (int i = 0; i < count; i++)
+                res = clockwise ? res.NextClockWise : res.NextCounterClockWise;
+
+            return res;
+
         }
 
         public MapDirection(int i, int j) : this(new Point(i, j))

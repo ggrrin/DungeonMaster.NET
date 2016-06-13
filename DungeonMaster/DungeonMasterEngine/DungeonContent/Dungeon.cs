@@ -12,8 +12,8 @@ namespace DungeonMasterEngine.DungeonContent
 {
     public class Dungeon : DrawableGameComponent
     {
-        private readonly BreadthFirstSearch<Tile,object> bfs = new BreadthFirstSearch<Tile,object>();
-        private List<Tile> currentVisibleTiles;
+        private readonly BreadthFirstSearch<ITile,object> bfs = new BreadthFirstSearch<ITile,object>();
+        private List<ITile> currentVisibleTiles;
         private SpriteBatch batcher;
 
         public DungeonLevel CurrentLevel { get; private set; }
@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(0,  new Point(9 ,7));
+            var l = LoadLevel(1,  new Point(25,15));
             Theron = new Theron(l.StartTile, Game);
             Game.Components.Add(Theron);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;
@@ -86,11 +86,8 @@ namespace DungeonMasterEngine.DungeonContent
             //if changel is multiplexing set symetricaly 
             if (secondLevelConnector != null)
             {
-                secondLevelConnector.NextLevelEnter = (Tile)e;
+                secondLevelConnector.NextLevelEnter = e;
             }
-
-
-            
 
             UpdateVisibleTiles();
         }
@@ -142,7 +139,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         private void UpdateVisibleTiles()
         {
-            currentVisibleTiles = new List<Tile>();
+            currentVisibleTiles = new List<ITile>();
             bfs.StartSearch(Theron.Location, Theron.Location, FogHorizont, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
         }
 
@@ -161,7 +158,7 @@ namespace DungeonMasterEngine.DungeonContent
 
             var mat = Matrix.Identity;
             foreach (var t in currentVisibleTiles.ReverseLazy())
-                t.Renderer.Render(ref mat, Effect, null);
+                t.Renderer?.Render(ref mat, Effect, null);
 
             Theron.Draw(Effect);
 

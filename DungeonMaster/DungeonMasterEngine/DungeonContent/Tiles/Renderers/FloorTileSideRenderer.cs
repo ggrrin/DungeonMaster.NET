@@ -5,11 +5,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
-    public class FloorTileSideRenderer : TileWallSideRenderer<FloorTileSide>
+    public class ActuatorFloorTileSideRenderer : FloorTileSideRenderer<ActuatorFloorTileSide>
     {
-        public FloorTileSideRenderer(FloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) { }
 
-        const float size= 0.25f;
+        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
+        {
+            var res = base.Render(ref currentTransformation, effect, parameter);
+            TileSide.Actuator.Renderer?.Render(ref res, effect, parameter);
+            return res;
+        }
+
+        public ActuatorFloorTileSideRenderer(ActuatorFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) {}
+    }
+
+    public class FloorTileSideRenderer<TFloorTileSide> : TileWallSideRenderer<TFloorTileSide> where TFloorTileSide : FloorTileSide
+    {
+        public FloorTileSideRenderer(TFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) { }
+
+        const float size = 0.25f;
 
         public Vector3 GetPosition(Point p)
         {
@@ -19,8 +32,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public BoundingBox GetBoundingBox(Point p)
         {
             var pos = GetPosition(p);
-            return new BoundingBox(pos + new Vector3(-size,size, 0), pos + new Vector3(size, -size, 0.01f));
-            
+            return new BoundingBox(pos + new Vector3(-size, size, 0), pos + new Vector3(size, -size, 0.01f));
+
         }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
@@ -40,7 +53,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
         {
-            Ray ray = (Ray) leader.Interactor;
+            Ray ray = (Ray)leader.Interactor;
             var resultTransformationInverse = Matrix.Invert(GetCurrentTransformation(ref currentTransformation));
 
             foreach (var space in TileSide.Spaces)

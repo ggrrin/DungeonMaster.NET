@@ -9,11 +9,11 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
     public class OpenDoorSpell : Spell
     {
         private readonly MapDirection startDirection;
-        private readonly Animator<OpenDoorSpell, Tile> animator = new Animator<OpenDoorSpell, Tile>();
+        private readonly Animator<OpenDoorSpell, ITile> animator = new Animator<OpenDoorSpell, ITile>();
 
         public override float TranslationVelocity { get; protected set; } = 2 * 2.2f;
 
-        public OpenDoorSpell(Tile location, MapDirection startDirection) : base(location.Position)
+        public OpenDoorSpell(ITile location, MapDirection startDirection) : base(location.Position)
         {
             this.startDirection = startDirection;
             Location = location;
@@ -22,7 +22,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 
         public override async void Run()
         {
-            Tile moveTile = null; 
+            ITile moveTile = null; 
             while (!TryFinishSpell() && null != (moveTile = Location.Neighbours.GetTile(startDirection)))
             {
                 await animator.MoveToAsync(this, moveTile, setLocation: true);

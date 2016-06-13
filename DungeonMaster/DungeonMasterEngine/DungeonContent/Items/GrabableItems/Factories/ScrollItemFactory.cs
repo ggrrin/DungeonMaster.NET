@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {
     public class ScrollItemFactory : GrabableItemFactoryBase
     {
-        public ScrollItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture) {}
+        public ScrollItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture) {}
 
         public Scroll Create<TItemInitiator>(TItemInitiator initializator) where TItemInitiator : IScrollInitializer
         {

@@ -6,5 +6,7 @@ namespace DungeonMasterEngine.Interfaces
     {
         Vector3 Position { get; set; }
         float TranslationVelocity { get; }
+
+        void Update(GameTime time);
     }
 }

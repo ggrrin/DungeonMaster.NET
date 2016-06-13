@@ -1,10 +1,12 @@
 ﻿using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {
-    public abstract class Spell : Item, ISpell
+    public abstract class Spell :  ISpell
     {
+        public Vector3 Position { get; set; }
         public abstract float TranslationVelocity { get; protected set; }
 
         public bool Finished { get; private set; } = false;
@@ -14,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 
         public abstract void Run();
 
-        public sealed override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             if (!Finished)
                 OnSpellUpdate(gameTime);
@@ -27,5 +29,8 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
             Finished = true;
             Location = null;
         }
+
+        public ITile Location { get; set; }
+        public MapDirection MapDirection { get; set; }
     }
 }

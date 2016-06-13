@@ -6,6 +6,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         //look direction from stairs
         public MapDirection UpperLevelDirection { get; set; }
         public MapDirection LowerLevelDirection { get; set; }
-        public bool Up { get; set; }
+        public bool Down { get; set; }
     }
 }

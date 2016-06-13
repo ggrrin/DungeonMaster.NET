@@ -31,7 +31,8 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateItem(ItemData itemData)
         {
             itemData.Processed = true;
-            descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData)itemData).ItemTypeIndex);
+            descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData)itemData).ItemTypeIndex );
+
             var item = itemData.CreateItem(this);
             item.Renderer = builder.RendererSource.GetItemRenderer(item, item.Factory.Texture);
             return item;
@@ -84,7 +85,7 @@ namespace DungeonMasterEngine.Builders
             {
                 content = container
                     .GetEnumerator(builder.Data)
-                    .Select(x => CreateItem(x))
+                    .Select(x => new LegacyItemCreator(builder).CreateItem(x))
                     .ToArray()
             };
             return builder.ContainerFactories[descriptor.InCategoryIndex].Create(initializator);

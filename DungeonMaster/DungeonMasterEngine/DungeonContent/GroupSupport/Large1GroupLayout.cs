@@ -8,12 +8,12 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
     {
         public IEnumerable<ISpace> AllSpaces { get; }
 
-        public IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, Tile currentTile, MapDirection mapDirection)
+        public IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, ITile currentTile, MapDirection mapDirection)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, Tile currentTile, Tile targetTile)
+        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, ITile currentTile, ITile targetTile)
         {
             throw new NotImplementedException();
         }

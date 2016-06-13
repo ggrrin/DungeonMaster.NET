@@ -7,19 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
 {
-    public abstract class GrabableItem : Item, IGrabableItem
+    public abstract class GrabableItem : IGrabableItem
     {
         public abstract IGrabableItemFactoryBase Factory { get; }
 
-        protected GrabableItem() 
-        {
-            ((CubeGraphic) Graphics).Texture = ResourceProvider.Instance.DrawRenderTarget(this.GetType().Name, Color.Green, Color.White);
-        }
 
         public override string ToString()
         {
             return $"{GetType().Name} : {Factory.GetType().Name}";
         }
 
+        public Renderer Renderer { get; set; }
     }
 }

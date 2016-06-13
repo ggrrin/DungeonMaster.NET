@@ -5,7 +5,7 @@ namespace DungeonMasterEngine.Interfaces
 {
     public interface ILevelConnector  : ITile
     {
-        Tile NextLevelEnter { get; set; }
+        ITile NextLevelEnter { get; set; }
         int NextLevelIndex { get; }
         Point TargetTilePosition { get; }
     }

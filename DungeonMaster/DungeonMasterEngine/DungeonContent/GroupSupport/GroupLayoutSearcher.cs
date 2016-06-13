@@ -7,9 +7,9 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
     public class GroupLayoutSearcher : BreadthFirstSearch<ISpace, object>
     {
-        private LayoutManager layoutManager;
+        private LayoutManager<ILiveEntity> layoutManager;
 
-        public LayoutManager LayoutManager
+        public LayoutManager<ILiveEntity> LayoutManager
         {
             get { return layoutManager; }
             set

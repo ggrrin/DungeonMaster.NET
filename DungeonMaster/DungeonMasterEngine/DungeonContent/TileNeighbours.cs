@@ -8,7 +8,7 @@ using DungeonMasterEngine.Interfaces;
 namespace DungeonMasterEngine.DungeonContent
 {
 
-    public class TileNeighbours : INeighbours<Tile>
+    public class TileNeighbours : INeighbours<ITile>
     {
         protected TileNeighbours() { }
 
@@ -28,12 +28,12 @@ namespace DungeonMasterEngine.DungeonContent
             West = neigbours.West;
         }
 
-        public virtual Tile North { get;  }
-        public virtual Tile South { get; }
-        public virtual Tile East { get; }
-        public virtual Tile West { get; }
+        public virtual ITile North { get;  }
+        public virtual ITile South { get; }
+        public virtual ITile East { get; }
+        public virtual ITile West { get; }
 
-        public Tile GetTile(MapDirection mapDirection)
+        public ITile GetTile(MapDirection mapDirection)
         {
             if (mapDirection == MapDirection.East)
                 return East;
@@ -47,7 +47,7 @@ namespace DungeonMasterEngine.DungeonContent
                 return null;
         }
 
-        public IEnumerator<Tuple<Tile, MapDirection>> GetEnumerator()
+        public IEnumerator<Tuple<ITile, MapDirection>> GetEnumerator()
         {
             return MapDirection.Sides
                 .Select(s => Tuple.Create(GetTile(s), s))

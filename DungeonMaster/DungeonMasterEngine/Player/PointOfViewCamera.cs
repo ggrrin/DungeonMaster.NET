@@ -7,9 +7,9 @@ using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.Player
 {
-    public class PointOfViewCamera : FreeLookCamera, IPlayer, IMovable<Tile>
+    public class PointOfViewCamera : FreeLookCamera, IMovable<ITile>
     {
-        private readonly Animator<PointOfViewCamera, Tile> animator = new Animator<PointOfViewCamera, Tile>();
+        private readonly Animator<PointOfViewCamera, ITile> animator = new Animator<PointOfViewCamera, ITile>();
         private IPOVInputProvider inputProvider = new DefaultPOVInput();
         private MapDirection mapDirection = MapDirection.South;
 
@@ -52,11 +52,11 @@ namespace DungeonMasterEngine.Player
 
         public Point GridPosition => location.GridPosition;
 
-        private Tile location;
+        private ITile location;
 
         public event EventHandler LocationChanged;
 
-        public Tile Location
+        public ITile Location
         {
             get
             {
@@ -78,18 +78,18 @@ namespace DungeonMasterEngine.Player
             LocationChanged += (d, s) => $"{Location.Position} {Location.Neighbours}".Dump();
         }
 
-        protected virtual void OnLocationChanged(Tile oldLocation, Tile newLocation)
+        protected virtual void OnLocationChanged(ITile oldLocation, ITile newLocation)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
         }
 
-        protected virtual void OnLocationChanging(Tile oldLocation, Tile newLocation)
+        protected virtual void OnLocationChanging(ITile oldLocation, ITile newLocation)
         { }
 
         protected virtual void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
         { }
 
-        protected virtual bool CanMoveToTile(Tile tile)
+        protected virtual bool CanMoveToTile(ITile tile)
         {
             return tile != null && tile.IsAccessible;
         }

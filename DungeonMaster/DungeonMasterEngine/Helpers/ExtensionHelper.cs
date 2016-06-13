@@ -15,6 +15,8 @@ namespace DungeonMasterEngine.Helpers
 {
     public static class ExtensionHelper
     {
+
+
         public static Ray Transform(this Ray ray, ref Matrix mat)
         {
             var p1 = ray.Position;
@@ -25,7 +27,6 @@ namespace DungeonMasterEngine.Helpers
 
             return new Ray(p1Transformed, p2Transformed - p1Transformed);
         }
-
 
         public static TSource MinObj<TSource>(this IEnumerable<TSource> source, Func<TSource, float> getValue)
         {
@@ -129,16 +130,6 @@ namespace DungeonMasterEngine.Helpers
             return parentDataPosition + relativePos;
         }
 
-        public static ActionStateX GetActionStateX(this ActuatorItemData actuator)
-        {
-            int specifer = -1;
-            var location = actuator.ActionLocation as RemoteTarget;
-            if (location != null)
-                specifer = (int)location.Position.Direction;
-
-            return new ActionStateX((ActionState)actuator.Action, actuator.ActionDelay * 1000 / 6, actuator.IsOnceOnly, specifer);
-        }
-
         public static Point ToAbsolutePosition(this Position p, DungeonMap map)
         {
             Point absolutePosition = new Point
@@ -224,10 +215,10 @@ namespace DungeonMasterEngine.Helpers
         private static int LeastWholeNumber(float p)
         {
             int x;
-            if (p < 0 && p != (int)p)
-                x = (int)p - 1;
+            if (p < 0 && p != (int) p)
+                x = (int) p - 1;
             else
-                x = (int)p;
+                x = (int) p;
 
             return x;
         }

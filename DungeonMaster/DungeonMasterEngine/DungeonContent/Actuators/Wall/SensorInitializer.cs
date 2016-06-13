@@ -2,7 +2,12 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class SensorInitializer
+    public class SensorInitializer<TActuatorX> : SensorInitializerX where TActuatorX : IActuatorX
+    {
+        public TActuatorX Graphics { get; set; }
+    }
+
+    public class SensorInitializerX 
     {
         public SensorEffect Effect { get; set; }
         //local target
@@ -10,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public bool Rotate { get; set; }
 
         //remote target
-        public EarthSides Specifer { get; set; }
+        public MapDirection Specifer { get; set; }
         public Tile TargetTile { get; set; }
 
         public int TimeDelay { get; set; }
@@ -18,8 +23,5 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
         public bool RevertEffect { get; set; }
         public bool OnceOnly { get; set; }
         public bool Audible { get; set; }
-        public IActuatorX Graphics { get; set; }
-
-
     }
 }

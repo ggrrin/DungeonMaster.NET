@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {
     public class ContainerItemFactory : GrabableItemFactoryBase
     {
-        public ContainerItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture) {}
+        public ContainerItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture) {}
 
         public Container Create<TItemInitializator>(TItemInitializator initializator) where TItemInitializator : IContainerInitializer
         {

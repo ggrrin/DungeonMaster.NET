@@ -11,18 +11,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
     public class WallIlusion<TMessage> : FloorTile<TMessage> where TMessage : Message
     {
-        public bool IsImaginary { get; } 
+        public bool IsImaginary { get; }
 
-        private bool isOpen;
-        public bool IsOpen
-        {
-            get { return isOpen; }
-            private set
-            {
-                isOpen = value;
-                UpdateWall();
-            }
-        }
+        public bool IsOpen { get; private set; }
 
         public override bool IsAccessible => IsImaginary || IsOpen;
 
@@ -47,14 +38,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             base.DeactivateTileContent();
             IsOpen = false;
-        }
-
-        protected override void UpdateWall()
-        {
-            //base.UpdateWall();
-            //wallGraphic.Outter = !IsOpen;
-            //if (!IsOpen)
-            //    wallGraphic.DrawFaces |= CubeFaces.Sides;
         }
 
     }

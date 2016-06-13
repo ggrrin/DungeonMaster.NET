@@ -9,6 +9,6 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
     {
         public override IEnumerable<SpellSymbol> CastingSequence { get; } = new[] { SymbolFactory<ZoSymbol>.Instance.Symbol};
 
-        public override ISpell CastSpell(Tile location, MapDirection startDirection) => new OpenDoorSpell(location, startDirection);
+        public override ISpell CastSpell(ITile location, MapDirection startDirection) => new OpenDoorSpell(location, startDirection);
     }
 }

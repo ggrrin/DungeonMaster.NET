@@ -6,63 +6,75 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 {
-    public class ActuatorX : IActuatorX
+    public class WallActuator : ActuatorX
     {
-        public Renderer Renderer { get; set; }
-
-        public ActuatorX(IEnumerable<Sensor> sensors)
+        public List<WallSensor> Sensors { get; } 
+ 
+        public WallActuator(IEnumerable<WallSensor> sensors) 
         {
-            if(sensors == null || sensors.Any(x => x== null))
+            if (sensors == null || sensors.Any(x => x == null))
                 throw new ArgumentNullException();
 
-            Sensors = new List<Sensor>(sensors);
+            Sensors = new List<WallSensor>(sensors);
         }
-
-        public List<Sensor> Sensors { get; }
-        public bool Rotate { get; set; }
 
         public bool Trigger(ILeader leader)
         {
             bool anyTriggered = false;
 
             foreach (var sensor in Sensors)
-                anyTriggered = anyTriggered || sensor.TryTrigger(leader, this, sensor == Sensors.Last());
+            {
+                bool sensorTrigger = sensor.TryTrigger(leader, this, sensor == Sensors.Last());
+                anyTriggered = anyTriggered || sensorTrigger;
+            }
 
-            F271_xxxx_SENSOR_ProcessRotationEffect();
+            F271_xxxx_SENSOR_ProcessRotationEffect(Sensors);
             return anyTriggered;
         }
 
-        void F271_xxxx_SENSOR_ProcessRotationEffect()
+        public override IEnumerable<SensorX> SensorsEnumeration => Sensors;
+    }
+
+    public abstract class ActuatorX : IActuatorX
+    {
+        public Renderer Renderer { get; set; }
+
+        //public ActuatorX(IEnumerable<SensorX> sensors)
+        //{
+        //    if(sensors == null || sensors.Any(x => x== null))
+        //        throw new ArgumentNullException();
+
+        //    Sensors = new List<SensorX>(sensors);
+        //}
+
+        public abstract IEnumerable<SensorX> SensorsEnumeration{ get; }
+
+        public bool Rotate { get; set; }
+
+
+        protected void F271_xxxx_SENSOR_ProcessRotationEffect<T>(IList<T> sensors )
         {
             if (!Rotate)
                 return;
 
-            var first = Sensors.FirstOrDefault();
+            T first = sensors.FirstOrDefault();
             if (first != null)
             {
-                Sensors.RemoveAt(0);
-                Sensors.Add(first);
+                sensors.RemoveAt(0);
+                sensors.Add(first);
             }
 
             Rotate = false;
         }
 
-        public void AcceptMessage(Message message)
+
+        public virtual void AcceptMessage(Message message)
         {
-            foreach (var sensor in Sensors)
+            foreach (var sensor in SensorsEnumeration)
             {
                 sensor.AcceptMessage(message);
             }
         }
 
-        public void Interact(ILeader leader, ref Matrix matrix, object param)
-        {
-            Trigger(leader);
-        }
-
-        public void Initialize()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

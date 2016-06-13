@@ -3,7 +3,7 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {
-    public interface ISpell : IMovable<Tile>
+    public interface ISpell : IMovable<ITile>
     {
         void Run();
     }

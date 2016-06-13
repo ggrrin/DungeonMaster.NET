@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
@@ -19,19 +20,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
 {
-    public class Theron : PointOfViewCamera, IItem, ILeader
+    public class Theron : PointOfViewCamera, ILeader
     {
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
 
-        public IGraphicProvider GraphicsProvider => null;
 
-        public Renderer Renderer { get; set; }
 
-        public BoundingBox Bounding => default(BoundingBox);
-        public bool AcceptMessages { get; set; } = false;
-
-        public List<Champion> partyGoup = new List<Champion>();
+        public readonly List<Champion> partyGoup = new List<Champion>();
         private IGrabableItem hand;
 
         public IReadOnlyList<Champion> PartyGroup => partyGoup;
@@ -61,19 +57,22 @@ namespace DungeonMasterEngine.Player
         {
             Location = location;
 
-            //var x = new[]{
-            //TODO remove champion mocap
-            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap1" },
-            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap2" },
-            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap3" },
-            //new Champion(new RelationToken(0), new RelationToken(1u).ToEnumerable()) { Name = "Mocap4" }};
-            //if (x.Any(champoin => !AddChampoinToGroup(champoin)))
-            //{
-            //    throw new Exception();
-            //}
+            var builder = new ChampionMocapFactory();
+            var x = new[]
+            {
+                //TODO remove champion mocap
+                builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|AACPACJOAABB|DJCFCPDJCFCPCF|BDACAAAAAAAADCDB"),
+                builder.GetChampion("IAIDO|RUYITO CHIBURI||M|AADAACIKAAAL|CICLDHCICDCNDC|CDACAAAABBBCAAAA"),
+                builder.GetChampion("HAWK|$CFEARLESS||M|AAEGADFCAAAK|CICNCDCGDHCDCD|CAACAAAAADADAAAA"),
+                builder.GetChampion("ZED|DUKE OF BANVILLE||M|AADMACFIAAAK|DKCICICIDCCICI|CBBCCBCBBCBBBCBB"),
+            };
+            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            {
+                throw new Exception();
+            }
         }
 
-        protected override bool CanMoveToTile(Tile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
+        protected override bool CanMoveToTile(ITile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
 
         protected override void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
         {
@@ -90,7 +89,7 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        protected override void OnLocationChanging(Tile oldLocation, Tile newLocation)
+        protected override void OnLocationChanging(ITile oldLocation, ITile newLocation)
         {
             base.OnLocationChanging(oldLocation, newLocation);
 
@@ -100,7 +99,7 @@ namespace DungeonMasterEngine.Player
             MovePartyToRight(newLocation);
         }
 
-        private void MovePartyToRight(Tile newLocation)
+        private void MovePartyToRight(ITile newLocation)
         {
             if (!newLocation.LayoutManager.WholeTileEmpty)
                 throw new InvalidOperationException();
@@ -108,20 +107,20 @@ namespace DungeonMasterEngine.Player
             foreach (var champion in PartyGroup)
             {
                 var prevLocation = champion.Location;
-                newLocation.LayoutManager.TryGetSpace(champion, prevLocation.Space);
+                if (!newLocation.LayoutManager.TryGetSpace(champion, prevLocation.Space))
+                    throw new InvalidOperationException("not expected");
+
                 champion.Location = new FourthSpaceRouteElement(prevLocation.Space, newLocation);
                 prevLocation.Tile.LayoutManager.FreeSpace(champion, prevLocation.Space);
             }
         }
 
-        protected override void OnLocationChanged(Tile oldLocation, Tile newLocation)
+        protected override void OnLocationChanged(ITile oldLocation, ITile newLocation)
         {
             base.OnLocationChanged(oldLocation, newLocation);
 
             oldLocation?.OnObjectLeft(this);
             newLocation?.OnObjectEntered(this);
-
-
         }
 
         private void RotateParty(MapDirection oldDirection, MapDirection newDirection)
@@ -164,16 +163,6 @@ namespace DungeonMasterEngine.Player
         public IGrabableItem ExchangeItems(IGrabableItem item) => item;
 
 
-
-        void IItem.Update(GameTime gameTime)
-        {
-            /*Do NOT update fromtile, because Theron is component*/
-            foreach (var champoin in PartyGroup)
-            {
-                champoin.Update(gameTime);
-            }
-        }
-
         public bool ThrowOutItem(uint distance = 0)
         {
             if (Hand != null)
@@ -182,7 +171,7 @@ namespace DungeonMasterEngine.Player
 
                 if (targetLocation != null)
                 {
-                    Hand.Location = targetLocation;
+                    //TODO throwing
                     Hand = null;
                     return true;
                 }
@@ -193,7 +182,7 @@ namespace DungeonMasterEngine.Player
                 return false;
         }
 
-        private Tile CheckRoute(uint distance)
+        private ITile CheckRoute(uint distance)
         {
             var direction = MapDirection;
             var curLocation = Location;
@@ -224,6 +213,11 @@ namespace DungeonMasterEngine.Player
         public override void Update(GameTime time)
         {
             base.Update(time);
+
+            foreach (var champoin in PartyGroup)
+            {
+                champoin.Update(time);
+            }
 
             if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
@@ -273,55 +267,55 @@ namespace DungeonMasterEngine.Player
 
             foreach (var champoin in PartyGroup)
             {
-                throw new NotImplementedException();
-                //champoin.GraphicsProvider?.Draw(effect);
-
+                var mat = Matrix.Identity;
+                champoin.Renderer.Render(ref mat, effect, null);
             }
         }
 
         private void ObsloteInteraction(List<Tile> tiles)
         {
-            var aimingTile = Location.Neighbours.GetTile(MapDirection);
-            if (aimingTile != null)
-                tiles.Add(aimingTile);
+            //var aimingTile = Location.Neighbours.GetTile(MapDirection);
+            //if (aimingTile != null)
+            //    tiles.Add(aimingTile);
 
-            var intersectingItems = new List<Tuple<IItem, Tile>>();
+            //var intersectingItems = new List<Tuple<IItem, Tile>>();
 
-            Tuple<IItem, Tile> closest = null;
-            float closestDistance = float.MaxValue;
+            //Tuple<IItem, Tile> closest = null;
+            //float closestDistance = float.MaxValue;
 
-            foreach (var tile in tiles)
-                foreach (var item in tile.SubItems)
-                {
-                    float? res = Ray.Intersects(item.Bounding);
-                    if (res != null)
-                    {
-                        intersectingItems.Add(new Tuple<IItem, Tile>(item, tile));
-                        if (res.Value < closestDistance)
-                        {
-                            closest = new Tuple<IItem, Tile>(item, tile);
-                            closestDistance = res.Value;
-                        }
-                    }
-                }
+            //foreach (var tile in tiles)
+            //    foreach (var item in tile.SubItems)
+            //    {
+            //        float? res = Ray.Intersects(item.Bounding);
+            //        if (res != null)
+            //        {
+            //            intersectingItems.Add(new Tuple<IItem, Tile>(item, tile));
+            //            if (res.Value < closestDistance)
+            //            {
+            //                closest = new Tuple<IItem, Tile>(item, tile);
+            //                closestDistance = res.Value;
+            //            }
+            //        }
+            //    }
 
-            if (closest != null)
-            {
-                $"Click on Item: {closest.Item1}".Dump();
-                if (closest.Item1 is GrabableItem && Hand == null)
-                {
-                    Hand = (GrabableItem)closest.Item1;
-                    closest.Item1.Location = null;
-                }
-                else
-                {
-                    Hand = closest.Item1.ExchangeItems(Hand);
-                }
-            }
-            else
-            {
-                Fight();
-            }
+            //if (closest != null)
+            //{
+            //    $"Click on Item: {closest.Item1}".Dump();
+            //    if (closest.Item1 is GrabableItem && Hand == null)
+            //    {
+            //        Hand = (GrabableItem)closest.Item1;
+            //        closest.Item1.Location = null;
+            //    }
+            //    else
+            //    {
+            //        Hand = closest.Item1.ExchangeItems(Hand);
+            //    }
+            //}
+            //else
+            //{
+            //    Fight();
+            //}
         }
+
     }
 }

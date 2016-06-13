@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.Builders.FloorActuatorFactories;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
@@ -10,9 +9,8 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {
-    public interface ILiveEntity : IEntity, IMovable<ISpaceRouteElement> 
+    public interface ILiveEntity : IEntity, IMovable<ISpaceRouteElement>
     {
-        MapDirection FacingDirection { get; }
         IRelationManager RelationManager { get; }
         IBody Body { get; }
 

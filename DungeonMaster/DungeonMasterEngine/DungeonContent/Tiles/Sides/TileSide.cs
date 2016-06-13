@@ -21,6 +21,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual void AcceptMessage(Message message) { }
 
+        
     }
 
     public class TextTileSide : TileSide

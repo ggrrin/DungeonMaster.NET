@@ -15,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
         public int ShootDamage { get;  }
         public int Strength { get; }
 
-        public WeaponItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass @class, int kineticEnergy, int shootDamage, int strength, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
+        public WeaponItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass @class, int kineticEnergy, int shootDamage, int strength, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
         {
             DeltaEnergy = deltaEnergy;
             Class = @class;

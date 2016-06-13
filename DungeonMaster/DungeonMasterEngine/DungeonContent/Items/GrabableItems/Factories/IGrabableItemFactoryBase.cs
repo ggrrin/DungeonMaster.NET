@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
     {
         Texture2D Texture { get; }
         string Name { get; }
-        float Weight { get; }
+        int Weight { get; }
         IEnumerable<IAttackFactory> AttackCombo { get; }
         IEnumerable<IStorageType> CarryLocation { get; }
         bool CanBeStoredIn(IStorageType storage);

@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories
 {
     public class ClothItemFactory : GrabableItemFactoryBase
     {
-        public ClothItemFactory(string name, float weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation,texture) {}
+        public ClothItemFactory(string name, int weight, IEnumerable<IAttackFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation,texture) {}
 
         public Cloth Create<TItemInitiator>(TItemInitiator initiator) where TItemInitiator : IClothInitializer
         {

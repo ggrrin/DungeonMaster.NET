@@ -10,6 +10,6 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 
         public abstract IEnumerable<SpellSymbol> CastingSequence { get; }
 
-        public abstract  ISpell CastSpell(Tile location, MapDirection startDirection);
+        public abstract  ISpell CastSpell(ITile location, MapDirection startDirection);
     }
 }

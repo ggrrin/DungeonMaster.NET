@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterParser.Enums;
+using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
 using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
@@ -25,6 +27,7 @@ namespace DungeonMasterEngine.Builders
         private readonly LegacyMapBuilder builder;
         private readonly Color[] miniMapData;
         private readonly Texture2D texture;
+        private readonly LogicActuatorCreator logicActuatorCreator;
         private Vector3 tilePosition;
 
         public int level => builder.CurrentLevel;
@@ -47,6 +50,7 @@ namespace DungeonMasterEngine.Builders
             texture = new Texture2D(ResourceProvider.Instance.Device, this.builder.CurrentMap.OffsetX + this.builder.CurrentMap.Width, this.builder.CurrentMap.OffsetY + this.builder.CurrentMap.Height);
             miniMapData = new Color[texture.Width * texture.Height];
             sidesCreator = new SidesCreator(builder);
+            logicActuatorCreator = new LogicActuatorCreator(builder);
         }
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
@@ -57,11 +61,11 @@ namespace DungeonMasterEngine.Builders
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             GridPosition = tileInfo.Position;
             var tile = tileInfo.Tile.GetTile(this);
-            if (initalizer != null)
+            if (initializer != null)
             {
-                initalizer.GridPosition = GridPosition;
-                builder.TileInitializers.Add(initalizer);
-                initalizer = null;
+                initializer.GridPosition = GridPosition;
+                builder.TileInitializers.Add(initializer);
+                initializer = null;
             }
             return tile;
         }
@@ -69,7 +73,7 @@ namespace DungeonMasterEngine.Builders
         public Point GridPosition { get; private set; }
 
         private readonly SidesCreator sidesCreator;
-        private TileInitializer initalizer;
+        private TileInitializer initializer;
 
         public Tile GetTile(FloorTileData t)
         {
@@ -79,7 +83,7 @@ namespace DungeonMasterEngine.Builders
             sidesCreator.SetupSides(initalizer, GridPosition, t.AllowRandomDecoration);
             var res = new FloorTile(initalizer);
             res.Renderer = builder.RendererSource.GetTileRenderer(res);
-            this.initalizer = initalizer;
+            this.initializer = initalizer;
             return res;
         }
 
@@ -90,16 +94,16 @@ namespace DungeonMasterEngine.Builders
 
             SetMinimapTile(Color.Purple);
 
-            var initalizer = new DoorInitializer { Door = CreateDoor(t) };
-            initalizer.HasButton = t.Door.HasButton;
-            
-            sidesCreator.SetupSides(initalizer, GridPosition, false);
+            var initializer = new DoorInitializer { Door = CreateDoor(t) };
+            initializer.HasButton = t.Door.HasButton;
 
-            initalizer.Direction = t.Orientation == Orientation.NorthSouth ? MapDirection.North : MapDirection.East;
+            sidesCreator.SetupSides(initializer, GridPosition, false);
 
-            var res = new DoorTile(initalizer);
+            initializer.Direction = t.Orientation == Orientation.NorthSouth ? MapDirection.North : MapDirection.East;
+
+            var res = new DoorTile(initializer);
             res.Renderer = builder.RendererSource.GetDoorTileRenderer(res, builder.WallTexture, builder.DoorButtonTexture);
-            this.initalizer = initalizer;
+            this.initializer = initializer;
             return res;
         }
 
@@ -115,40 +119,68 @@ namespace DungeonMasterEngine.Builders
         {
             SetMinimapTile(Color.Orange);
 
-            return null;
+            var pitInitializer = new PitInitializer
+            {
+                IsImaginary = t.IsImaginary,
+                IsVisible = t.IsVisible,
+                IsOpen = t.IsOpen
+            };
+
+            sidesCreator.SetupSides(pitInitializer, GridPosition, false);
+            var res =new Pit(pitInitializer);
+            res.Renderer = builder.RendererSource.GetTileRenderer(res);//TODO create pit renderer
+            initializer = pitInitializer;
+            return res;
         }
 
         public Tile GetTile(TeleporterTileData t)
         {
+            if (t.Teleport == null)
+                throw new InvalidOperationException("Invalid map format. Teleport tile has to have teleport");
+
             SetMinimapTile(Color.Blue);
 
-            if (t.Teleport != null)
+            var initializer = new TeleprotInitializer
             {
-                t.Teleport.Processed = true;
+                Direction = t.Teleport.Rotation.ToMapDirection(),
+                AbsoluteDirection = t.Teleport.RotationType == RotationType.Absolute,
+                Open = t.IsOpen,
+                ScopeConstrain = GetTeleportScopeType(t.Teleport.Scope),
+                TargetTilePosition = t.Teleport.DestinationPosition.ToAbsolutePosition(builder.Data.Maps[t.Teleport.MapIndex]),
+                NextLevelIndex = t.Teleport.MapIndex,
+                Visible = t.IsVisible,
+            };
 
-                var destinationPosition = t.Teleport.DestinationPosition.ToAbsolutePosition(builder.Data.Maps[t.Teleport.MapIndex]);
+            sidesCreator.SetupSides(initializer, GridPosition, false);
 
-                if (t.Teleport.MapIndex == level)
-                {
-                    Successors = new[] {new TileInfo<TileData>
-                    {
-                        Position = destinationPosition,
-                        Tile = builder.CurrentMap[destinationPosition.X, destinationPosition.Y]
-                    }};
-                }
-
-                return null;
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid map format. Teleport tile has to have teleport");
-            }
+            var res = new TeleportTile(initializer);
+            res.Renderer = builder.RendererSource.GetTeleportRenderer(res, builder.TeleportTexture);
+            this.initializer = initializer;
+            return res;
         }
 
         public Tile GetTile(WallTileData t)
         {
-            return null;
+            var logicSensors = t.Actuators
+                .Where(x => x.ActuatorType == 5 || x.ActuatorType == 6)
+                .ToArray();
+
+            if (logicSensors.Any())
+            {
+                var logicTileInitializer = new LogicTileInitializer();
+                logicActuatorCreator.ParseActuatorCreator(logicTileInitializer, logicSensors);
+                return new LogicTile(logicTileInitializer); 
+            }
+            else
+            {
+                return null;
+            }
         }
+
+
+
+
+
 
         public Tile GetTile(TrickTileData t)
         {
@@ -159,20 +191,12 @@ namespace DungeonMasterEngine.Builders
         public Tile GetTile(StairsTileData t)
         {
             SetMinimapTile(Color.Yellow);
+            StairsInitializer stairsInitializer = new StairsInitializer { Down = t.Direction == VerticalDirection.Down };
 
-            TileInfo<StairsTileData> stairs;
-            if (t.Direction == VerticalDirection.Up)
-            {
-                stairs = FindStairs(tilePosition.ToGrid(), level - 1);
-                //return new Stairs(tilePosition);//ghostStairs = to connect levels
-            }
-            else// take care of showing stairs in right direction
-            {
-                stairs = FindStairs(tilePosition.ToGrid(), level + 1);
-                //return new Stairs(tilePosition, t.Orientation != Orientation.NorthSouth, t.Orientation != stairs.Tile.Orientation);
-
-            }
-            return null;
+            var res = new Stairs(stairsInitializer);
+            res.Renderer = null;
+            this.initializer = stairsInitializer;
+            return res;
         }
 
         private TileInfo<StairsTileData> FindStairs(Point pos, int level)

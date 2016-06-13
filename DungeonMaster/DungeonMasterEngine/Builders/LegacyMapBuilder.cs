@@ -36,12 +36,12 @@ namespace DungeonMasterEngine.Builders
         private Texture2D[] doorTextures;
         private Texture2D[] wallTextures;
         private Texture2D[] floorTextures;
+        private Texture2D[] championTextures;
         private List<Creature> creatures = new List<Creature>();
 
         public DungeonData Data { get; }
         public DungeonMap CurrentMap { get; private set; }
         public Dictionary<Point, Tile> TilesPositions { get; private set; }
-        public WallActuatorCreator WallActuatorCreator { get; private set; }
         public FloorActuatorCreator FloorActuatorCreator { get; private set; }
         public LegacyItemCreator ItemCreator { get; private set; }
         public Texture2D defaultDoorTexture { get; private set; }
@@ -49,6 +49,7 @@ namespace DungeonMasterEngine.Builders
         public IReadOnlyList<Texture2D> DoorTextures => doorTextures;
         public IReadOnlyList<Texture2D> WallTextures => wallTextures;
         public IReadOnlyList<Texture2D> FloorTextures => floorTextures;
+        public IReadOnlyList<Texture2D> ChampionTextures => championTextures;
         public Texture2D WallTexture { get; private set; }
         public int CurrentLevel { get; private set; }
         public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
@@ -110,6 +111,7 @@ namespace DungeonMasterEngine.Builders
         }
 
         public Texture2D DoorButtonTexture { get; private set; }
+        public Texture2D TeleportTexture { get; private set; }
 
         public LegacyMapBuilder()
         {
@@ -204,7 +206,6 @@ namespace DungeonMasterEngine.Builders
             CurrentLevel = level;
             CurrentMap = Data.Maps[level];
             legacyTileCreator = new LegacyTileCreator(this);
-            WallActuatorCreator = new WallActuatorCreator(this);
             FloorActuatorCreator = new FloorActuatorCreator(this);
             ItemCreator = new LegacyItemCreator(this);
             creatures = new List<Creature>();
@@ -220,6 +221,9 @@ namespace DungeonMasterEngine.Builders
 
         public override DungeonLevel GetLevel(int level, Dungeon dungeon, Point? startTile)
         {
+
+
+
             DungeonLevel dungeonLevel = null;
             if (Data.Maps.Count <= level)
                 throw new ArgumentException("Level does not exist.");
@@ -234,7 +238,6 @@ namespace DungeonMasterEngine.Builders
             tileInitialized.SetResult(true);
 
             SetupNeighbours(TilesPositions, TileInitializers);
-            SetupItems();
 
             dungeonLevel = new DungeonLevel(dungeon, creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
 
@@ -242,7 +245,7 @@ namespace DungeonMasterEngine.Builders
             {
                 tileInitializer.Level = dungeonLevel;
                 tileInitializer.Initialize();
-                
+
             }
 
             loadedLevels.Add(level, dungeonLevel);
@@ -273,14 +276,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        private IEnumerable<TileInfo<TileData>> CreateTile(TileInfo<TileData> currentTile)
-        {
-            var newTile = legacyTileCreator.GetTile(currentTile);
-            TilesPositions.Add(currentTile.Position, newTile); //remember Tiles-position association
-            //outputTiles.Add(newTile); //remember created tile
 
-            return GetNeigbourTiles(currentTile.Position, CurrentMap).Concat(legacyTileCreator.Successors); //add nextTiles advised by CurrentTile
-        }
 
         public IEnumerable<TileInfo<TileData>> GetNeigbourTiles(Point position, DungeonMap map)
         {
@@ -294,30 +290,6 @@ namespace DungeonMasterEngine.Builders
                 };
             });
         }
-
-        private void SetupItems()
-        {
-            //foreach (var tile in outputTiles)
-            //{
-            //    WallActuatorCreator.CreateSetupActuators(tile);
-            //    SetupFloorItems(tile);
-            //}
-        }
-
-        private void SetupFloorItems(Tile tile)
-        {
-            FloorActuatorCreator.CreateSetupActuators(tile);
-
-            var itemCreator = new LegacyItemCreator(this);
-            var tileData = CurrentMap[tile.GridPosition.X, tile.GridPosition.Y];
-            tileData.GrabableItems.ForEach(x => tile.SubItems.Add(itemCreator.CreateItem(x)));
-
-            //TODO creatures
-            var creatureCreator = new CreatureCreator(this);
-            foreach (var creatre in tileData.Creatures.Where(i => !i.Processed))
-                creatures.AddRange(creatureCreator.AddCreature(creatre, tile));
-        }
-
 
 
         private void InitializeMapTextures()
@@ -338,112 +310,15 @@ namespace DungeonMasterEngine.Builders
             for (int i = 0; i < floorTextures.Length; i++)
                 floorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.FloorDecorations[i].Name}");
 
+            championTextures = Data.ChamptionDescriptors
+                .Select(x => ResourceProvider.Instance.Content.Load<Texture2D>(x.TexturePath))
+                .ToArray();
+
             WallTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/Wall");
             DoorButtonTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DoorButton");
+            TeleportTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/Teleport");
         }
 
-
-
-
-        public Tile GetTargetTile(ActuatorItemData callingActuator)
-        {
-            var targetPos = ((RemoteTarget)callingActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap);
-
-            Tile targetTile = null;
-            if (TilesPositions.TryGetValue(targetPos, out targetTile))
-                return targetTile;
-            else
-            {
-                //try find tile in raw data, and than actuator, add it to Tiles Positions
-                var virtualTileData = CurrentMap[targetPos.X, targetPos.Y];
-                if (virtualTileData.Actuators.Any()) //virtual tile will be proccessed at the and so any checking shouldnt be necessary
-                {
-                    var newTile = new LogicTile(null);
-                    ;//TODO//targetPos.ToGridVector3(CurrentLevel));
-                    newTile.Gates = virtualTileData.Actuators.Where(x => x.ActuatorType == 5).Select(y => InitLogicGates(y, newTile)).ToArray(); //recurse
-                    //TODO
-                    //newTile.Counters = virtualTileData.Actuators.Where(x => x.ActuatorType == 6).Select(y => InitCounters(y, newTile)).ToArray(); //recurse
-
-                    TilesPositions.Add(targetPos, targetTile = newTile); //subitems will be processed 
-                }
-                else if (virtualTileData.TextTags.Any())
-                {
-                    var textTag = virtualTileData.TextTags.Single();
-                    textTag.HasTargetingActuator = true;
-                    targetTile = TilesPositions[textTag.GetParentPosition(targetPos)];
-
-                    if (textTag.Processed)
-                        targetTile.SubItems.Single(x => x is TextTag).AcceptMessages = true;
-                }
-
-                return targetTile; //TODO (if null)  think out what to do 
-                //Acutor at the begining references wall near by with tag only ... what to do ? 
-            }
-        }
-
-        //private CounterActuator InitCounters(ActuatorItemData gateActuator, Tile gateActuatorTile)
-        //TODO
-        //{
-        //    //if nextTarget tile is current tile do not call recurese
-        //    Tile nextTargetTile = gateActuatorTile.GridPosition == ((RemoteTarget)gateActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
-
-        //    return new CounterActuator(nextTargetTile, gateActuator.GetActionStateX(), gateActuator.Data, gateActuatorTile.Position);
-        //}
-
-        private LogicGate InitLogicGates(ActuatorItemData gateActuator, Tile gateActuatorTile)
-        {
-            //if nextTarget tile is current tile do not call recurese
-            Tile nextTargetTile = gateActuatorTile.GridPosition == ((RemoteTarget)gateActuator.ActionLocation).Position.Position.ToAbsolutePosition(CurrentMap) ? gateActuatorTile : GetTargetTile(gateActuator);
-
-            return new LogicGate(nextTargetTile, gateActuator.GetActionStateX(), gateActuatorTile.Position, (gateActuator.Data & 0x10) == 0x10, (gateActuator.Data & 0x20) == 0x20, (gateActuator.Data & 0x40) == 0x40, (gateActuator.Data & 0x80) == 0x80);
-        }
-
-        public Vector3 GetFloorPosition(TilePosition tilePosition, Tile currentTile)
-        {
-            Vector3 offset = Vector3.Zero;
-            const float scalarOffset = 0.25f;
-
-            switch (tilePosition)
-            {
-                case TilePosition.North_TopLeft:
-                    offset = new Vector3(scalarOffset, 0, scalarOffset);
-                    break;
-                case TilePosition.East_TopRight:
-                    offset = new Vector3(1 - scalarOffset, 0, scalarOffset);
-                    break;
-                case TilePosition.South_BottomLeft:
-                    offset = new Vector3(scalarOffset, 0, 1 - scalarOffset);
-                    break;
-                case TilePosition.West_BottomRight:
-                    offset = new Vector3(1 - scalarOffset, 0, 1 - scalarOffset);
-                    break;
-            }
-
-            return currentTile.Position + offset;
-        }
-
-        public Vector3 GetWallPosition(TilePosition tilePosition, Tile currentTile)
-        {
-            Vector3 offset = Vector3.Zero;
-            const float scalarOffset = 0.25f;
-            switch (tilePosition)
-            {
-                case TilePosition.North_TopLeft:
-                    offset = new Vector3(scalarOffset, scalarOffset, 1 - scalarOffset);
-                    break;
-                case TilePosition.East_TopRight:
-                    offset = new Vector3(0, scalarOffset, 1 - scalarOffset);
-                    break;
-                case TilePosition.South_BottomLeft:
-                    offset = new Vector3(scalarOffset, scalarOffset, 0);
-                    break;
-                case TilePosition.West_BottomRight:
-                    offset = new Vector3(1 - scalarOffset, scalarOffset, scalarOffset);
-                    break;
-            }
-
-            return currentTile.Position + offset;
-        }
 
         public IGrabableItemFactoryBase GetItemFactory(int identifer)
         {
@@ -467,49 +342,44 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public bool PrepareActuatorData(ActuatorItemData i, out Tile targetTile, out IConstrain constrain, out Texture2D decoration, bool putOnWall)
+        public async Task<Tuple<Tile, MapDirection>> GetTargetTile(Point? target, MapDirection requesteDirection)
         {
-            targetTile = GetTargetTile(i);
-            constrain = null;
-            decoration = null;
-
-            if (i.Data > 0)
-                constrain = new GrabableItemConstrain(GetItemFactory(i.Data), i.IsRevertable);
-            else
-                constrain = new NoConstrain();
-
-            if (i.IsLocal)
-                throw new NotSupportedException("yet");
-            decoration = GetTexture(i, putOnWall);
-
-            return true;
-        }
-
-        public Texture2D GetTexture(ActuatorItemData i, bool putOnWall)
-        {
-            if (i.Decoration > 0)
-                return putOnWall ? WallTextures[i.Decoration - 1] : FloorTextures[i.Decoration - 1];
-            return null;
-        }
-
-        public async Task<Tile> GetTargetTile(Point? target)
-        {
+            MapDirection invertMessageDirection = requesteDirection;
             if (target == null)
                 return null;
 
             await tileInitialized.Task;
 
             Tile tile = null;
-            TilesPositions.TryGetValue(target.Value + new Point(CurrentMap.OffsetX, CurrentMap.OffsetY), out tile);
-            //TODO find right tile when it is send to wall
+            TilesPositions.TryGetValue(target.Value, out tile);
 
-            return tile;
+            if (tile == null)
+            {
+                var targetTileData = CurrentMap.GetTileData(target.Value);
+                if (targetTileData.Actuators.Any() && targetTileData.Actuators.All(x => x.ActuatorType == 5 || x.ActuatorType == 6))
+                {
+                    throw new InvalidOperationException("this should not be possible");
+                }
+                else if (targetTileData.Actuators.Any() && !targetTileData.Actuators.All(x => x.ActuatorType != 5 && x.ActuatorType != 6))
+                {
+                    throw new InvalidOperationException("mixture of wall and virtual actuators");
+                }
+                else
+                {//find floor tile where is wall actuator put & thus invert message direction
+                    invertMessageDirection = requesteDirection.Opposite;
+                    TilesPositions.TryGetValue(target.Value + requesteDirection.RelativeShift, out tile);
+                    if (tile == null)
+                        throw new InvalidOperationException();
+                }
+            }
+
+            return Tuple.Create(tile, invertMessageDirection);
         }
 
         public DoorDescriptor GetCurrentDoor(DoorTypeIndex index)
         {
-            var firstType = Data.DoorDescriptors[(int) CurrentMap.DoorType0];
-            var secondType = Data.DoorDescriptors[(int) CurrentMap.DoorType1];
+            var firstType = Data.DoorDescriptors[(int)CurrentMap.DoorType0];
+            var secondType = Data.DoorDescriptors[(int)CurrentMap.DoorType1];
 
             switch (index)
             {

@@ -1,119 +1,192 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Items;
+using System.Text;
+using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
-using DungeonMasterParser.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Builders
 {
-    public class WallActuatorCreator
+    public class LogicActuatorCreator : ActuatorCreatorBase
     {
-        private readonly LegacyMapBuilder builder;
-        private readonly Parser<ActuatorState, ActuatorItemData, LegacyMapBuilder, Actuator> parser;
-
-        public Tile CurrentTile { get; private set; }
-        public IEnumerable<GrabableItemData> CurrentGrabableItems { get; private set; }
-
-        public WallActuatorCreator(LegacyMapBuilder builder)
+        public async void  ParseActuatorCreator(LogicTileInitializer initializer, IEnumerable<ActuatorItemData> data)
         {
-            this.builder = builder;
-            parser = new Parser<ActuatorState, ActuatorItemData, LegacyMapBuilder, Actuator>(new ActuatorFactoryBase[]
-            {
-                //TODO add factories
-                //new AlcoveHidingSwitchFactory(), 
-                //new BasicAlcoveFactory(),
-                //new BasicDecorationFactory(),
-                //new BasicExchangerFactory(),
-                //new BasicExchangerFactoryReverse(), 
-                //new OnceOnlyExchangerFactory(), 
-                //new BasicKeyHoleFactory(), 
-                //new DestroyingKeyHoleFactory(), 
-                //new ChampoinFactory(), 
-                //new LeverSwitchFactory(), 
-                //new TimerSwitchFactory(), 
-                //new HolderButtonFactory(), 
-                //new ButtonFactory(), 
-                //new TimerMultiSwitchFactory(), 
-                //new MultiKeyHoleFactory(), 
-            });
+            initializer.LogicActuator = new LogicActuator(await Task.WhenAll(data.Select(async x => await ParseLogicSensor(x))));
         }
 
-        public void CreateSetupActuators(Tile currentTile)
+        private async Task<SensorX> ParseLogicSensor(ActuatorItemData data)
         {
-            CurrentTile = currentTile;
-
-            var sides = 
-                MapDirection.Sides
-                .Except(currentTile.Neighbours.Select(t => t.Item2))//sides with walls
-                .Select(side =>
-                {
-                    var pos = CurrentTile.GridPosition + side;
-                    var wall = builder.CurrentMap.GetTileData(pos); //get appropriate WallData
-                    return wall == null ? null : new Tuple<TileData,Point,IReadOnlyList<ActuatorItemData>>(wall,pos,
-                        wall.Actuators.Where(x => x.TilePosition == side.Opposite.ToTilePosition())
-                        .ToArray());//select appropriate side
-                })
-                .Where(x => x != null );//filter map border nonexisting tiles
-
-            foreach (var tuple in sides)
+            switch (data.ActuatorType)
             {
-                SetupTags(tuple.Item1, tuple.Item2);
-                SetupWallSideActuators(tuple.Item1.GrabableItems, tuple.Item3);
-            }
-        }
-
-        private void SetupTags(TileData wall, Point textTagTilePosition)
-        {
-            foreach (var textTag in wall.TextTags.Where(x => !x.Processed && x.GetParentPosition(textTagTilePosition) == CurrentTile.GridPosition))
-            {
-                textTag.Processed = true;
-                var tag = new TextTag(builder.GetWallPosition(textTag.TilePosition, CurrentTile), textTag.IsVisible,
-                    textTag.TilePosition == TilePosition.East_TopRight || textTag.TilePosition == TilePosition.West_BottomRight, textTag.Text.Replace("|", Environment.NewLine))
-                {
-                    AcceptMessages = textTag.HasTargetingActuator
-                };
-                CurrentTile.SubItems.Add(tag);
-            }
-        }
-
-        private void SetupWallSideActuators(IEnumerable<GrabableItemData> items, IReadOnlyList<ActuatorItemData> actuators)
-        {
-            if (actuators.Any())
-            {
-                CurrentGrabableItems = items;
-
-                var factory = parser.TryMatchFactory(actuators, items.Any());
-                if (factory != null)
-                {
-                    CurrentTile.SubItems.Add(factory.CreateItem(builder, CurrentTile, actuators));
-                }
-                else
-                {
-                    if(actuators.All(x => x.ActuatorType != 5 && x.ActuatorType != 6))
+                case 5:
+                    var logicGateInitializer = new LogicGateInitializer
                     {
-                        foreach (var i in actuators)
-                        {
-                            Point? absolutePosition = null;
-                            if (i.ActionLocation is RemoteTarget)
-                                absolutePosition = ((RemoteTarget) i.ActionLocation).Position.Position.ToAbsolutePosition(builder.CurrentMap);
-
-                            CurrentTile.SubItems.Add(new Actuator(builder.GetWallPosition(i.TilePosition, CurrentTile), $"{absolutePosition} {i.DumpString()}"));
-                        }
-                    }
-                    else
+                        RefBit0 = (data.Data & 0x10) == 0x10,
+                        RefBit1 = (data.Data & 0x20) == 0x20,
+                        RefBit2 = (data.Data & 0x40) == 0x40,
+                        RefBit3 = (data.Data & 0x80) == 0x80
+                    };
+                    await SetupInitializer(logicGateInitializer, data);
+                    return new LogicGateSensor(logicGateInitializer);
+                case 6:
+                    var counterInitializer = new CounterIntializer()
                     {
-                        
-                    }
-                }
+                        Count = data.Data,
+                    };
+                    await SetupInitializer(counterInitializer, data);
+                    return new CounterSensor(counterInitializer);
+                default:
+                    throw new InvalidOperationException();
             }
         }
+
+        public LogicActuatorCreator(LegacyMapBuilder builder) : base(builder) {}
+    }
+
+
+    public class WallActuatorCreator :ActuatorCreatorBase
+    {
+        public WallActuatorCreator(LegacyMapBuilder builder) : base(builder) { } 
+
+        public async Task<IActuatorX> ParseActuatorX(IEnumerable<ActuatorItemData> data, List<IGrabableItem> items, Point pos)
+        {
+            var sensors = await Task.WhenAll(data
+                .Where(x => x.ActuatorType != 5 && x.ActuatorType != 6)
+                .Select(async x => await ParseSensor(x, items, pos)));
+            var res = new WallActuator(sensors);
+            res.Renderer = builder.RendererSource.GetWallActuatorRenderer(res);
+            return res;
+        }
+
+        private async Task<WallSensor> ParseSensor(ActuatorItemData data, List<IGrabableItem> items, Point pos)
+        {
+            SensorInitializer<IActuatorX> initializer = new SensorInitializer<IActuatorX>();
+
+            switch (data.ActuatorType)
+            {
+                case 10:
+                //TODO
+
+                case 0:
+                    await SetupInitializer(initializer, data);
+                    initializer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor0(initializer);
+                case 1:
+                    await SetupInitializer(initializer, data);
+                    initializer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor1(initializer);
+                case 2:
+                    var sensor2initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor2initalizer, data);
+                    sensor2initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor2(sensor2initalizer);
+                case 3:
+                    var sensor3initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor3initalizer, data);
+                    sensor3initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor3(sensor3initalizer);
+                case 4:
+                    var sensor4initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor4initalizer, data);
+                    sensor4initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor4(sensor4initalizer);
+                case 11:
+                    var sensor11initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor11initalizer, data);
+                    sensor11initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor11(sensor11initalizer);
+                case 12:
+                    var sensor12initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor12initalizer, data);
+                    sensor12initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor12(sensor12initalizer);
+                case 13:
+                    var sensor13initalizer = new StorageSensorInitializer<IActuatorX> { StoredItem = GetStoredObject(items, data.Data), Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor13initalizer, data);
+                    sensor13initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor13(sensor13initalizer);
+                case 16:
+                    var sensor16initalizer = new StorageSensorInitializer<IActuatorX> { StoredItem = GetStoredObject(items, data.Data), Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor16initalizer, data);
+                    sensor16initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor16(sensor16initalizer);
+                case 17:
+                    var sensor17initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
+                    await SetupInitializer(sensor17initalizer, data);
+                    sensor17initalizer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
+                    return new Sensor17(sensor17initalizer);
+                case 127:
+                    return await CreateChampionActuator(data, items, pos);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+
+        private async Task<WallSensor> CreateChampionActuator(ActuatorItemData data, List<IGrabableItem> items, Point pos)
+        {
+            var face = builder.ChampionTextures[data.Data];
+            var sensor127initializer = new ChampionSensorInitializer
+            {
+                Champion = new ChampionFactory(builder).GetChampion(pos, face),
+                GridPosition = pos,
+            };
+            await SetupInitializer(sensor127initializer, data);
+            var dec = new ChampionDecoration(true);
+            sensor127initializer.Graphics = dec;
+            sensor127initializer.Graphics.Renderer = builder.RendererSource.GetChampionRenderer(dec, builder.WallTextures[data.Decoration - 1], face);
+            return new Sensor127(sensor127initializer);
+        }
+
+        private IGrabableItem GetStoredObject(List<IGrabableItem> items, int data)
+        {
+            var factory = builder.GetItemFactory(data);
+
+            var res = items.Single(i => i.Factory == factory);
+            items.Remove(res);
+            return res;
+        }
+
+
+
+        private IActuatorX CreateWallDecoration(int currentIdentifer, List<IGrabableItem> items)
+        {
+            var descriptor = builder.CurrentMap.WallDecorations[currentIdentifer];
+            var texture = builder.WallTextures[currentIdentifer];
+            switch (descriptor.Type)
+            {
+                case GraphicsItemState.GraphicOnly:
+                    var decoration = new DecorationItem();
+                    decoration.Renderer = builder.RendererSource.GetDecorationRenderer(decoration, texture);
+                    return decoration;
+
+                case GraphicsItemState.Alcove:
+                    var alcove = new Alcove(items);
+                    items.Clear();
+                    alcove.Renderer = builder.RendererSource.GetAlcoveDecoration(alcove, texture);
+                    return alcove;
+
+                case GraphicsItemState.ViAltair:
+                    var altair = new ViAltairAlcove(items);
+                    items.Clear();
+                    altair.Renderer = builder.RendererSource.GetAlcoveDecoration(altair, texture);
+                    return altair;
+
+                case GraphicsItemState.Fountain:
+                    var fountain = new Fountain();
+                    fountain.Renderer = builder.RendererSource.GetFountainDecoration(fountain, texture);
+                    return fountain;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
     }
 }

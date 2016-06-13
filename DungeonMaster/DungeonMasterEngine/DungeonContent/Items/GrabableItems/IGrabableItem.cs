@@ -3,7 +3,7 @@ using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 
 namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
 {
-    public interface IGrabableItem : IItem 
+    public interface IGrabableItem : IRenderable 
     {
         IGrabableItemFactoryBase Factory { get; }
     }

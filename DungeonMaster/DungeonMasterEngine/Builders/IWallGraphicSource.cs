@@ -1,15 +1,17 @@
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders
 {
     public interface IWallGraphicSource
     {
-        Renderer GetRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture);
-        Renderer GetRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture);
-        Renderer GetRenderer(ActuatorX res);
+        Renderer GetWallSideRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture);
+        Renderer GetActuatorWallSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture);
+        Renderer GetWallActuatorRenderer(WallActuator res);
 
         Renderer GetAlcoveDecoration(Alcove alcove, Texture2D wallTexture);
 
@@ -30,5 +32,13 @@ namespace DungeonMasterEngine.Builders
         Renderer GetDoorRenderer(Texture2D doorTexture);
 
         Renderer GetTextSideRenderer(TextTileSide textTileSide, Texture2D wallTexture);
+
+
+        Renderer GetChampionRenderer(ChampionDecoration graphics, Texture2D mirror, Texture2D face);
+        Renderer GetChampionRenderer(Champion res, Texture2D face);
+
+        Renderer GetTeleportRenderer(TeleportTile teleportTile, Texture2D teleportTexture);
+
+        Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture);
     }
 }

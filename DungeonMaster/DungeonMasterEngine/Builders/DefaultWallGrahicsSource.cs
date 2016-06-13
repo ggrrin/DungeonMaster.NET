@@ -1,4 +1,5 @@
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -10,19 +11,19 @@ namespace DungeonMasterEngine.Builders
 {
     public class DefaultWallGrahicsSource : IWallGraphicSource
     {
-        public Renderer GetRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture)
+        public Renderer GetWallSideRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new TileWallSideRenderer<TileSide>(side, wallTexture, decorationTexture);
         }
 
-        public Renderer GetRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture)
+        public Renderer GetActuatorWallSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new ActuatorSideRenderer(side, wallTexture, decorationTexture);
         }
 
-        public Renderer GetRenderer(ActuatorX res)
+        public Renderer GetWallActuatorRenderer(WallActuator res)
         {
-            return new ActuatorXRenderer(res);
+            return new WallActuatorRenderer(res);
         }
 
         public Renderer GetAlcoveDecoration(Alcove alcove, Texture2D wallTexture)
@@ -50,11 +51,6 @@ namespace DungeonMasterEngine.Builders
             return new TileWallSideRenderer<TileSide>(ceeling, wallTexture, null);
         }
 
-        public Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
-        {
-            return new FloorTileSideRenderer(floorTile, wallTexture, decorationTexture);
-        }
-
         public Renderer GetItemRenderer(IGrabableItem item, Texture2D texture2D)
         {
             var transformation = Matrix.CreateScale(0.15f) /** Matrix.CreateTranslation(new Vector3(0, -0.25f, 0.01f))*/;
@@ -74,6 +70,31 @@ namespace DungeonMasterEngine.Builders
         public Renderer GetTextSideRenderer(TextTileSide textTileSide, Texture2D wallTexture)
         {
             return new TextTileSideRenderer(textTileSide, wallTexture);
+        }
+
+        public Renderer GetChampionRenderer(ChampionDecoration graphics, Texture2D mirror, Texture2D face)
+        {
+            return new ChampionMirrorRenderer(graphics, mirror, face);
+        }
+
+        public Renderer GetChampionRenderer(Champion res, Texture2D face)
+        {
+            return new ChampionRenderer(res, face);
+        }
+
+        public Renderer GetTeleportRenderer(TeleportTile teleportTile, Texture2D teleportTexture)
+        {
+            return new TeleportTileRenderer(teleportTile, teleportTexture);
+        }
+
+        public Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture)
+        {
+            return new ActuatorFloorTileSideRenderer(floor, wallTexture, texture); 
+        }
+
+        public Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
+        {
+            return new FloorTileSideRenderer<FloorTileSide>(floorTile, wallTexture, decorationTexture);
         }
     }
 }

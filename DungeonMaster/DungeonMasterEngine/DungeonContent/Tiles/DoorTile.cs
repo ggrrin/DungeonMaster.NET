@@ -7,7 +7,6 @@ using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterParser.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ActionState = DungeonMasterEngine.DungeonContent.Actuators.ActionState;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
@@ -45,6 +44,31 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             initializer.Initializing -= Initialize;
         }
     }
+
+
+    public class TeleportTileRenderer : TileRenderer<TeleportTile>
+    {
+        private readonly TextureRenderer teleport;
+
+        public TeleportTileRenderer(TeleportTile tile, Texture2D teleportTexture) : base(tile)
+        {
+            var transformation = /*Matrix.CreateRotationX(MathHelper.PiOver2)**/
+                Matrix.CreateTranslation(new Vector3(0.5f));
+            //transformation = Matrix.Identity;
+            this.teleport = new TextureRenderer(transformation, teleportTexture);
+        }
+
+        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
+        {
+            var transformation = base.Render(ref currentTransformation, effect, parameter);
+
+            //if(Tile.Visible)
+            teleport.Render(ref transformation, effect, parameter);
+
+            return transformation;
+        }
+    }
+
 
     public class DoorTileRenderer : TileRenderer<DoorTile>
     {
@@ -97,7 +121,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 Matrix backButtonReversed = Matrix.CreateRotationY(MathHelper.Pi)*finalMatrix;
                 if (buttonRenderer.Interact(leader, ref finalMatrix, param) || buttonRenderer.Interact(leader, ref backButtonReversed, param))
                 {
-                    Tile.AcceptMessage(new Message(MessageAction.Toggle, 0));
+                    Tile.AcceptMessage(new Message(MessageAction.Toggle, MapDirection.North));
                     return true;
                 }
             }
