@@ -11,7 +11,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
             var res = base.Render(ref currentTransformation, effect, parameter);
-            TileSide.Actuator.Renderer?.Render(ref res, effect, parameter);
+            TileSide.Actuator.Renderer.Render(ref res, effect, parameter);
             return res;
         }
 

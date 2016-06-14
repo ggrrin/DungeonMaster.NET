@@ -151,10 +151,11 @@ namespace DungeonMasterEngine.Builders
                 Visible = t.IsVisible,
             };
 
-            sidesCreator.SetupSides(initializer, GridPosition, false);
+            sidesCreator.SetupSides(initializer, GridPosition, true);
 
             var res = new TeleportTile(initializer);
-            res.Renderer = builder.RendererSource.GetTeleportRenderer(res, builder.TeleportTexture);
+            initializer.FloorSide.Renderer = builder.RendererSource.GetTeleportFloorSideRenderer(initializer.FloorSide, builder.WallTexture, builder.TeleportTexture);
+            res.Renderer = builder.RendererSource.GetTileRenderer(res);
             this.initializer = initializer;
             return res;
         }
@@ -168,6 +169,7 @@ namespace DungeonMasterEngine.Builders
             if (logicSensors.Any())
             {
                 var logicTileInitializer = new LogicTileInitializer();
+                initializer = logicTileInitializer;
                 logicActuatorCreator.ParseActuatorCreator(logicTileInitializer, logicSensors);
                 return new LogicTile(logicTileInitializer); 
             }
@@ -176,10 +178,6 @@ namespace DungeonMasterEngine.Builders
                 return null;
             }
         }
-
-
-
-
 
 
         public Tile GetTile(TrickTileData t)

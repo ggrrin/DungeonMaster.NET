@@ -21,7 +21,10 @@ namespace DungeonMasterEngine.Builders
         public async Task<FloorActuator> GetFloorActuator(IEnumerable<ActuatorItemData> actuators)
         {
             var floorSensors = await Task.WhenAll(actuators.Select(CreateSensor));
-            return new FloorActuator(floorSensors);
+
+            var res = new FloorActuator(floorSensors);
+            res.Renderer = builder.RendererSource.GetFloorActuatorRenderer(res);
+            return res;
         }
 
         protected async Task SetupFloorInitializer(SensorInitializer<IActuatorX> initializer, ActuatorItemData data)

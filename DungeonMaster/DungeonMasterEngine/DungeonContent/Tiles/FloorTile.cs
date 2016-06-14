@@ -38,8 +38,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override void OnObjectEntered(object localizable)
         {
-            FloorSide.OnObjectEntered(localizable);
             base.OnObjectEntered(localizable);
+            FloorSide.OnObjectEntered(localizable);
         }
 
         public override void OnObjectLeft(object localizable)

@@ -133,7 +133,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 //TODO send B,A,TargetCell only to wall tiles, floor tiles has set this flag NORTHWEST
                 //TODO time delay await Task.Delay(A.Value);
                 await Task.Delay(TimeDelay);
-                TargetTile.AcceptMessage(new Message(action, Specifer));
+                TargetTile.AcceptMessageBase(new Message(action, Specifer));
             }
         }
 

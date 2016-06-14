@@ -94,7 +94,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
                 }
 
                 bool some = CurrentBit0 == ReferenceBit0 && CurrentBit1 == ReferenceBit1 && CurrentBit2 == ReferenceBit2 && CurrentBit3 == ReferenceBit3;
-                bool A0636_B_TriggerSetEffect = some != RevertEffect;
+                bool A0636_B_TriggerSetEffect = some;//TODO F161_sz...// != RevertEffect;
                 if (Effect == SensorEffect.C03_EFFECT_HOLD)
                 {
                     F272_xxxx_SENSOR_TriggerEffect(null, null, A0636_B_TriggerSetEffect ? SensorEffect.C00_EFFECT_SET : SensorEffect.C01_EFFECT_CLEAR);

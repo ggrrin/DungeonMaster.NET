@@ -7,10 +7,8 @@ namespace DungeonMasterEngine.Player
 {
     public class FreeLookCamera : GameComponent, IViewStatus
     {
-        //TODO IInputProvider
-
-        //TODO normalize inside setter
         public Vector3 Position { get; set; } = Vector3.Zero;
+
         public Vector3 Up { get; set; } = Vector3.Up;
 
         //always normalized

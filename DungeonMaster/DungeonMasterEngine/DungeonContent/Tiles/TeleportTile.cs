@@ -51,8 +51,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Teleport(TeleprotInitializer initializer) : base(initializer)
         {
             initializer.Initializing += Initialize;
-
-
         }
 
         private void Initialize(TeleprotInitializer initializer)
@@ -68,12 +66,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             FloorSide.SubItemsChaned += (sender, args) => TryTeleportAll();
 
             initializer.Initializing -= Initialize;
-        }
-
-        public override void OnObjectEntered(object localizable)
-        {
-            base.OnObjectEntered(localizable);
-            TeleportItem(localizable);
         }
 
         private void TeleportItem(object obj)

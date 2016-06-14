@@ -1,4 +1,5 @@
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall.FloorSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
@@ -19,6 +20,11 @@ namespace DungeonMasterEngine.Builders
         public Renderer GetActuatorWallSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new ActuatorSideRenderer(side, wallTexture, decorationTexture);
+        }
+
+        public Renderer GetFloorActuatorRenderer(FloorActuator res)
+        {
+            return new ActuatorRenderer<FloorActuator>(res);
         }
 
         public Renderer GetWallActuatorRenderer(WallActuator res)
@@ -82,9 +88,9 @@ namespace DungeonMasterEngine.Builders
             return new ChampionRenderer(res, face);
         }
 
-        public Renderer GetTeleportRenderer(TeleportTile teleportTile, Texture2D teleportTexture)
+        public Renderer GetTeleportFloorSideRenderer(FloorTileSide floorTileSide, Texture2D wallTexture, Texture2D teleportTexture)
         {
-            return new TeleportTileRenderer(teleportTile, teleportTexture);
+            return new TeleportFloorTileSideRenderer(floorTileSide, wallTexture, teleportTexture);
         }
 
         public Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture)

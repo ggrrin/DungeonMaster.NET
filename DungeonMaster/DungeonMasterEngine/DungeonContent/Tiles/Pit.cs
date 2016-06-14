@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public bool IsVisible { get; private  set; }
         public bool IsImaginary { get; private set; }
 
-        public bool IsOpen => ContentActivated;
+        public bool IsOpen => !ContentActivated;
 
         public override bool IsAccessible => true;
 
@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void Initialize(PitInitializer initializer)
         {
-            ContentActivated = true;
+            ContentActivated = !initializer.IsOpen; 
             IsVisible = initializer.IsVisible;
             IsImaginary = initializer.IsImaginary;
 

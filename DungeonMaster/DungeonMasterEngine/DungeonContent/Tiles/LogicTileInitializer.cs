@@ -8,5 +8,11 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public new event Initializer<LogicTileInitializer> Initializing;
 
         public LogicActuator LogicActuator { get; set; }
+
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            Initializing?.Invoke(this);
+        }
     }
 }

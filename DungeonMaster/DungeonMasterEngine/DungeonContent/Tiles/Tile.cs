@@ -21,9 +21,16 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public abstract override bool IsAccessible { get; }
 
-        public virtual void AcceptMessage(TMessage message)
+        public sealed override void AcceptMessageBase(Message message)
         {
-            base.AcceptMessage(message);
+
+            if(message is TMessage)
+                AcceptMessage(tMessage: (TMessage)message);
+        }
+
+        public virtual void AcceptMessage(TMessage tMessage)
+        {
+            base.AcceptMessageBase(tMessage);
         }
 
     }
@@ -113,7 +120,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             //}
         }
 
-        public void AcceptMessage(Message message)
+        public virtual void AcceptMessageBase(Message message)
         {
             switch (message.Action)
             {

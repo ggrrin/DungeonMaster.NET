@@ -1,4 +1,5 @@
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall.FloorSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -11,6 +12,7 @@ namespace DungeonMasterEngine.Builders
     {
         Renderer GetWallSideRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture);
         Renderer GetActuatorWallSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture);
+        Renderer GetFloorActuatorRenderer(FloorActuator res);
         Renderer GetWallActuatorRenderer(WallActuator res);
 
         Renderer GetAlcoveDecoration(Alcove alcove, Texture2D wallTexture);
@@ -37,7 +39,7 @@ namespace DungeonMasterEngine.Builders
         Renderer GetChampionRenderer(ChampionDecoration graphics, Texture2D mirror, Texture2D face);
         Renderer GetChampionRenderer(Champion res, Texture2D face);
 
-        Renderer GetTeleportRenderer(TeleportTile teleportTile, Texture2D teleportTexture);
+        Renderer GetTeleportFloorSideRenderer(FloorTileSide floorTileSide, Texture2D wallTexture, Texture2D teleportTexture);
 
         Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture);
     }

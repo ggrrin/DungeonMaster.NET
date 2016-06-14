@@ -35,7 +35,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            Actuator.SensorsEnumeration.LastOrDefault()?.GraphicsBase.Renderer.Render(ref currentTransformation, effect, parameter);
+            Actuator.SensorsEnumeration.LastOrDefault()?.GraphicsBase?.Renderer?.Render(ref currentTransformation, effect, parameter);
             return currentTransformation;
         }
 

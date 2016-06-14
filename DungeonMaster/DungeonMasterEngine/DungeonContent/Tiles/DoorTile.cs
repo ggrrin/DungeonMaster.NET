@@ -46,26 +46,24 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     }
 
 
-    public class TeleportTileRenderer : TileRenderer<TeleportTile>
+    public class TeleportFloorTileSideRenderer : FloorTileSideRenderer<FloorTileSide>
     {
         private readonly TextureRenderer teleport;
 
-        public TeleportTileRenderer(TeleportTile tile, Texture2D teleportTexture) : base(tile)
+        public TeleportFloorTileSideRenderer(FloorTileSide tileSide, Texture2D wallTexture, Texture2D teleportTexture) : base(tileSide, wallTexture, teleportTexture)
         {
-            var transformation = /*Matrix.CreateRotationX(MathHelper.PiOver2)**/
-                Matrix.CreateTranslation(new Vector3(0.5f));
-            //transformation = Matrix.Identity;
-            this.teleport = new TextureRenderer(transformation, teleportTexture);
+            var identity = Matrix.CreateTranslation(new Vector3(0,0, -0.499f));
+            this.teleport = new TextureRenderer(identity, teleportTexture);
         }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            var transformation = base.Render(ref currentTransformation, effect, parameter);
+            var matrix = base.Render(ref currentTransformation, effect, parameter);
 
             //if(Tile.Visible)
-            teleport.Render(ref transformation, effect, parameter);
+            teleport.Render(ref matrix, effect, parameter);
 
-            return transformation;
+            return matrix;
         }
     }
 
