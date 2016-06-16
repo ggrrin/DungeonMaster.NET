@@ -24,7 +24,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Point TargetTilePosition { get; private set; }
         public MapDirection Direction { get; private set; }
         public bool AbsoluteDirection { get; private set; }
+
         public ITile NextLevelEnter { get; set; }
+
         public bool Open { get; private set; }
 
         public sealed override bool ContentActivated
@@ -73,8 +75,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             var localizable = obj as ILocalizable<ITile>;
             if (localizable != null && Open && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)//TODO how to set taget location creatures
             {
-                localizable.Location = NextLevelEnter; //TODO rename in interface property
-
                 if (AbsoluteDirection)
                 {
                     localizable.MapDirection = Direction;
@@ -83,6 +83,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 {
                     localizable.MapDirection = localizable.MapDirection.GetRotated(Direction.Index + 1);
                 }
+                localizable.Location = NextLevelEnter; 
             }
         }
 

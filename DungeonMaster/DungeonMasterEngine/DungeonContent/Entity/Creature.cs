@@ -372,6 +372,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
+        public override void MoveTo(ITile newLocation, bool setNewLocation)
+        {
+
+        }
+
         public override void Update(GameTime time)
         {
             animator.Update(time);

@@ -31,14 +31,21 @@ namespace DungeonMasterEngine.Builders
             floorCreator = new FloorActuatorCreator(builder);
         }
 
-        public async void SetupSides(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
+        
+
+
+        public async void SetupSidesAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
         {
-            var sides = await Task.WhenAll(
-                MapDirection.Sides
-                .Select(d => Tuple.Create(d, builder.CurrentMap.GetTileData(pos + d)))
-                .Where(t => t.Item2 == null || t.Item2.GetType() == typeof(WallTileData))
-                .Select(async t => await CreateWallSide(t.Item1, (WallTileData)t.Item2, pos))
-                .ToArray());
+            await SetupSidesAwaitableAsync(initalizer, pos, allowRandomDecoration);
+        }
+
+        public async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
+        {
+            var sides = await Task.WhenAll(MapDirection.Sides
+                            .Select(d => Tuple.Create(d, builder.CurrentMap.GetTileData(pos + d)))
+                            .Where(t => t.Item2 == null || t.Item2.GetType() == typeof(WallTileData))
+                            .Select(async t => await CreateWallSide(t.Item1, (WallTileData)t.Item2, pos))
+                            .ToArray());
 
             initalizer.WallSides = sides
                 .Concat(new[] { GetCeelingSide() })

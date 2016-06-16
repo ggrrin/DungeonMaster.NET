@@ -53,10 +53,9 @@ namespace DungeonMasterEngine.Helpers
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
             c = new CubeGraphic { Texture = texture, DrawFaces = CubeFaces.Back, Position = Vector3.Zero, Scale = new Vector3(1) };
 
-            f = new FreeLookCamera(this);
+            f = new FreeLookCamera();
             f.Position = new Vector3(0, 0, 5);
             f.ForwardDirection = -Vector3.UnitZ;
-            Components.Add(f);
         }
 
         protected override void UnloadContent()
@@ -70,6 +69,7 @@ namespace DungeonMasterEngine.Helpers
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
 
+            f.Update(gameTime);
             modelRotation += (float)gameTime.ElapsedGameTime.TotalMilliseconds * MathHelper.ToRadians(0.1f);
 
             Effect.View = f.View;

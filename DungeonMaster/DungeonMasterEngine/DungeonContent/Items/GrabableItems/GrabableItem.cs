@@ -9,6 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
 {
     public abstract class GrabableItem : IGrabableItem
     {
+        private ITile location;
         public abstract IGrabableItemFactoryBase Factory { get; }
 
 
@@ -18,5 +19,23 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
         }
 
         public Renderer Renderer { get; set; }
+
+        public ITile Location
+        {
+            get { return location; }
+            set
+            {
+                location?.OnObjectLeft(this);
+                location = value;
+                location?.OnObjectEntered(this);
+            }
+        }
+
+        public void SetLocationNoEvents(ITile tile)
+        {
+            location = tile;
+        }
+
+        public MapDirection MapDirection { get; set; }
     }
 }

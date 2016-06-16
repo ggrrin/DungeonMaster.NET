@@ -16,6 +16,11 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 
         public abstract void Run();
 
+        public void MoveTo(ITile newLocation, bool setNewLocation)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Update(GameTime gameTime)
         {
             if (!Finished)

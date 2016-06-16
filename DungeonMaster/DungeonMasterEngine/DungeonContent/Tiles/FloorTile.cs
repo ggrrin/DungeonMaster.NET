@@ -16,9 +16,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
     public class FloorTile<TMessage> : Tile<TMessage> where TMessage : Message
     {
-        private IEnumerable<TileSide> wallSides;
         public FloorTileSide FloorSide { get; private set; }
-        public override IEnumerable<TileSide> Sides => wallSides.Concat(new [] {FloorSide});
+        public override IEnumerable<TileSide> Sides => WallSides.Concat(new [] {FloorSide});
         public override bool IsAccessible => true;
 
         public FloorTile(FloorInitializer initializer) : base(initializer)
@@ -29,12 +28,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         private void Initialize(FloorInitializer initializer)
         {
             FloorSide = initializer.FloorSide;
-            wallSides = initializer.WallSides;
+            WallSides = initializer.WallSides;
 
             initializer.Initializing -= Initialize;
         }
 
         public override IEnumerable<object> SubItems => FloorSide;
+
+        public IEnumerable<TileSide> WallSides { get; private set; }
 
         public override void OnObjectEntered(object localizable)
         {

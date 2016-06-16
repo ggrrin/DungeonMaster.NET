@@ -93,9 +93,14 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 return new EmptySkill();
         }
 
-
-        public void Update(GameTime gameTime)
+        public override void MoveTo(ITile newLocation, bool setNewLocation)
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
             animator.Update(gameTime);
         }
 
@@ -118,7 +123,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 Position = Chamption.Position,
                 DrawFaces = CubeFaces.All,
                 Outter = true,
-                Scale = new Vector3(0.2f),
+                Scale = new Vector3(0.1f,0.3f, 0.1f),
             };
         }
 

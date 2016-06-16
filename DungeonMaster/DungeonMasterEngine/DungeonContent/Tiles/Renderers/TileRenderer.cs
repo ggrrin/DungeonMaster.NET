@@ -34,17 +34,21 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             var distance = ray.Intersects(new BoundingBox(Tile.Position, Tile.Position + new Vector3(1f)));
 
             var finalMatrix = GetCurrentTransformation(ref currentTransformation);
+
+
             bool res = false;
-            if (distance != null)
+            if (leader.Location == Tile)
             {
-                Tile.Renderer.Highlight(500);
-
-                foreach (var tileSide in Tile.Sides)
+                if (distance != null)
                 {
-                    if (tileSide.Renderer?.Interact(leader, ref finalMatrix, param) ?? false)
-                        res = true;
-                }
+                    Tile.Renderer.Highlight(500);
 
+                    foreach (var tileSide in Tile.Sides)
+                    {
+                        if (tileSide.Renderer?.Interact(leader, ref finalMatrix, param) ?? false)
+                            res = true;
+                    }
+                }
             }
             return res;
         }

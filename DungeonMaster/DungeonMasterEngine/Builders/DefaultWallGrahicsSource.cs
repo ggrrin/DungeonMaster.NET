@@ -98,6 +98,13 @@ namespace DungeonMasterEngine.Builders
             return new ActuatorFloorTileSideRenderer(floor, wallTexture, texture); 
         }
 
+        public Renderer GetPitTileRenderer(Pit pit)
+        {
+            return new PitTileRenderer(pit);
+
+
+        }
+
         public Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new FloorTileSideRenderer<FloorTileSide>(floorTile, wallTexture, decorationTexture);

@@ -43,7 +43,7 @@ namespace DungeonMasterEngine.Player
             {
                 mapDirection = value;
 
-                if(setForwardDirection)
+                if (setForwardDirection)
                     ForwardDirection = new Vector3(mapDirection.RelativeShift.X, 0, mapDirection.RelativeShift.Y);
 
                 OnMapDirectionChanged(oldDirection, mapDirection);
@@ -73,7 +73,7 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public PointOfViewCamera(Game game) : base(game)
+        public PointOfViewCamera() 
         {
             LocationChanged += (d, s) => $"{Location.Position} {Location.Neighbours}".Dump();
         }
@@ -113,6 +113,12 @@ namespace DungeonMasterEngine.Player
             }
 
             return Vector3.Zero;
+        }
+
+        public void MoveTo(ITile newLocation, bool setNewLocation)
+        {
+            OnLocationChanging(Location, newLocation);
+            animator.MoveTo(this, newLocation, setNewLocation);
         }
 
         private Point? GetTranslation()

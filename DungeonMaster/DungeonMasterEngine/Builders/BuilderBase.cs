@@ -16,18 +16,10 @@ namespace DungeonMasterEngine.Builders
         {
             foreach (var t in initializers )
             {
-                Tile north = null;
-                Tile east = null;
-                Tile south = null;
-                Tile west = null;
-
-                tilesPositions.TryGetValue(t.GridPosition + new Point(0, -1), out north);
-                tilesPositions.TryGetValue(t.GridPosition + new Point(1, 0), out east);
-                tilesPositions.TryGetValue(t.GridPosition + new Point(0, 1), out south);
-                tilesPositions.TryGetValue(t.GridPosition + new Point(-1, 0), out west);
-                var neighbours = new TileNeighbours(north, south, east, west);
-                t.Neighbours = neighbours;
+                t.SetupNeighbours(tilesPositions);
             }
         }
+
+
     }
 }

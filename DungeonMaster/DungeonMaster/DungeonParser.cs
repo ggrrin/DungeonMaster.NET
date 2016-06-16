@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
@@ -10,6 +11,61 @@ using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser
 {
+    class EndianesBinaryConverter : BigEndianBinaryReader
+    {
+        private readonly BinaryWriter writer;
+        public EndianesBinaryConverter(Stream input) : base(input)
+        {
+            writer = new BinaryWriter(new FileStream("endianess.dat", FileMode.Create));
+        }
+
+        public override byte ReadByte()
+        {
+            var res = base.ReadByte();
+            writer.Write(res);
+            return res;
+        }
+
+        public override byte[] ReadBytes(int count)
+        {
+            var res = base.ReadBytes(count);
+            writer.Write(res);
+            return res;
+        }
+
+        public override ushort ReadUInt16()
+        {
+            var res = base.ReadUInt16();
+            writer.Write(res);
+            return res;
+        }
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            writer.Dispose();
+
+            base.Dispose(disposing);
+        }
+    }
+
+    class BigEndianBinaryReader : BinaryReader
+    {
+        public BigEndianBinaryReader(Stream input) : base(input)
+        {
+
+        }
+
+        public override ushort ReadUInt16()
+        {
+            var b = base.ReadUInt16();
+            ushort res = (ushort)((b << 8) + (b >> 8));
+            return res;
+        }
+    }
+
+
     public class DungeonParser
     {
         public DungeonData Data { get; private set; } = new DungeonData();
@@ -27,7 +83,13 @@ namespace DungeonMasterParser
 
         public void Parse()
         {
-            using (var r = new BinaryReader(new FileStream("Data/DUNGEON.DAT", mode: FileMode.Open)))
+            var mapData = new FileStream("Data/DUNGEON_ATARI.DAT", mode: FileMode.Open);
+            var reader = new EndianesBinaryConverter(mapData);
+
+            //var mapData = new FileStream("Data/DUNGEON.DAT", mode: FileMode.Open);
+            //var reader = new BinaryReader(mapData);
+
+            using (var r = reader)
             {
                 ReadHeader(r);
                 Debug.Assert(r.BaseStream.Position == 44);
@@ -36,51 +98,55 @@ namespace DungeonMasterParser
                 Debug.Assert(r.BaseStream.Position == 268);
 
                 ReadObjectTilesShortcuts(r);
-                Debug.Assert(r.BaseStream.Position == 1086);
+                //Debug.Assert(r.BaseStream.Position == 1086); //more object ids
 
                 Data.ObjectIDs = ReadObjectIDs(r);
-                Debug.Assert(r.BaseStream.Position == 4444);
+                //Debug.Assert(r.BaseStream.Position == 4444);
 
-                Data.TextDataStream = new MemoryStream(r.ReadBytes(3498), false);
-                Debug.Assert(r.BaseStream.Position == 7942);
+                var textData = Enumerable
+                    .Range(0, Data.TextDataSize)
+                    .SelectMany(x => BitConverter.GetBytes(r.ReadUInt16()))
+                    .ToArray();
+                Data.TextDataStream = new MemoryStream(textData, false);
+                //Debug.Assert(r.BaseStream.Position == 7942);
 
                 Data.Doors = ReadDoorsData(r);
-                Debug.Assert(r.BaseStream.Position == 8622);
+                //Debug.Assert(r.BaseStream.Position == 8622);
 
                 Data.Teleports = ReadTeleportsData(r);
-                Debug.Assert(r.BaseStream.Position == 9696);
+                //Debug.Assert(r.BaseStream.Position == 9696);
 
                 Data.Texts = ReadTextsData(r);
-                Debug.Assert(r.BaseStream.Position == 10196);
+                //Debug.Assert(r.BaseStream.Position == 10196);
 
                 Data.Actuators = ReadActuatorsData(r);
-                Debug.Assert(r.BaseStream.Position == 15668);
+                //Debug.Assert(r.BaseStream.Position == 15668);//less actuators -8
 
                 Data.Creatures = ReadCreaturesData(r);
-                Debug.Assert(r.BaseStream.Position == 18580);
+                //Debug.Assert(r.BaseStream.Position == 18580);
 
                 Data.Weapons = ReadWeaponsData(r);
-                Debug.Assert(r.BaseStream.Position == 19008);
+                //Debug.Assert(r.BaseStream.Position == 19008);
 
                 Data.Clothes = ReadClothesData(r);
-                Debug.Assert(r.BaseStream.Position == 19492);
+                //Debug.Assert(r.BaseStream.Position == 19492);
 
                 Data.Scrolls = ReadScrollsData(r);
-                Debug.Assert(r.BaseStream.Position == 19632);
+                //Debug.Assert(r.BaseStream.Position == 19632);
 
                 Data.Potions = ReadPotionsData(r);
-                Debug.Assert(r.BaseStream.Position == 19856);
+                //Debug.Assert(r.BaseStream.Position == 19856);
 
                 Data.Containers = ReadContainersData(r);
-                Debug.Assert(r.BaseStream.Position == 19952);
+                //Debug.Assert(r.BaseStream.Position == 19952);
 
                 //asuming missiles and clouds empty
 
                 Data.MiscellaneousItems = ReadMiscellaneousItemsData(r);
-                Debug.Assert(r.BaseStream.Position == 21072);
+                //Debug.Assert(r.BaseStream.Position == 21072);
 
                 ReadMapData(r);
-                ushort checksum = r.ReadUInt16();//TODO Checksum does not fit :OOO
+                //ushort checksum = r.ReadUInt16();//TODO Checksum does not fit :OOO
                 //Debug.Assert(r.BaseStream.Position == checksum);
 
                 DeployObjects();
@@ -197,26 +263,25 @@ namespace DungeonMasterParser
 
         private void ReadObjectTilesShortcuts(BinaryReader r)
         {
-            //TODO todo
-            r.ReadBytes(818);
+            var skipWords = Data.Maps.Sum(m => m.Width);
+
+            for (int i = 0; i < skipWords; i++)
+            {
+                r.ReadUInt16();
+            }
         }
 
         private IList<ObjectID> ReadObjectIDs(BinaryReader r)
         {
-            var o = new ObjectID[1300];
+            var o = new ObjectID[Data.ObjectListSize];
             for (int i = 0; i < o.Length; i++)
             {
                 ushort data = r.ReadUInt16();
 
                 var t = new ObjectID(data);
 
-
-
-
                 o[i] = t;
             }
-
-            Debug.Assert(r.ReadBytes(758).All(x => x == 0xFF)); //758 FF unused (unreferenced) objects
 
             return o;
         }
@@ -308,7 +373,7 @@ namespace DungeonMasterParser
 
         private string SetTextData(int referredOffset)
         {
-            Data.TextDataStream.Position = referredOffset; 
+            Data.TextDataStream.Position = referredOffset;
             return new StreamReader(Data.TextDataStream, new DMEncoding(), false).ReadLine();
         }
 
@@ -335,7 +400,7 @@ namespace DungeonMasterParser
             a.IsLocal = ((data1 >> 11) & oneBitMask) == 1;
             a.ActionDelay = (data1 >> 7) & fourBitsMask;
             a.HasSoundEffect = ((data1 >> 6) & oneBitMask) == 1;
-            a.IsRevertable = ((data1 >> 6) & oneBitMask) == 0;
+            a.IsRevertable = ((data1 >> 5) & oneBitMask) == 1; //fixed bug
             a.Action = (ActionType)((data1 >> 3) & twoBitsMask);
             a.IsOnceOnly = ((data1 >> 2) & oneBitMask) == 1;
 
@@ -475,7 +540,7 @@ namespace DungeonMasterParser
             s.NextObjectID = r.ReadUInt16();
 
             s.ReferredTextIndex = r.ReadUInt16() & nineBitsMask;
-            s.Text = Data.Texts[s.ReferredTextIndex].Text.Replace('|' , ' '); 
+            s.Text = Data.Texts[s.ReferredTextIndex].Text.Replace('|', ' ');
             return s;
         }
 
@@ -518,7 +583,8 @@ namespace DungeonMasterParser
             c.NextObjectID = r.ReadUInt16();
 
             c.NextContainedObjectID = new ObjectID(r.ReadUInt16());
-            r.ReadUInt32(); //padding
+            r.ReadUInt16(); //padding
+            r.ReadUInt16(); //padding
             return c;
         }
 
@@ -621,8 +687,8 @@ namespace DungeonMasterParser
         {
             return new PitTileData
             {
-                IsImaginary = (data & oneBitMask) == 1,
-                IsVisible = ((data >> 2) & oneBitMask) == 1,
+                Imaginary = (data & oneBitMask) == 1,
+                Invisible = ((data >> 2) & oneBitMask) == 1,
                 IsOpen = ((data >> 3) & oneBitMask) == 1
             };
         }

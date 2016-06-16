@@ -63,11 +63,11 @@ namespace DungeonMasterEngine.Helpers
         private void FinsihAnimation()
         {
             movableObject.Position = newLocation.StayPoint;
+            IsAnimating = false;
 
             if (setLocation)
                 movableObject.Location = newLocation;
 
-            IsAnimating = false;
             animationPromise?.SetResult(true); 
         }
     }

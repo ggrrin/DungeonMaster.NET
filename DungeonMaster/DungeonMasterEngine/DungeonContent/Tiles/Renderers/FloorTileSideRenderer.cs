@@ -53,6 +53,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
         {
+
             Ray ray = (Ray)leader.Interactor;
             var resultTransformationInverse = Matrix.Invert(GetCurrentTransformation(ref currentTransformation));
 

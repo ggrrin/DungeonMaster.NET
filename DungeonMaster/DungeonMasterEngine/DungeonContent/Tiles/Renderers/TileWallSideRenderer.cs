@@ -11,7 +11,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public TSide TileSide { get; }
 
         protected Matrix transformation;
-        private readonly DecorationRenderer<IActuatorX> decorationRenderer;
+        protected  readonly DecorationRenderer<IActuatorX> decorationRenderer;
 
         public WallResource Resource => WallResource.Instance;
 
@@ -56,7 +56,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             return false;
         }
 
-        private void RenderWall(BasicEffect effect, ref Matrix finalTransformation)
+        protected void RenderWall(BasicEffect effect, ref Matrix finalTransformation)
         {
             Color color = Color.Black;
 

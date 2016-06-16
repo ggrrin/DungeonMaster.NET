@@ -2,10 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.Helpers
 {
+    public class RendererSearcher : BreadthFirstSearch<ITile, object>
+    {
+        protected override void AddSucessors(int layer, ITile currentTile)
+        {
+            foreach (var neighbour in currentTile.Neighbours)
+                Enqueue(neighbour.Item1, layer, currentTile);
+        }
+    }
+
+
     public class BreadthFirstSearch<TTile, TBundle> where TTile : class, INeighbourable<TTile>
     {
         private SearchFabricElement<TTile, TBundle>[][,] processedTiles;
@@ -100,7 +111,7 @@ namespace DungeonMasterEngine.Helpers
 
         protected virtual void AddSucessors(int layer, TTile currentTile)
         {
-            foreach (var neighbour in currentTile.Neighbours)
+            foreach (var neighbour in currentTile.Neighbours.Where(x => x.Item2.ShiftType == DirectionShift.VerticalShift))
                 Enqueue(neighbour.Item1, layer, currentTile);
         }
 

@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Interfaces
@@ -7,6 +8,7 @@ namespace DungeonMasterEngine.Interfaces
         Vector3 Position { get; set; }
         float TranslationVelocity { get; }
 
+        void MoveTo(ITile newLocation, bool setNewLocation);
         void Update(GameTime time);
     }
 }

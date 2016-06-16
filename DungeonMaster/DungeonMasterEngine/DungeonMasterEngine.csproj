@@ -224,6 +224,7 @@
     <Compile Include="DungeonContent\Tiles\MocapDefensive.cs" />
     <Compile Include="DungeonContent\Tiles\MocapDefensiveInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\PitInitializer.cs" />
+    <Compile Include="DungeonContent\Tiles\PitTileRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\ActuatorSideRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\AlcoveRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DecorationRenderer.cs" />
@@ -442,6 +443,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Data\DUNGEON.DAT">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\DUNGEON_ATARI - Copy.DAT">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\DUNGEON_ATARI.DAT">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

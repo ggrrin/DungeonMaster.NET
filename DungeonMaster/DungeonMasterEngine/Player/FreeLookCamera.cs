@@ -1,11 +1,13 @@
 ﻿using System.Xml.Schema;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.Interfaces;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
 {
-    public class FreeLookCamera : GameComponent, IViewStatus
+    public class FreeLookCamera : IViewStatus
     {
         public Vector3 Position { get; set; } = Vector3.Zero;
 
@@ -22,57 +24,55 @@ namespace DungeonMasterEngine.Player
             set { forwardDirection = Vector3.Normalize(value); }
         }
 
-        public Vector3 BackwardDirection => -ForwardDirection; 
+        public Vector3 BackwardDirection => -ForwardDirection;
 
-        public Vector3 LeftDirection => -Vector3.Cross(ForwardDirection, Up); 
+        public Vector3 LeftDirection => -Vector3.Cross(ForwardDirection, Up);
 
-        public Vector3 RighDirection => -LeftDirection; 
-        protected Point sceenCenter => new Point(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2); 
+        public Vector3 RighDirection => -LeftDirection;
+        protected Point sceenCenter => new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 
-        public float TranslationVelocity { get; set; } = 2 * 2.2f;
-
+        public float TranslationVelocity { get; set; } = 4.4f;
 
         public Matrix View { get; private set; }
 
         public Matrix Projection { get; private set; }
 
         public float FieldOfView { get; set; } = MathHelper.PiOver2;
+        public GraphicsDevice GraphicsDevice { get; }
 
-        public FreeLookCamera(Game game) : base(game)
+        public FreeLookCamera()
         {
+            GraphicsDevice = ResourceProvider.Instance.Device;
             Mouse.SetPosition(sceenCenter.X, sceenCenter.Y);
-            Projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Game.GraphicsDevice.Viewport.AspectRatio, 0.1f, 100);
+            Projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, GraphicsDevice.Viewport.AspectRatio, 0.1f, 100);
         }
 
-        public override void Update(GameTime time)
+
+        public virtual void Update(GameTime time)
         {
-            if (Game.IsActive)
-            {
-                var move = GetTranslation(time);
-                if (move != Vector3.Zero)
-                    Position += TranslationVelocity * (float)time.ElapsedGameTime.TotalSeconds * Vector3.Normalize(move);//same speed for oblique direction 
+            var move = GetTranslation(time);
+            if (move != Vector3.Zero)
+                Position += TranslationVelocity * (float)time.ElapsedGameTime.TotalSeconds * Vector3.Normalize(move);//same speed for oblique direction 
 
-                var rotation = GetRotation(time);
+            var rotation = GetRotation(time);
 
-                //TODO bounding up down look
-                //if (sign(horizontal.X) != sign(Direction.X) || sign(horizontal.Z) != sign(Direction.Z))
-                //    Direction = horizontal;
+            //TODO bounding up down look
+            //if (sign(horizontal.X) != sign(Direction.X) || sign(horizontal.Z) != sign(Direction.Z))
+            //    Direction = horizontal;
 
-                ForwardDirection = Vector3.Transform(ForwardDirection, rotation);
-                ForwardDirection.Normalize();
-                var t = ForwardDirection;
-                const float val = 0.93f;
-                if (t.Y > val)
-                    t.Y = val;
-                if (t.Y < -val)
-                    t.Y = -val;
+            ForwardDirection = Vector3.Transform(ForwardDirection, rotation);
+            ForwardDirection.Normalize();
+            var t = ForwardDirection;
+            const float val = 0.93f;
+            if (t.Y > val)
+                t.Y = val;
+            if (t.Y < -val)
+                t.Y = -val;
 
-                t.Normalize();
-                ForwardDirection = t;
+            t.Normalize();
+            ForwardDirection = t;
 
-                View = Matrix.CreateLookAt(Position, Position + ForwardDirection, Up);
-            }
-            base.Update(time);
+            View = Matrix.CreateLookAt(Position, Position + ForwardDirection, Up);
         }
 
         protected virtual Vector3 GetTranslation(GameTime time)
@@ -98,7 +98,7 @@ namespace DungeonMasterEngine.Player
         protected virtual Quaternion GetRotation(GameTime time)
         {
             var coor = Mouse.GetState().Position;
-            
+
             Vector2 mouseMove = new Vector2(sceenCenter.X - coor.X, coor.Y - sceenCenter.Y);
             Mouse.SetPosition(sceenCenter.X, sceenCenter.Y);
 
@@ -106,8 +106,8 @@ namespace DungeonMasterEngine.Player
             float horizontalAngle = 0;
             if (mouseMove != Vector2.Zero)
             {
-                verticalAngle = mouseMove.X / Game.GraphicsDevice.Viewport.Width * FieldOfView;
-                horizontalAngle = mouseMove.Y / Game.GraphicsDevice.Viewport.Width * FieldOfView;
+                verticalAngle = mouseMove.X / GraphicsDevice.Viewport.Width * FieldOfView;
+                horizontalAngle = mouseMove.Y / GraphicsDevice.Viewport.Width * FieldOfView;
             }
             else
             {
@@ -124,7 +124,7 @@ namespace DungeonMasterEngine.Player
             }
 
             //horizontalAngle = MathHelper.Clamp(horizontalAngle, -0.23f, 0.23f);
-            
+
             Quaternion rotationUp = Quaternion.CreateFromAxisAngle(Up, verticalAngle);
             Quaternion rotationLeft = Quaternion.CreateFromAxisAngle(-Vector3.Normalize(Vector3.Cross(ForwardDirection, Up)), horizontalAngle);
 

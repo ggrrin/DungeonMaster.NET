@@ -10,7 +10,6 @@ namespace DungeonMasterEngine.DungeonContent
 
     public class TileNeighbours : INeighbours<ITile>
     {
-        protected TileNeighbours() { }
 
         public TileNeighbours(Tile north, Tile south, Tile east, Tile west)
         {
@@ -28,12 +27,16 @@ namespace DungeonMasterEngine.DungeonContent
             West = neigbours.West;
         }
 
+        protected TileNeighbours()
+        {
+        }
+
         public virtual ITile North { get;  }
         public virtual ITile South { get; }
         public virtual ITile East { get; }
         public virtual ITile West { get; }
 
-        public ITile GetTile(MapDirection mapDirection)
+        public virtual ITile GetTile(MapDirection mapDirection)
         {
             if (mapDirection == MapDirection.East)
                 return East;
@@ -49,7 +52,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         public IEnumerator<Tuple<ITile, MapDirection>> GetEnumerator()
         {
-            return MapDirection.Sides
+            return MapDirection.AllDirections
                 .Select(s => Tuple.Create(GetTile(s), s))
                 .Where(t => t.Item1 != null)
                 .GetEnumerator();

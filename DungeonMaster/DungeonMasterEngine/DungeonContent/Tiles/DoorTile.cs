@@ -92,11 +92,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            Matrix finalTransformation = transformation * base.Render(ref currentTransformation, effect, parameter);
+            Matrix finalTransformation = transformation * GetCurrentTransformation(ref currentTransformation);
+            base.Render(ref currentTransformation, effect, parameter);
 
-            DrawModel(frameModel, ref finalTransformation, effect);
+
             if(!Tile.ContentActivated)
                 Tile.Door.Renderer.Render(ref finalTransformation, effect, parameter);
+
+            DrawModel(frameModel, ref finalTransformation, effect);
 
             if (Tile.HasButton)
             {

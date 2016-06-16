@@ -42,5 +42,7 @@ namespace DungeonMasterEngine.Builders
         Renderer GetTeleportFloorSideRenderer(FloorTileSide floorTileSide, Texture2D wallTexture, Texture2D teleportTexture);
 
         Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture);
+
+        Renderer GetPitTileRenderer(Pit pit1);
     }
 }

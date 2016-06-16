@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent
 {
     public class Dungeon : DrawableGameComponent
     {
-        private readonly BreadthFirstSearch<ITile,object> bfs = new BreadthFirstSearch<ITile,object>();
+        private readonly RendererSearcher bfs = new RendererSearcher();
         private List<ITile> currentVisibleTiles;
         private SpriteBatch batcher;
 
@@ -38,9 +38,8 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1,  new Point(18,33));
-            Theron = new Theron(l.StartTile, Game);
-            Game.Components.Add(Theron);
+            var l = LoadLevel(2, new Point(21,24));
+            Theron = new Theron(l.StartTile);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;
             EnabledChanged += Dungeon_EnabledChanged;
         }
@@ -64,7 +63,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         private void Dungeon_EnabledChanged(object sender, EventArgs e)
         {
-            Theron.Enabled = Enabled;
+            Theron.IsActive = Enabled;
         }
 
         private DungeonLevel LoadLevel(int levelIndex, Point? enterTile)
@@ -81,13 +80,6 @@ namespace DungeonMasterEngine.DungeonContent
                 nextLevel = LoadLevel(e.NextLevelIndex, e.TargetTilePosition);//load level if necesarry    
 
             e.NextLevelEnter = nextLevel.TilesPositions[e.TargetTilePosition];//TODO unolad level disconect
-
-            var secondLevelConnector = e.NextLevelEnter as ILevelConnector;
-            //if changel is multiplexing set symetricaly 
-            if (secondLevelConnector != null)
-            {
-                secondLevelConnector.NextLevelEnter = e;
-            }
 
             UpdateVisibleTiles();
         }
@@ -122,6 +114,9 @@ namespace DungeonMasterEngine.DungeonContent
         public override void Update(GameTime gameTime)
         {
             Time = gameTime;
+
+            Theron.Update(gameTime);
+
             if (currentVisibleTiles == null)
                 CurrentPlayer_LocationChanged(this, new EventArgs());
 

@@ -71,7 +71,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 var grabable = localizable as GrabableItem;
                 if (grabable != null)
                 {
-                    Spaces.First().AddItem(grabable);
+                    Spaces.First().AddItem(grabable, false);
                 }
             }
 

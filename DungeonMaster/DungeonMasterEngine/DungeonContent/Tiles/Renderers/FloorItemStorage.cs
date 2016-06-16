@@ -24,10 +24,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public void AddItem(IGrabableItem item, bool triggerEvent = true)
         {
+            items.Add(item);
+
             if(triggerEvent)
                 ItemAdding?.Invoke(this, item);
-
-            items.Add(item);
         }
 
         public IGrabableItem RemoveItem(IGrabableItem item, bool triggerEvent = true)
@@ -44,10 +44,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             if (leader.Hand == null && items.Any())
             {
                 leader.Hand = RemoveItem(items.Last());
+                leader.Hand.SetLocationNoEvents(null);
                 return true;
             }
             else if (leader.Hand != null)
             {
+                leader.Hand.SetLocationNoEvents(leader.Location);
                 AddItem(leader.Hand);
                 leader.Hand = null;
                 return true;

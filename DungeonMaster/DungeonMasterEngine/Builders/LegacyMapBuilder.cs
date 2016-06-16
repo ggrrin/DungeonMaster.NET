@@ -391,5 +391,15 @@ namespace DungeonMasterEngine.Builders
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
         }
+
+        public Renderer GetWallIllusionTileRenderer(WallIlusion wallIlusion, Texture2D wallTexture)
+        {
+            return new WallIllusionRenderer(wallIlusion);
+        }
+
+        public Renderer GetWallIllusionTileSideRenderer(TileSide tileSide, Texture2D wallTexture, Texture2D decoration)
+        {
+            return new WallIllusionTileSideRenderer(tileSide, wallTexture, decoration);  
+        }
     }
 }

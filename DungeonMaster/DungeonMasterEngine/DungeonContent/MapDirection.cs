@@ -83,6 +83,8 @@ namespace DungeonMasterEngine.DungeonContent
             HorizontalShift = horizontalShift;
         }
 
+        public DirectionShift ShiftType => HorizontalShift == 0 ? DirectionShift.VerticalShift : DirectionShift.HorizontalShift;
+
         public static bool IsHroizontalOK(int horizontalShift)
         {
             switch (horizontalShift)
@@ -157,5 +159,11 @@ namespace DungeonMasterEngine.DungeonContent
             else
                 return "Undefined.";
         }
+    }
+
+    public enum DirectionShift
+    {
+        HorizontalShift, VerticalShift
+        
     }
 }

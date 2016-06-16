@@ -53,7 +53,7 @@ namespace DungeonMasterEngine.Player
 
 
 
-        public Theron(Tile location, Game game) : base(game)
+        public Theron(Tile location)
         {
             Location = location;
 
@@ -195,10 +195,6 @@ namespace DungeonMasterEngine.Player
             return curLocation;
         }
 
-
-
-
-
         public bool AddChampoinToGroup(Champion champion)
         {
             if (partyGoup.Count == 4)
@@ -219,7 +215,7 @@ namespace DungeonMasterEngine.Player
                 champoin.Update(time);
             }
 
-            if (Game.IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
+            if (IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
                 var tiles = new[] { Location }.Concat(Location.Neighbours
@@ -228,13 +224,19 @@ namespace DungeonMasterEngine.Player
 
                 var matrix = Matrix.Identity;
                 foreach (var tile in tiles)
-                    if (tile.Renderer.Interact(this, ref matrix, null))
+                    if(tile.Renderer.Interact(this, ref matrix, null))
                         break;
 
             }
 
             prevMouse = Mouse.GetState();
             prevKeyboard = Keyboard.GetState();
+        }
+
+        public bool IsActive
+        {
+            get { return true; }
+            set { }
         }
 
         public ILiveEntity GetEnemy(ILiveEntity champoin)

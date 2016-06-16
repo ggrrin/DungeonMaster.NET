@@ -24,6 +24,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         public Vector3 Position { get; set; }
         public abstract float TranslationVelocity { get; }
 
+        public abstract void MoveTo(ITile newLocation, bool setNewLocation);
+
         public virtual void Update(GameTime time) { }
 
         public abstract IBody Body { get; }

@@ -5,14 +5,14 @@
         //Bit 0:
         //     '0' Normal
         //     '1' Imaginary
-        public bool IsImaginary { get; set; }
+        public bool Imaginary { get; set; }
 
         // Bit 1: Unused
         
         // Bit 2:
         //     '0' Visible
         //     '1' Invisible
-        public bool IsVisible { get; set; }
+        public bool Invisible { get; set; }
         
         // Bit 3:
         //     '0' Closed
