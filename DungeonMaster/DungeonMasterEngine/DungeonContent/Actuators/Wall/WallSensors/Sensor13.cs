@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Wall
             }
             else
             {
-                if ((theron.Hand.Factory != Data) || Storage != null)
+                if ((theron.Hand?.Factory != Data) || Storage != null)
                     return false;
 
                 Storage = theron.Hand;

@@ -52,7 +52,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public TeleportFloorTileSideRenderer(FloorTileSide tileSide, Texture2D wallTexture, Texture2D teleportTexture) : base(tileSide, wallTexture, teleportTexture)
         {
-            var identity = Matrix.CreateTranslation(new Vector3(0,0, -0.499f));
+            var identity = Matrix.CreateTranslation(new Vector3(0, 0, -0.499f));
             this.teleport = new TextureRenderer(identity, teleportTexture);
         }
 
@@ -95,8 +95,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             Matrix finalTransformation = transformation * GetCurrentTransformation(ref currentTransformation);
             base.Render(ref currentTransformation, effect, parameter);
 
-
-            if(!Tile.ContentActivated)
+            if (!Tile.ContentActivated)
                 Tile.Door.Renderer.Render(ref finalTransformation, effect, parameter);
 
             DrawModel(frameModel, ref finalTransformation, effect);
@@ -104,10 +103,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             if (Tile.HasButton)
             {
                 buttonRenderer.Render(ref finalTransformation, effect, parameter);
-                Matrix backButtonReversed = Matrix.CreateRotationY(MathHelper.Pi)*finalTransformation;
+                Matrix backButtonReversed = Matrix.CreateRotationY(MathHelper.Pi) * finalTransformation;
                 buttonRenderer.Render(ref backButtonReversed, effect, parameter);
             }
-
             return finalTransformation;
         }
 
@@ -118,8 +116,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
             if (Tile.HasButton)
             {
-                var finalMatrix = transformation*GetCurrentTransformation(ref currentTransformation);
-                Matrix backButtonReversed = Matrix.CreateRotationY(MathHelper.Pi)*finalMatrix;
+                var finalMatrix = transformation * GetCurrentTransformation(ref currentTransformation);
+                Matrix backButtonReversed = Matrix.CreateRotationY(MathHelper.Pi) * finalMatrix;
                 if (buttonRenderer.Interact(leader, ref finalMatrix, param) || buttonRenderer.Interact(leader, ref backButtonReversed, param))
                 {
                     Tile.AcceptMessage(new Message(MessageAction.Toggle, MapDirection.North));

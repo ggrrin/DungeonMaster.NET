@@ -34,12 +34,12 @@ namespace DungeonMasterEngine.Builders
         
 
 
-        public async void SetupSidesAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
+        public async void SetupSidesAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
         {
-            await SetupSidesAwaitableAsync(initalizer, pos, allowRandomDecoration);
+            await SetupSidesAwaitableAsync(initalizer, pos, allowRandomDecoration, tile);
         }
 
-        public async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration)
+        public async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
         {
             var sides = await Task.WhenAll(MapDirection.Sides
                             .Select(d => Tuple.Create(d, builder.CurrentMap.GetTileData(pos + d)))
@@ -51,7 +51,7 @@ namespace DungeonMasterEngine.Builders
                 .Concat(new[] { GetCeelingSide() })
                 .ToArray();
 
-            initalizer.FloorSide = await GetFloorSide(pos, allowRandomDecoration);
+            initalizer.FloorSide = await GetFloorSide(pos, allowRandomDecoration, tile);
         }
 
         private TileSide GetCeelingSide()
@@ -61,17 +61,24 @@ namespace DungeonMasterEngine.Builders
             return ceeling;
         }
 
-        private async Task<FloorTileSide> GetFloorSide(Point point, bool allowRandomDecoration)
+        private IGrabableItem SetupItem(ItemData itemData, ITile tile)
         {
-            var tile = builder.CurrentMap[point.X, point.Y];
+            var item = builder.ItemCreator.CreateItem(itemData);
+            item.SetLocationNoEvents(tile);
+            return item;
+        } 
+
+        private async Task<FloorTileSide> GetFloorSide(Point point, bool allowRandomDecoration, ITile tile)
+        {
+            var tileData = builder.CurrentMap[point.X, point.Y];
             Texture2D texture = allowRandomDecoration ? builder.RandomFloorDecoration : null;
 
-            var topleft = tile.GrabableItems.Where(x => x.TilePosition == TilePosition.North_TopLeft).Select(builder.ItemCreator.CreateItem);
-            var topRight = tile.GrabableItems.Where(x => x.TilePosition == TilePosition.East_TopRight).Select(builder.ItemCreator.CreateItem);
-            var bottomLeft= tile.GrabableItems.Where(x => x.TilePosition == TilePosition.South_BottomLeft).Select(builder.ItemCreator.CreateItem);
-            var bottomRifgh = tile.GrabableItems.Where(x => x.TilePosition == TilePosition.West_BottomRight).Select(builder.ItemCreator.CreateItem);
+            var topleft = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.North_TopLeft).Select(x => SetupItem(x, tile));
+            var topRight = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.East_TopRight).Select(x => SetupItem(x, tile));
+            var bottomLeft= tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.South_BottomLeft).Select(x => SetupItem(x, tile));
+            var bottomRifgh = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.West_BottomRight).Select(x => SetupItem(x, tile));
 
-            if (!tile.Actuators.Any())
+            if (!tileData.Actuators.Any())
             {
                 var floor = new FloorTileSide(texture != null, MapDirection.Down, topleft, topRight, bottomLeft, bottomRifgh);
                 floor.Renderer = builder.RendererSource.GetFloorRenderer(floor, builder.WallTexture, texture);
@@ -79,7 +86,7 @@ namespace DungeonMasterEngine.Builders
             }
             else
             {
-                var floor = new ActuatorFloorTileSide(await floorCreator.GetFloorActuator(tile.Actuators), texture != null, MapDirection.Down, topleft, topRight, bottomLeft, bottomRifgh);
+                var floor = new ActuatorFloorTileSide(await floorCreator.GetFloorActuator(tileData.Actuators), texture != null, MapDirection.Down, topleft, topRight, bottomLeft, bottomRifgh);
                 floor.Renderer = builder.RendererSource.GetActuatorFloorRenderer(floor, builder.WallTexture, texture);
                 return floor;
             }

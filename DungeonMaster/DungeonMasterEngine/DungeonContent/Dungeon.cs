@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(2, new Point(21,24));
+            var l = LoadLevel(2, new Point(11,34));
             Theron = new Theron(l.StartTile);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;
             EnabledChanged += Dungeon_EnabledChanged;

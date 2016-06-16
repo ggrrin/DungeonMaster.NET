@@ -22,10 +22,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             tilesPositions.TryGetValue(GridPosition + new Point(1, 0), out east);
             tilesPositions.TryGetValue(GridPosition + new Point(0, 1), out south);
             tilesPositions.TryGetValue(GridPosition + new Point(-1, 0), out west);
-            var neighbours = new TileNeighbours(north, south, east, west);
+            var neighbours = new TileNeighbours(Check(north) , Check(south), Check(east), Check(west));
             Neighbours = neighbours;
         }
 
+        private Tile Check(Tile t)
+        {
+            if (t is LogicTile)
+                return null;
+            else
+                return t;
+        }
 
 
         protected override void OnInitialize()

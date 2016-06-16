@@ -80,8 +80,8 @@ namespace DungeonMasterEngine.Builders
             SetMinimapTile(Color.White);
 
             var initalizer = new FloorInitializer();
-            sidesCreator.SetupSidesAsync(initalizer, GridPosition, t.AllowRandomDecoration);
             var res = new FloorTile(initalizer);
+            sidesCreator.SetupSidesAsync(initalizer, GridPosition, t.AllowRandomDecoration, res);
             res.Renderer = builder.RendererSource.GetTileRenderer(res);
             this.initializer = initalizer;
             return res;
@@ -97,11 +97,11 @@ namespace DungeonMasterEngine.Builders
             var initializer = new DoorInitializer { Door = CreateDoor(t) };
             initializer.HasButton = t.Door.HasButton;
 
-            sidesCreator.SetupSidesAsync(initializer, GridPosition, false);
 
             initializer.Direction = t.Orientation == Orientation.NorthSouth ? MapDirection.North : MapDirection.East;
 
             var res = new DoorTile(initializer);
+            sidesCreator.SetupSidesAsync(initializer, GridPosition, false, res);
             res.Renderer = builder.RendererSource.GetDoorTileRenderer(res, builder.WallTexture, builder.DoorButtonTexture);
             this.initializer = initializer;
             return res;
@@ -126,8 +126,8 @@ namespace DungeonMasterEngine.Builders
                 IsOpen = t.IsOpen
             };
 
-            sidesCreator.SetupSidesAsync(pitInitializer, GridPosition, false);
             var res = new Pit(pitInitializer);
+            sidesCreator.SetupSidesAsync(pitInitializer, GridPosition, false, res);
             res.Renderer = builder.RendererSource.GetPitTileRenderer(res);
             initializer = pitInitializer;
             return res;
@@ -151,17 +151,17 @@ namespace DungeonMasterEngine.Builders
                 Visible = t.IsVisible,
             };
 
-            SetupTeleportSides(initializer, GridPosition, true);
 
             var res = new TeleportTile(initializer);
+            SetupTeleportSides(initializer, GridPosition, true, res);
             res.Renderer = builder.RendererSource.GetTileRenderer(res);
             this.initializer = initializer;
             return res;
         }
 
-        private async void SetupTeleportSides(TeleprotInitializer initializer, Point gridPosition, bool randomDecoration)
+        private async void SetupTeleportSides(TeleprotInitializer initializer, Point gridPosition, bool randomDecoration, ITile tile)
         {
-            await sidesCreator.SetupSidesAwaitableAsync(initializer, GridPosition, true);
+            await sidesCreator.SetupSidesAwaitableAsync(initializer, GridPosition, true, tile);
             initializer.FloorSide.Renderer = builder.RendererSource.GetTeleportFloorSideRenderer(initializer.FloorSide, builder.WallTexture, builder.TeleportTexture);
         }
 
@@ -196,18 +196,18 @@ namespace DungeonMasterEngine.Builders
                 RandomDecoration = t.AllowRandomDecoration,
             };
 
-            SetupWallIllusionSidesAsync(trickTileInitializer, t.AllowRandomDecoration);
 
             var res = new WallIlusion(trickTileInitializer);
+            SetupWallIllusionSidesAsync(trickTileInitializer, t.AllowRandomDecoration, res);
             res.Renderer = builder.GetWallIllusionTileRenderer(res, builder.WallTexture);
 
             initializer = trickTileInitializer;
             return res;
         }
 
-        private async void SetupWallIllusionSidesAsync(WallIlusionInitializer initializer, bool randomDecoration)
+        private async void SetupWallIllusionSidesAsync(WallIlusionInitializer initializer, bool randomDecoration, ITile tile)
         {
-            await sidesCreator.SetupSidesAwaitableAsync(initializer, GridPosition, randomDecoration);
+            await sidesCreator.SetupSidesAwaitableAsync(initializer, GridPosition, randomDecoration, tile);
 
             var trickSides = MapDirection.Sides.Except(initializer.WallSides.Select(x => x.Face))
                 .Select(x =>

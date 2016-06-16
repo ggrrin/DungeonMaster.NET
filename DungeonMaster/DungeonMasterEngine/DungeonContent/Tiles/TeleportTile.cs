@@ -18,6 +18,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
     public class Teleport<TMessage> : FloorTile<TMessage>, ILevelConnector where TMessage : Message
     {
+        private ITile nextLevelEnter;
         public IConstrain ScopeConstrain { get; private set; }
         public bool Visible { get; private set; }
         public int NextLevelIndex { get; private set; }
@@ -25,7 +26,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public MapDirection Direction { get; private set; }
         public bool AbsoluteDirection { get; private set; }
 
-        public ITile NextLevelEnter { get; set; }
+        public ITile NextLevelEnter
+        {
+            get { return nextLevelEnter; }
+            set
+            {
+                nextLevelEnter = value;
+            }
+        }
 
         public bool Open { get; private set; }
 

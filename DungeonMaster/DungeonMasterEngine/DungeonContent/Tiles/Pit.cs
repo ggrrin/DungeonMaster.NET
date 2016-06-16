@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -74,12 +75,33 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override bool IsAccessible => true;
 
-        //public override Vector3 StayPoint => IsOpen ? base.StayPoint + Vector3.Down : base.StayPoint;
+        public override bool ContentActivated
+        {
+            get { return base.ContentActivated; }
+            protected set
+            {
+                base.ContentActivated = value;
+                foreach (var subItem in SubItems.ToArray())
+                {
+                    var movable = subItem as IMovable<ITile>;
+
+                    if (movable != null)
+                        MakeItemFall(subItem);
+                }
+                
+            }
+        }
 
         public override void OnObjectEntered(object localizable)
         {
             base.OnObjectEntered(localizable);
 
+            MakeItemFall(localizable);
+
+        }
+
+        private void MakeItemFall(object localizable)
+        {
             if (IsOpen)
             {
                 var loc = localizable as IMovable<ITile>;
@@ -89,7 +111,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                     loc.MoveTo(PitNeighbours.Down, true);
                 }
             }
-
         }
 
         public Pit(PitInitializer initializer) : base(initializer)
