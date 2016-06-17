@@ -37,5 +37,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
         public float HitProbability { get; }
 
         public float DamageFactor { get; }
+
+        public override string ToString() => Type.GetType().Name;
     }
 }

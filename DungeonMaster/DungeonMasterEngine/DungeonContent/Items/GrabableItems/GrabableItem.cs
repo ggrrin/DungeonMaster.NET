@@ -15,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Items.GrabableItems
 
         public override string ToString()
         {
-            return $"{GetType().Name} : {Factory.GetType().Name}";
+            return $"{GetType().Name} : {Factory.Name}";
         }
 
         public Renderer Renderer { get; set; }

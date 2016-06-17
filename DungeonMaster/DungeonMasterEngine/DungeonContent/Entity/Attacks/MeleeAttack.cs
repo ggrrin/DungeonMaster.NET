@@ -10,13 +10,14 @@ using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
 {
 
-    class ThrowAttakc : HumanAttack
+    class ThrowAttakc : MeleeAttack
     {
         int F305_xxxx_CHAMPION_GetThrowingStaminaCost(IGrabableItem item)
         {
@@ -105,24 +106,70 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             throw new NotImplementedException();
         }
 
-        public ThrowAttakc(HumanAttackFactory factory, ILiveEntity attackProvider) : base(factory, attackProvider) { }
+        public ThrowAttakc(HumanAttackFactoryBase factoryBase, ILiveEntity attackProvider) : base(factoryBase, attackProvider) { }
     }
 
-    class HumanAttack : IAttack
+    class SwingAttack : MeleeAttack
     {
-        protected static Random rand = new Random();
+        //case C030_ACTION_BASH:
+        //case C018_ACTION_HACK:
+        //case C019_ACTION_BERZERK:
+        //case C007_ACTION_KICK:
+        //case C013_ACTION_SWING:
+        //case C002_ACTION_CHOP:
 
-        private readonly HumanAttackFactory factory;
-        protected readonly ILiveEntity attackProvider;
-        private Weapon weapon;
+        public SwingAttack(HumanAttackFactoryBase factoryBase, ILiveEntity attackProvider) : base(factoryBase, attackProvider) { }
 
-        public HumanAttack(HumanAttackFactory factory, ILiveEntity attackProvider)
+
+        protected override void PerformAttack(MapDirection direction, ref int delay)
         {
-            this.factory = factory;
+            var targetTile = attackProvider.Location.Tile.Neighbours.GetTile(direction) as IHasEntity;
+            if (targetTile?.Entity != null)
+            {
+                //F064_aadz_SOUND_RequestPlay_COPYPROTECTIOND(C16_SOUND_COMBAT, G306_i_PartyMapX, G307_i_PartyMapY, C01_MODE_PLAY_IF_PRIORITIZED);
+                delay = 6;
+                F232_dzzz_GROUP_IsDoorDestroyedByAttack(targetTile.Entity, F312_xzzz_CHAMPION_GetStrength(ActionHandStorageType.Instance), false);
+                //F064_aadz_SOUND_RequestPlay_COPYPROTECTIOND(C04_SOUND_WOODEN_THUD, G306_i_PartyMapX, G307_i_PartyMapY, C02_MODE_PLAY_ONE_TICK_LATER);
+            }
+            else
+            {
+                base.PerformAttack(direction, ref delay);
+            }
+        }
+        protected void F232_dzzz_GROUP_IsDoorDestroyedByAttack(IEntity door, int P506_i_Attack, bool P507_B_MagicAttack)
+        {
+            var doorHealth = door.GetProperty(PropertyFactory<HealthProperty>.Instance);
+            var doorDefense = door.GetProperty(PropertyFactory<DefenseProperty>.Instance);
+            var doorAntiMagic = door.GetProperty(PropertyFactory<AntiMagicProperty>.Instance);
+
+            if (P507_B_MagicAttack)
+            {
+                //TODO test !!
+                doorHealth.Value -= MathHelper.Clamp(P506_i_Attack - doorAntiMagic.Value, 0, int.MaxValue);
+            }
+            else
+            {
+                doorHealth.Value -= MathHelper.Clamp(P506_i_Attack - doorDefense.Value, 0, int.MaxValue);
+            }
+        }
+    }
+
+
+    public abstract class HumanAttack : IAttack
+    {
+        protected static readonly Random rand = new Random();
+        protected readonly HumanAttackFactoryBase factoryBase;
+        protected readonly ILiveEntity attackProvider;
+
+        public HumanAttack(HumanAttackFactoryBase factoryBase, ILiveEntity attackProvider)
+        {
+            this.factoryBase = factoryBase;
             this.attackProvider = attackProvider;
         }
 
-        private ILiveEntity GetAccesibleEnemies(MapDirection partyDirection)
+        protected abstract void PerformAttack(MapDirection direction, ref int delay);
+
+        protected ILiveEntity GetAccesibleEnemies(MapDirection partyDirection)
         {
             //TODO rework using rectangle intersection
             var targetTile = attackProvider.Location.Tile.Neighbours.GetTile(partyDirection);
@@ -142,8 +189,54 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             return enemy;
         }
 
+        public async void ApplyAttack(MapDirection direction)
+        {
+            var delay = factoryBase.Fatigue;
+            var requiredSkill = attackProvider.GetSkill(factoryBase.SkillIndex);
+            var requiredStamina = factoryBase.Stamina + rand.Next(2);
 
-        bool F402_xxxx_MENUS_IsMeleeActionPerformed(MapDirection direction)
+            PerformAttack(direction, ref delay);
+
+            //AfterSwitch
+            if (delay > 0)
+            {
+                await Task.Delay(delay);
+            }
+            if (requiredStamina > 0)
+            {
+                attackProvider.GetProperty(PropertyFactory<StaminaProperty>.Instance).Value -= requiredStamina;
+            }
+            if (factoryBase.ExperienceGain > 0)
+            {
+                requiredSkill.AddExperience(factoryBase.ExperienceGain);
+            }
+        }
+
+    }
+
+
+    public class MeleeAttack : HumanAttack
+    {
+        //case C024_ACTION_DISRUPT:
+        //case C016_ACTION_JAB:
+        //case C017_ACTION_PARRY:
+        //case C014_ACTION_STAB:
+        //case C009_ACTION_STAB:
+        //case C031_ACTION_STUN:
+        //case C015_ACTION_THRUST:
+        //case C025_ACTION_MELEE:
+        //case C028_ACTION_SLASH:
+        //case C029_ACTION_CLEAVE:
+        //case C006_ACTION_PUNCH:
+
+        public MeleeAttack(HumanAttackFactoryBase factoryBase, ILiveEntity attackProvider) : base(factoryBase, attackProvider) { }
+        protected override void PerformAttack(MapDirection direction, ref int delay)
+        {
+            if (F402_xxxx_MENUS_IsMeleeActionPerformed(direction))
+                delay >>= 1;
+        }
+
+        protected bool F402_xxxx_MENUS_IsMeleeActionPerformed(MapDirection direction)
         {
             var enemy = GetAccesibleEnemies(direction); //aka ismeleeActionPerformed
             if (enemy != null)
@@ -154,8 +247,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                 }
                 else
                 {
-                    ActionProbabilityInfo A1237_i_ActionHitProbability = new ActionProbabilityInfo(factory.HitProbability); //G493_auc_Graphic560_ActionHitProbability[P775_i_ActionIndex];
-                    int A1236_ui_ActionDamageFactor = factory.Damage;  //G492_auc_Graphic560_ActionDamageFactor[P775_i_ActionIndex];
+                    ActionProbabilityInfo A1237_i_ActionHitProbability = new ActionProbabilityInfo(factoryBase.HitProbability); //G493_auc_Graphic560_ActionHitProbability[P775_i_ActionIndex];
+                    int A1236_ui_ActionDamageFactor = factoryBase.Damage;  //G492_auc_Graphic560_ActionDamageFactor[P775_i_ActionIndex];
                     A1237_i_ActionHitProbability.HitNonmaterial = attackProvider.GetProperty(PropertyFactory<NonMaterialProperty>.Instance).MaxValue > 0;
                     //if ((F033_aaaz_OBJECT_GetIconIndex(P774_ps_Champion->Slots[C01_SLOT_ACTION_HAND]) == C040_ICON_WEAPON_VORPAL_BLADE) || (P775_i_ActionIndex == C024_ACTION_DISRUPT))
                     //{
@@ -165,37 +258,12 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                     return true;
                 }
             }
-            T402_010:
             return false;
         }
 
-        public async void ApplyAttack(MapDirection direction)
-        {
-            var fatigue = factory.Fatigue;
-            var requiredSkill = attackProvider.GetSkill(factory.SkillIndex);
-            var requiredStamina = factory.Stamina + rand.Next(2);
 
-            if (F402_xxxx_MENUS_IsMeleeActionPerformed(direction))
-            {
-                fatigue >>= 1;
-            }
 
-            //AfterSwitch
-            if (fatigue > 0)
-            {
-                await Task.Delay(fatigue);
-            }
-            if (requiredStamina > 0)
-            {
-                attackProvider.GetProperty(PropertyFactory<StaminaProperty>.Instance).Value -= requiredStamina;
-            }
-            if (factory.ExperienceGain > 0)
-            {
-                requiredSkill.AddExperience(factory.ExperienceGain);
-            }
-        }
-
-        int F231_izzz_GROUP_GetMeleeActionDamage(ILiveEntity enemy, ActionProbabilityInfo P501_i_ActionHitProbability, int P502_ui_ActionDamageFactor)
+        protected int F231_izzz_GROUP_GetMeleeActionDamage(ILiveEntity enemy, ActionProbabilityInfo P501_i_ActionHitProbability, int P502_ui_ActionDamageFactor)
         {
             int L0565_i_Damage;
             int L0568_i_Defense = 0;
@@ -218,11 +286,14 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                 ((attackProvider.GetProperty(PropertyFactory<DextrityProperty>.Instance/*P495_ps_Champion*/).MaxValue > (rand.Next(32) + enemy.GetProperty(PropertyFactory<DextrityProperty>.Instance).MaxValue + L0567_i_DoubledMapDifficulty - 16)) ||
                  (rand.Next(4) == 0) || (F308_vzzz_CHAMPION_IsLucky(/*P495_ps_Champion,*/ 75 - P501_i_ActionHitProbability.Value))))
             {
-                if ((L0565_i_Damage = F312_xzzz_CHAMPION_GetStrength(/*P496_i_ChampionIndex, C01_SLOT_ACTION_HAND,*/ ActionHandStorageType.Instance)) > 0)
-                {
-                    //goto T231_009;
-                }
-                else//
+                //if (( //condition added onto fllowing block and to jumping locaiton t231_009
+                L0565_i_Damage = F312_xzzz_CHAMPION_GetStrength( /*P496_i_ChampionIndex, C01_SLOT_ACTION_HAND,*/ ActionHandStorageType.Instance);
+                //{
+                //goto T231_009;/
+                //}
+                //else//
+
+                if (L0565_i_Damage > 0)
                 {//
                     L0565_i_Damage += rand.Next((L0565_i_Damage >> 1) + 1);
                     L0565_i_Damage = (/*(long)*/L0565_i_Damage * /*(long)*/P502_ui_ActionDamageFactor) >> 5;
@@ -242,9 +313,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                 }//
 
                 int L0566_i_Damage;
-                if ((L0566_i_Damage = L0565_i_Damage = rand.Next(32) + L0565_i_Damage - L0568_i_Defense) <= 1)
+                if ((L0566_i_Damage = L0565_i_Damage) <= 0 || (L0566_i_Damage = L0565_i_Damage = rand.Next(32) + L0565_i_Damage - L0568_i_Defense) <= 1)
                 {
-                    T231_009:
+                    //T231_009:
                     if ((L0565_i_Damage = rand.Next(4)) > 0)
                     {
                         goto T231_015;
@@ -269,15 +340,15 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                 //{
                 //    goto T231_015;
                 //}
-                if (rand.Next(64) < attackProvider.GetSkill(factory.SkillIndex).SkillLevel)//  F303_AA09_CHAMPION_GetSkillLevel(/*P496_i_ChampionIndex,*/ P503_i_SkillIndex))
+                if (rand.Next(64) < attackProvider.GetSkill(factoryBase.SkillIndex).SkillLevel)//  F303_AA09_CHAMPION_GetSkillLevel(/*P496_i_ChampionIndex,*/ P503_i_SkillIndex))
                 {
                     L0565_i_Damage += L0565_i_Damage + 10;
                 }
                 //L0569_i_Outcome = F190_zzzz_GROUP_GetDamageCreatureOutcome(P497_ps_Group, P498_i_CreatureIndex, P499_i_MapX, P500_i_MapY, L0565_i_Damage, true);
-                enemy.GetProperty(PropertyFactory<HealthProperty>.Instance).Value -= L0566_i_Damage;
+                enemy.GetProperty(PropertyFactory<HealthProperty>.Instance).Value -= L0565_i_Damage;
                 //F304_apzz_CHAMPION_AddSkillExperience(/*P496_i_ChampionIndex,*/ P503_i_SkillIndex, (L0565_i_Damage * L0572_ps_CreatureInfo.Experience /*M58_EXPERIENCE(L0572_ps_CreatureInfo->Properties)*/ >> 4) + 3);
                 var experienceGain = enemy.GetProperty(PropertyFactory<ExperienceProperty>.Instance).Value;
-                attackProvider.GetSkill(factory.SkillIndex).AddExperience((L0565_i_Damage * experienceGain >> 4) + 3);
+                attackProvider.GetSkill(factoryBase.SkillIndex).AddExperience((L0565_i_Damage * experienceGain >> 4) + 3);
 
                 attackProvider.GetProperty(PropertyFactory<StaminaProperty>.Instance).Value -= /*P496_i_ChampionIndex, */ rand.Next(4) + 4;
                 goto T231_016;
@@ -385,5 +456,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
             }
             return P641_i_Value;
         }
+
+
     }
 }

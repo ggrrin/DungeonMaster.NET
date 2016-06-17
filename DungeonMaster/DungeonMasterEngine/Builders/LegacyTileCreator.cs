@@ -28,6 +28,7 @@ namespace DungeonMasterEngine.Builders
         private readonly Color[] miniMapData;
         private readonly Texture2D texture;
         private readonly LogicActuatorCreator logicActuatorCreator;
+        private readonly CreatureCreator creatureCreator;
         private Vector3 tilePosition;
 
         public int level => builder.CurrentLevel;
@@ -41,28 +42,29 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public IEnumerable<TileInfo<TileData>> Successors { get; private set; }
 
         public LegacyTileCreator(LegacyMapBuilder builder)
         {
             this.builder = builder;
-
             texture = new Texture2D(ResourceProvider.Instance.Device, this.builder.CurrentMap.OffsetX + this.builder.CurrentMap.Width, this.builder.CurrentMap.OffsetY + this.builder.CurrentMap.Height);
             miniMapData = new Color[texture.Width * texture.Height];
             sidesCreator = new SidesCreator(builder);
             logicActuatorCreator = new LogicActuatorCreator(builder);
+            creatureCreator = new CreatureCreator(builder);
         }
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
 
         public Tile GetTile(TileInfo<TileData> tileInfo)
         {
-            Successors = Enumerable.Empty<TileInfo<TileData>>();//reset sucessors
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             GridPosition = tileInfo.Position;
             var tile = tileInfo.Tile.GetTile(this);
+
             if (initializer != null)
             {
+                initializer.Creatures = tileInfo.Tile.Creatures.SelectMany(x => creatureCreator.AddCreature(x, tile)).ToArray();
+                builder.Creatures.AddRange(initializer.Creatures);
                 initializer.GridPosition = GridPosition;
                 builder.TileInitializers.Add(initializer);
                 initializer = null;
@@ -196,10 +198,9 @@ namespace DungeonMasterEngine.Builders
                 RandomDecoration = t.AllowRandomDecoration,
             };
 
-
             var res = new WallIlusion(trickTileInitializer);
             SetupWallIllusionSidesAsync(trickTileInitializer, t.AllowRandomDecoration, res);
-            res.Renderer = builder.GetWallIllusionTileRenderer(res, builder.WallTexture);
+            res.Renderer = builder.RendererSource.GetWallIllusionTileRenderer(res, builder.WallTexture);
 
             initializer = trickTileInitializer;
             return res;
@@ -214,7 +215,7 @@ namespace DungeonMasterEngine.Builders
                 {
                     var decoration = randomDecoration ? builder.RandomWallDecoration : null;
                     var res = new TileSide(x, decoration != null);
-                    res.Renderer = builder.GetWallIllusionTileSideRenderer(res, builder.WallTexture, decoration);
+                    res.Renderer = builder.RendererSource.GetWallIllusionTileSideRenderer(res, builder.WallTexture, decoration);
                     return res;
                 });
 
@@ -229,7 +230,7 @@ namespace DungeonMasterEngine.Builders
             StairsInitializer stairsInitializer = new StairsInitializer { Down = t.Direction == VerticalDirection.Down };
 
             var res = new Stairs(stairsInitializer);
-            res.Renderer = null;
+            res.Renderer = builder.RendererSource.GetStairsTileRenderer(res, builder.WallTexture);
             this.initializer = stairsInitializer;
             return res;
         }

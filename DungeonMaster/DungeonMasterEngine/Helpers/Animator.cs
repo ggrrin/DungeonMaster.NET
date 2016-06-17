@@ -11,6 +11,7 @@ namespace DungeonMasterEngine.Helpers
         private Stopable newLocation, oldLocation;
         private Movable movableObject;
         private TaskCompletionSource<bool> animationPromise;
+        public Task AnimatingTask => animationPromise.Task;
         private bool setLocation;
 
         public bool IsAnimating { get; private set; }

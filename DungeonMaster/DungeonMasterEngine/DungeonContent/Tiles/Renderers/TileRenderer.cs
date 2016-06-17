@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -17,13 +18,16 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            var finalTransformation = GetCurrentTransformation(ref currentTransformation); 
+            var finalTransformation = GetCurrentTransformation(ref currentTransformation);
             foreach (var side in Tile.Sides)
             {
                 var renderer = side.Renderer;
                 renderer.Highlighted = Highlighted;
                 renderer.Render(ref finalTransformation, effect, parameter);
             }
+
+            foreach (var subItem in Tile.SubItems)
+                (subItem as IRenderable)?.Renderer?.Render(ref currentTransformation, effect, parameter);
 
             return finalTransformation;
         }

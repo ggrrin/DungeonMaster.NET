@@ -30,32 +30,32 @@
         //        25 Lord Order / -
         //        26 Grey Lord
 
-        GiantScorpion_Scorpion = 0
-        , SwampSlime_SlimeDevil
+        Scorpion = 0
+        , SwampSlime
         , Giggler
-        , WizardEye_FlyingEye
-        , PainRat_Hellhound
+        , WizardEye
+        , PainRat
         , Ruster
         , Screamer
-        , Rockpile_RockPile
-        , Ghost_Rive
+        , RockPile
+        , Ghost
         , StoneGolem
         , Mummy
         , BlackFlame
         , Skeleton
         , Couatl
         , Vexirk
-        , MagentaWorm_Worm
-        , Trolin_AntMan
-        , GiantWasp_Muncher
-        , AnimatedArmour_DethKnight
-        , Materializer_Zytaz
+        , MagentaWorm
+        , Trolin
+        , GiantWasp
+        , AnimatedArmour
+        , Materializer
         , WaterElemental
         , Oitu
-        , Demon_Demon
+        , Demon
         , LordChaos
-        , RedDragon_Dragon
-        , LordOrder_
+        , Dragon
+        , LordOrder
         , GreyLord
 
     }

@@ -24,14 +24,14 @@ namespace DungeonMasterEngine.DungeonContent
             queue.Enqueue(item);
             foreach (var creature in item.Creatures)
             {
-                creature.Living = true;
+                creature.Activated = true;
             }
 
             if (Count > 3)
             {
                 foreach (var creature in queue.Dequeue().Creatures)
                 {
-                    creature.Living = false;
+                    creature.Activated = false;
                 }
             }
         }

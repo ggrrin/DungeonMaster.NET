@@ -13,6 +13,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
     {
         IRelationManager RelationManager { get; }
         IBody Body { get; }
+        bool Activated { get; set; }
 
         ISkill GetSkill(ISkillFactory skillType);
     }

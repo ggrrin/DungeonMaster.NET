@@ -1,6 +1,7 @@
 ﻿using System;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
@@ -15,9 +16,15 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public DoorTile(DoorInitializer initializer) : base(initializer) { }
     }
 
-    public class DoorTile<TMessage> : FloorTile<TMessage> where TMessage : Message
+    public interface IHasEntity
+    {
+        IEntity Entity { get; }
+    }
+
+    public class DoorTile<TMessage> : FloorTile<TMessage>, IHasEntity where TMessage : Message
     {
         public Door Door { get; private set; }
+        public IEntity Entity =>  Door.Open ? (IEntity)null : Door;
 
         public bool HasButton { get; private set; }
         public MapDirection Direction { get; private set; }
@@ -43,6 +50,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
             initializer.Initializing -= Initialize;
         }
+
     }
 
 

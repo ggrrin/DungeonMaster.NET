@@ -7,5 +7,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public MapDirection UpperLevelDirection { get; set; }
         public MapDirection LowerLevelDirection { get; set; }
         public bool Down { get; set; }
+
+        protected override void OnInitialized()
+        {
+        }
     }
 }

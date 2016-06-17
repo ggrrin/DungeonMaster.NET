@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent
 
 
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(2, new Point(11,34));
+            var l = LoadLevel(1, new Point(6,14));
             Theron = new Theron(l.StartTile);
             Theron.LocationChanged += CurrentPlayer_LocationChanged;
             EnabledChanged += Dungeon_EnabledChanged;
@@ -115,7 +115,6 @@ namespace DungeonMasterEngine.DungeonContent
         {
             Time = gameTime;
 
-            Theron.Update(gameTime);
 
             if (currentVisibleTiles == null)
                 CurrentPlayer_LocationChanged(this, new EventArgs());

@@ -30,7 +30,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
             int L0930_i_Wounds;
 
             L0929_ui_MaximumLoad = (liveEntity.GetProperty(PropertyFactory<StrengthProperty>.Instance).Value << 3) + 100;//  (P647_ps_Champion->Statistics[C1_STATISTIC_STRENGTH][C1_CURRENT] << 3) + 100;
-            L0929_ui_MaximumLoad = HumanAttack.F306_xxxx_CHAMPION_GetStaminaAdjustedValue(/*P647_ps_Champion,*/liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance), L0929_ui_MaximumLoad);
+            L0929_ui_MaximumLoad = MeleeAttack.F306_xxxx_CHAMPION_GetStaminaAdjustedValue(/*P647_ps_Champion,*/liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance), L0929_ui_MaximumLoad);
             //if (L0930_i_Wounds = P647_ps_Champion->Wounds)
             if (liveEntity.Body.BodyParts.Any(b => b.IsWound))
             {

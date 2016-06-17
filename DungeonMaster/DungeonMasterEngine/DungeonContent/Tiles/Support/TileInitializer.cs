@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
@@ -6,10 +8,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     public abstract class TileInitializer : InitializerBase
     {
         public event Initializer<TileInitializer> Initializing;
+        public event Initializer<TileInitializer> Initialized;
 
         public DungeonLevel Level { get; set; }
         public Point GridPosition { get; set; }
         public TileNeighbours Neighbours { get; set; }
+        public IEnumerable<ILiveEntity> Creatures { get; set; }
 
         public virtual void SetupNeighbours(IDictionary<Point, Tile> tilesPositions)
         {
@@ -35,9 +39,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         }
 
 
-        protected override void OnInitialize()
+        protected override void OnInitialing()
         {
             Initializing?.Invoke(this);
+        }
+
+        protected override void OnInitialized()
+        {
+            Initialized?.Invoke(this);
         }
     }
 }

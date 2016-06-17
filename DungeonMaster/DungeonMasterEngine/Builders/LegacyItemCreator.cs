@@ -74,7 +74,7 @@ namespace DungeonMasterEngine.Builders
                              throw new InvalidOperationException();
                      }
                  })
-                .Concat(new IStorageType[] { HandStorageType.Instance, BackPackStorageType.Instance })
+                .Concat(new IStorageType[] { ActionHandStorageType.Instance,HandStorageType.Instance, BackPackStorageType.Instance })
                 .ToArray();
         }
 

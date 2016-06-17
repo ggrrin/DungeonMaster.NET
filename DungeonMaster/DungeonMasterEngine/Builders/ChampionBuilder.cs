@@ -33,7 +33,7 @@ namespace DungeonMasterEngine.Builders
                 IsMale = descriptor[3] == "M",
             };
 
-            res.Renderer = new ChampionRenderer(res, ResourceProvider.Instance.DrawRenderTarget(res.Name, Color.Green, Color.White));
+            res.Renderer = new LiveEntityRenderer<Champion>(res, ResourceProvider.Instance.DrawRenderTarget(res.Name, Color.Green, Color.White));
             return res;
         }
     }

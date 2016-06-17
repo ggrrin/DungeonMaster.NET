@@ -23,6 +23,11 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             return AllSpaces.Select(x => new OnethSpaceRouteElement(x, currentTile));
         }
 
+        public ISpaceRouteElement GetSpaceElement(ISpace space, ITile tile)
+        {
+            return new OnethSpaceRouteElement(space, tile);
+        }
+
         public static FullTileLayout Instance { get; } = new FullTileLayout();
 
         private FullTileLayout()
@@ -118,6 +123,11 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             }
             else
                 return null;
+        }
+
+        public ISpaceRouteElement GetSpaceElement(ISpace space, ITile tile)
+        {
+            return  new FourthSpaceRouteElement(space, tile);
         }
 
         protected Small4GroupLayout()

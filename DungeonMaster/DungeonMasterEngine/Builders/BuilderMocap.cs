@@ -2,6 +2,7 @@
 using System.Linq;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
@@ -100,7 +101,7 @@ namespace DungeonMasterEngine.Builders
 
             SetupNeighbours(tilePositions,  null);
 
-            return new DungeonLevel(dungeon, new Creature[0], i, tilePositions, tiles.FirstOrDefault(), null);
+            return new DungeonLevel(dungeon, new List<ILiveEntity>(), i, tilePositions, tiles.FirstOrDefault(), null);
 
         }
     }

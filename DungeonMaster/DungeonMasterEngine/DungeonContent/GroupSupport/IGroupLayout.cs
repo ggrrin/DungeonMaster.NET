@@ -10,5 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
         IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, ITile currentTile, MapDirection mapDirection);
 
         IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, ITile currentTile,  ITile targetTile);
+
+        ISpaceRouteElement GetSpaceElement(ISpace space, ITile tile);
     }
 }

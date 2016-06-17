@@ -26,9 +26,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             Neighbours = new PitTileNeighbours(north, south, east, west);
         }
 
-        protected override void OnInitialize()
+        protected override void OnInitialing()
         {
-            base.OnInitialize();
+            base.OnInitialing();
             Initializing?.Invoke(this);
         }
     }

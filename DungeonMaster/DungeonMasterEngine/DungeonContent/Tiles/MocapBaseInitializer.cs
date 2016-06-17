@@ -6,9 +6,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public float baseVAlue { get; set; }
 
-        protected override void OnInitialize()
+        protected override void OnInitialing()
         {
             Initializing?.Invoke(this);
+        }
+
+        protected override void OnInitialized()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

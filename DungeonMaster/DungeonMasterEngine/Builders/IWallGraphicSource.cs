@@ -44,5 +44,13 @@ namespace DungeonMasterEngine.Builders
         Renderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture);
 
         Renderer GetPitTileRenderer(Pit pit1);
+
+        Renderer GetStairsTileRenderer(Stairs stairs, Texture2D wallTexture);
+
+        Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D);
+
+        Renderer GetWallIllusionTileRenderer(WallIlusion wallIlusion, Texture2D wallTexture);
+
+        Renderer GetWallIllusionTileSideRenderer(TileSide tileSide, Texture2D wallTexture, Texture2D decoration);
     }
 }

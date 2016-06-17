@@ -8,9 +8,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public bool Open { get; set; }
         public bool RandomDecoration { get; set; }
 
-        protected override void OnInitialize()
+        protected override void OnInitialing()
         {
-            base.OnInitialize();
+            base.OnInitialing();
             Initializing?.Invoke(this);
 
         }

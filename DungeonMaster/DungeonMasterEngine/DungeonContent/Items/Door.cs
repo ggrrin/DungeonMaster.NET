@@ -23,7 +23,7 @@ namespace DungeonMasterEngine.DungeonContent.Items
 
         public bool Open
         {
-            get { return open; }
+            get { return Destroyed || open; }
             set
             {
                 if (open != value)

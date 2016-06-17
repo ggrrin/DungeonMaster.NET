@@ -77,7 +77,7 @@ namespace DungeonMasterEngine.Player
         protected override void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
         {
             base.OnMapDirectionChanged(oldDirection, newDirection);
-            $"Direction changed: {oldDirection} -> {newDirection}".Dump();
+            //TODO $"Direction changed: {oldDirection} -> {newDirection}".Dump();
 
             if (oldDirection != newDirection.Opposite)
                 RotateParty(oldDirection, newDirection);
@@ -260,7 +260,7 @@ namespace DungeonMasterEngine.Player
                 var hitLocation = sortedEnemyLocation.FirstOrDefault();
 
                 var enemy = enemyTile.LayoutManager.GetEntities(hitLocation).FirstOrDefault();
-                ((Creature)enemy)?.Kill();
+                //((Creature)enemy)?.Kill();
             }
         }
 

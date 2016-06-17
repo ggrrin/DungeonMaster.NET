@@ -85,7 +85,7 @@ namespace DungeonMasterEngine.Builders
 
         public Renderer GetChampionRenderer(Champion res, Texture2D face)
         {
-            return new ChampionRenderer(res, face);
+            return new LiveEntityRenderer<Champion>(res, face);
         }
 
         public Renderer GetTeleportFloorSideRenderer(FloorTileSide floorTileSide, Texture2D wallTexture, Texture2D teleportTexture)
@@ -101,13 +101,31 @@ namespace DungeonMasterEngine.Builders
         public Renderer GetPitTileRenderer(Pit pit)
         {
             return new PitTileRenderer(pit);
+        }
 
+        public Renderer GetStairsTileRenderer(Stairs stairs, Texture2D wallTexture)
+        {
+            return new StairsRenderer(stairs, wallTexture);
+        }
 
+        public Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D)
+        {
+            return new CreatureRenderer(creature, texture2D);
         }
 
         public Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new FloorTileSideRenderer<FloorTileSide>(floorTile, wallTexture, decorationTexture);
+        }
+
+        public Renderer GetWallIllusionTileRenderer(WallIlusion wallIlusion, Texture2D wallTexture)
+        {
+            return new WallIllusionRenderer(wallIlusion);
+        }
+
+        public Renderer GetWallIllusionTileSideRenderer(TileSide tileSide, Texture2D wallTexture, Texture2D decoration)
+        {
+            return new WallIllusionTileSideRenderer(tileSide, wallTexture, decoration);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
     {
         public bool UseCharges { get; }
         public int MinimumSkillLevel { get; }
-        public HumanAttackFactory FightAction { get; }
+        public HumanAttackFactoryBase FightAction { get; }
 
-        public ComboAttackFactory(bool useCharges, int minimumSkillLevel, HumanAttackFactory fightAction)
+        public ComboAttackFactory(bool useCharges, int minimumSkillLevel, HumanAttackFactoryBase fightAction)
         {
             UseCharges = useCharges;
             MinimumSkillLevel = minimumSkillLevel;
@@ -25,6 +25,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Attacks
                 return FightAction.CreateAttackAction(attackProvider);
             else
                 return null;
+        }
+
+        public override string ToString()
+        {
+            return FightAction?.Name ?? "[null]";
         }
     }
 }

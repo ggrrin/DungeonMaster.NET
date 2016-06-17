@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
@@ -19,11 +20,11 @@ namespace DungeonMasterEngine.DungeonContent
 
         public IEnumerable<Tile> Tiles { get; }
 
-        public IEnumerable<Creature> Creatures { get; }
+        public List<ILiveEntity> Creatures { get; }
 
         public IReadOnlyDictionary<Point, Tile> TilesPositions { get; }
 
-        public DungeonLevel(Dungeon d, IEnumerable<Creature> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
+        public DungeonLevel(Dungeon d, List<ILiveEntity> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
         {
             TilesPositions = positions;
 

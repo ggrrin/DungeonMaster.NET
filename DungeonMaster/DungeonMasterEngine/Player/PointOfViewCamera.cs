@@ -75,12 +75,12 @@ namespace DungeonMasterEngine.Player
 
         public PointOfViewCamera() 
         {
-            LocationChanged += (d, s) => $"{Location.Position} {Location.Neighbours}".Dump();
         }
 
         protected virtual void OnLocationChanged(ITile oldLocation, ITile newLocation)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
+            $"{Location.Position}".Dump();
         }
 
         protected virtual void OnLocationChanging(ITile oldLocation, ITile newLocation)

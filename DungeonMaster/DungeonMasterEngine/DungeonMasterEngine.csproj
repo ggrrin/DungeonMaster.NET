@@ -166,8 +166,8 @@
     <Compile Include="DungeonContent\GroupSupport\N4.cs" />
     <Compile Include="DungeonContent\Entity\ActionProbabilityInfo.cs" />
     <Compile Include="DungeonContent\Entity\DefaultRelationManager.cs" />
-    <Compile Include="DungeonContent\Entity\Attacks\HumanAttack.cs" />
-    <Compile Include="DungeonContent\Entity\Attacks\HumanAttackFactory.cs" />
+    <Compile Include="DungeonContent\Entity\Attacks\MeleeAttack.cs" />
+    <Compile Include="DungeonContent\Entity\Attacks\HumanAttackFactoryBase.cs" />
     <Compile Include="DungeonContent\Entity\Attacks\IAttack.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\IBody.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\IBodyPart.cs" />
@@ -185,7 +185,6 @@
     <Compile Include="DungeonContent\Entity\IRelationManager.cs" />
     <Compile Include="DungeonContent\Entity\Skills\base\ISkillFactory.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\base\IStorageType.cs" />
-    <Compile Include="DungeonContent\GroupSupport\Large1GroupLayout.cs" />
     <Compile Include="DungeonContent\Entity\Entity.cs" />
     <Compile Include="DungeonContent\GroupSupport\Medium2GroupLayout.cs" />
     <Compile Include="DungeonContent\GroupSupport\Small4GroupLayout.cs" />

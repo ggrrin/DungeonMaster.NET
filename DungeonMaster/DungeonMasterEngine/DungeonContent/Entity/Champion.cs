@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
@@ -93,6 +95,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 return new EmptySkill();
         }
 
+        public IEnumerable<IAttackFactory> CurrentCombos
+        {
+            get { return Body.BodyParts.First(x => x.Type == ActionHandStorageType.Instance).Storage[0]?.Factory.AttackCombo ?? Enumerable.Empty<IAttackFactory>(); }
+        }
+
         public override void MoveTo(ITile newLocation, bool setNewLocation)
         {
             throw new NotImplementedException();
@@ -108,19 +115,28 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
     }
 
-    class ChampionRenderer : Renderer
+    class CreatureRenderer : LiveEntityRenderer<Creature>
     {
-        private readonly CubeGraphic cube;
-        public Champion Chamption { get; }
-
-        public ChampionRenderer(Champion chamption, Texture2D face)
+        public CreatureRenderer(Creature entity, Texture2D face) : base(entity, face)
         {
-            Chamption = chamption;
+            cube.Scale = new Vector3(0.3f, 0.7f, 0.3f);
+            
+        }
+    }
+
+    class LiveEntityRenderer<TEntity> : Renderer where TEntity : ILiveEntity
+    {
+        protected readonly CubeGraphic cube;
+        public TEntity Entity { get; }
+
+        public LiveEntityRenderer(TEntity entity, Texture2D face)
+        {
+            Entity = entity;
 
             cube = new CubeGraphic
             {
                 Texture = face,
-                Position = Chamption.Position,
+                Position = Entity.Position,
                 DrawFaces = CubeFaces.All,
                 Outter = true,
                 Scale = new Vector3(0.1f,0.3f, 0.1f),
@@ -129,7 +145,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            cube.Position = Chamption.Position;
+            cube.Position = Entity.Position;
             cube.Draw(effect);
             return currentTransformation;
         }

@@ -5,9 +5,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public string AValue { get; set; }
         public new event Initializer<MocapDefensiveInitializer> Initializing;
 
-        protected override void OnInitialize()
+        protected override void OnInitialing()
         {
-            base.OnInitialize();
+            base.OnInitialing();
             Initializing?.Invoke(this);
         }
     }

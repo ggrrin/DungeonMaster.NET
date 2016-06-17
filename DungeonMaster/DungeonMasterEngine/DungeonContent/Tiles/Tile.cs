@@ -45,9 +45,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             initializer.Initialized += AfterInitialized;
         }
 
-        private void AfterInitialized(InitializerBase initializer)
+        private void AfterInitialized(TileInitializer initializer)
         {
             Renderer?.Initialize();
+            foreach (var liveEntity in initializer.Creatures)
+            {
+                OnObjectEntered(liveEntity);
+                liveEntity.Position = liveEntity.Location.StayPoint;
+            }
 
             initializer.Initialized -= AfterInitialized;
         }
@@ -57,6 +62,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             GridPosition = initializer.GridPosition;
             Level = initializer.Level;
             Neighbours = initializer.Neighbours;
+
 
             initializer.Initializing -= Initialize;
         }
@@ -114,10 +120,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public void Update(GameTime gameTime)
         {
-            //foreach (var item in SubItems.ToArray()) //Enable modifing collection
-            //{
-            //    item.Update(gameTime);
-            //}
+            foreach (var item in SubItems.OfType<IUpdate>().ToArray()) //Enable modifing collection
+            {
+                item.Update(gameTime);
+            }
         }
 
         public virtual void AcceptMessageBase(Message message)

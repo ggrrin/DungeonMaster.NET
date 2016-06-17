@@ -2,17 +2,18 @@ using System;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
 {
-    public abstract class SkillBase : ISkill 
+    public abstract class SkillBase : ISkill
     {
         protected static readonly Random rand = new Random();
 
         protected readonly ILiveEntity liveEntity;
 
-        public abstract ISkillFactory Factory { get; }  
+        public abstract ISkillFactory Factory { get; }
 
         public long Experience { get; protected set; }
         public long TemporaryExperience { get; protected set; }
@@ -27,11 +28,15 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
             this.liveEntity = liveEntity;
         }
 
-        protected abstract void ApplySkills( int majorIncrease, int minorIncrease);
+        protected abstract void ApplySkills(int majorIncrease, int minorIncrease);
 
         public void AddExperience(int experience)
         {
-            F304_apzz_CHAMPION_AddSkillExperience( experience);
+            var prevLevel = SkillLevel;
+            var prevExp = Experience;
+            var prevtempExp = TemporaryExperience;
+            F304_apzz_CHAMPION_AddSkillExperience(experience);
+            $"{GetType().Name}: exp: {Experience}/{TemporaryExperience}; {Experience - prevExp}/{ TemporaryExperience - prevtempExp} level:{SkillLevel}; {SkillLevel - prevLevel}".Dump();
         }
 
         public void AddInitExperience(long experience)
@@ -53,25 +58,26 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
                 if (mapDifficulty > 0)
                     exp *= mapDifficulty;
 
+                //if has base skill split experience between all skills
                 var skill = BaseSkill ?? this;
 
                 int levelBefore = skill.BaseSkillLevel;
 
-                //TODO finish
-                //if (BaseSkill != null &&  (G361_l_LastCreatureAttackTime > (G313_ul_GameTime - 25)) )
-                //    exp <<= 1;
+                
+                if (BaseSkill != null) //TODO finish// &&  (G361_l_LastCreatureAttackTime > (G313_ul_GameTime - 25)) )
+                    exp <<= 1;
 
                 Experience += exp;
                 if (TemporaryExperience < 32000)
                     TemporaryExperience += MathHelper.Clamp(exp >> 3, 1, 100);
 
-                if (skill.BaseSkill != null)
-                    skill.BaseSkill.Experience += exp;
+                if (skill != null)
+                    skill.Experience += exp;
 
                 int levelAfter = skill.BaseSkillLevel;
 
                 if (levelAfter > levelBefore)
-                    skill.LevelUp();//always level up only base skills
+                    skill.LevelUp();
             }
         }
 

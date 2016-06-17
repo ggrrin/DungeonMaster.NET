@@ -4,14 +4,61 @@ using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders
 {
+    public class CreatureFactory
+    {
+        public Texture2D Texture { get; }
+        public string Name { get; }
+        public IGroupLayout Layout { get; }
+        public int MoveDuration { get; }
+        public int DetectRange { get; }
+        public int SightRange { get; }
+        public int Experience { get; }
+
+        public CreatureFactory(IGroupLayout layout, string name, int moveDuration, int detectRange, int sightRange, int experience, Texture2D texture)
+        {
+            Layout = layout;
+            MoveDuration = moveDuration;
+            Texture = texture;
+            DetectRange = detectRange;
+            SightRange = sightRange;
+            Name = name;
+            Experience = experience;
+        }
+
+
+        public Creature Create<TCreatureInitializer>(TCreatureInitializer initiator) where TCreatureInitializer : ICreatureInitializer
+        {
+            return new Creature(initiator, this);
+        }
+    }
+
+    public interface ICreatureInitializer
+    {
+        int HitPoints { get; set;  }
+        ISpaceRouteElement Location { get; }
+        RelationToken RelationToken { get; }
+        IEnumerable<RelationToken> EnemiesTokens { get; }
+    }
+
+    class CreatureInitializer : ICreatureInitializer {
+        public int HitPoints { get; set; }
+        public ISpaceRouteElement Location { get; set; }
+        public RelationToken RelationToken { get; set; }
+        public IEnumerable<RelationToken> EnemiesTokens { get; set; }
+    }
+
     internal class CreatureCreator
     {
         private readonly LegacyMapBuilder builder;
@@ -21,68 +68,31 @@ namespace DungeonMasterEngine.Builders
             this.builder = builder;
         }
 
-        public IEnumerable<Creature> AddCreature(CreatureItem creature, Tile tile)
+        public IEnumerable<Creature> AddCreature(CreatureItem creatureData, Tile tile)
         {
-            var creatureDescriptor = builder.Data.CreatureDescriptors[(int)creature.Type];
-            var duration = creatureDescriptor.MovementDuration * 1000 / 6;
-            duration = MathHelper.Clamp(duration, 500, 1200);
-            var layout = GetGroupLayout(creature);
+            var factory = builder.CreatureFactories[(int)creatureData.Type];
+
             var res = new List<Creature>();
 
-            foreach (var tuple in creature.GetCreaturesInfo().Take(creature.CreaturesCount + 1))
+            foreach (var tuple in creatureData.GetCreaturesInfo().Take(creatureData.CreaturesCount + 1))
             {
-                var space = layout.AllSpaces.First(s => tuple.Item1.ToDirections().All(s.Sides.Contains));
-                res.Add(new Creature(layout, new FourthSpaceRouteElement(space, tile), builder.CreatureToken,
-                    builder.ChampionToken.ToEnumerable(), duration, creatureDescriptor.DetectionRange, creatureDescriptor.SightRange));
+                var space = factory.Layout.AllSpaces.First(s => tuple.Item1.ToDirections().All(s.Sides.Contains));
+
+                var creature = factory.Create(new CreatureInitializer
+                {
+                    HitPoints = tuple.Item2,
+                    Location = factory.Layout.GetSpaceElement(space, tile),
+                    RelationToken = builder.CreatureToken,
+                    EnemiesTokens = builder.ChampionToken.ToEnumerable(),
+                });
+                creature.Renderer = builder.RendererSource.GetCreatureRenderer(creature, factory.Texture);
+
+                res.Add(creature);
             }
 
             return res;
         }
 
-        public IGroupLayout GetGroupLayout(CreatureItem creature)
-        {
-            return Small4GroupLayout.Instance;
-            switch (creature.Type)
-            {
-                //1
-                case CreatureType.GiantScorpion_Scorpion:
-                case CreatureType.StoneGolem:
-                case CreatureType.BlackFlame:
-                case CreatureType.Couatl:
-                case CreatureType.WaterElemental:
-                case CreatureType.Oitu:
-                case CreatureType.LordChaos:
-                case CreatureType.RedDragon_Dragon:
-                case CreatureType.LordOrder_:
-                case CreatureType.GreyLord:
-                    return new Large1GroupLayout();
 
-                //4
-                case CreatureType.SwampSlime_SlimeDevil:
-                case CreatureType.Giggler:
-                case CreatureType.WizardEye_FlyingEye:
-                case CreatureType.Screamer:
-                case CreatureType.Rockpile_RockPile:
-                case CreatureType.Ghost_Rive:
-                case CreatureType.Mummy:
-                case CreatureType.Skeleton:
-                case CreatureType.Vexirk:
-                case CreatureType.Trolin_AntMan:
-                case CreatureType.GiantWasp_Muncher:
-                case CreatureType.AnimatedArmour_DethKnight:
-                case CreatureType.Materializer_Zytaz:
-                case CreatureType.Demon_Demon:
-                    return Small4GroupLayout.Instance;
-
-                //2
-                case CreatureType.MagentaWorm_Worm:
-                case CreatureType.PainRat_Hellhound:
-                case CreatureType.Ruster:
-                    return new Medium2GroupLayout();
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
     }
 }

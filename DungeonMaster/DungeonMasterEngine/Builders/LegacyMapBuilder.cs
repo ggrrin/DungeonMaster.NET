@@ -12,12 +12,14 @@ using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Attacks;
 using DungeonMasterEngine.DungeonContent.Entity.Skills;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
+using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
+using DungeonMasterParser.Descriptors;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
@@ -37,7 +39,8 @@ namespace DungeonMasterEngine.Builders
         private Texture2D[] wallTextures;
         private Texture2D[] floorTextures;
         private Texture2D[] championTextures;
-        private List<Creature> creatures = new List<Creature>();
+
+        public List<ILiveEntity> Creatures { get; private set; } = new List<ILiveEntity>();
 
         public DungeonData Data { get; }
         public DungeonMap CurrentMap { get; private set; }
@@ -84,14 +87,18 @@ namespace DungeonMasterEngine.Builders
             SkillFactory<WaterSkill>.Instance,
         };
 
+        public IReadOnlyList<HumanAttackFactoryBase> FightActions { get; }
+        public IReadOnlyList<IReadOnlyList<IAttackFactory>> ActionCombos { get; }
+
         //item factories
         public IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
         public IReadOnlyList<ClothItemFactory> ClothFactories { get; }
         public IReadOnlyList<ContainerItemFactory> ContainerFactories { get; }
         public IReadOnlyList<ScrollItemFactory> ScrollFactories { get; }
         public IReadOnlyList<PotionItemFactory> PotionFactories { get; }
-
         public IReadOnlyList<MiscItemFactory> MiscFactories { get; }
+        public IReadOnlyList<CreatureFactory> CreatureFactories { get; }
+
         public Texture2D RandomWallDecoration
         {
             get
@@ -121,11 +128,14 @@ namespace DungeonMasterEngine.Builders
 
             ItemCreator = new LegacyItemCreator(this);
 
+            FightActions = GetFightActionsFactories();
+            ActionCombos = GetComboActions();
+
             WeaponFactories = Data.WeaponDescriptors
                 .Select(wd =>
                 {
                     var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Weapon, wd.Identifer);
-                    return new WeaponItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor),
+                    return new WeaponItemFactory(wd.Name, wd.Weight, ActionCombos[itemDescriptor.AttackCombo],
                         ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation),
                         wd.DeltaEnergy, (WeaponClass)wd.Class, wd.KineticEnergy, wd.ShootDamage, wd.Strength, ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath));
                 })
@@ -135,7 +145,7 @@ namespace DungeonMasterEngine.Builders
                .Select(wd =>
                {
                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Clothe, wd.Identifer);
-                   return new ClothItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                   return new ClothItemFactory(wd.Name, wd.Weight, ActionCombos[itemDescriptor.AttackCombo]
                        , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation), ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath));
                })
                .ToArray(); ;
@@ -144,7 +154,7 @@ namespace DungeonMasterEngine.Builders
                .Select(wd =>
                {
                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Container, wd.Identifer);
-                   return new ContainerItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                   return new ContainerItemFactory(wd.Name, wd.Weight, ActionCombos[itemDescriptor.AttackCombo]
                        , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation), ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath));
                })
                .ToArray();
@@ -153,7 +163,7 @@ namespace DungeonMasterEngine.Builders
                .Select(wd =>
                {
                    var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Scroll, wd.Identifer);
-                   return new ScrollItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                   return new ScrollItemFactory(wd.Name, wd.Weight, ActionCombos[itemDescriptor.AttackCombo]
                        , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation), ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath));
                })
                .ToArray();
@@ -163,7 +173,7 @@ namespace DungeonMasterEngine.Builders
                 .Select(wd =>
                 {
                     var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Miscellenaous, wd.Identifer);
-                    return new MiscItemFactory(wd.Name, wd.Weight, GetAttackFactories(itemDescriptor)
+                    return new MiscItemFactory(wd.Name, wd.Weight, ActionCombos[itemDescriptor.AttackCombo]
                         , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation), ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath));
                 })
                 .ToArray();
@@ -172,34 +182,105 @@ namespace DungeonMasterEngine.Builders
                 .Select(p =>
                 {
                     var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Potion, p.Identifer);
-                    return new PotionItemFactory(p.Name, p.Weight, GetAttackFactories(itemDescriptor)
+                    return new PotionItemFactory(p.Name, p.Weight, ActionCombos[itemDescriptor.AttackCombo]
                         , ItemCreator.GetStorageTypes(itemDescriptor.CarryLocation), ResourceProvider.Instance.Content.Load<Texture2D>(p.TexturePath));
                 })
                 .ToArray();
+
+            CreatureFactories = Data.CreatureDescriptors
+                .Select(wd => new CreatureFactory(GetGroupLayout(wd.Size), wd.Name, MathHelper.Clamp(wd.MovementDuration * 1000 / 6, 500, 1200),
+                wd.DetectionRange, wd.SightRange, wd.ExperienceClass,
+                ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/Creatures/DM-Creature-SuperNES-{wd.Name}")))
+                .ToArray();
+
 
 
 
             RendererSource = new DefaultWallGrahicsSource();
         }
 
-        private IList<IAttackFactory> GetAttackFactories(ItemDescriptor itemsDescriptor)
+        private IGroupLayout GetGroupLayout(int size)
         {
-            // ReSharper disable once CoVariantArrayConversion
-            return Data.FightCombos[itemsDescriptor.AttackCombo].Actions
-               .Select(a =>
-                    new ComboAttackFactory(a.UseCharges == 1, a.MinimumSkillLevel,
-                       new HumanAttackFactory(a.ActionDescriptor.Name,
-                           a.ActionDescriptor.ExperienceGain,
-                           a.ActionDescriptor.DefenseModifier,
-                           a.ActionDescriptor.HitProbability,
-                           a.ActionDescriptor.Damage,
-                           a.ActionDescriptor.Fatigue,
-                           Skills[a.ActionDescriptor.ImprovedSkill],
-                           a.ActionDescriptor.Stamina,
-                           -1)))
-               .ToArray();
+            switch (size)
+            {
+                case 0:
+                    return Small4GroupLayout.Instance;
+                case 1:
+                    return Medium2GroupLayout.Instance;
+                case 2:
+                    return FullTileLayout.Instance;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
+
+
+
+
+
+        private IReadOnlyList<HumanAttackFactoryBase> GetFightActionsFactories()
+        {
+            return Data.FightActions.Select<FightActionDescriptor, HumanAttackFactoryBase>(action =>
+             {
+                 switch (action.Number)
+                 {
+                     case FightActionEnum.C030_ACTION_BASH:
+                     case FightActionEnum.C018_ACTION_HACK:
+                     case FightActionEnum.C019_ACTION_BERZERK:
+                     case FightActionEnum.C007_ACTION_KICK:
+                     case FightActionEnum.C013_ACTION_SWING:
+                     case FightActionEnum.C002_ACTION_CHOP:
+                         return new SwingAttackFactory(
+                             action.Name,
+                             action.ExperienceGain,
+                             action.DefenseModifier,
+                             action.HitProbability,
+                             action.Damage,
+                             action.Fatigue * 1000 / 6,
+                             Skills[action.ImprovedSkill],
+                             action.Stamina,
+                             -1);
+
+                     case FightActionEnum.C024_ACTION_DISRUPT:
+                     case FightActionEnum.C016_ACTION_JAB:
+                     case FightActionEnum.C017_ACTION_PARRY:
+                     case FightActionEnum.C014_ACTION_STAB:
+                     case FightActionEnum.C009_ACTION_STAB:
+                     case FightActionEnum.C031_ACTION_STUN:
+                     case FightActionEnum.C015_ACTION_THRUST:
+                     case FightActionEnum.C025_ACTION_MELEE:
+                     case FightActionEnum.C028_ACTION_SLASH:
+                     case FightActionEnum.C029_ACTION_CLEAVE:
+                     case FightActionEnum.C006_ACTION_PUNCH:
+                         return new MeleeAttackFactory(
+                             action.Name,
+                             action.ExperienceGain,
+                             action.DefenseModifier,
+                             action.HitProbability,
+                             action.Damage,
+                             action.Fatigue * 1000 / 6,
+                             Skills[action.ImprovedSkill],
+                             action.Stamina,
+                             -1);
+
+                     default:
+                         return null;//TODO
+                 }
+             })
+            .ToArray();
+
+        }
+
+        private IReadOnlyList<IReadOnlyList<IAttackFactory>> GetComboActions()
+        {
+            // ReSharper disable once CoVariantArrayConversion
+            return Data.FightCombos.Select(c => c.Actions
+                    .Select(x => new ComboAttackFactory(x.UseCharges == 1, x.MinimumSkillLevel,
+                        FightActions[(int)x.ActionDescriptor.Number]))
+                    .ToArray())
+                .ToArray();
+        }
 
         private void Initialize(int level, Point? startTile)
         {
@@ -208,7 +289,7 @@ namespace DungeonMasterEngine.Builders
             legacyTileCreator = new LegacyTileCreator(this);
             FloorActuatorCreator = new FloorActuatorCreator(this);
             ItemCreator = new LegacyItemCreator(this);
-            creatures = new List<Creature>();
+            Creatures = new List<ILiveEntity>();
             InitializeMapTextures();
             TileInitializers = new List<TileInitializer>();
             tiles = new List<Tile>();
@@ -221,9 +302,6 @@ namespace DungeonMasterEngine.Builders
 
         public override DungeonLevel GetLevel(int level, Dungeon dungeon, Point? startTile)
         {
-
-
-
             DungeonLevel dungeonLevel = null;
             if (Data.Maps.Count <= level)
                 throw new ArgumentException("Level does not exist.");
@@ -232,20 +310,18 @@ namespace DungeonMasterEngine.Builders
 
             Initialize(level, startTile);
 
-
             tileInitialized = new TaskCompletionSource<bool>();
             ProcessMapData();
             tileInitialized.SetResult(true);
 
             SetupNeighbours(TilesPositions, TileInitializers);
 
-            dungeonLevel = new DungeonLevel(dungeon, creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
+            dungeonLevel = new DungeonLevel(dungeon, Creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
 
             foreach (var tileInitializer in TileInitializers)
             {
                 tileInitializer.Level = dungeonLevel;
                 tileInitializer.Initialize();
-
             }
 
             loadedLevels.Add(level, dungeonLevel);
@@ -275,8 +351,6 @@ namespace DungeonMasterEngine.Builders
                 }
             }
         }
-
-
 
         public IEnumerable<TileInfo<TileData>> GetNeigbourTiles(Point position, DungeonMap map)
         {
@@ -392,14 +466,6 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Renderer GetWallIllusionTileRenderer(WallIlusion wallIlusion, Texture2D wallTexture)
-        {
-            return new WallIllusionRenderer(wallIlusion);
-        }
 
-        public Renderer GetWallIllusionTileSideRenderer(TileSide tileSide, Texture2D wallTexture, Texture2D decoration)
-        {
-            return new WallIllusionTileSideRenderer(tileSide, wallTexture, decoration);  
-        }
     }
 }

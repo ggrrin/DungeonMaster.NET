@@ -355,6 +355,12 @@ namespace DungeonMasterParser
                             continue;
                         }
 
+                        if (tuple.Item2 == nameof(res.Number))
+                        {
+                            res.Number = (FightActionEnum) int.Parse(tuple.Item1);
+                            continue;
+                        }
+
                         if (int.TryParse(tuple.Item1, out val))
                             res.GetType().GetProperty(tuple.Item2).SetValue(res, val);
                         else
@@ -386,7 +392,7 @@ namespace DungeonMasterParser
 
             return names.Select((x, i) =>
             {
-                var res = new CreatureDescriptor(x);
+                var res = new CreatureDescriptor(x.Trim());
 
                 foreach (var row in data)
                 {

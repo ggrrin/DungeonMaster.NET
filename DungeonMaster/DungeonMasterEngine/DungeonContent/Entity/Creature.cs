@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Builders;
+using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
@@ -18,8 +20,9 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    public class Creature : LiveEntity
+    public class Creature : LiveEntity, IRenderable
     {
+        public CreatureFactory Factory { get; }
         private static readonly Random random = new Random();
         private static readonly BreadthFirstSearch<ITile, object> globalSearcher = new BreadthFirstSearch<ITile, object>();
         private readonly Animator<Creature, ISpaceRouteElement> animator = new Animator<Creature, ISpaceRouteElement>();
@@ -29,32 +32,31 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         public override IRelationManager RelationManager { get; }
         public override IBody Body { get; }
 
-        private IProperty[] properties = new IProperty[]
+        private readonly Dictionary<IPropertyFactory, IProperty> properties;
+
+        public Renderer Renderer { get; set; }
+
+        public override IProperty GetProperty(IPropertyFactory propertyType)
         {
-
-        };
-
-        public override IProperty GetProperty(IPropertyFactory propertyType) => properties.FirstOrDefault(p => p.Type == propertyType) ?? new EmptyProperty();
+            IProperty res;
+            properties.TryGetValue(propertyType, out res);
+            return res ?? new EmptyProperty();
+        }
 
         public override ISkill GetSkill(ISkillFactory skillType)
         {
             throw new NotImplementedException();
         }
 
-        public int DetectRange { get; }
-        public int SightRange { get; }
+        public int DetectRange => Factory.DetectRange;
+        public int SightRange => Factory.SightRange;
         public bool hounting => hountingPath != null;
 
-        public int MoveDuration
-        {
-            get { return (int)(moveDuration * random.Next(9, 11) / 10f); }
-            protected set { moveDuration = value; }
-        }
+        public int MoveDuration => (int)(Factory.MoveDuration * random.Next(9, 11) / 10f);
 
         public override float TranslationVelocity => 4;
         public int watchAroundRadius { get; protected set; } = 3;
-        public override IGroupLayout GroupLayout { get; }
-
+        public override IGroupLayout GroupLayout => Factory.Layout;
         private ISpaceRouteElement location = null;
         public override ISpaceRouteElement Location
         {
@@ -64,54 +66,69 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if (location == value)
                     throw new InvalidOperationException("Cannot move from space to itself.");
 
-                bool alreadyOnTile = location.Tile == value.Tile;
+                bool alreadyOnTile = location?.Tile == value.Tile;
 
-                if(!alreadyOnTile)
+                if (!alreadyOnTile)
                     location?.Tile?.OnObjectLeft(this);
 
                 location = value;
+                Position = location.StayPoint;
 
-                if(!alreadyOnTile)
+                if (!alreadyOnTile)
                     location?.Tile?.OnObjectEntered(this);
             }
         }
 
-        private bool living = false;
-        private int moveDuration = 2000;
         private int attackDuration = 1000;
         private IReadOnlyList<ITile> hountingPath = null;
         private bool gettingHome => homeRoute != null;
         private IReadOnlyList<ITile> homeRoute = null;
+        public bool Alive { get; private set; } = true;
 
-        public bool Living
+        public override bool Activated
         {
-            get { return living; }
+            get { return base.Activated; }
             set
             {
-                living = value;
-                if (living = value)
+                base.Activated = value;
+                if (Activated == value)
                     Live();
             }
         }
 
-        public Creature(IGroupLayout layout, ISpaceRouteElement location, RelationToken relationToken, IEnumerable<RelationToken> enemiesTokens, int moveDuration, int detectRange, int sightRange) 
+        public Creature(ICreatureInitializer initializer, CreatureFactory factory)
         {
-            GroupLayout = layout;
-            MoveDuration = moveDuration;
-            DetectRange = detectRange;
-            SightRange = sightRange;
-            watchAroungOrigin = location.Tile;
-
+            Factory = factory;
+            location = initializer.Location;
             if (!location.Tile.LayoutManager.TryGetSpace(this, location.Space))
                 throw new ArgumentException("Location is not accessable!");
 
-            ((ILocalizable<ISpaceRouteElement>)this).Location = location;
-            RelationManager = new DefaultRelationManager(relationToken, enemiesTokens);
+            watchAroungOrigin = location.Tile;
+            RelationManager = new DefaultRelationManager(initializer.RelationToken, initializer.EnemiesTokens);
+
+            HealthProperty health;
+            properties = new Dictionary<IPropertyFactory, IProperty>
+            {
+                {PropertyFactory<HealthProperty>.Instance, health = new HealthProperty(initializer.HitPoints) },
+                {PropertyFactory<ExperienceProperty>.Instance, new ExperienceProperty(Factory.Experience)},
+            };
+
+            health.ValueChanged += async (sender, value) =>
+            {
+                if (Alive && value <= 0)
+                {
+                    Alive = false;
+
+                    await animator.AnimatingTask;
+                    location.Tile.LayoutManager.FreeSpace(this, location.Space);
+                    location.Tile.OnObjectLeft(this);
+                }
+            };
         }
 
         private async void Live()
         {
-            while (living)
+            while (Activated && Alive)
             {
                 if (hounting)
                     await Hount();
@@ -122,10 +139,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
                 await Task.Delay(100);
             }
-
-            Location.Tile.LayoutManager.FreeSpace(this, location.Space);
-            //TODO
-            //((CubeGraphic) GraphicsProvider).Texture = ResourceProvider.Instance.DrawRenderTarget("DEAD", Color.Black, Color.Red);
         }
 
         private async Task GoHome()
@@ -345,7 +358,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             var locEnum = sortedEnemyLocation.GetEnumerator();
 
 
-            while (locEnum.MoveNext() && living)
+            while (locEnum.MoveNext() && (Activated && Alive))
             {
                 await Task.Delay(100);
 
@@ -358,7 +371,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                     enemy = enemyTile.LayoutManager.GetEntities(locEnum.Current).FirstOrDefault();
                     if (enemy != null)
                     {
-                        $"{enemy} hitted.".Dump();
+                        //TODO $"{enemy} hitted.".Dump();
                         await Task.Delay(attackDuration);
                         //TODO if killed reset enumerator
                         if (false)
@@ -368,7 +381,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                         }
                     }
                 }
-                while (living && enemy != null);
+                while (Activated && Alive && enemy != null);
             }
         }
 
@@ -387,9 +400,5 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             return "creature";
         }
 
-        public void Kill()
-        {
-            living = false;
-        }
     }
 }

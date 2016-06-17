@@ -1,6 +1,6 @@
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
-    internal struct ActionProbabilityInfo
+    public struct ActionProbabilityInfo
     {
         public int Value;
         public bool HitNonmaterial;
