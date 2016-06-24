@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Enums;
@@ -39,7 +41,7 @@ namespace DungeonMasterEngine.Builders
             await SetupSidesAwaitableAsync(initalizer, pos, allowRandomDecoration, tile);
         }
 
-        public async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
+        public virtual async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
         {
             var sides = await Task.WhenAll(MapDirection.Sides
                             .Select(d => Tuple.Create(d, builder.CurrentMap.GetTileData(pos + d)))

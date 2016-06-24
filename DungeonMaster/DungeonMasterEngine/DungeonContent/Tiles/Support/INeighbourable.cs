@@ -1,7 +1,7 @@
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface INeighbourable<TTile> where TTile : INeighbourable<TTile>
     {

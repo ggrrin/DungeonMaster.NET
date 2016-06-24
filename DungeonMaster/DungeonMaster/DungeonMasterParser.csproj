@@ -56,23 +56,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BigEndianBinaryReader.cs" />
     <Compile Include="ChampionDescriptor.cs" />
     <Compile Include="Descriptors\ArmorDescriptor.cs" />
     <Compile Include="Descriptors\ComboEntry.cs" />
     <Compile Include="Descriptors\ContainerDescriptor.cs" />
     <Compile Include="Descriptors\CreatureDescriptor.cs" />
     <Compile Include="Descriptors\DescriptorBase.cs" />
+    <Compile Include="Descriptors\FightActionEnum.cs" />
     <Compile Include="Descriptors\MiscDescriptor.cs" />
     <Compile Include="Descriptors\PotionDescriptor.cs" />
     <Compile Include="Descriptors\ScrollDescriptor.cs" />
     <Compile Include="Descriptors\WeaponDescriptor.cs" />
     <Compile Include="DMEncoding.cs" />
     <Compile Include="Descriptors\DoorDescriptor.cs" />
+    <Compile Include="EndianesBinaryConverter.cs" />
     <Compile Include="Enums\ActionType.cs" />
     <Compile Include="Enums\CarrryLocations.cs" />
     <Compile Include="Descriptors\FightActionDescriptor.cs" />
     <Compile Include="Descriptors\FightComboDescriptor.cs" />
     <Compile Include="ItemSorter.cs" />
+    <Compile Include="Items\DoorTypeIndex.cs" />
+    <Compile Include="Support\GraphicsDescriptor.cs" />
+    <Compile Include="Support\GraphicsItemState.cs" />
     <Compile Include="Support\ItemDescriptor.cs" />
     <Compile Include="Items\ActuatorItemData.cs" />
     <Compile Include="Items\ClothItemData.cs" />

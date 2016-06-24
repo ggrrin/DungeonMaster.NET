@@ -6,8 +6,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Attacks;
 using DungeonMasterEngine.DungeonContent.Entity.Skills;
@@ -15,14 +13,12 @@ using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Interfaces;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterParser.Descriptors;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
@@ -61,9 +57,9 @@ namespace DungeonMasterEngine.Builders
         public List<TileInitializer> TileInitializers { get; private set; }
         private TaskCompletionSource<bool> tileInitialized;
         private List<Tile> tiles;
-        public IWallGraphicSource RendererSource { get; }
+        public virtual IWallGraphicSource RendererSource { get; }
 
-        public IReadOnlyList<ISkillFactory> Skills { get; } = new ISkillFactory[]
+        public virtual IReadOnlyList<ISkillFactory> Skills { get; } = new ISkillFactory[]
         {
             SkillFactory<FighterSkill>.Instance,
             SkillFactory<NinjaSkill>.Instance,
@@ -87,19 +83,19 @@ namespace DungeonMasterEngine.Builders
             SkillFactory<WaterSkill>.Instance,
         };
 
-        public IReadOnlyList<HumanAttackFactoryBase> FightActions { get; }
-        public IReadOnlyList<IReadOnlyList<IAttackFactory>> ActionCombos { get; }
+        public virtual IReadOnlyList<HumanAttackFactoryBase> FightActions { get; }
+        public virtual IReadOnlyList<IReadOnlyList<IAttackFactory>> ActionCombos { get; }
 
         //item factories
-        public IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
-        public IReadOnlyList<ClothItemFactory> ClothFactories { get; }
-        public IReadOnlyList<ContainerItemFactory> ContainerFactories { get; }
-        public IReadOnlyList<ScrollItemFactory> ScrollFactories { get; }
-        public IReadOnlyList<PotionItemFactory> PotionFactories { get; }
-        public IReadOnlyList<MiscItemFactory> MiscFactories { get; }
-        public IReadOnlyList<CreatureFactory> CreatureFactories { get; }
+        public virtual IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
+        public virtual IReadOnlyList<ClothItemFactory> ClothFactories { get; }
+        public virtual IReadOnlyList<ContainerItemFactory> ContainerFactories { get; }
+        public virtual IReadOnlyList<ScrollItemFactory> ScrollFactories { get; }
+        public virtual IReadOnlyList<PotionItemFactory> PotionFactories { get; }
+        public virtual IReadOnlyList<MiscItemFactory> MiscFactories { get; }
+        public virtual IReadOnlyList<CreatureFactory> CreatureFactories { get; }
 
-        public Texture2D RandomWallDecoration
+        public virtual Texture2D RandomWallDecoration
         {
             get
             {
@@ -108,7 +104,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Texture2D RandomFloorDecoration
+        public virtual Texture2D RandomFloorDecoration
         {
             get
             {
@@ -117,8 +113,8 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public Texture2D DoorButtonTexture { get; private set; }
-        public Texture2D TeleportTexture { get; private set; }
+        public Texture2D DoorButtonTexture { get; protected set; }
+        public Texture2D TeleportTexture { get; protected set; }
 
         public LegacyMapBuilder()
         {
@@ -219,7 +215,7 @@ namespace DungeonMasterEngine.Builders
 
 
 
-        private IReadOnlyList<HumanAttackFactoryBase> GetFightActionsFactories()
+        protected virtual IReadOnlyList<HumanAttackFactoryBase> GetFightActionsFactories()
         {
             return Data.FightActions.Select<FightActionDescriptor, HumanAttackFactoryBase>(action =>
              {
@@ -282,7 +278,7 @@ namespace DungeonMasterEngine.Builders
                 .ToArray();
         }
 
-        private void Initialize(int level, Point? startTile)
+        protected virtual void Initialize(int level, Point? startTile)
         {
             CurrentLevel = level;
             CurrentMap = Data.Maps[level];
@@ -300,7 +296,7 @@ namespace DungeonMasterEngine.Builders
         }
 
 
-        public override DungeonLevel GetLevel(int level, Dungeon dungeon, Point? startTile)
+        public override DungeonLevel GetLevel(int level, Point? startTile)
         {
             DungeonLevel dungeonLevel = null;
             if (Data.Maps.Count <= level)
@@ -316,7 +312,7 @@ namespace DungeonMasterEngine.Builders
 
             SetupNeighbours(TilesPositions, TileInitializers);
 
-            dungeonLevel = new DungeonLevel(dungeon, Creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
+            dungeonLevel = new DungeonLevel(Creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap);
 
             foreach (var tileInitializer in TileInitializers)
             {
@@ -366,7 +362,7 @@ namespace DungeonMasterEngine.Builders
         }
 
 
-        private void InitializeMapTextures()
+        protected virtual void InitializeMapTextures()
         {
             defaultDoorTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DefaultDoor");
 
@@ -394,7 +390,7 @@ namespace DungeonMasterEngine.Builders
         }
 
 
-        public IGrabableItemFactoryBase GetItemFactory(int identifer)
+        public virtual IGrabableItemFactoryBase GetItemFactory(int identifer)
         {
             var itemDescriptor = Data.ItemGlobalIdentifers[identifer];
             switch (itemDescriptor.Category)
@@ -416,7 +412,7 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public async Task<Tuple<Tile, MapDirection>> GetTargetTile(Point? target, MapDirection requesteDirection)
+        public virtual async Task<Tuple<Tile, MapDirection>> GetTargetTile(Point? target, MapDirection requesteDirection)
         {
             MapDirection invertMessageDirection = requesteDirection;
             if (target == null)
@@ -450,7 +446,7 @@ namespace DungeonMasterEngine.Builders
             return Tuple.Create(tile, invertMessageDirection);
         }
 
-        public DoorDescriptor GetCurrentDoor(DoorTypeIndex index)
+        public virtual DoorDescriptor GetCurrentDoor(DoorTypeIndex index)
         {
             var firstType = Data.DoorDescriptors[(int)CurrentMap.DoorType0];
             var secondType = Data.DoorDescriptors[(int)CurrentMap.DoorType1];

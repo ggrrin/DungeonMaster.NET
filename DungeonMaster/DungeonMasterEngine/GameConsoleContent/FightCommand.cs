@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            Theron t = ConsoleContext.AppContext.Theron;
+            Theron t = ConsoleContext.AppContext.Leader;
             Champion champoin = null;
             IAttackFactory action = null;
             if (Parameters.Length == 0)

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public class LevelCollection : IEnumerable<DungeonLevel>, IEnumerable, ICollection<DungeonLevel>
+    public class LevelCollection : ICollection<DungeonLevel>
     {
-        private Queue<DungeonLevel> queue = new Queue<DungeonLevel>();
+        private readonly Queue<DungeonLevel> queue = new Queue<DungeonLevel>();
+
+        public DungeonLevel LastAddedLevel { get; private set; }
 
         public int Count => queue.Count;
 
@@ -21,6 +23,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         public void Add(DungeonLevel item)
         {
+            LastAddedLevel = item;
             queue.Enqueue(item);
             foreach (var creature in item.Creatures)
             {

@@ -1,5 +1,7 @@
 ﻿using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;

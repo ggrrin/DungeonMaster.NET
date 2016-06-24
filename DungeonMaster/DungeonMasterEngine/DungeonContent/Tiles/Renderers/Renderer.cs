@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public abstract class Renderer : IRenderer
     {

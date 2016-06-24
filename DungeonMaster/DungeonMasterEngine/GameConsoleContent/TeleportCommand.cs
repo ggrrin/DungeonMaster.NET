@@ -13,7 +13,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             Point targetLocation;
             if (Parameters.Length == 2 && int.TryParse(Parameters[0], out targetLocation.X) && int.TryParse(Parameters[1], out targetLocation.Y))
             {
-                var theron = ConsoleContext.AppContext.Theron;
+                var theron = ConsoleContext.AppContext.Leader;
                 int currentLevel = theron.Location.LevelIndex;
                 var level = ConsoleContext.AppContext.ActiveLevels.First(x => x.LevelIndex == currentLevel);//Level has to be there 
                 Tile targetTile = null;

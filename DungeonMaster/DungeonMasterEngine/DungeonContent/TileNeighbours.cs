@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent

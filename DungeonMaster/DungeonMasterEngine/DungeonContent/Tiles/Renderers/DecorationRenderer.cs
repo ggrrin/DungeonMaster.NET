@@ -1,9 +1,8 @@
-using System;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class DecorationRenderer<TDecoration> : TextureRenderer where TDecoration : IActuatorX
     {

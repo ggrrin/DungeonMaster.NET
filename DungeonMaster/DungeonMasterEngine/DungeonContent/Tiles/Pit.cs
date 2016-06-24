@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -11,32 +13,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     public class Pit : Pit<Message>
     {
         public Pit(PitInitializer initializer) : base(initializer) { }
-    }
-
-    public class PitTileNeighbours : TileNeighbours
-    {
-        public ITile Up { get; set; }
-        public ITile Down { get; set; }
-
-        public override ITile GetTile(MapDirection mapDirection)
-        {
-            var res = base.GetTile(mapDirection);
-            if (res == null)
-            {
-                if (mapDirection == MapDirection.Up)
-                    return Up;
-                else if (mapDirection == MapDirection.Down)
-                    return Down;
-                else
-                    return null;
-            }
-            else
-                return res;
-        }
-
-        public PitTileNeighbours(Tile north, Tile south, Tile east, Tile west) : base(north, south, east, west)
-        {
-        }
     }
 
     public class Pit<TMessage> : FloorTile<TMessage>, ILevelConnector where TMessage : Message

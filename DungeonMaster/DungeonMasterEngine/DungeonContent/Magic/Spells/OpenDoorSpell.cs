@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 

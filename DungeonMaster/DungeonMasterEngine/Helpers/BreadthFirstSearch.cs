@@ -4,19 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.Helpers
 {
-    public class RendererSearcher : BreadthFirstSearch<ITile, object>
-    {
-        protected override void AddSucessors(int layer, ITile currentTile)
-        {
-            foreach (var neighbour in currentTile.Neighbours)
-                Enqueue(neighbour.Item1, layer, currentTile);
-        }
-    }
-
-
     public class BreadthFirstSearch<TTile, TBundle> where TTile : class, INeighbourable<TTile>
     {
         private SearchFabricElement<TTile, TBundle>[][,] processedTiles;

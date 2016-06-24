@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
@@ -55,7 +57,7 @@ namespace DungeonMasterEngine.Builders
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
 
-        public Tile GetTile(TileInfo<TileData> tileInfo)
+        public virtual  Tile GetTile(TileInfo<TileData> tileInfo)
         {
             tilePosition = new Vector3(tileInfo.Position.X, -level, tileInfo.Position.Y);
             GridPosition = tileInfo.Position;

@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public class Message
     {

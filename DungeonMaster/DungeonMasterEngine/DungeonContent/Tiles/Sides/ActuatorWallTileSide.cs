@@ -1,7 +1,6 @@
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using Microsoft.Xna.Framework;
+using DungeonMasterEngine.DungeonContent.Actuators;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 {
     public class ActuatorWallTileSide : TileSide
     {

@@ -1,9 +1,10 @@
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class AlcoveRenderer : DecorationRenderer<Alcove>
     {

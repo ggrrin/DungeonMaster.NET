@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;

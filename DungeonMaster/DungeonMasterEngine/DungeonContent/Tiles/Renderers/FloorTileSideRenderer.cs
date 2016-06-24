@@ -1,23 +1,11 @@
-using System.Runtime.InteropServices;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
-    public class ActuatorFloorTileSideRenderer : FloorTileSideRenderer<ActuatorFloorTileSide>
-    {
-
-        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
-        {
-            var res = base.Render(ref currentTransformation, effect, parameter);
-            TileSide.Actuator.Renderer.Render(ref res, effect, parameter);
-            return res;
-        }
-
-        public ActuatorFloorTileSideRenderer(ActuatorFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) {}
-    }
-
     public class FloorTileSideRenderer<TFloorTileSide> : TileWallSideRenderer<TFloorTileSide> where TFloorTileSide : FloorTileSide
     {
         public FloorTileSideRenderer(TFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) { }

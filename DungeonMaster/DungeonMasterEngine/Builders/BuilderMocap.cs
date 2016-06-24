@@ -11,7 +11,7 @@ namespace DungeonMasterEngine.Builders
 {
     public class BuilderMocap : BuilderBase 
     {
-        public override DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile)
+        public override DungeonLevel GetLevel(int i, Point? startTile)
         {
             var tiles = new List<Tile>();
 
@@ -101,7 +101,7 @@ namespace DungeonMasterEngine.Builders
 
             SetupNeighbours(tilePositions,  null);
 
-            return new DungeonLevel(dungeon, new List<ILiveEntity>(), i, tilePositions, tiles.FirstOrDefault(), null);
+            return new DungeonLevel(new List<ILiveEntity>(), i, tilePositions, tiles.FirstOrDefault(), null);
 
         }
     }

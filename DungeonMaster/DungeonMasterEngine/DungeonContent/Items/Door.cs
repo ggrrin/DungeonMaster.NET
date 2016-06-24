@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Items
 {
@@ -84,23 +83,6 @@ namespace DungeonMasterEngine.DungeonContent.Items
             IProperty res;
             properties.TryGetValue(propertyType, out res);
             return res ?? new EmptyProperty();
-        }
-    }
-
-    public class DoorRenderer : TextureRenderer
-    {
-        public DoorRenderer(Texture2D doorTexture) : base(Matrix.CreateScale(2 / 3f) * Matrix.CreateTranslation(new Vector3(0, -1 / 6f, 0.3f)), doorTexture) { }
-
-        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
-        {
-            base.Render(ref currentTransformation, effect, parameter);
-            var finalmatrix = Matrix.CreateRotationY(MathHelper.Pi) * currentTransformation;
-            return base.Render(ref finalmatrix, effect, parameter);
-        }
-
-        public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
-        {
-            return false;
         }
     }
 }

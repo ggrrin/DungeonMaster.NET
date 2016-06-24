@@ -1,6 +1,6 @@
 using DungeonMasterParser.Enums;
 
-namespace DungeonMasterParser
+namespace DungeonMasterParser.Descriptors
 {
     public class DoorDescriptor
     {

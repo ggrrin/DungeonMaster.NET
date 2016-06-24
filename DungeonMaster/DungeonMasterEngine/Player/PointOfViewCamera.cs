@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
 

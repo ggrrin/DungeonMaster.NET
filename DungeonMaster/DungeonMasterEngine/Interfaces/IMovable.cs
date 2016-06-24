@@ -1,4 +1,5 @@
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Interfaces
@@ -9,10 +10,5 @@ namespace DungeonMasterEngine.Interfaces
         float TranslationVelocity { get; }
 
         void MoveTo(ITile newLocation, bool setNewLocation);
-    }
-
-    public interface IUpdate
-    {
-        void Update(GameTime time);
     }
 }

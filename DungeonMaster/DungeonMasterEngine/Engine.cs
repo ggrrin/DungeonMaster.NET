@@ -42,13 +42,14 @@ namespace DungeonMasterEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
-            dungeon = new Dungeon(this, new LegacyMapBuilder()) { DrawOrder = 0 };
+            dungeon = new Dungeon(new LegacyMapBuilder(), GraphicsDevice);
             GameConsole.InitializeConsole(this, dungeon);
             GameConsole.Instance.DrawOrder = 1;
         }
 
         protected override void Update(GameTime gameTime)
         {
+            dungeon.Update(gameTime);
             while (taskQueue.Count > 0)
             {
                 Tuple<SendOrPostCallback, object> task;
@@ -63,6 +64,7 @@ namespace DungeonMasterEngine
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(dungeon.Effect.FogColor));
+            dungeon.Draw(gameTime);
 
             base.Draw(gameTime);
         }

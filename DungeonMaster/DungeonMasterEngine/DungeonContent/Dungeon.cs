@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
@@ -10,70 +11,69 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public class Dungeon : DrawableGameComponent
+    public class Dungeon : DungeonBase<Theron>
     {
-        private readonly RendererSearcher bfs = new RendererSearcher();
-        private List<ITile> currentVisibleTiles;
-        private SpriteBatch batcher;
-
-        public DungeonLevel CurrentLevel { get; private set; }
-
-        public Theron Theron { get; }
-
-        public BasicEffect Effect { get; private set; }
-
-        public IDungonBuilder Builder { get; }
-
-        public LevelCollection ActiveLevels { get; }
-
-        public int FogHorizont { get; } = 5;
-
-        public GameTime Time { get; private set; }
-
-        public Dungeon(Game game, IDungonBuilder builder) : base(game)
+        public Dungeon(IDungonBuilder builder, GraphicsDevice graphicDevice) : base(builder, graphicDevice)
         {
+            Leader = new Theron( ActiveLevels.LastAddedLevel.StartTile);
+        }
+    }
+
+    public abstract class DungeonBase
+    {
+        protected readonly RendererSearcher bfs = new RendererSearcher();
+        protected List<ITile> currentVisibleTiles;
+        protected SpriteBatch batcher;
+
+        public abstract ILeader LeaderBase { get; }
+        public DungeonLevel CurrentLevel { get; protected set; }
+        public bool Enabled { get; set; } = true;
+        public BasicEffect Effect { get; protected set; }
+        public IDungonBuilder Builder { get; }
+        public virtual LevelCollection ActiveLevels { get; }
+        public int FogHorizont { get; protected set; } = 5;
+        public GameTime Time { get; private set; }
+        public GraphicsDevice GraphicsDevice { get; }
+
+        public DungeonBase(IDungonBuilder builder, GraphicsDevice graphicsDevice)
+        {
+            GraphicsDevice = graphicsDevice;
             InitializeGraphics();
-            Game.Components.Add(this);
             Builder = builder;
 
-
             ActiveLevels = new LevelCollection();
-            var l = LoadLevel(1, new Point(6,14));
-            Theron = new Theron(l.StartTile);
-            Theron.LocationChanged += CurrentPlayer_LocationChanged;
-            EnabledChanged += Dungeon_EnabledChanged;
+            LoadLevel(1, new Point(6, 14));
         }
 
-        private void CurrentPlayer_LocationChanged(object sender, EventArgs e)
+        protected void Leader_LocationChanged(object sender, EventArgs e)
         {
             if (Time != null)//not on an initialization
             {
                 UpdateVisibleTiles();
+                SetupLevelConnectors();
 
-                foreach (var t in currentVisibleTiles)
-                {
-                    var connector = t as ILevelConnector;
-                    if (connector != null)
-                        ConnectLevels(connector);
-                }
-
-                CurrentLevel = ActiveLevels.Single(x => x.LevelIndex == Theron.Location.LevelIndex);
+                CurrentLevel = ActiveLevels.Single(x => x.LevelIndex == LeaderBase.Location.LevelIndex);
             }
         }
 
-        private void Dungeon_EnabledChanged(object sender, EventArgs e)
+        protected virtual void SetupLevelConnectors()
         {
-            Theron.IsActive = Enabled;
+            foreach (var t in currentVisibleTiles)
+            {
+                var connector = t as ILevelConnector;
+                if (connector != null)
+                    ConnectLevels(connector);
+            }
         }
 
-        private DungeonLevel LoadLevel(int levelIndex, Point? enterTile)
+        protected virtual DungeonLevel LoadLevel(int levelIndex, Point? enterTile)
         {
-            var nextLevel = Builder.GetLevel(levelIndex, this, enterTile);
+            var nextLevel = Builder.GetLevel(levelIndex, enterTile);
             ActiveLevels.Add(nextLevel);
             return nextLevel;
         }
 
-        private void ConnectLevels(ILevelConnector e)
+        protected virtual void ConnectLevels(ILevelConnector e)
         {
             DungeonLevel nextLevel;
             if (!ActiveLevels.Contains(e.NextLevelIndex, out nextLevel))
@@ -84,7 +84,7 @@ namespace DungeonMasterEngine.DungeonContent
             UpdateVisibleTiles();
         }
 
-        private void InitializeGraphics()
+        protected virtual void InitializeGraphics()
         {
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -111,40 +111,34 @@ namespace DungeonMasterEngine.DungeonContent
         }
 
 
-        public override void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             Time = gameTime;
 
-
-            if (currentVisibleTiles == null)
-                CurrentPlayer_LocationChanged(this, new EventArgs());
-
-            Effect.World = Matrix.Identity;
-            Effect.View = Theron.View;
-            Effect.Projection = Theron.Projection;
-
-            foreach (var tile in CurrentLevel.Tiles)
+            if (Enabled)
             {
-                tile.Update(gameTime);
-            }
+                if (currentVisibleTiles == null)
+                    Leader_LocationChanged(this, new EventArgs());
 
-            base.Update(gameTime);
+                Effect.World = Matrix.Identity;
+                Effect.View = LeaderBase.View;
+                Effect.Projection = LeaderBase.Projection;
+
+                foreach (var tile in CurrentLevel.Tiles)
+                    tile.Update(gameTime);
+            }
         }
 
-        private void UpdateVisibleTiles()
+        protected virtual void UpdateVisibleTiles()
         {
             currentVisibleTiles = new List<ITile>();
-            bfs.StartSearch(Theron.Location, Theron.Location, FogHorizont, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
+            bfs.StartSearch(LeaderBase.Location, LeaderBase.Location, FogHorizont, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
         }
 
-        private Texture2D pixel;
+        protected Texture2D pixel;
 
-        public override void Draw(GameTime gameTime)
+        public virtual void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
-
-
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
@@ -154,19 +148,19 @@ namespace DungeonMasterEngine.DungeonContent
             foreach (var t in currentVisibleTiles.ReverseLazy())
                 t.Renderer?.Render(ref mat, Effect, null);
 
-            Theron.Draw(Effect);
+            LeaderBase.Draw(Effect);
 
             DrawMiniMap();
         }
 
-        private void DrawMiniMap()
+        protected virtual void DrawMiniMap()
         {
             if (CurrentLevel != null)
             {
                 const int scale = 8;
                 batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
                 batcher.Draw(CurrentLevel.MiniMap, new Rectangle(Point.Zero, new Point(CurrentLevel.MiniMap.Width * scale, CurrentLevel.MiniMap.Height * scale)), Color.White);
-                batcher.Draw(pixel, new Rectangle((Theron.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
+                batcher.Draw(pixel, new Rectangle((LeaderBase.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
                 batcher.End();
             }
         }

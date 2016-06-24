@@ -1,7 +1,7 @@
 ﻿using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
 
 namespace DungeonMasterEngine.GameConsoleContent
@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                 switch (parameter)
                 {
                     case "list":
-                        await GetFromItemIndex(ConsoleContext.AppContext.Theron.PartyGroup, false);
+                        await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup, false);
                         break;
                 }
             }
@@ -37,7 +37,7 @@ namespace DungeonMasterEngine.GameConsoleContent
         private async Task ChampoinReincarnation()
         {
             Output.WriteLine("Champoin builder:");
-            if (ConsoleContext.AppContext.Theron.PartyGroup.Count == 4)
+            if (ConsoleContext.AppContext.Leader.PartyGroup.Count == 4)
             {
                 Output.WriteLine("Group is full!!");
                 return;
@@ -59,7 +59,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (champion != null)
             {
                 Actuator.Champion = null;
-                ConsoleContext.AppContext.Theron.AddChampoinToGroup(champion);
+                ConsoleContext.AppContext.Leader.AddChampoinToGroup(champion);
                 Output.WriteLine("Champoin succesfully added to group.");
             }
         }

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public abstract class TileInitializer : InitializerBase
     {

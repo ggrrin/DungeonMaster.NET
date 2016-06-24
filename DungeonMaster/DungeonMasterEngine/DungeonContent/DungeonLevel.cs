@@ -10,7 +10,6 @@ namespace DungeonMasterEngine.DungeonContent
 {
     public class DungeonLevel
     {        
-        private Dungeon dungeon;
 
         public Tile StartTile { get; }
 
@@ -24,11 +23,10 @@ namespace DungeonMasterEngine.DungeonContent
 
         public IReadOnlyDictionary<Point, Tile> TilesPositions { get; }
 
-        public DungeonLevel(Dungeon d, List<ILiveEntity> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
+        public DungeonLevel(List<ILiveEntity> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
         {
             TilesPositions = positions;
 
-            dungeon = d;
             Tiles = positions.Values;
             StartTile = startTile;
             LevelIndex = levelIndex;

@@ -5,7 +5,7 @@ namespace DungeonMasterEngine.Interfaces
 {
     public interface IDungonBuilder
     {
-        DungeonLevel GetLevel(int i, Dungeon dungeon, Point? startTile);
+        DungeonLevel GetLevel(int i, Point? startTile);
 
     }
 }

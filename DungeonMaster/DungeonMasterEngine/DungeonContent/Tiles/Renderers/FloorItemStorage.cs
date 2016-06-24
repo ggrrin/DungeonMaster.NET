@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class FloorItemStorage
     {

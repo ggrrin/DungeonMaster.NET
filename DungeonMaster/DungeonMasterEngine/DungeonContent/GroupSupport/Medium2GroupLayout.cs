@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport
 {

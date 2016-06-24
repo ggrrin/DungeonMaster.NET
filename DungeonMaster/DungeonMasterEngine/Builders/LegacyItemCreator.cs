@@ -18,6 +18,7 @@ using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.Grab
 
 namespace DungeonMasterEngine.Builders
 {
+
     public class LegacyItemCreator : IItemCreator<IGrabableItem>
     {
         private readonly LegacyMapBuilder builder;
@@ -28,7 +29,7 @@ namespace DungeonMasterEngine.Builders
             this.builder = builder;
         }
 
-        public IGrabableItem CreateItem(ItemData itemData)
+        public virtual IGrabableItem CreateItem(ItemData itemData)
         {
             itemData.Processed = true;
             descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData)itemData).ItemTypeIndex );

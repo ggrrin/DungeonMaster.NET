@@ -1,12 +1,15 @@
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall.FloorSensors;
+using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Actuators.FloorSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DecorationItem = DungeonMasterEngine.DungeonContent.Actuators.Wall.DecorationItem;
+using DecorationItem = DungeonMasterEngine.DungeonContent.Actuators.DecorationItem;
 
 namespace DungeonMasterEngine.Builders
 {

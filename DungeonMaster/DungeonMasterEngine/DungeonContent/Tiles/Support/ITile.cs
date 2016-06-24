@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items;
+using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface ITile : IWorldObject,IStopable, INeighbourable<ITile>
     {

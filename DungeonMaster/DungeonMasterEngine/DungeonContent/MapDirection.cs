@@ -160,10 +160,4 @@ namespace DungeonMasterEngine.DungeonContent
                 return "Undefined.";
         }
     }
-
-    public enum DirectionShift
-    {
-        HorizontalShift, VerticalShift
-        
-    }
 }

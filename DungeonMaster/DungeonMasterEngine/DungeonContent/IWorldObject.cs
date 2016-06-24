@@ -1,4 +1,4 @@
-﻿using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+﻿using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;

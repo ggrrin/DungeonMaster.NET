@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            var theron = ConsoleContext.AppContext.Theron;
+            var theron = ConsoleContext.AppContext.Leader;
             var spellFactory = symbolParser.ParseSpell(Parameters);
             if (spellFactory != null)
                 spellFactory.CastSpell(theron.Location, theron.MapDirection).Run();

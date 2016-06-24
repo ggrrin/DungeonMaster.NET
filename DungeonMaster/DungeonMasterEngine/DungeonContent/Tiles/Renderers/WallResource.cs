@@ -2,7 +2,7 @@ using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles
+namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class WallResource : BufferResourceProvider
     {

@@ -14,7 +14,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            theron = ConsoleContext.AppContext.Theron;
+            theron = ConsoleContext.AppContext.Leader;
 
             if (Parameters.Length == 0)
             {

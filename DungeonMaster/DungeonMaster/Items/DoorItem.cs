@@ -46,9 +46,4 @@ namespace DungeonMasterParser.Items
         //The attack power required to destroy a door depends on its type.The resistance values are stored in the graphics.dat file in item 559, offset 244h (4 words). Wooden doors are easy, grate doors are harder, iron doors are very hard and Ra doors are nearly indestructible.
 
     }
-
-    public enum DoorTypeIndex
-    {
-        FirstType = 0, SecondType = 1
-    }
 }

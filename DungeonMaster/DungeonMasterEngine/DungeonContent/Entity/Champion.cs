@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.Wall;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity.Attacks;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
@@ -11,12 +11,12 @@ using DungeonMasterEngine.DungeonContent.Entity.Skills;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
@@ -113,51 +113,5 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public override string ToString() => Name;
 
-    }
-
-    class CreatureRenderer : LiveEntityRenderer<Creature>
-    {
-        public CreatureRenderer(Creature entity, Texture2D face) : base(entity, face)
-        {
-            cube.Scale = new Vector3(0.3f, 0.7f, 0.3f);
-            
-        }
-    }
-
-    class LiveEntityRenderer<TEntity> : Renderer where TEntity : ILiveEntity
-    {
-        protected readonly CubeGraphic cube;
-        public TEntity Entity { get; }
-
-        public LiveEntityRenderer(TEntity entity, Texture2D face)
-        {
-            Entity = entity;
-
-            cube = new CubeGraphic
-            {
-                Texture = face,
-                Position = Entity.Position,
-                DrawFaces = CubeFaces.All,
-                Outter = true,
-                Scale = new Vector3(0.1f,0.3f, 0.1f),
-            };
-        }
-
-        public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
-        {
-            cube.Position = Entity.Position;
-            cube.Draw(effect);
-            return currentTransformation;
-        }
-
-        public override Matrix GetCurrentTransformation(ref Matrix parentTransformation)
-        {
-            return Matrix.Identity;
-        }
-
-        public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
-        {
-            return false;
-        }
     }
 }
