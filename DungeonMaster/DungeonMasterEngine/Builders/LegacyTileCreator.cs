@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
@@ -19,7 +18,7 @@ using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
-using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
+using GrabableItem = DungeonMasterEngine.DungeonContent.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders

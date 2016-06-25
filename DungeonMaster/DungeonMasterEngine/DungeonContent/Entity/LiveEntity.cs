@@ -3,7 +3,6 @@ using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;

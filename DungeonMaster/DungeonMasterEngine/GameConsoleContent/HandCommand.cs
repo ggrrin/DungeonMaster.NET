@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent

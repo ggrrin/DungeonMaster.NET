@@ -12,11 +12,11 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
 
         public IEnumerable<TItem> Entities => entitiesSpaces.Select(x => x.Item1);
 
-        public bool IsFree(ISpace space) => FullSpaces.All(s => !s.Area.Intersects(space.Area));
+        public virtual bool IsFree(ISpace space) => FullSpaces.All(s => !s.Area.Intersects(space.Area));
 
         public bool WholeTileEmpty => !FullSpaces.Any();
 
-        public bool TryGetSpace(TItem entity, ISpace dreamPosition)
+        public virtual bool TryGetSpace(TItem entity, ISpace dreamPosition)
         {
             var res = FullSpaces.Any(s => s.Area.Intersects(dreamPosition.Area));
             if (!res)
@@ -24,7 +24,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             return !res;
         }
 
-        public void FreeSpace(TItem entity, ISpace space)
+        public virtual void FreeSpace(TItem entity, ISpace space)
         {
             int index = entitiesSpaces.FindIndex(t => t.Item1 == entity && t.Item2 == space);
             if(index == -1 )
@@ -32,7 +32,7 @@ namespace DungeonMasterEngine.DungeonContent.GroupSupport
             entitiesSpaces.RemoveAt(index);
         }
 
-        public IEnumerable<TItem> GetEntities(ISpace space)
+        public virtual IEnumerable<TItem> GetEntities(ISpace space)
         {
             return entitiesSpaces
                 .Where(t => t.Item2.Area.Intersects(space.Area))

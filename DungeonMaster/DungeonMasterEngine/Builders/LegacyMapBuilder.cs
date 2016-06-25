@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.Skills;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
@@ -83,8 +83,8 @@ namespace DungeonMasterEngine.Builders
             SkillFactory<WaterSkill>.Instance,
         };
 
-        public virtual IReadOnlyList<HumanAttackFactoryBase> FightActions { get; }
-        public virtual IReadOnlyList<IReadOnlyList<IAttackFactory>> ActionCombos { get; }
+        public virtual IReadOnlyList<HumanActionFactoryBase> FightActions { get; }
+        public virtual IReadOnlyList<IReadOnlyList<IActionFactory>> ActionCombos { get; }
 
         //item factories
         public virtual IReadOnlyList<WeaponItemFactory> WeaponFactories { get; }
@@ -215,9 +215,9 @@ namespace DungeonMasterEngine.Builders
 
 
 
-        protected virtual IReadOnlyList<HumanAttackFactoryBase> GetFightActionsFactories()
+        protected virtual IReadOnlyList<HumanActionFactoryBase> GetFightActionsFactories()
         {
-            return Data.FightActions.Select<FightActionDescriptor, HumanAttackFactoryBase>(action =>
+            return Data.FightActions.Select<FightActionDescriptor, HumanActionFactoryBase>(action =>
              {
                  switch (action.Number)
                  {
@@ -268,11 +268,11 @@ namespace DungeonMasterEngine.Builders
 
         }
 
-        private IReadOnlyList<IReadOnlyList<IAttackFactory>> GetComboActions()
+        private IReadOnlyList<IReadOnlyList<IActionFactory>> GetComboActions()
         {
             // ReSharper disable once CoVariantArrayConversion
             return Data.FightCombos.Select(c => c.Actions
-                    .Select(x => new ComboAttackFactory(x.UseCharges == 1, x.MinimumSkillLevel,
+                    .Select(x => new ComboActionFactory(x.UseCharges == 1, x.MinimumSkillLevel,
                         FightActions[(int)x.ActionDescriptor.Number]))
                     .ToArray())
                 .ToArray();

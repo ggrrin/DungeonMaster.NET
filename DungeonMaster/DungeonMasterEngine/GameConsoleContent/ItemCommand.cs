@@ -3,12 +3,9 @@ using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.Initializators;
-using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.Builders.ItemInitializers;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
-using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
@@ -37,7 +34,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                                 //TODO
 
 
-                                theron.Hand = factory.Create(new MiscInitializator
+                                theron.Hand = factory.Create(new MiscInitializer
                                 {
                                     Attribute = 0
                                 });

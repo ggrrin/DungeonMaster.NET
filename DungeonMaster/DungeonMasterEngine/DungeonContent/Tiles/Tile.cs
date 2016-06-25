@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -118,11 +117,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public virtual void OnObjectLeaving(object localizable) { }
 
         public event EventHandler<object> ObjectEntered;
+
         public event EventHandler<object> ObjectLeft;
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
-            foreach (var item in SubItems.OfType<IUpdate>().ToArray()) //Enable modifing collection
+            foreach (var item in SubItems.OfType<IUpdate>().ToArray()) 
             {
                 item.Update(gameTime);
             }
@@ -153,8 +153,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
         }
 
-        public abstract IEnumerable<TileSide> Sides { get; }
-        public Renderer Renderer { get; set; }
+        public abstract IEnumerable<ITileSide> Sides { get; }
+        public IRenderer Renderer { get; set; }
     }
 
 

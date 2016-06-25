@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
 {
     public abstract class ActuatorX : IActuatorX
     {
-        public Renderer Renderer { get; set; }
+        public IRenderer Renderer { get; set; }
 
         //public ActuatorX(IEnumerable<SensorX> sensors)
         //{

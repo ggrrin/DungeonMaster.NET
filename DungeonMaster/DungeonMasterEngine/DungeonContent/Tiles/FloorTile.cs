@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -20,7 +19,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     public class FloorTile<TMessage> : Tile<TMessage> where TMessage : Message
     {
         public FloorTileSide FloorSide { get; private set; }
-        public override IEnumerable<TileSide> Sides => WallSides.Concat(new [] {FloorSide});
+        public override IEnumerable<ITileSide> Sides => WallSides.Concat(new [] {FloorSide});
         public override bool IsAccessible => true;
 
         public FloorTile(FloorInitializer initializer) : base(initializer)

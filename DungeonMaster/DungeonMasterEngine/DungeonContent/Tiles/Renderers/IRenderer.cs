@@ -15,5 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         void Initialize();
 
         void Highlight(int miliseconds);
+
+        bool Highlighted { get; set; }
     }
 }

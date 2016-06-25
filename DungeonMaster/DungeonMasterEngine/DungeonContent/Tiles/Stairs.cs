@@ -39,7 +39,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public override bool IsAccessible => true;
 
-        public override IEnumerable<TileSide> Sides => Enumerable.Empty<TileSide>();
+        public override IEnumerable<ITileSide> Sides => Enumerable.Empty<ITileSide>();
         private readonly List<object> subItems = new List<object>();
         public override IEnumerable<object> SubItems => subItems;
         public override Vector3 StayPoint => base.StayPoint + 0.5f * (Up ? Vector3.Up : Vector3.Down);

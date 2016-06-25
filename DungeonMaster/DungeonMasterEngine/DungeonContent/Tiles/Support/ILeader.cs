@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

@@ -1,5 +1,5 @@
 using System;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.WallSensors

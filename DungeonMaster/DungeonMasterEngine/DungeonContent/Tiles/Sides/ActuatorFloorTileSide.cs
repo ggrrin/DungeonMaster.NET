@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Actuators.FloorSensors;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 {

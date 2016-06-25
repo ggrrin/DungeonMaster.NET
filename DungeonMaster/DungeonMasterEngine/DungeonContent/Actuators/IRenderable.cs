@@ -4,6 +4,6 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
 {
     public interface IRenderable
     {
-        Renderer Renderer { get; set; }
+        IRenderer Renderer { get; set; }
     }
 }

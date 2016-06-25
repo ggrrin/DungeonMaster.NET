@@ -4,7 +4,12 @@ using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 {
-    public class TileSide : IRenderable, IMessageAcceptor<Message>
+    public interface ITileSide : IRenderable, IMessageAcceptor<Message>
+    {
+        
+    }
+
+    public class TileSide : ITileSide 
     {
         public MapDirection Face { get; }
         public bool RandomDecoration { get; }
@@ -15,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
             RandomDecoration = randomDecoration;
         }
 
-        public Renderer Renderer { get; set; }
+        public IRenderer Renderer { get; set; }
 
         public virtual void AcceptMessage(Message message) { }
 

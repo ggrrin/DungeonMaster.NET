@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework;
 
@@ -10,11 +10,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 {
     public class FloorTileSide : TileSide, IEnumerable<object>
     {
-        public event EventHandler SubItemsChaned;
+        public event EventHandler SubItemsChanged;
 
 
         protected readonly List<object> subItems = new List<object>();
-        public IReadOnlyList<FloorItemStorage> Spaces { get; }
+
+        public IReadOnlyList<FloorItemStorage> Spaces { get; protected set; }
 
         public FloorTileSide(bool randomDecoration, MapDirection face, IEnumerable<IGrabableItem> topLeftItems, IEnumerable<IGrabableItem> topRightItems, IEnumerable<IGrabableItem> bottomLeftItems, IEnumerable<IGrabableItem> bottomRightItems) : base(face, randomDecoration)
         {
@@ -51,7 +52,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
                 }
             }
 
-            SubItemsChaned?.Invoke(this, new EventArgs());
+            SubItemsChanged?.Invoke(this, new EventArgs());
         }
 
         public virtual void OnObjectLeft(object localizable)
@@ -68,7 +69,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
                 foreach (var storage in Spaces)
                     storage.RemoveItem(grabable, false);
             }
-            SubItemsChaned?.Invoke(this, new EventArgs());
+            SubItemsChanged?.Invoke(this, new EventArgs());
         }
 
         public IEnumerator<object> GetEnumerator()

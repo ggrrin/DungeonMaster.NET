@@ -31,7 +31,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             initializer.Initializing -= Initialize;
         }
 
-        public override IEnumerable<TileSide> Sides => Enumerable.Empty<TileSide>();
+        public override IEnumerable<ITileSide> Sides => Enumerable.Empty<TileSide>();
 
         public override void ActivateTileContent() { }
 

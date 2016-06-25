@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
@@ -31,7 +31,7 @@ namespace DungeonMasterEngine.GameConsoleContent
         {
             Theron t = ConsoleContext.AppContext.Leader;
             Champion champoin = null;
-            IAttackFactory action = null;
+            IActionFactory action = null;
             if (Parameters.Length == 0)
             {
                 champoin = await GetFromItemIndex(t.PartyGroup);
@@ -59,9 +59,9 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
         }
 
-        public void Fight(Theron theron, ILiveEntity champion, IAttackFactory action)
+        public void Fight(Theron theron, ILiveEntity champion, IActionFactory action)
         {
-            action.CreateAttackAction(champion).ApplyAttack(theron.MapDirection);
+            action.CreateAction(champion).ApplyAttack(theron.MapDirection);
         }
     }
 }

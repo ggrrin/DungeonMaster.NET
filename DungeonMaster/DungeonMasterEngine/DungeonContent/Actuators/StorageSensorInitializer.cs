@@ -1,4 +1,4 @@
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
 {

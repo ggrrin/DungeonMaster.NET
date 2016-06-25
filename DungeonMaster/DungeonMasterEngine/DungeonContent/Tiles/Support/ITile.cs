@@ -9,27 +9,31 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface ITile : IWorldObject,IStopable, INeighbourable<ITile>
     {
-        
-        bool ContentActivated { get; }
-
         bool IsAccessible { get; }
+        bool CanFlyItems { get; }
+        bool IsTransparent { get; }
         LayoutManager<ILiveEntity> LayoutManager { get; }
+        new TileNeighbours Neighbours { get; }
         DungeonLevel Level { get; }
-        IEnumerable<TileSide> Sides { get; }
-        new TileNeighbours Neighbours { get; }// TODO generic??
+
+        //IEnumerable<TileSide> Sides { get; }
+        //IEnumerable<object> SubItems { get; }
+        void Update(GameTime gameTime);
+
+
+        bool ContentActivated { get; }
+        void ActivateTileContent();
+        void DeactivateTileContent();
+        void AcceptMessageBase(Message message);
 
         event EventHandler<object> ObjectEntered;
         event EventHandler<object> ObjectLeft;
 
-        void ActivateTileContent();
-        void DeactivateTileContent();
-
-        IEnumerable<object> SubItems { get; }
         void OnObjectEntered(object localizable);
         void OnObjectEntering(object localizable);
         void OnObjectLeaving(object localizable);
         void OnObjectLeft(object localizable);
 
-        void Update(GameTime gameTime);
+
     }
 }

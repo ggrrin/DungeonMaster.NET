@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.Items;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.GroupSupport

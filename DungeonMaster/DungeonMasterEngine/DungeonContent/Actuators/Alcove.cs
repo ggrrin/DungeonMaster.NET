@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
 
         public void AcceptMessage(Message message) { }
 
-        public Renderer Renderer { get; set; }
+        public IRenderer Renderer { get; set; }
 
         public virtual bool Trigger(ILeader leader)
         {

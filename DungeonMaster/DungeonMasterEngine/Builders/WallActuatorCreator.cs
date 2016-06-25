@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;

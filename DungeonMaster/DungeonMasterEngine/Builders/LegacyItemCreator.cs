@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using DungeonMasterEngine.Builders.Initializators;
+using DungeonMasterEngine.Builders.ItemInitializers;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterParser;
-using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Player;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using DoorItem = DungeonMasterParser.Items.DoorItem;
-using GrabableItem = DungeonMasterEngine.DungeonContent.Items.GrabableItems.GrabableItem;
+using GrabableItem = DungeonMasterEngine.DungeonContent.GrabableItems.GrabableItem;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -105,7 +104,7 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateWeapon(WeaponItemData weapon)
         {
             weapon.Processed = true;
-            var initializator = new WeaponInitializator
+            var initializator = new WeaponInitializer
             {
                 IsBroken = weapon.IsBroken,
                 ChargeCount = weapon.ChargeCount,
@@ -118,7 +117,7 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateScrool(ScrollItemData scroll)
         {
             scroll.Processed = true;
-            var initializator = new ScrollInitializator
+            var initializator = new ScrollInitializer
             {
                 Text = scroll.Text
             };
@@ -128,7 +127,7 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateMisc(MiscellaneousItemData misc)
         {
             misc.Processed = true;
-            var initializator = new MiscInitializator
+            var initializator = new MiscInitializer
             {
                 Attribute = misc.AttributeValueIndex
             };
@@ -138,7 +137,7 @@ namespace DungeonMasterEngine.Builders
         public IGrabableItem CreateCloth(ClothItemData cloth)
         {
             cloth.Processed = true;
-            var initalizator = new ClothInitializator
+            var initalizator = new ClothInitializer
             {
                 IsCruised = cloth.IsCursed,
                 IsBroken = cloth.IsBroken

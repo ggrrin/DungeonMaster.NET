@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Entity.Attacks;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
@@ -29,7 +29,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         protected readonly IDictionary<IPropertyFactory, IProperty> properties;
         protected readonly IDictionary<ISkillFactory, ISkill> skills;
 
-        public Renderer Renderer { get; set; }
+        public IRenderer Renderer { get; set; }
         public override float TranslationVelocity => 4.4f;
         public override IGroupLayout GroupLayout => Small4GroupLayout.Instance;
         public override IBody Body { get; } = new HumanBody();
@@ -95,9 +95,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 return new EmptySkill();
         }
 
-        public IEnumerable<IAttackFactory> CurrentCombos
+        public IEnumerable<IActionFactory> CurrentCombos
         {
-            get { return Body.BodyParts.First(x => x.Type == ActionHandStorageType.Instance).Storage[0]?.Factory.AttackCombo ?? Enumerable.Empty<IAttackFactory>(); }
+            get { return Body.BodyParts.First(x => x.Type == ActionHandStorageType.Instance).Storage[0]?.Factory.ActionCombo ?? Enumerable.Empty<IActionFactory>(); }
         }
 
         public override void MoveTo(ITile newLocation, bool setNewLocation)

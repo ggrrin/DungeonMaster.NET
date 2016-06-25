@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.FloorSensors

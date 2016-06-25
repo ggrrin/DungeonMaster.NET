@@ -9,8 +9,6 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
 using DungeonMasterEngine.DungeonContent.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -36,7 +34,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         private readonly Dictionary<IPropertyFactory, IProperty> properties;
 
-        public Renderer Renderer { get; set; }
+        public IRenderer Renderer { get; set; }
 
         public override IProperty GetProperty(IPropertyFactory propertyType)
         {

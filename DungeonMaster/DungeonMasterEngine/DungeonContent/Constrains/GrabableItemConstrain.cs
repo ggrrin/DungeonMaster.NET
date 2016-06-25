@@ -1,6 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Items;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems;
-using DungeonMasterEngine.DungeonContent.Items.GrabableItems.Factories;
+﻿using DungeonMasterEngine.DungeonContent.GrabableItems;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Constrains

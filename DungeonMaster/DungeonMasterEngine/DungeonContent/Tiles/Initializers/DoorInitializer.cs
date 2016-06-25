@@ -1,5 +1,3 @@
-using DungeonMasterEngine.DungeonContent.Items;
-
 namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
 {
     public class DoorInitializer : FloorInitializer
