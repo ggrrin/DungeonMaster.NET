@@ -6,9 +6,9 @@ namespace DungeonMasterEngine.DungeonContent
 {
     public class LevelCollection : ICollection<DungeonLevel>
     {
-        private readonly Queue<DungeonLevel> queue = new Queue<DungeonLevel>();
+        protected readonly Queue<DungeonLevel> queue = new Queue<DungeonLevel>();
 
-        public DungeonLevel LastAddedLevel { get; private set; }
+        public DungeonLevel LastAddedLevel { get; protected set; }
 
         public int Count => queue.Count;
 
@@ -21,7 +21,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
 
-        public void Add(DungeonLevel item)
+        public virtual void Add(DungeonLevel item)
         {
             LastAddedLevel = item;
             queue.Enqueue(item);
@@ -39,17 +39,17 @@ namespace DungeonMasterEngine.DungeonContent
             }
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             queue.Clear();
         }
 
-        public bool Contains(DungeonLevel item)
+        public virtual bool Contains(DungeonLevel item)
         {
             return queue.Contains(item);            
         }
 
-        public bool Contains(int levelIndex, out DungeonLevel level)
+        public virtual  bool Contains(int levelIndex, out DungeonLevel level)
         {
             foreach (var l in queue)
                 if (l.LevelIndex == levelIndex)
@@ -67,7 +67,7 @@ namespace DungeonMasterEngine.DungeonContent
             queue.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(DungeonLevel item)
+        public virtual bool Remove(DungeonLevel item)
         {
             throw new InvalidOperationException("Operiation not supported");
         }
