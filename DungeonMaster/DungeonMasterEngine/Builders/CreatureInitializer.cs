@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Relations;
 
 namespace DungeonMasterEngine.Builders
 {

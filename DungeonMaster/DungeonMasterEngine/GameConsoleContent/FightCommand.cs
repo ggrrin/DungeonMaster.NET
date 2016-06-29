@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
 

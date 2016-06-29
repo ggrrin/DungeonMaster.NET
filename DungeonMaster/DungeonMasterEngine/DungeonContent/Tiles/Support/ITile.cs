@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         bool CanFlyItems { get; }
         bool IsTransparent { get; }
         LayoutManager<ILiveEntity> LayoutManager { get; }
-        new TileNeighbours Neighbours { get; }
+        new TileNeighbors Neighbors { get; }
         DungeonLevel Level { get; }
 
         //IEnumerable<TileSide> Sides { get; }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
 {

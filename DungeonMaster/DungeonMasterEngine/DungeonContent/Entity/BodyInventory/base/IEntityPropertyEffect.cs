@@ -1,6 +1,6 @@
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
     public interface IEntityPropertyEffect
     {

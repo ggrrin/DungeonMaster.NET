@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Skills;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders
 {
-    public class ChampionFactory : IChampionInitializator
+    public class ChampionFactory : IChampionInitializer
     {
         protected string[] descriptor;
         protected readonly LegacyMapBuilder builder;

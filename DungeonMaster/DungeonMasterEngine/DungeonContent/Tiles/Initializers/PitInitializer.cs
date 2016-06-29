@@ -23,7 +23,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
             tilesPositions.TryGetValue(GridPosition + new Point(1, 0), out east);
             tilesPositions.TryGetValue(GridPosition + new Point(0, 1), out south);
             tilesPositions.TryGetValue(GridPosition + new Point(-1, 0), out west);
-            Neighbours = new PitTileNeighbours(north, south, east, west);
+            Neighbors = new PitTileNeighbors(north, south, east, west);
         }
 
         protected override void OnInitialing()

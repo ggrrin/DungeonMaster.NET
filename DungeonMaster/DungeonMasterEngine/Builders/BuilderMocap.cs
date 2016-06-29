@@ -2,7 +2,6 @@
 using System.Linq;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 

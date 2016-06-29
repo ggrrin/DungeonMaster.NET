@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties

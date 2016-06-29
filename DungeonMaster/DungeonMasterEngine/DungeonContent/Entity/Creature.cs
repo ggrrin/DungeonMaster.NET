@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Relations;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -36,28 +37,43 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public IRenderer Renderer { get; set; }
 
-        public override IProperty GetProperty(IPropertyFactory propertyType)
-        {
-            IProperty res;
-            properties.TryGetValue(propertyType, out res);
-            return res ?? new EmptyProperty();
-        }
-
-        public override ISkill GetSkill(ISkillFactory skillType)
-        {
-            throw new NotImplementedException();
-        }
-
         public int DetectRange => Factory.DetectRange;
+
         public int SightRange => Factory.SightRange;
+
         public bool hounting => hountingPath != null;
 
         public int MoveDuration => (int)(Factory.MoveDuration * random.Next(9, 11) / 10f);
 
         public override float TranslationVelocity => 4;
+
         public int watchAroundRadius { get; protected set; } = 3;
+
         public override IGroupLayout GroupLayout => Factory.Layout;
-        private ISpaceRouteElement location = null;
+
+        protected ISpaceRouteElement location = null;
+
+        protected int attackDuration = 1000;
+
+        protected IReadOnlyList<ITile> hountingPath = null;
+
+        protected bool gettingHome => homeRoute != null;
+
+        protected IReadOnlyList<ITile> homeRoute = null;
+
+        public bool Alive { get; private set; } = true;
+
+        public override bool Activated
+        {
+            get { return base.Activated; }
+            set
+            {
+                base.Activated = value;
+                if (Activated == value)
+                    Live();
+            }
+        }
+
         public override ISpaceRouteElement Location
         {
             get { return location; }
@@ -76,23 +92,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
                 if (!alreadyOnTile)
                     location?.Tile?.OnObjectEntered(this);
-            }
-        }
-
-        private int attackDuration = 1000;
-        private IReadOnlyList<ITile> hountingPath = null;
-        private bool gettingHome => homeRoute != null;
-        private IReadOnlyList<ITile> homeRoute = null;
-        public bool Alive { get; private set; } = true;
-
-        public override bool Activated
-        {
-            get { return base.Activated; }
-            set
-            {
-                base.Activated = value;
-                if (Activated == value)
-                    Live();
             }
         }
 
@@ -126,7 +125,20 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             };
         }
 
-        private async void Live()
+        public override IProperty GetProperty(IPropertyFactory propertyType)
+        {
+            IProperty res;
+            properties.TryGetValue(propertyType, out res);
+            return res ?? new EmptyProperty();
+        }
+
+        public override ISkill GetSkill(ISkillFactory skillType)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Simple AI
+        protected virtual async void Live()
         {
             while (Activated && Alive)
             {
@@ -141,7 +153,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private async Task GoHome()
+        protected virtual async Task GoHome()
         {
             foreach (var tile in homeRoute.Skip(1))//first tile is current tile
             {
@@ -152,7 +164,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             homeRoute = null;
         }
 
-        private async Task WatchAround()
+        protected virtual async Task WatchAround()
         {
             var nextRoute = FindNextWatchLocation();
             foreach (var tile in nextRoute.Skip(1))//first tile is current tile
@@ -162,7 +174,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private async Task<bool> MoveToNeighbourTile(ITile tile, bool findEnemies)
+        protected virtual async Task<bool> MoveToNeighbourTile(ITile tile, bool findEnemies)
         {
             if (tile.IsAccessible) //TODO other conditions
             {
@@ -180,7 +192,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             return false;
         }
 
-        private async Task<bool> MoveThroughSpaces(ITile targetTile, bool findEnemies)
+        protected virtual async Task<bool> MoveThroughSpaces(ITile targetTile, bool findEnemies)
         {
             var spaceRoute = GroupLayout.GetToNeighbour(this, Location.Tile, targetTile);
 
@@ -201,7 +213,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             return true;
         }
 
-        private async Task<bool> MoveToSpace(ISpaceRouteElement destination)
+        protected virtual async Task<bool> MoveToSpace(ISpaceRouteElement destination)
         {
             if (destination.Tile.LayoutManager.TryGetSpace(this, destination.Space))
             {
@@ -214,7 +226,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 return false;
         }
 
-        private IReadOnlyList<ITile> FindNextWatchLocation()
+        protected virtual IReadOnlyList<ITile> FindNextWatchLocation()
         {
             var maxTravelDistance = random.Next(2, 2 * watchAroundRadius + 1);
             ITile destTile = Location.Tile;
@@ -242,7 +254,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             return watchAroundArea.GetShortestRoute(destTile);
         }
 
-        private bool FindEnemies()
+        protected virtual bool FindEnemies()
         {
             ILiveEntity enemy = null;
             globalSearcher.StartSearch(Location.Tile, Location.Tile, Math.Max(DetectRange, SightRange), (tile, layer, bundle) =>
@@ -264,7 +276,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private async Task Hount()
+        protected virtual async Task Hount()
         {
             if (hountingPath != null)
             {
@@ -285,7 +297,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private bool GetPathHome()
+        protected virtual bool GetPathHome()
         {
             var distance = watchAroungOrigin.GridPosition - Location.Tile.GridPosition;//TODO calculate appropriate distance
             var maxDistance = Math.Max(Math.Abs(distance.X), Math.Abs(distance.Y));
@@ -312,7 +324,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private void EstablishNewBase()
+        protected virtual void EstablishNewBase()
         {
 
             $"{this} reestablishing base at {Location}.".Dump();
@@ -320,9 +332,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             watchAroungOrigin = Location.Tile;
         }
 
-        private async Task PrepareForFight(ITile enemyTile)
+        protected virtual async Task PrepareForFight(ITile enemyTile)
         {
-            var moveDirection = Location.Tile.Neighbours.Single(t => t.Item1 == enemyTile).Item2;
+            var moveDirection = Location.Tile.Neighbors.Single(t => t.Item1 == enemyTile).Item2;
 
             while (true)
             {
@@ -347,7 +359,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             }
         }
 
-        private async Task Fight(ITile enemyTile, MapDirection moveDirection)
+        protected virtual async Task Fight(ITile enemyTile, MapDirection moveDirection)
         {
             var sortedEnemyLocation = GroupLayout.AllSpaces
                 .Where(s => s.Sides.Contains(moveDirection.Opposite))
@@ -384,6 +396,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 while (Activated && Alive && enemy != null);
             }
         }
+
+        #endregion
 
         public override void MoveTo(ITile newLocation, bool setNewLocation)
         {

@@ -1,8 +1,7 @@
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {

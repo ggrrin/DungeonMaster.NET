@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {

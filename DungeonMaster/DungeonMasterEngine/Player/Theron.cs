@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.DungeonContent.Tiles;
@@ -57,19 +57,19 @@ namespace DungeonMasterEngine.Player
         {
             Location = location;
 
-            var builder = new ChampionMocapFactory();
-            var x = new[]
-            {
-                //TODO remove champion mocap
-                builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|AACPACJOAABB|DJCFCPDJCFCPCF|BDACAAAAAAAADCDB"),
-                builder.GetChampion("IAIDO|RUYITO CHIBURI||M|AADAACIKAAAL|CICLDHCICDCNDC|CDACAAAABBBCAAAA"),
-                builder.GetChampion("HAWK|$CFEARLESS||M|AAEGADFCAAAK|CICNCDCGDHCDCD|CAACAAAAADADAAAA"),
-                builder.GetChampion("ZED|DUKE OF BANVILLE||M|AADMACFIAAAK|DKCICICIDCCICI|CBBCCBCBBCBBBCBB"),
-            };
-            if (x.Any(champoin => !AddChampoinToGroup(champoin)))
-            {
-                throw new Exception();
-            }
+            //var builder = new ChampionMocapFactory();
+            //var x = new[]
+            //{
+            //    //TODO remove champion mocap
+            //    builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|AACPACJOAABB|DJCFCPDJCFCPCF|BDACAAAAAAAADCDB"),
+            //    builder.GetChampion("IAIDO|RUYITO CHIBURI||M|AADAACIKAAAL|CICLDHCICDCNDC|CDACAAAABBBCAAAA"),
+            //    builder.GetChampion("HAWK|$CFEARLESS||M|AAEGADFCAAAK|CICNCDCGDHCDCD|CAACAAAAADADAAAA"),
+            //    builder.GetChampion("ZED|DUKE OF BANVILLE||M|AADMACFIAAAK|DKCICICIDCCICI|CBBCCBCBBCBBBCBB"),
+            //};
+            //if (x.Any(champoin => !AddChampoinToGroup(champoin)))
+            //{
+            //    throw new Exception();
+            //}
         }
 
         protected override bool CanMoveToTile(ITile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
@@ -188,7 +188,7 @@ namespace DungeonMasterEngine.Player
             var curLocation = Location;
             for (int i = 0; i < distance; i++)
             {
-                curLocation = curLocation.Neighbours.GetTile(direction);
+                curLocation = curLocation.Neighbors.GetTile(direction);
                 if (curLocation == null || !curLocation.IsAccessible)
                     return null;
             }
@@ -218,7 +218,7 @@ namespace DungeonMasterEngine.Player
             if (IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
-                var tiles = new[] { Location }.Concat(Location.Neighbours
+                var tiles = new[] { Location }.Concat(Location.Neighbors
                     .Select(x => x.Item1))
                     .ToArray();
 
@@ -241,13 +241,13 @@ namespace DungeonMasterEngine.Player
 
         public ILiveEntity GetEnemy(ILiveEntity champoin)
         {
-            var enemyTile = Location.Neighbours.GetTile(MapDirection);
+            var enemyTile = Location.Neighbors.GetTile(MapDirection);
             return enemyTile.LayoutManager.Entities.MinObj(e => Vector3.Distance(e.Position, champoin.Position));
         }
 
         private void Fight()
         {
-            var enemyTile = Location.Neighbours.GetTile(MapDirection);
+            var enemyTile = Location.Neighbors.GetTile(MapDirection);
             var GroupLayout = partyGoup.First().GroupLayout;
             if (enemyTile != null)
             {

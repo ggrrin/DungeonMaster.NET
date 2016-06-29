@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
-    internal class Inventory : IInventory
+    public class Inventory : IInventory
     {
         protected readonly IGrabableItem[] storage;
         public IStorageType Type { get; }

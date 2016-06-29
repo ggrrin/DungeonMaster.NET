@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {

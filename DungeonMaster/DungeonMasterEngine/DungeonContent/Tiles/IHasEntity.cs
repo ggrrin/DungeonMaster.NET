@@ -1,4 +1,4 @@
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {

@@ -5,7 +5,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface INeighbourable<TTile> where TTile : INeighbourable<TTile>
     {
-        INeighbours<TTile> Neighbours { get; }
+        INeighbors<TTile> Neighbors { get; }
         Point GridPosition { get; }
         int LevelIndex { get; }
     }

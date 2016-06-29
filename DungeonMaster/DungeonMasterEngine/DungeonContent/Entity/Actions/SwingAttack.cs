@@ -1,8 +1,7 @@
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using Microsoft.Xna.Framework;
 
@@ -22,7 +21,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
 
         protected override void PerformAttack(MapDirection direction, ref int delay)
         {
-            var targetTile = attackProvider.Location.Tile.Neighbours.GetTile(direction) as IHasEntity;
+            var targetTile = attackProvider.Location.Tile.Neighbors.GetTile(direction) as IHasEntity;
             if (targetTile?.Entity != null)
             {
                 //F064_aadz_SOUND_RequestPlay_COPYPROTECTIOND(C16_SOUND_COMBAT, G306_i_PartyMapX, G307_i_PartyMapY, C01_MODE_PLAY_IF_PRIORITIZED);

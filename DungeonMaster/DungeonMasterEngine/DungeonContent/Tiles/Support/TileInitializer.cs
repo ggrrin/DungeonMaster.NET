@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using Microsoft.Xna.Framework;
 
@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 
         public DungeonLevel Level { get; set; }
         public Point GridPosition { get; set; }
-        public TileNeighbours Neighbours { get; set; }
+        public TileNeighbors Neighbors { get; set; }
         public IEnumerable<ILiveEntity> Creatures { get; set; }
 
         public virtual void SetupNeighbours(IDictionary<Point, Tile> tilesPositions)
@@ -26,8 +26,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
             tilesPositions.TryGetValue(GridPosition + new Point(1, 0), out east);
             tilesPositions.TryGetValue(GridPosition + new Point(0, 1), out south);
             tilesPositions.TryGetValue(GridPosition + new Point(-1, 0), out west);
-            var neighbours = new TileNeighbours(Check(north) , Check(south), Check(east), Check(west));
-            Neighbours = neighbours;
+            var neighbours = new TileNeighbors(Check(north) , Check(south), Check(east), Check(west));
+            Neighbors = neighbours;
         }
 
         private Tile Check(Tile t)

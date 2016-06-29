@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
@@ -28,7 +28,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
                 anyTriggered = anyTriggered || sensorTrigger;
             }
 
-            F271_xxxx_SENSOR_ProcessRotationEffect(Sensors);
+            ProcessRotationEffect(Sensors);
             return anyTriggered;
         }
 

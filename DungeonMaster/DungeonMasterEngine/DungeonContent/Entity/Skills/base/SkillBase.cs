@@ -1,11 +1,10 @@
 using System;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
 {
     public abstract class SkillBase : ISkill
     {
@@ -13,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
 
         protected readonly ILiveEntity liveEntity;
 
-        public abstract ISkillFactory Factory { get; }
+        public abstract ISkillFactory Type { get; }
 
         public long Experience { get; protected set; }
         public long TemporaryExperience { get; protected set; }

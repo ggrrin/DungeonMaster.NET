@@ -1,0 +1,66 @@
+\select@language {czech}
+\contentsline {chapter}{\numberline {1}\IeC {\'U}vod}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}Related works}{5}{chapter.2}
+\contentsline {chapter}{\numberline {3}Anal\IeC {\'y}za}{6}{chapter.3}
+\contentsline {section}{\numberline {3.1}Parsov\IeC {\'a}n\IeC {\'\i } bin\IeC {\'a}rn\IeC {\'\i }ch dat}{6}{section.3.1}
+\contentsline {section}{\numberline {3.2}Pou\IeC {\v z}it\IeC {\'\i } frameworku pro pr\IeC {\'a}ci s grafickou kartou}{6}{section.3.2}
+\contentsline {section}{\numberline {3.3}Reprezentace dungeonu jako celku}{7}{section.3.3}
+\contentsline {section}{\numberline {3.4}Reprezentace level\IeC {\r u}}{7}{section.3.4}
+\contentsline {section}{\numberline {3.5}Reprezentace dla\IeC {\v z}dic}{7}{section.3.5}
+\contentsline {section}{\numberline {3.6}P\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}e}{8}{section.3.6}
+\contentsline {section}{\numberline {3.7}Popis funkce a slo\IeC {\v z}en\IeC {\'\i }}{8}{section.3.7}
+\contentsline {subsection}{\numberline {3.7.1}Reprezentace p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}}{8}{subsection.3.7.1}
+\contentsline {subsubsection}{Prvn\IeC {\'\i } reprezentace}{8}{section*.2}
+\contentsline {subsubsection}{Druha reprezentace}{9}{section*.3}
+\contentsline {subsubsection}{T\IeC {\v r}et\IeC {\'\i } reprezentace}{9}{section*.4}
+\contentsline {subsubsection}{Reprezentace zpr\IeC {\'a}vy p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}e}{9}{section*.5}
+\contentsline {section}{\numberline {3.8}Builder map}{10}{section.3.8}
+\contentsline {section}{\numberline {3.9}Inicializace a sestaven\IeC {\'\i } hern\IeC {\'\i }ch map a objekt\IeC {\r u}}{10}{section.3.9}
+\contentsline {section}{\numberline {3.10}Renderov\IeC {\'a}n\IeC {\'\i } a interakce}{11}{section.3.10}
+\contentsline {section}{\numberline {3.11}Hern\IeC {\'\i } entity}{11}{section.3.11}
+\contentsline {subsection}{\numberline {3.11.1}\IeC {\'U}vod}{11}{subsection.3.11.1}
+\contentsline {subsection}{\numberline {3.11.2}Vlastnosti a schopnosti entit}{12}{subsection.3.11.2}
+\contentsline {subsubsection}{Vlastnosti}{12}{section*.6}
+\contentsline {subsubsection}{Schopnosti}{12}{section*.7}
+\contentsline {subsection}{\numberline {3.11.3}Relace mezi entitami}{12}{subsection.3.11.3}
+\contentsline {subsection}{\numberline {3.11.4}T\IeC {\v e}lo a invent\IeC {\'a}\IeC {\v r}e}{13}{subsection.3.11.4}
+\contentsline {section}{\numberline {3.12}V\IeC {\v e}ci}{13}{section.3.12}
+\contentsline {section}{\numberline {3.13}Akce}{14}{section.3.13}
+\contentsline {section}{\numberline {3.14}Kouzla}{14}{section.3.14}
+\contentsline {chapter}{\numberline {4}Program\IeC {\'a}torsk\IeC {\'a} dokumentace}{15}{chapter.4}
+\contentsline {section}{\numberline {4.1}J\IeC {\'a}dro enginu}{15}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Renderovan\IeC {\'\i }}{15}{subsection.4.1.1}
+\contentsline {subsubsection}{V\IeC {\'y}b\IeC {\v e}r a vykreslov\IeC {\'a}n\IeC {\'\i } pou\IeC {\v z}it\IeC {\'y}ch dla\IeC {\v z}dic}{15}{section*.8}
+\contentsline {subsubsection}{Nastaven\IeC {\'\i } grafick\IeC {\'e}ho za\IeC {\v r}\IeC {\'\i }zen\IeC {\'\i }}{15}{section*.9}
+\contentsline {subsection}{\numberline {4.1.2}Inicializace hr\IeC {\'a}\IeC {\v c}e}{16}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Roz\IeC {\v s}i\IeC {\v r}itelnost dla\IeC {\v z}dic}{16}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Popis dla\IeC {\v z}dic}{16}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Inicializace dla\IeC {\v z}dic}{16}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Implementace dla\IeC {\v z}dic}{17}{subsection.4.2.3}
+\contentsline {subsubsection}{Dla\IeC {\v z}dice podlaha}{17}{section*.10}
+\contentsline {subsubsection}{Dal\IeC {\v s}\IeC {\'\i } dla\IeC {\v z}dice}{18}{section*.11}
+\contentsline {subsection}{\numberline {4.2.4}Strany dla\IeC {\v z}dic}{18}{subsection.4.2.4}
+\contentsline {subsubsection}{Jednotliv\IeC {\'e} implementace}{18}{section*.12}
+\contentsline {section}{\numberline {4.3}Renderery}{19}{section.4.3}
+\contentsline {section}{\numberline {4.4}P\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}e}{20}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}\IeC {\'U}vod}{20}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Implementace p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}\IeC {\r u} se senzory}{20}{subsection.4.4.2}
+\contentsline {subsubsection}{Implementace senzor\IeC {\r u}}{20}{section*.13}
+\contentsline {subsubsection}{Implementace p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}\IeC {\r u} pou\IeC {\v z}\IeC {\'\i }vaj\IeC {\'\i }c\IeC {\'\i } senzory}{22}{section*.14}
+\contentsline {subsection}{\numberline {4.4.3}Implementace obecn\IeC {\'y}ch p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}\IeC {\r u}}{22}{subsection.4.4.3}
+\contentsline {section}{\numberline {4.5}Hern\IeC {\'\i } entity}{23}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}Implementace vlastnost\IeC {\'\i } entit}{23}{subsection.4.5.1}
+\contentsline {subsection}{\numberline {4.5.2}Implementace schopnost\IeC {\'\i } entit}{24}{subsection.4.5.2}
+\contentsline {subsection}{\numberline {4.5.3}T\IeC {\v e}lo a invent\IeC {\'a}\IeC {\v r}e entity}{24}{subsection.4.5.3}
+\contentsline {subsubsection}{Invent\IeC {\'a}\IeC {\v r}}{24}{section*.15}
+\contentsline {subsubsection}{\IeC {\v C}\IeC {\'a}st t\IeC {\v e}la}{25}{section*.16}
+\contentsline {subsubsection}{T\IeC {\v e}lo entity}{25}{section*.17}
+\contentsline {subsection}{\numberline {4.5.4}Rozm\IeC {\'\i }st\IeC {\v e}n\IeC {\'\i } entity na dla\IeC {\v z}dici}{25}{subsection.4.5.4}
+\contentsline {subsubsection}{Definice prostor\IeC {\r u} a cest na dla\IeC {\v z}dici}{25}{section*.18}
+\contentsline {subsubsection}{\IeC {\v R}\IeC {\'\i }zen\IeC {\'\i } obsazen\IeC {\'e}ho prostoru na dla\IeC {\v z}dici}{25}{section*.19}
+\contentsline {subsection}{\numberline {4.5.5}Relace s dal\IeC {\v s}\IeC {\'\i }mi entitami}{26}{subsection.4.5.5}
+\contentsline {subsection}{\numberline {4.5.6}Implementace entit}{26}{subsection.4.5.6}
+\contentsline {subsubsection}{\IeC {\v S}ampion}{26}{section*.20}
+\contentsline {subsubsection}{P\IeC {\v r}\IeC {\'\i }\IeC {\v s}era}{26}{section*.21}
+\contentsline {chapter}{Z\IeC {\'a}v\IeC {\v e}r}{29}{chapter*.22}
+\contentsline {chapter}{P\IeC {\v r}\IeC {\'\i }lohy}{30}{chapter*.23}

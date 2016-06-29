@@ -1,8 +1,8 @@
-namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
 {
     public interface ISkill
     {
-        ISkillFactory Factory { get; }
+        ISkillFactory Type { get; }
         SkillBase BaseSkill { get; }
         long Experience { get; }
         long TemporaryExperience { get; }

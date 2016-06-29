@@ -4,12 +4,14 @@ using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Relations;
 using DungeonMasterEngine.DungeonContent.Entity.Skills;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -57,24 +59,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                     Position = value.StayPoint;
                 }
 
-                //bool alreadyOnTile = location?.Tile == value.Tile;
-                //if (!alreadyOnTile)
-                //    location?.Tile?.OnObjectLeft(this);
-
                 location = value;
-
-                //if (!alreadyOnTile)
-                //    location?.Tile?.OnObjectEntered(this);
             }
         }
 
-        public Champion(IChampionInitializator initializator, RelationToken relationToken, IEnumerable<RelationToken> enemiesRelationTokens)
+        public Champion(IChampionInitializer initializator, RelationToken relationToken, IEnumerable<RelationToken> enemiesRelationTokens)
         {
             RelationManager = new DefaultRelationManager(relationToken, enemiesRelationTokens);
             var enumerable = initializator.GetProperties(this);
             var dictionary = enumerable.ToDictionary(p => p.Type);
             properties = dictionary;
-            skills = initializator.GetSkills(this).ToDictionary(s => s.Factory);
+            skills = initializator.GetSkills(this).ToDictionary(s => s.Type);
         }
 
         public override IProperty GetProperty(IPropertyFactory propertyType)

@@ -1,4 +1,4 @@
-using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

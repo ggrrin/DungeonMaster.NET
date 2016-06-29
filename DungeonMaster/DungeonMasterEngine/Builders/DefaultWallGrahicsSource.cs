@@ -1,7 +1,7 @@
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Actuators.FloorSensors;
-using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Renderers;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;

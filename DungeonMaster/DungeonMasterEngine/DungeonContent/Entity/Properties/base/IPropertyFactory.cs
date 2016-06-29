@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
 {
     public interface IPropertyFactory { }
 }

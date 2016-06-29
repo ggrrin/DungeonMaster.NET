@@ -1,9 +1,9 @@
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 {
     public class EmptySkill : ISkill {
-        public ISkillFactory Factory { get; }
+        public ISkillFactory Type { get; }
         public SkillBase BaseSkill { get; }
         public long Experience { get; }
         public long TemporaryExperience { get; }

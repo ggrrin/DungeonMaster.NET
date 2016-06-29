@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Actuators.FloorSensors;
+using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Sides

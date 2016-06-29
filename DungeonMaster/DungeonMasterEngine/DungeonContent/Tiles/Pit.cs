@@ -25,7 +25,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             set
             {
                 nextLevelEnter = value;
-                PitNeighbours.Down = value;
+                PitNeighbors.Down = value;
             }
         }
 
@@ -33,14 +33,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public Point TargetTilePosition => GridPosition;
 
 
-        public PitTileNeighbours PitNeighbours => (PitTileNeighbours)Neighbours;
+        public PitTileNeighbors PitNeighbors => (PitTileNeighbors)Neighbors;
 
-        public override TileNeighbours Neighbours
+        public override TileNeighbors Neighbors
         {
-            get { return base.Neighbours; }
+            get { return base.Neighbors; }
             protected set
             {
-                base.Neighbours = (PitTileNeighbours)value;
+                base.Neighbors = (PitTileNeighbors)value;
             }
         }
 
@@ -84,7 +84,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 if (loc != null)
                 {
                     //loc.Location = PitNeighbours.Down;
-                    loc.MoveTo(PitNeighbours.Down, true);
+                    loc.MoveTo(PitNeighbors.Down, true);
                 }
             }
         }

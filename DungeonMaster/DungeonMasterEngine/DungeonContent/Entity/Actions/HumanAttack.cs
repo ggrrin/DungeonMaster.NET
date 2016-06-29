@@ -3,8 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
@@ -27,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
         protected ILiveEntity GetAccesibleEnemies(MapDirection partyDirection)
         {
             //TODO rework using rectangle intersection
-            var targetTile = attackProvider.Location.Tile.Neighbours.GetTile(partyDirection);
+            var targetTile = attackProvider.Location.Tile.Neighbors.GetTile(partyDirection);
             var enemy = targetTile?.LayoutManager.Entities.Where(e => attackProvider.RelationManager.IsEnemy(e.RelationManager.RelationToken)) //todo or otherwise
                 .MinObj(c => Vector3.Distance(c.Position, attackProvider.Position));
 

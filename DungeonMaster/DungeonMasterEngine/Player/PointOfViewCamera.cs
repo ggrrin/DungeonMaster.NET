@@ -105,7 +105,7 @@ namespace DungeonMasterEngine.Player
             Point? translation = GetTranslation();
             if (translation != null)
             {
-                var newLocation = location.Neighbours.GetTile(new MapDirection(translation.Value));
+                var newLocation = location.Neighbors.GetTile(new MapDirection(translation.Value));
                 if (CanMoveToTile(newLocation))
                 {
                     OnLocationChanging(Location, newLocation);

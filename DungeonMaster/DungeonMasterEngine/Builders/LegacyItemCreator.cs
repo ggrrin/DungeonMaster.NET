@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.Builders.ItemInitializers;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterParser;
 using DungeonMasterEngine.Graphics.ResourcesProvides;

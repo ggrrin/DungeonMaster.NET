@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Relations;
+using DungeonMasterEngine.DungeonContent.Entity.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;

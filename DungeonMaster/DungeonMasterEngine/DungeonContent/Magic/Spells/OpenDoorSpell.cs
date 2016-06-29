@@ -24,7 +24,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         public override async void Run()
         {
             ITile moveTile = null; 
-            while (!TryFinishSpell() && null != (moveTile = Location.Neighbours.GetTile(startDirection)))
+            while (!TryFinishSpell() && null != (moveTile = Location.Neighbors.GetTile(startDirection)))
             {
                 await animator.MoveToAsync(this, moveTile, setLocation: true);
             }

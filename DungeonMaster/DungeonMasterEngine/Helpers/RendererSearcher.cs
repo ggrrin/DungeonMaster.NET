@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.Helpers
     {
         protected override void AddSucessors(int layer, ITile currentTile)
         {
-            foreach (var neighbour in currentTile.Neighbours)
+            foreach (var neighbour in currentTile.Neighbors)
                 Enqueue(neighbour.Item1, layer, currentTile);
         }
     }

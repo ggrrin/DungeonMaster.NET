@@ -102,7 +102,7 @@ namespace DungeonMasterEngine.Helpers
 
         protected virtual void AddSucessors(int layer, TTile currentTile)
         {
-            foreach (var neighbour in currentTile.Neighbours.Where(x => x.Item2.ShiftType == DirectionShift.VerticalShift))
+            foreach (var neighbour in currentTile.Neighbors.Where(x => x.Item2.ShiftType == DirectionShift.VerticalShift))
                 Enqueue(neighbour.Item1, layer, currentTile);
         }
 

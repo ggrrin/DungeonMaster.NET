@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
     public interface IInventory
     {

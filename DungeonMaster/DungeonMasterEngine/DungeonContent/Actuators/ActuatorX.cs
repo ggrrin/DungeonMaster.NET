@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators.WallSensors;
+using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
@@ -18,12 +18,12 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
         //    Sensors = new List<SensorX>(sensors);
         //}
 
-        public abstract IEnumerable<SensorX> SensorsEnumeration{ get; }
+        public abstract IEnumerable<SensorX> SensorsEnumeration { get; }
 
         public bool Rotate { get; set; }
 
-
-        protected void F271_xxxx_SENSOR_ProcessRotationEffect<T>(IList<T> sensors )
+        //F271_xxxx_SENSOR_ProcessRotationEffect
+        protected void ProcessRotationEffect<T>(IList<T> sensors)
         {
             if (!Rotate)
                 return;

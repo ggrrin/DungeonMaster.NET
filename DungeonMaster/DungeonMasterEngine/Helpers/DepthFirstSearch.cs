@@ -33,10 +33,10 @@ namespace DungeonMasterEngine.Helpers
             action(currentTile);
             this[currentTile.GridPosition] = currentTimeFlag;
 
-            SolveDescendant(currentTile.Neighbours.North);
-            SolveDescendant(currentTile.Neighbours.West);
-            SolveDescendant(currentTile.Neighbours.East);
-            SolveDescendant(currentTile.Neighbours.South);
+            SolveDescendant(currentTile.Neighbors.North);
+            SolveDescendant(currentTile.Neighbors.West);
+            SolveDescendant(currentTile.Neighbors.East);
+            SolveDescendant(currentTile.Neighbors.South);
         }
 
         private void SolveDescendant(ITile descendant)

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
     public interface IBody
     {
         IEnumerable<IBodyPart> BodyParts { get; }
 
         IEnumerable<IInventory> Storages { get; }
-        bool IsWound { get; }
 
         IInventory GetStorage(IStorageType type);
 

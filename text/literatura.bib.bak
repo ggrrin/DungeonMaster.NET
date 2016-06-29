@@ -1,0 +1,42 @@
+% Encoding: UTF-8
+
+@WWW{TechnicalDocumentationFontanel05,
+  author = {Christophe Fontanel},
+  title  = {Technical Documentation - File Formats - Dungeon File (DUNGEON.DAT)},
+  year   = {2005},
+  date   = {24.10},
+  url    = {http://dmweb.free.fr/?q=node/217},
+}
+
+@WWW{HtmlDataFontanel05,
+  author = {Christophe Fontanel},
+  title  = {Dungeon Master - Content Categories},
+  year   = {2005},
+  date   = {24.10},
+  url    = {http://dmweb.free.fr/?q=view/CategoryBrowser},
+}
+
+@WWW{HtmlAgilityPack,
+  author = {Simon Mourier},
+  title  = {Html Agility Pack},
+  year   = {2012},
+  date   = {10.7.},
+  url    = {https://htmlagilitypack.codeplex.com/},
+}
+
+@WWW{TextureExtractor,
+  author = {Brian},
+  title  = {DMDecode for PC},
+  year   = {2005},
+  date   = {11.11},
+  url    = {http://dmweb.free.fr/?q=node/866},
+}
+
+@WWW{MonoGame,
+  author = {José Antonio Leal de Farias},
+  title  = {MonoGame},
+  year   = {2009},
+  url    = {http://www.monogame.net/},
+}
+
+@Comment{jabref-meta: databaseType:biblatex;}

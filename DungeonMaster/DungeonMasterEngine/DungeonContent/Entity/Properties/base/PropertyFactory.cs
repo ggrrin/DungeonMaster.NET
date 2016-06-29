@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
 {
     public class PropertyFactory<TProperty> : IPropertyFactory where TProperty: IProperty 
     {

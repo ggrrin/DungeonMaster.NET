@@ -1,4 +1,4 @@
-﻿using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
+﻿using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {

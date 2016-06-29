@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Entity.Skills.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
 {
     public class SkillFactory<TSkill> : ISkillFactory where TSkill : ISkill
     {

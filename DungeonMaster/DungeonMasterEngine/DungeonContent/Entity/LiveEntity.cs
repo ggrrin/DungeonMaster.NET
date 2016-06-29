@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Relations;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;

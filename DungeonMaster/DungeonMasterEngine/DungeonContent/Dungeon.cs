@@ -42,7 +42,7 @@ namespace DungeonMasterEngine.DungeonContent
             Builder = builder;
 
             ActiveLevels = new LevelCollection();
-            LoadLevel(1, new Point(6, 14));
+            LoadLevel(0, null);
         }
 
         protected void Leader_LocationChanged(object sender, EventArgs e)

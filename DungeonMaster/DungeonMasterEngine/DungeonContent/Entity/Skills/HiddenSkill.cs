@@ -1,6 +1,5 @@
 using System;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
 {
     public interface IProperty
     {

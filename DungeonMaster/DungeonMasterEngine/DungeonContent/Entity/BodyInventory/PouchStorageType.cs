@@ -1,4 +1,4 @@
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory
 {

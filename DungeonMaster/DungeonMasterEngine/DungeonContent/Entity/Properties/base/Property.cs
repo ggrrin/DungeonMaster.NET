@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
 {
     public abstract class Property : IProperty
     {

@@ -1,13 +1,12 @@
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 {
     public class FighterSkill : SkillBase
     {
-        public override ISkillFactory Factory => SkillFactory<FighterSkill>.Instance;
+        public override ISkillFactory Type => SkillFactory<FighterSkill>.Instance;
         public override SkillBase BaseSkill => null;
 
         protected override void ApplySkills(int majorIncrease, int minorIncrease)

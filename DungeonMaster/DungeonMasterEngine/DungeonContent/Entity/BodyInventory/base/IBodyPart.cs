@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
     public interface IBodyPart : IInventory
     {

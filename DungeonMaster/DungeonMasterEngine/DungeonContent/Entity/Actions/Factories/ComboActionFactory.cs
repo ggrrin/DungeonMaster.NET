@@ -1,5 +1,4 @@
 using System;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Factories
 {

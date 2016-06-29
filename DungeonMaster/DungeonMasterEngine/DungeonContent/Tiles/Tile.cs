@@ -5,7 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
@@ -62,7 +63,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             GridPosition = initializer.GridPosition;
             Level = initializer.Level;
-            Neighbours = initializer.Neighbours;
+            Neighbors = initializer.Neighbors;
 
 
             initializer.Initializing -= Initialize;
@@ -70,9 +71,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual LayoutManager<ILiveEntity> LayoutManager { get; } = new LayoutManager<ILiveEntity>();
 
-        public virtual TileNeighbours Neighbours { get; protected set; }
+        public virtual TileNeighbors Neighbors { get; protected set; }
 
-        INeighbours<ITile> INeighbourable<ITile>.Neighbours => Neighbours;
+        INeighbors<ITile> INeighbourable<ITile>.Neighbors => Neighbors;
 
         public abstract bool IsAccessible { get; }
         public virtual bool CanFlyItems => true;

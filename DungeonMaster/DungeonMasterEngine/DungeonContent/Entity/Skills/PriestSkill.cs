@@ -1,14 +1,13 @@
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.@base;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.@base;
-using DungeonMasterEngine.DungeonContent.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Skills
 {
     public class PriestSkill : SkillBase
     {
-        public override ISkillFactory Factory => SkillFactory<PriestSkill>.Instance;
+        public override ISkillFactory Type => SkillFactory<PriestSkill>.Instance;
         public override SkillBase BaseSkill => null;
 
         protected override void ApplySkills(int majorIncrease, int minorIncrease)

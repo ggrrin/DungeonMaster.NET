@@ -1,29 +1,13 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.GrabableItems;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.@base
+namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
-    public class BodyPart : IBodyPart
+    public class BodyPart : Inventory, IBodyPart
     {
-        private readonly IInventory bodyPartImplementation;
-        public IStorageType Type => bodyPartImplementation.Type;
-
-        public IReadOnlyList<IGrabableItem> Storage => bodyPartImplementation.Storage;
-
-        public IGrabableItem TakeItemFrom(int index) => bodyPartImplementation.TakeItemFrom(index);
-
-        public bool AddItemTo(IGrabableItem item, int index) => bodyPartImplementation.AddItemTo(item, index);
-
-        public bool AddItem(IGrabableItem item) => bodyPartImplementation.AddItem(item);
-
-        public IEnumerable<IGrabableItem> AddRange(IEnumerable<IGrabableItem> items) => bodyPartImplementation.AddRange(items);
-
-        public BodyPart(IStorageType storageType, float hitProbability, float damageFactor)
+        public BodyPart(IStorageType storageType, float hitProbability, float damageFactor) : base(storageType)
         {
-            bodyPartImplementation = new Inventory(storageType);
             HitProbability = hitProbability;
             DamageFactor = damageFactor;
-
         }
 
         public IEnumerable<IEntityPropertyEffect> Effects => null;

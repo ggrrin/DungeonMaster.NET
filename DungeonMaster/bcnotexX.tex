@@ -357,10 +357,10 @@ strategii načítání levelů, je třeba overridovat metody \ccc{SetupLevelConn
 strategie ukládání a mazání aktivních levelů, je třeba podědit třídu \ccc{LevelCollection}. Kterou je pak nutno nastavit
 do vlastnosti \ccc{ActiveLevels}. 
 
-\section{Body rozšiřitelnosti enginu}
-Tato sekce popisuje jaké objekty lze jakým způsobem rozšířit či upravit. O tom jak takové nové objekty potom používat
-pojednává následující sekce.
+Následující sekce popisují jaké objekty lze jakým způsobem rozšířit či upravit. O tom jak takové nové objekty potom používat
+pojednává pozdější sekce.
 
+\section{Rozšiřitelnost dlaždic}
 \subsection{Popis dlaždic}
 Nejobecnější strukturu dlaždice definuje interface \ccc{ITile}. Dlaždice tedy musí obsahovat pozici vzhledem
 k~mřížce dlaždic a potom level, ve kterém se nachází. Tyto vlastnosti používají příšery nebo hráč k~určení
@@ -465,7 +465,7 @@ Tento způsob je použit například u teleportu, kde se vědci přidávají do 
 Tato metoda pak volá odpovídající metodu podlahy. Poslední stranou je  třída \ccc{ActuatorFloorTileSide}, která pouze navíc přidává 
 nášlapný přepínač.
 
-\subsection{Renderery}
+\section{Renderery}
 Jelikož každá dlaždice a každé strany dlaždic mají renderery, je jím čas věnovat tuto sekci. Všechny tyto objekty
 a mnoho dalších k tomuto účelu implementují rozhraní \ccc{IRenderable}, které pouze vyžaduje  položku typu \ccc{IRenderer}. 
 Stěžejní funkce tohoto rozhraní jsou funkce \ccc{Render} a \ccc{Interact}. 
@@ -497,3 +497,40 @@ Interakční funkce má skrze parametr typu \ccc{ILeader}  přístup k položce 
 Daný renderer musí vědět, pro jaký typ interactoru je a na ten si ho musí vhodně přetypovat. V této implementaci je použit paprsek (\ccc{Ray}). 
 Celý tento koncept interactoru by šel sice udělat genericky, ale prolínal by se celou strukturou rendererů a z toho
 důvodu jsem se rozhodl v tomto místě ustoupit. A udělat situaci jednoduší na úkor kontroly za překladu.
+
+
+\section{Přepínače}
+Jak již bylo řečeno, přepínače se skládají z jednotlivých senzorů. Senzory pak mohou provádět následující akce:
+
+\begin{itemize}
+\item změna stavu  dlaždice
+\item proházení senzorů přepínače
+\item přidání zkušeností hráči
+\end{itemize}
+
+Senzory mohou být aktivovány:
+
+\begin{itemize}
+\item Kliknutím na dekoraci senzoru, pokud je senzor na zdi a je to poslední senzor přepínače.
+\item Zprávou od vyslanou jiným senzorem.
+\end{itemize}
+Tento typ přepínačů odpovídá přepínačům v původní hře.
+
+Dále engine povoluje nové přepínače, který nemusí používat senzory. Je tedy čistě na programátorovi, jakým 
+způsobem se bude přepínač aktivovat. 
+
+\section{Implementace přepínačů se senzory}
+Za přepínačem stojí navenek interface \ccc{IActuatorX}. Toto rozhraní pouze vyžaduje API pro příjem 
+zpráv typu  \ccc{Message} pro dodržení kompatibility s původní hrou. Jelikož ostatní aktivace záleží
+na typu přepínače. Protože například nášlapný přepínač se aktivuje jiným způsobem než přepínač na zdi.
+
+Rodiče všech přepínačů kompatibilních originální hře tvoří třída \ccc{Actuator}. Tato třída poskytuje
+pouze společnou rutinu pro zarotování senzory přepínače. Lze vyvolat pouze z potomků. Zda-li se mají
+senzory zarotovat určuje dle vlastnosti  \ccc{Rotate}, která se poté nastaví na false. Tato funkce se
+volá z potomků pokud proběhl pokus o aktivaci nějakého senzoru.
+
+Prvním potomkem předchozí třídy je třída \ccc{FloorActuator}, která může obsahovat pouze senzory určené
+na podlahu. Pokus o její aktivaci se provádí funkcí \ccc{Trigger}. Jako první parametr se jí předává objekt,
+který vstupuje/odchází z dlaždice. Potom seznam všech objektů na dlaždici a naposled informace zda objekt
+vstupuje či vystupuje. Pro přepínač je vytvořena speciální podlaha \ccc{ActuatorFloorSide}, která se stará 
+o volání zmíněné funkce.
