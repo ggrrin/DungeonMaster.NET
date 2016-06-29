@@ -6,11 +6,9 @@ using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.FloorSensors;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.Initializers;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterParser.Items;
-using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class FloorActuatorCreator : ActuatorCreatorBase
     {
@@ -31,7 +29,7 @@ namespace DungeonMasterEngine.Builders
             {
                 var texture = builder.FloorTextures[data.Decoration - 1];
                 var decoration = new DecorationItem();
-                decoration.Renderer = builder.RendererSource.GetDecorationRenderer(decoration, texture);
+                decoration.Renderer = builder.RendererSource.GetRandomDecorationRenderer(decoration, texture);
                 initializer.Graphics = decoration;
             }
             await SetupInitializer(initializer, data);

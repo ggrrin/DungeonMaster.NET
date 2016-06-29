@@ -1,13 +1,12 @@
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.Initializers;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class ActuatorCreatorBase
     {

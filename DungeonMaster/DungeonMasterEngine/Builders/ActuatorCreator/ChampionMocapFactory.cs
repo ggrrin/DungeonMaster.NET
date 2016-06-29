@@ -1,16 +1,11 @@
-﻿using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Entity;
+﻿using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
 using DungeonMasterEngine.DungeonContent.Entity.Renderers;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterParser.Items;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class ChampionMocapFactory : ChampionFactory
     {

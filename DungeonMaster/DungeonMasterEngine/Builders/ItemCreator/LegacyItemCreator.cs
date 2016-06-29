@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using DungeonMasterEngine.Builders.ItemInitializers;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterParser;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
-using DungeonMasterEngine.Player;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using DoorItem = DungeonMasterParser.Items.DoorItem;
-using GrabableItem = DungeonMasterEngine.DungeonContent.GrabableItems.GrabableItem;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ItemCreator
 {
 
     public class LegacyItemCreator : IItemCreator<IGrabableItem>

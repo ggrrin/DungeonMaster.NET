@@ -313,7 +313,7 @@ TODO
 \section{Kouzla}
 TODO
 
-\chapter{Programátorská dokumentace}
+\chapter{Vývojová dokumentace}
 Následující sekce této kapitoly jsou určeny především pro lidi, kteří chtějí porozumět více celému enginu. Především
 však dobře poslouží lidem, kteří by tento engine chtěli použít pro svoji hru nebo by chtěli jen rozšířit některé části
 tohoto enginu Dungeon Masteru.
@@ -838,6 +838,57 @@ TODO
 TODO
 
 \section{Builder map}
+Nyní když máme rozebrané všechny části enginu, které je potenciálně možné rozšířit, je čas popsat, 
+jak se vše sestaví dohromady v herní úroveň.
+
+\subsection{Vlastní implementace builderu}
+Jak již bylo zmíněno builder musí implementovat rozhraní \ccc{IDungeonBuilder}. Toto rozhraní je
+potom dotazované pro načtení levelu jádrem enginu. Je úkolem builderu rozhodnout jak bude jednat
+v případě, že je podán několikrát dotaz na stejnou mapu. Typicky je se tedy nutné rozhodnout
+jestli načtené mapy kešovat či nikoliv. Existuje částečná implementace tohoto rozhraní \ccc{BuilderBase},
+která má funkci pro vyplnění sousedů dlaždic do inicializátorů. Nicméně nic jiného neposkytuje, takže
+je zcela v pořádku implementovat přímo dané rozhraní.
+
+Správně implementovaný builder by měl načítat mapy zhruba tímto způsobem. 
+
+\begin{itemize}
+
+\item Vytvoření dlaždic a naplnění jejich inicializátorů. 
+To znamená vytvořit strany dlaždic a přepínače či předměty v nich obsažené.
+
+\item Nastavení sousedů dlaždic do inicializátorů. 
+
+\item Vytvoření samotného levelu \ccc{DungeonLevel}.
+
+\item Dokončení inicializace inicializátoru a zavolaní inicializaci dlaždic skrze inicializátory. 
+
+\item Případné kešování levelu pro případný opakovaný požadavek. 
+\end{itemize}
+
+Na tyto body se samozřejmě navazuje spoustu další věcí, které je třeba vyřešit. 
+Je to například vytvoření továren pro akce a předměty. Továrny pro akce jsou pak použity pro
+továrny pro předměty a ty zase pro vytvoření samotných předmětů. Dále je potřeba vyřešit 
+nastavení rendererů. Pokud má builder podporovat různé zobrazovací vrstvy, je potřeba 
+nějakým způsobem poskytnout možnost předání jiných rendererů builderu. Je tedy například
+možné vytvořit rozhraní, které bude vracet dané renderery používané v builderu. Odlišnou
+implementaci rozhraní se potom budou požívat odlišné renderery.
+
+
+\subsection{Implementace builderu Dungeon Masteru}
+Builder pro samotnu hru Dungeon Master řeší třída \ccc{LegacyMapBuilder}. Tento builder
+využívá parseru binární dat originální hry a to \ccc{DungeonParser}. Při vytvoření instance 
+builderu předchozím parserem rozparsuje všechna data, která pak jsou skrze něj k dispozici jako 
+třída \ccc{DungeonData}. Jak bylo zmiňováno v analýze, parser kromě samotných dat načítá 
+i ostatní data jako například vlastnosti předmětů atp. Vše je k dispozici ve zmíněné třídě.
+Po rosparsovaní dat, jsou na základě těchto dat vytvořeny továrny pro předměty, akce a příšery.
+To vše stále v konstruktoru. 
+
+Samotný builder map potom využívá ještě další buildery. Jsou to třídy pro vytváření
+dlaždic, přepínačů, předmětů a příšer. Při požadavku na určitou mapu pak 
+následuje postup zmíněný v předchozí sekci.
+
+
+\subsection{Rozšíření builderů Dungeon Masteru}
 TODO
 
 \chapter{Uživatelská dokumentace}

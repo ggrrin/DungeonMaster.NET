@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.Initializers;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterParser.Items;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class LogicActuatorCreator : ActuatorCreatorBase
     {

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.Builders.ItemInitializers;
+using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;

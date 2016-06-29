@@ -1,13 +1,7 @@
-﻿using DungeonMasterEngine.Graphics.ResourcesProvides;
-using DungeonMasterEngine.Helpers;
-using DungeonMasterEngine.Interfaces;
-using DungeonMasterParser;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using DungeonMasterEngine.Builders.ActuatorCreator;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Constrains;
 using DungeonMasterEngine.DungeonContent.Entity;
@@ -15,13 +9,18 @@ using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
+using DungeonMasterEngine.Helpers;
+using DungeonMasterEngine.Interfaces;
+using DungeonMasterParser;
 using DungeonMasterParser.Enums;
-using DungeonMasterParser.Items;
 using DungeonMasterParser.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using GrabableItem = DungeonMasterEngine.DungeonContent.GrabableItems.GrabableItem;
 using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.TileCreator
 {
     public class LegacyTileCreator : ITileCreator<Tile>
     {
@@ -29,7 +28,7 @@ namespace DungeonMasterEngine.Builders
         private readonly Color[] miniMapData;
         private readonly Texture2D texture;
         private readonly LogicActuatorCreator logicActuatorCreator;
-        private readonly CreatureCreator creatureCreator;
+        private readonly CreatureCreator.CreatureCreator creatureCreator;
         private Vector3 tilePosition;
 
         public int level => builder.CurrentLevel;
@@ -51,7 +50,7 @@ namespace DungeonMasterEngine.Builders
             miniMapData = new Color[texture.Width * texture.Height];
             sidesCreator = new SidesCreator(builder);
             logicActuatorCreator = new LogicActuatorCreator(builder);
-            creatureCreator = new CreatureCreator(builder);
+            creatureCreator = new CreatureCreator.CreatureCreator(builder);
         }
 
         private void SetMinimapTile(Color color) => miniMapData[(int)tilePosition.Z * texture.Width + (int)tilePosition.X] = color;
@@ -243,19 +242,9 @@ namespace DungeonMasterEngine.Builders
             var stairs = map[pos.X, pos.Y];
 
             if (stairs.GetType() == typeof(StairsTileData))
-            {
                 return new TileInfo<StairsTileData> { Position = pos, Tile = (StairsTileData)stairs };
-            }
-            else//TODO shouldnt be necesarry
-            {
-                var k = builder.GetNeigbourTiles(pos, map);
-
-                var res = k.FirstOrDefault(x => x.Tile.GetType() == typeof(Stairs));
-                if (res.Tile == null)
-                    throw new InvalidOperationException("Invalid CurrentMap format");
-                else
-                    return new TileInfo<StairsTileData> { Position = res.Position, Tile = (StairsTileData)res.Tile };
-            }
+            else
+                throw new InvalidOperationException("Should not be possible");
         }
 
         private IConstrain GetTeleportScopeType(TeleportScope scope)

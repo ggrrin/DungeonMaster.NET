@@ -11,7 +11,7 @@ using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class ChampionFactory : IChampionInitializer
     {

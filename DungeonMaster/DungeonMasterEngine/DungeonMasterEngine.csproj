@@ -57,13 +57,13 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Builders\ActuatorCreatorBase.cs" />
-    <Compile Include="Builders\ChampionMocapFactory.cs" />
-    <Compile Include="Builders\ChampionFactory.cs" />
+    <Compile Include="Builders\ActuatorCreator\ActuatorCreatorBase.cs" />
+    <Compile Include="Builders\ActuatorCreator\ChampionMocapFactory.cs" />
+    <Compile Include="Builders\ActuatorCreator\ChampionFactory.cs" />
     <Compile Include="DungeonContent\Entity\CreatureFactory.cs" />
-    <Compile Include="Builders\CreatureInitializer.cs" />
-    <Compile Include="Builders\ICreatureInitializer.cs" />
-    <Compile Include="Builders\LogicActuatorCreator.cs" />
+    <Compile Include="Builders\CreatureCreator\CreatureInitializer.cs" />
+    <Compile Include="Builders\CreatureCreator\ICreatureInitializer.cs" />
+    <Compile Include="Builders\ActuatorCreator\LogicActuatorCreator.cs" />
     <Compile Include="DungeonContent\Actuators\Renderers\ActuatorRenderer.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\Initializers\DirectionIntializer.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\FloorSensors\FloorItemDataSensor.cs" />
@@ -97,8 +97,8 @@
     <Compile Include="DungeonContent\Tiles\Renderers\ChampionMirrorRenderer.cs" />
     <Compile Include="Builders\DefaultWallGrahicsSource.cs" />
     <Compile Include="Builders\IWallGraphicSource.cs" />
-    <Compile Include="Builders\SidesCreator.cs" />
-    <Compile Include="Builders\WallActuatorCreator.cs" />
+    <Compile Include="Builders\TileCreator\SidesCreator.cs" />
+    <Compile Include="Builders\ActuatorCreator\WallActuatorCreator.cs" />
     <Compile Include="DungeonContent\Actuators\FloorActuator.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\FloorSensors\FloorSensor.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\FloorSensors\FloorSensorC01.cs" />
@@ -146,10 +146,10 @@
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\AirSkill.cs" />
     <Compile Include="Builders\BuilderBase.cs" />
-    <Compile Include="Builders\ItemInitializers\ClothInitializer.cs" />
+    <Compile Include="Builders\ItemCreator\ClothInitializer.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ClubSkill.cs" />
-    <Compile Include="Builders\ItemInitializers\ContainerInitializer.cs" />
-    <Compile Include="Builders\CreatureCreator.cs" />
+    <Compile Include="Builders\ItemCreator\ContainerInitializer.cs" />
+    <Compile Include="Builders\CreatureCreator\CreatureCreator.cs" />
     <Compile Include="DungeonContent\Entity\Skills\DeffendSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\EarthSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FireSkill.cs" />
@@ -157,16 +157,16 @@
     <Compile Include="DungeonContent\Entity\Skills\HiddenSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\IdentifySkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\InfluenceSkill.cs" />
-    <Compile Include="Builders\ItemInitializers\MiscInitializer.cs" />
+    <Compile Include="Builders\ItemCreator\MiscInitializer.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ParrySkill.cs" />
-    <Compile Include="Builders\ItemInitializers\PotionInitializer.cs" />
-    <Compile Include="Builders\ItemInitializers\ScrollInitializer.cs" />
+    <Compile Include="Builders\ItemCreator\PotionInitializer.cs" />
+    <Compile Include="Builders\ItemCreator\ScrollInitializer.cs" />
     <Compile Include="DungeonContent\Entity\Skills\StealSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ThrustSkill.cs" />
     <Compile Include="Builders\TileInfo.cs" />
     <Compile Include="DungeonContent\Entity\Skills\WaterSkill.cs" />
-    <Compile Include="Builders\ItemInitializers\WeaponInitializer.cs" />
-    <Compile Include="Builders\FloorActuatorCreator.cs" />
+    <Compile Include="Builders\ItemCreator\WeaponInitializer.cs" />
+    <Compile Include="Builders\ActuatorCreator\FloorActuatorCreator.cs" />
     <Compile Include="DungeonContent\Constrains\PartyConstrain.cs" />
     <Compile Include="DungeonContent\Constrains\OrConstrain.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\LogicGateSensor.cs" />
@@ -326,11 +326,10 @@
     <Compile Include="DungeonContent\Entity\BodyInventory\BigQuiverStorageType.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\Base\BodyPart.cs" />
     <Compile Include="DungeonContent\Entity\Champion.cs" />
-    <Compile Include="Builders\LegacyItemCreator.cs" />
-    <Compile Include="Builders\LegacyTileCreator.cs" />
+    <Compile Include="Builders\ItemCreator\LegacyItemCreator.cs" />
+    <Compile Include="Builders\TileCreator\LegacyTileCreator.cs" />
     <Compile Include="Helpers\BitMapMemory.cs" />
     <Compile Include="Helpers\BreadthFirstSearch.cs" />
-    <Compile Include="Builders\BuilderMocap.cs" />
     <Compile Include="DungeonContent\GrabableItems\Cloth.cs" />
     <Compile Include="DungeonContent\GrabableItems\Container.cs" />
     <Compile Include="DungeonContent\Entity\Creature.cs" />

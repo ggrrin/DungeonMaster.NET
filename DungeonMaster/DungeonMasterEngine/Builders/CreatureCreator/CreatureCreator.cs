@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
-using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.CreatureCreator
 {
     internal class CreatureCreator
     {

@@ -27,7 +27,7 @@
 \contentsline {section}{\numberline {3.12}P\IeC {\v r}edm\IeC {\v e}ty}{13}{section.3.12}
 \contentsline {section}{\numberline {3.13}Akce}{14}{section.3.13}
 \contentsline {section}{\numberline {3.14}Kouzla}{14}{section.3.14}
-\contentsline {chapter}{\numberline {4}Program\IeC {\'a}torsk\IeC {\'a} dokumentace}{15}{chapter.4}
+\contentsline {chapter}{\numberline {4}V\IeC {\'y}vojov\IeC {\'a} dokumentace}{15}{chapter.4}
 \contentsline {section}{\numberline {4.1}J\IeC {\'a}dro enginu}{15}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}Renderovan\IeC {\'\i }}{15}{subsection.4.1.1}
 \contentsline {subsubsection}{V\IeC {\'y}b\IeC {\v e}r a vykreslov\IeC {\'a}n\IeC {\'\i } pou\IeC {\v z}it\IeC {\'y}ch dla\IeC {\v z}dic}{15}{section*.8}
@@ -66,15 +66,18 @@
 \contentsline {subsection}{\numberline {4.6.1}Implementace p\IeC {\v r}edm\IeC {\v e}t\IeC {\r u}}{28}{subsection.4.6.1}
 \contentsline {section}{\numberline {4.7}Akce}{28}{section.4.7}
 \contentsline {section}{\numberline {4.8}Kouzla}{28}{section.4.8}
-\contentsline {section}{\numberline {4.9}Builder map}{28}{section.4.9}
-\contentsline {chapter}{\numberline {5}U\IeC {\v z}ivatelsk\IeC {\'a} dokumentace}{29}{chapter.5}
-\contentsline {section}{\numberline {5.1}Mechaniky ve h\IeC {\v r}e}{29}{section.5.1}
-\contentsline {section}{\numberline {5.2}C\IeC {\'\i }l hry}{29}{section.5.2}
-\contentsline {section}{\numberline {5.3}Ovl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i }}{29}{section.5.3}
-\contentsline {subsection}{\numberline {5.3.1}Pohyb}{29}{subsection.5.3.1}
-\contentsline {subsection}{\numberline {5.3.2}Aktivace p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}\IeC {\r u} a sb\IeC {\'\i }r\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}edm\IeC {\v e}t\IeC {\r u}}{29}{subsection.5.3.2}
-\contentsline {subsection}{\numberline {5.3.3}Souboj}{30}{subsection.5.3.3}
-\contentsline {subsection}{\numberline {5.3.4}Konzole}{30}{subsection.5.3.4}
-\contentsline {chapter}{Z\IeC {\'a}v\IeC {\v e}r}{31}{chapter*.22}
-\contentsline {chapter}{Seznam pou\IeC {\v z}it\IeC {\'e} literatury}{32}{chapter*.23}
-\contentsline {chapter}{P\IeC {\v r}\IeC {\'\i }lohy}{33}{chapter*.24}
+\contentsline {section}{\numberline {4.9}Builder map}{29}{section.4.9}
+\contentsline {subsection}{\numberline {4.9.1}Vlastn\IeC {\'\i } implementace builderu}{29}{subsection.4.9.1}
+\contentsline {subsection}{\numberline {4.9.2}Implementace builderu Dungeon Masteru}{29}{subsection.4.9.2}
+\contentsline {subsection}{\numberline {4.9.3}Roz\IeC {\v s}\IeC {\'\i }\IeC {\v r}en\IeC {\'\i } builder\IeC {\r u} Dungeon Masteru}{30}{subsection.4.9.3}
+\contentsline {chapter}{\numberline {5}U\IeC {\v z}ivatelsk\IeC {\'a} dokumentace}{31}{chapter.5}
+\contentsline {section}{\numberline {5.1}Mechaniky ve h\IeC {\v r}e}{31}{section.5.1}
+\contentsline {section}{\numberline {5.2}C\IeC {\'\i }l hry}{31}{section.5.2}
+\contentsline {section}{\numberline {5.3}Ovl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i }}{31}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Pohyb}{31}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Aktivace p\IeC {\v r}ep\IeC {\'\i }na\IeC {\v c}\IeC {\r u} a sb\IeC {\'\i }r\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}edm\IeC {\v e}t\IeC {\r u}}{31}{subsection.5.3.2}
+\contentsline {subsection}{\numberline {5.3.3}Souboj}{32}{subsection.5.3.3}
+\contentsline {subsection}{\numberline {5.3.4}Konzole}{32}{subsection.5.3.4}
+\contentsline {chapter}{Z\IeC {\'a}v\IeC {\v e}r}{33}{chapter*.22}
+\contentsline {chapter}{Seznam pou\IeC {\v z}it\IeC {\'e} literatury}{34}{chapter*.23}
+\contentsline {chapter}{P\IeC {\v r}\IeC {\'\i }lohy}{35}{chapter*.24}

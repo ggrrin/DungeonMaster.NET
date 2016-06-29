@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.6.26)  29 JUN 2016 23:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.6.26)  30 JUN 2016 01:38
 entering extended mode
 **prace.tex
 (prace.tex
@@ -829,7 +829,7 @@ LaTeX Info: Redefining \nameref on input line 137.
  (titulka.tex
 Package hyperref Info: Option `pageanchor' set `false' on input line 6.
 
-<./img/logo.pdf, id=239, 371.3875pt x 366.36874pt>
+<./img/logo.pdf, id=251, 371.3875pt x 366.36874pt>
 File: ./img/logo.pdf Graphic file (type pdf)
  <use ./img/logo.pdf>
 Package pdftex.def Info: ./img/logo.pdf used on input line 24.
@@ -907,20 +907,20 @@ Overfull \hbox (14.5392pt too wide) in paragraph at lines 671--679
 cmr/m/n/12 . První vlast-ností to-hoto roz-hraní je \IL2/cmr/bx/n/12 SkillLe-|
  []
 
-[24] [25] [26] [27] [28]
+[24] [25] [26] [27] [28] [29] [30]
 Kapitola 5.
-[29
+[31
 
-] [30]
+] [32]
 ! You can't use `macro parameter character #' in horizontal mode.
-l.892 ...it. Pro implementaci byl pouÅ¾it jazyk c#
+l.943 ...it. Pro implementaci byl pouÅ¾it jazyk c#
                                                   , platforma .NET
 Sorry, but I'm not programmed to handle this case;
 I'll just pretend that you didn't ask for it.
 If you're in the wrong mode, you might be able to
 return to the right one by typing `I}' or `I$' or `I\par'.
 
-) [31
+) [33
 
 ] (literatura.tex (prace.bbl
 LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 11.
@@ -928,11 +928,11 @@ LaTeX Font Info:    Try loading font information for IL2+cmtt on input line 11.
 
 ("C:\Program Files\MiKTeX 2.9\tex\cslatex\base\il2cmtt.fd"
 File: il2cmtt.fd 1997/08/20 CSLaTeX font definitions
-))) [32
+))) [34
 
 
 
-] [33
+] [35
 
 
 ]
@@ -945,14 +945,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 176.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 176.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 176.
 Package rerunfilecheck Info: File `prace.out' has not changed.
-(rerunfilecheck)             Checksum: EDFF93BB1704E862B98EDCFF4311FD14;8912.
+(rerunfilecheck)             Checksum: 2126F49BA12A2D66D0B43AD55E1D66CE;9613.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 176.
  ) 
 Here is how much of TeX's memory you used:
- 12311 strings out of 493698
- 166666 string characters out of 3144409
+ 12319 strings out of 493698
+ 166782 string characters out of 3144409
  251371 words of memory out of 3000000
- 15323 multiletter control sequences out of 15000+200000
+ 15326 multiletter control sequences out of 15000+200000
  23686 words of font info for 75 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
  29i,6n,35p,358b,504s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -963,9 +963,9 @@ X 2.9/fonts/type1/public/cs/cscsc10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
 pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cs/cstt12.pfb><C:/Program F
 iles/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1200.pfb><C:/Program Files/MiKT
 eX 2.9/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on prace.pdf (37 pages, 353981 bytes).
+Output written on prace.pdf (39 pages, 359908 bytes).
 PDF statistics:
- 559 PDF objects out of 1000 (max. 8388607)
- 122 named destinations out of 1000 (max. 500000)
- 478 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 583 PDF objects out of 1000 (max. 8388607)
+ 127 named destinations out of 1000 (max. 500000)
+ 502 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.Initializers;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
-using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.ActuatorCreator
 {
     public class WallActuatorCreator :ActuatorCreatorBase
     {
@@ -105,7 +103,7 @@ namespace DungeonMasterEngine.Builders
             await SetupInitializer(sensor127initializer, data);
             var dec = new ChampionDecoration(true);
             sensor127initializer.Graphics = dec;
-            sensor127initializer.Graphics.Renderer = builder.RendererSource.GetChampionRenderer(dec, builder.WallTextures[data.Decoration - 1], face);
+            sensor127initializer.Graphics.Renderer = builder.RendererSource.GetChampionActuatorRenderer(dec, builder.WallTextures[data.Decoration - 1], face);
             return new Sensor127(sensor127initializer);
         }
 
@@ -128,19 +126,19 @@ namespace DungeonMasterEngine.Builders
             {
                 case GraphicsItemState.GraphicOnly:
                     var decoration = new DecorationItem();
-                    decoration.Renderer = builder.RendererSource.GetDecorationRenderer(decoration, texture);
+                    decoration.Renderer = builder.RendererSource.GetRandomDecorationRenderer(decoration, texture);
                     return decoration;
 
                 case GraphicsItemState.Alcove:
                     var alcove = new Alcove(items);
                     items.Clear();
-                    alcove.Renderer = builder.RendererSource.GetAlcoveDecoration(alcove, texture);
+                    alcove.Renderer = builder.RendererSource.GetAlcoveDecorationRenderer(alcove, texture);
                     return alcove;
 
                 case GraphicsItemState.ViAltair:
                     var altair = new ViAltairAlcove(items);
                     items.Clear();
-                    altair.Renderer = builder.RendererSource.GetAlcoveDecoration(altair, texture);
+                    altair.Renderer = builder.RendererSource.GetAlcoveDecorationRenderer(altair, texture);
                     return altair;
 
                 case GraphicsItemState.Fountain:

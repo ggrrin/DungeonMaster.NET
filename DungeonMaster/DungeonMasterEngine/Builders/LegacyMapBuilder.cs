@@ -5,6 +5,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Builders.ActuatorCreator;
+using DungeonMasterEngine.Builders.ItemCreator;
+using DungeonMasterEngine.Builders.TileCreator;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
@@ -191,15 +194,12 @@ namespace DungeonMasterEngine.Builders
                 ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/Creatures/DM-Creature-SuperNES-{wd.Name}")))
                 .ToArray();
 
-
-
-
             RendererSource = new DefaultWallGrahicsSource();
         }
 
-        private IGroupLayout GetGroupLayout(int size)
+        private IGroupLayout GetGroupLayout(int layout)
         {
-            switch (size)
+            switch (layout)
             {
                 case 0:
                     return Small4GroupLayout.Instance;
@@ -211,11 +211,6 @@ namespace DungeonMasterEngine.Builders
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-
-
-
-
 
         protected virtual IReadOnlyList<HumanActionFactoryBase> GetFightActionsFactories()
         {
@@ -297,7 +292,6 @@ namespace DungeonMasterEngine.Builders
             TilesPositions = new Dictionary<Point, Tile>();
         }
 
-
         public override DungeonLevel GetLevel(int level, Point? startTile)
         {
             DungeonLevel dungeonLevel = null;
@@ -350,20 +344,6 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        public IEnumerable<TileInfo<TileData>> GetNeigbourTiles(Point position, DungeonMap map)
-        {
-            return MapDirection.Sides.Select(side =>
-            {
-                var p = position + side.RelativeShift;
-                return new TileInfo<TileData>
-                {
-                    Position = p,
-                    Tile = map[p.X, p.Y]
-                };
-            });
-        }
-
-
         protected virtual void InitializeMapTextures()
         {
             defaultDoorTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DefaultDoor");
@@ -390,7 +370,6 @@ namespace DungeonMasterEngine.Builders
             DoorButtonTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DoorButton");
             TeleportTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/Teleport");
         }
-
 
         public virtual IGrabableItemFactoryBase GetItemFactory(int identifer)
         {
@@ -463,7 +442,5 @@ namespace DungeonMasterEngine.Builders
                     throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
         }
-
-
     }
 }

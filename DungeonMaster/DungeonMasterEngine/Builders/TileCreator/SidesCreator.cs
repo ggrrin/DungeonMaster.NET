@@ -1,24 +1,20 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DungeonMasterEngine.Builders.ActuatorCreator;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
-using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.TileCreator
 {
     public class SidesCreator
     {

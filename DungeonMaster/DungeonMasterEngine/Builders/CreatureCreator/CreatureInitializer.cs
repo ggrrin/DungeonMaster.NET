@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
 
-namespace DungeonMasterEngine.Builders
+namespace DungeonMasterEngine.Builders.CreatureCreator
 {
     class CreatureInitializer : ICreatureInitializer {
         public int HitPoints { get; set; }

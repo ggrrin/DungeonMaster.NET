@@ -3,7 +3,7 @@ using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.ItemInitializers;
+using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.Helpers;
