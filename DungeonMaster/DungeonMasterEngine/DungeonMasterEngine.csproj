@@ -58,8 +58,34 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Builders\ActuatorCreator\ActuatorCreatorBase.cs" />
-    <Compile Include="Builders\ActuatorCreator\ChampionMocapFactory.cs" />
-    <Compile Include="Builders\ActuatorCreator\ChampionFactory.cs" />
+    <Compile Include="Builders\ActuatorCreator\ChampionMocapCreator.cs" />
+    <Compile Include="Builders\ActuatorCreator\ChampionCreator.cs" />
+    <Compile Include="Builders\ItemCreator\ChampionBonesInitializer.cs" />
+    <Compile Include="Builders\LegacySpellCreator.cs" />
+    <Compile Include="Builders\PotionFactoriesBuilder.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\AttackBase.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Factories\ThrowActionFactory.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\AttackInfo.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\CreatureAttack.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\CreatureAttackType.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\ImpactProjectile.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\ExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\PoisonCloudExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\SmokeExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\FireballProjectile.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\FireballExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\GigglerAttack.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\HarmNonMaterialExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\Impact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\LightingBoltExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\PoisonBoltExplosionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\OpenDoorProjectile.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Projectile.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\RemoteCreatureAttack.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\SlimeExplostionImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\ThrowImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\Projectiles\Explosions\WeaponImpact.cs" />
+    <Compile Include="DungeonContent\Entity\Actions\WoundInfo.cs" />
     <Compile Include="DungeonContent\Entity\CreatureFactory.cs" />
     <Compile Include="Builders\CreatureCreator\CreatureInitializer.cs" />
     <Compile Include="Builders\CreatureCreator\ICreatureInitializer.cs" />
@@ -81,12 +107,53 @@
     <Compile Include="DungeonContent\Entity\Actions\SwingAttack.cs" />
     <Compile Include="DungeonContent\Entity\Actions\Factories\SwingAttackFactory.cs" />
     <Compile Include="DungeonContent\Entity\Actions\ThrowAttakc.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\AntiPoisonProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\ChampionDextrityProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\FireShieldDefenseProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\PoisonProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\ShieldDefenseProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\SpellShieldDefenseProperty.cs" />
     <Compile Include="DungeonContent\Entity\Renderers\CreatureRenderer.cs" />
     <Compile Include="DungeonContent\Entity\Renderers\LiveEntityRenderer.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\FullTileLayout.cs" />
     <Compile Include="DungeonContent\Entity\ILiveEntity.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\OnethSpace.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\OnethSpaceRouteElement.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\ChampionBonesFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\EmptyPotionFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Misc\FoodMisc.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\FoodMiscFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Initializers\IChampionBonesInitializer.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Misc\WaterMisc.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\BroPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Misc\ChampionBones.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\DanePotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\DrinkablePotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\DrinkablePotionFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\EEPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\EmptyPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\IHasEffect.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\KuPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\MaPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\NetaPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\RosPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\ViPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\WaterPotion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\YaPotion.cs" />
+    <Compile Include="DungeonContent\Magic\ISpellCastingManager.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorExplosionProjectileFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\PotionSpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\ExplosionProjectileSpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\ProjectileProperties.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\ProjectilSpellFactory.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\SpellFactoryInitializer.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\OpenDoorSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\OtherSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\PotionSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\ProjectileSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\ExplosionProjectilSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\IPowerSymbol.cs" />
+    <Compile Include="DungeonContent\Magic\Symbols\ISpellSymbol.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DoorRenderer.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\Initializers\CounterIntializer.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\CounterSensor.cs" />
@@ -94,9 +161,9 @@
     <Compile Include="DungeonContent\Tiles\IHasEntity.cs" />
     <Compile Include="DungeonContent\Tiles\PitTileNeighbors.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\ActuatorFloorTileSideRenderer.cs" />
-    <Compile Include="DungeonContent\Tiles\Renderers\ChampionMirrorRenderer.cs" />
-    <Compile Include="Builders\DefaultWallGrahicsSource.cs" />
-    <Compile Include="Builders\IWallGraphicSource.cs" />
+    <Compile Include="DungeonContent\Actuators\Renderers\ChampionMirrorRenderer.cs" />
+    <Compile Include="Builders\DefaulRenderers.cs" />
+    <Compile Include="Builders\IRenderersSource.cs" />
     <Compile Include="Builders\TileCreator\SidesCreator.cs" />
     <Compile Include="Builders\ActuatorCreator\WallActuatorCreator.cs" />
     <Compile Include="DungeonContent\Actuators\FloorActuator.cs" />
@@ -120,6 +187,10 @@
     <Compile Include="DungeonContent\Actuators\DecorationItem.cs" />
     <Compile Include="DungeonContent\Actuators\Fountain.cs" />
     <Compile Include="DungeonContent\Actuators\IActuatorX.cs" />
+    <Compile Include="DungeonContent\Tiles\Sides\FloorSpaceManager.cs" />
+    <Compile Include="DungeonContent\Tiles\Sides\ITileSide.cs" />
+    <Compile Include="GameConsoleContent\KeyboardStreamReader.cs" />
+    <Compile Include="Interfaces\IFactories.cs" />
     <Compile Include="Interfaces\IMessageAcceptor.cs" />
     <Compile Include="Interfaces\IRenderable.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\ItemConstrainSensor.cs" />
@@ -142,10 +213,9 @@
     <Compile Include="DungeonContent\Actuators\ViAltairAlcove.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\Mess\APart1.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializer.cs" />
-    <Compile Include="DungeonContent\Entity\Properties\ExperienceProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\CreatureSpecific\ExperienceProperty.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />
     <Compile Include="DungeonContent\Entity\Skills\AirSkill.cs" />
-    <Compile Include="Builders\BuilderBase.cs" />
     <Compile Include="Builders\ItemCreator\ClothInitializer.cs" />
     <Compile Include="DungeonContent\Entity\Skills\ClubSkill.cs" />
     <Compile Include="Builders\ItemCreator\ContainerInitializer.cs" />
@@ -176,7 +246,7 @@
     <Compile Include="DungeonContent\Entity\Skills\SwingSkill.cs" />
     <Compile Include="DungeonContent\Entity\Properties\DefenseProperty.cs" />
     <Compile Include="DungeonContent\Entity\Actions\Factories\IActionFactory.cs" />
-    <Compile Include="DungeonContent\Entity\Properties\NonMaterialProperty.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\CreatureSpecific\NonMaterialProperty.cs" />
     <Compile Include="DungeonContent\Entity\Properties\Base\PropertyFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\Base\SkillFactory.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FighterSkill.cs" />
@@ -223,22 +293,15 @@
     <Compile Include="DungeonContent\GrabableItems\Initializers\IScrollInitializer.cs" />
     <Compile Include="DungeonContent\GrabableItems\Initializers\IWeaponInitializer.cs" />
     <Compile Include="DungeonContent\GrabableItems\Factories\MiscItemFactory.cs" />
-    <Compile Include="DungeonContent\GrabableItems\Factories\PotionItemFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\PotionFactory.cs" />
     <Compile Include="DungeonContent\GrabableItems\Factories\ScrollItemFactory.cs" />
     <Compile Include="DungeonContent\GrabableItems\WeaponClass.cs" />
     <Compile Include="DungeonContent\GrabableItems\Factories\WeaponItemFactory.cs" />
     <Compile Include="DungeonContent\IWorldObject.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\ISpellFactory.cs" />
-    <Compile Include="DungeonContent\Magic\Spells\Factories\OpenDoorSpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\Factories\SpellFactory.cs" />
     <Compile Include="DungeonContent\Magic\Spells\ISpell.cs" />
-    <Compile Include="DungeonContent\Magic\Spells\OpenDoorSpell.cs" />
-    <Compile Include="DungeonContent\Magic\Spells\Spell.cs" />
     <Compile Include="DungeonContent\Magic\Symbols\Factories\ISymbolFactory.cs" />
-    <Compile Include="DungeonContent\Magic\Symbols\OSymbol.cs" />
-    <Compile Include="DungeonContent\Magic\Symbols\SpellSymbol.cs" />
-    <Compile Include="DungeonContent\Magic\Symbols\Factories\SymbolFactory.cs" />
-    <Compile Include="DungeonContent\Magic\Symbols\ZoSymbol.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\Base\IGroupLayout.cs" />
     <Compile Include="DungeonContent\Tiles\Initializers\DoorInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\Initializers\FloorInitializer.cs" />
@@ -248,7 +311,7 @@
     <Compile Include="DungeonContent\Tiles\Initializers\PitInitializer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\PitTileRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\ActuatorSideRenderer.cs" />
-    <Compile Include="DungeonContent\Tiles\Renderers\AlcoveRenderer.cs" />
+    <Compile Include="DungeonContent\Actuators\Renderers\AlcoveRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DecorationRenderer.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\DecorationResource.cs" />
     <Compile Include="DungeonContent\Tiles\Renderers\FloorItemStorage.cs" />
@@ -293,7 +356,7 @@
     <Compile Include="GameConsoleContent\Base\IInterpreter.cs" />
     <Compile Include="GameConsoleContent\Base\Interpreter.cs" />
     <Compile Include="GameConsoleContent\ChampionCommand.cs" />
-    <Compile Include="GameConsoleContent\Factories\ChampoinFactory.cs" />
+    <Compile Include="GameConsoleContent\Factories\ChampionCommandFactory.cs" />
     <Compile Include="GameConsoleContent\FightCommand.cs" />
     <Compile Include="GameConsoleContent\FightCommandFactory.cs" />
     <Compile Include="GameConsoleContent\GameConsole.cs" />
@@ -309,7 +372,7 @@
     <Compile Include="GameConsoleContent\ScreenStream.cs" />
     <Compile Include="GameConsoleContent\SpellCommand.cs" />
     <Compile Include="GameConsoleContent\Factories\SpellCommandFactory.cs" />
-    <Compile Include="GameConsoleContent\SpellSymbolParser.cs" />
+    <Compile Include="DungeonContent\Magic\SpellCastingManager.cs" />
     <Compile Include="GameConsoleContent\TeleportCommand.cs" />
     <Compile Include="GameConsoleContent\Factories\TeleportFactory.cs" />
     <Compile Include="GameSynchronizationContext.cs" />
@@ -337,11 +400,10 @@
     <Compile Include="DungeonContent\Tiles\Door.cs" />
     <Compile Include="DungeonContent\GrabableItems\GrabableItem.cs" />
     <Compile Include="DungeonContent\LevelCollection.cs" />
-    <Compile Include="DungeonContent\GrabableItems\Miscellaneous.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Misc\Miscellaneous.cs" />
     <Compile Include="DungeonContent\MultiTileNeighbors.cs" />
     <Compile Include="Interfaces\ILevelConnector.cs" />
     <Compile Include="Helpers\Animator.cs" />
-    <Compile Include="DungeonContent\Dungeon.cs" />
     <Compile Include="DungeonContent\DungeonLevel.cs" />
     <Compile Include="Helpers\ExtensionHelper.cs" />
     <Compile Include="Helpers\Game1.cs" />
@@ -355,6 +417,7 @@
     <Compile Include="DungeonContent\Entity\BodyInventory\ChestStorageType.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\ConsumableStorageType.cs" />
     <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Builders\LegacyFactories.cs" />
     <Compile Include="Player\DefaultPOVInput.cs" />
     <Compile Include="DungeonContent\Entity\Properties\DextrityProperty.cs" />
     <Compile Include="DungeonContent\Entity\Properties\EmptyProperty.cs" />
@@ -362,7 +425,7 @@
     <Compile Include="DungeonContent\Entity\Properties\Base\Property.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\FeetsStorageType.cs" />
     <Compile Include="DungeonContent\Entity\Properties\FoodProperty.cs" />
-    <Compile Include="DungeonContent\Entity\BodyInventory\HandStorageType.cs" />
+    <Compile Include="DungeonContent\Entity\BodyInventory\ReadyHandStorageType.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\HeadStorageType.cs" />
     <Compile Include="DungeonContent\Entity\Properties\HealthProperty.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\Base\HumanBody.cs" />
@@ -383,7 +446,7 @@
     <Compile Include="Interfaces\IViewStatus.cs" />
     <Compile Include="DungeonContent\TileNeighbors.cs" />
     <Compile Include="Builders\LegacyMapBuilder.cs" />
-    <Compile Include="DungeonContent\GrabableItems\Potion.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Potions\Potion.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\PouchStorageType.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\SmallQuiverStorageType.cs" />
     <Compile Include="DungeonContent\Entity\Properties\StaminaProperty.cs" />
@@ -408,6 +471,10 @@
     <Compile Include="DungeonContent\GrabableItems\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -448,7 +515,16 @@
     <Content Include="Data\potions.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\PowerSymbols.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\scroll.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Spells.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SpellSymbols.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\wallgraphics.html">
@@ -479,6 +555,7 @@
     <None Include="Data\DUNGEON_ATARI.DAT">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">

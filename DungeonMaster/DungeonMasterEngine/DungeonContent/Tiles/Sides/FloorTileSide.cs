@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework;
@@ -12,6 +13,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
     {
         public event EventHandler SubItemsChanged;
 
+        public FloorSpaceManager SpaceManager { get; }
 
         protected readonly List<object> subItems = new List<object>();
 
@@ -21,11 +23,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
         {
             Spaces = new[]
             {
-                new FloorItemStorage(new Point(-1,1),  topLeftItems),
-                new FloorItemStorage(new Point(1,1),topRightItems),
-                new FloorItemStorage(new Point(-1,-1),bottomLeftItems),
-                new FloorItemStorage(new Point(1,-1),bottomRightItems),
+                new FloorItemStorage(new Point(0, 0), topLeftItems),
+                new FloorItemStorage(new Point(1, 0),topRightItems),
+                new FloorItemStorage(new Point(0, 1),bottomLeftItems),
+                new FloorItemStorage(new Point(1, 1),bottomRightItems),
             };
+            SpaceManager = new FloorSpaceManager(Spaces);
 
             subItems.AddRange(Spaces.SelectMany(s => s.Items));
 
@@ -45,15 +48,17 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 
             if (addToSpacd)
             {
-                var grabable = localizable as GrabableItem;
+                var grabable = localizable as IGrabableItem;
                 if (grabable != null)
                 {
-                    Spaces.First().AddItem(grabable, false);
+                    var space = SpaceManager.GetSpace(grabable);
+                    space.AddItem(grabable, false);
                 }
             }
 
             SubItemsChanged?.Invoke(this, new EventArgs());
         }
+
 
         public virtual void OnObjectLeft(object localizable)
         {
@@ -63,7 +68,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 
             subItems.Remove(localizable);
 
-            var grabable = localizable as GrabableItem;
+            var grabable = localizable as IGrabableItem;
             if (grabable != null)
             {
                 foreach (var storage in Spaces)

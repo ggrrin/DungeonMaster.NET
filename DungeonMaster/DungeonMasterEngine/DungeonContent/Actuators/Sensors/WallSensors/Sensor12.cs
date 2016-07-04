@@ -15,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
             if (!L0753_B_DoNotTriggerSensor)
             {
                 TriggerLocalEffect(theron, actuator, true); /* This will cause a rotation of the sensors at the specified cell on the specified square after all sensors have been processed */
-                theron.Hand = Data.Create();
+                theron.Hand = Data.CreateItem();
             }
             return true;
         }

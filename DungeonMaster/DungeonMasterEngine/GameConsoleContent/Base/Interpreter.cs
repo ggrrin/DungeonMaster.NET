@@ -19,17 +19,18 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 
         public abstract Task Run();
 
-        protected async Task<T> GetFromItemIndex<T>(IEnumerable<T> list, bool result = true) where T : class
+        protected async Task<T> GetFromItemIndex<T>(IEnumerable<T> list, bool selectItem = true) where T : class
         {
-            Output.WriteLine("Selecet index:");
+            Output.WriteLine("Select index:");
             int j = 0;
             foreach (var i in list)
                 Output.WriteLine($"{j++} {i?.ToString() ?? "--slot_empty--"}");
 
-            if (result)
+            if (selectItem)
             {
                 int index = -1;
-                if (int.TryParse(await Input.ReadLineAsync(), out index) && index >= 0 && index < list.Count())
+                string s = await Input.ReadLineAsync();
+                if (int.TryParse(s, out index) && index >= 0 && index < list.Count())
                     return list.ElementAt(index);
                 else
                 {

@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.FloorSensors
             triggerSensor = theron.PartyGroup.
                 SelectMany(x => x.Body.Storages.SelectMany(s => s.Storage.Where(y => y != null)))
                 .Concat(new[] { theron.Hand }.Where(x => x != null))
-                .Any(x => x.Factory == Data);
+                .Any(x => x.FactoryBase == Data);
             return true;
         }
 

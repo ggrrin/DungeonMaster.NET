@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.GameConsoleContent.Factories;
 
 namespace DungeonMasterEngine.GameConsoleContent
@@ -25,9 +27,13 @@ namespace DungeonMasterEngine.GameConsoleContent
         private SpriteFont font;
         public TextWriter Out { get; }
 
-        public bool Activated { get; set; }
+        public bool Activated
+        {
+            get { return activated; }
+            set { activated = value; }
+        }
 
-        public StreamReader In { get; }
+        public TextReader In { get; }
 
         public Color BackgroundColor { get; set; } = new Color(new Vector4(0, 0, 0, 0.85f));
 
@@ -35,14 +41,15 @@ namespace DungeonMasterEngine.GameConsoleContent
         new ICommandFactory<ConsoleContext<Dungeon>>[] {
             HelpFactory.Instance,
             HandCommandFactory.Instance,
-            ChampoinFactory.Instance,
+            ChampionCommandFactory.Instance,
             ItemFactory.Instance,
             TeleportFactory.Instance,
             SpellCommandFactory.Instance,
             FightCommandFactory.Instance
             //TODO add default factories
         };
-        private ScreenStream ouput;     
+        private ScreenStream ouput;
+        private bool activated;
 
         public Rectangle Window { get; set; }
 
@@ -58,17 +65,13 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private GameConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories) : base(game)
         {
-            In = new StreamReader(input = new KeyboardStream());
+            In = new KeyboardStreamReader(input = new KeyboardStream());
             var s = new StreamWriter(ouput = new ScreenStream())
             { AutoFlush = true };
             Out = s;
             interpreter = new BaseInterpreter(defaultFactories.Concat(thirdPartyFactories), In, Out, input)
             { ConsoleContext = new ConsoleContext<Dungeon>(defaultFactories.Concat(thirdPartyFactories), dungeon) };
-            new Action(async () =>
-            {
-                await interpreter.Run();
-                return;
-            })();
+            new Action(async () => await interpreter.Run())();
 
             LoadResources();
             game.Components.Add(this);
@@ -90,11 +93,11 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public static GameConsole Instance { get; private set; }
 
-        public void RunCommand(IInterpreter<ConsoleContext<Dungeon>> cmd)
+        public async void RunCommand(IInterpreter<ConsoleContext<Dungeon>> cmd)
         {
-            ActivateDeactivateConsole();
             interpreter.RunCommand(cmd);
-            //input.WriteLineToInput("");
+            await Task.Delay(100); //delay because of input
+            ActivateDeactivateConsole();
         }
 
         private void ReadKeyBoard()
@@ -123,8 +126,8 @@ namespace DungeonMasterEngine.GameConsoleContent
 
             if (keyState.IsKeyDown(Keys.Enter) && prevKeyState.IsKeyUp(Keys.Enter))
             {
-                input.WriteLineToInput(line.ToString());
                 Out.WriteLine(line.ToString());
+                input.WriteLineToInput(line.ToString());
                 CursorPosition = 0;
                 line.Clear();
             }
@@ -165,8 +168,8 @@ namespace DungeonMasterEngine.GameConsoleContent
         }
 
         private void ActivateDeactivateConsole()
-        { 
-            if(Activated && interpreter.ExecutingCommand && !interpreter.RunningCommand.CanRunBackground)
+        {
+            if (Activated && interpreter.ExecutingCommand && !interpreter.RunningCommand.CanRunBackground)
             {
                 Out.WriteLine("Cannot close until command is done!!!");
                 return;

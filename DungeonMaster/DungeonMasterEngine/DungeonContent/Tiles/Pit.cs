@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Properties;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics;
@@ -64,7 +67,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                     if (movable != null)
                         MakeItemFall(subItem);
                 }
-                
+
             }
         }
 
@@ -80,13 +83,45 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             if (IsOpen)
             {
+                var entities = LayoutManager.Entities.ToArray();
                 var loc = localizable as IMovable<ITile>;
                 if (loc != null)
                 {
                     //loc.Location = PitNeighbours.Down;
                     loc.MoveTo(PitNeighbors.Down, true);
                 }
+
+
+                foreach (var entity in entities)
+                    F324_aezz_CHAMPION_DamageAll_GetDamagedChampionCount(entity, 20); //, MASK0x0010_LEGS | MASK0x0020_FEET, C2_ATTACK_SELF)
             }
+        }
+
+        private static readonly Random rand = new Random();
+
+        void F324_aezz_CHAMPION_DamageAll_GetDamagedChampionCount(ILiveEntity entity, int P669_ui_Attack)//, int P670_i_Wounds, int P671_i_AttackType)
+        {
+            int L0984_i_ChampionIndex;
+            int L0985_i_RandomAttack;
+            int L0986_i_DamagedChampionCount;
+
+            
+            //customized 
+            L0985_i_RandomAttack = (P669_ui_Attack >> 3) + 1;
+            P669_ui_Attack += (rand.Next(3) - 1) * L0985_i_RandomAttack;
+
+            entity.GetProperty(PropertyFactory<HealthProperty>.Instance).Value -= P669_ui_Attack;
+
+
+            //L0985_i_RandomAttack <<= 1;
+            //for (L0986_i_DamagedChampionCount = 0, L0984_i_ChampionIndex = C00_CHAMPION_FIRST; L0984_i_ChampionIndex < G305_ui_PartyChampionCount; L0984_i_ChampionIndex++)
+            //{
+            //    if (F321_AA29_CHAMPION_AddPendingDamageAndWounds_GetDamage(L0984_i_ChampionIndex, F025_aatz_MAIN_GetMaximumValue(1, P669_ui_Attack + M02_RANDOM(L0985_i_RandomAttack)), P670_i_Wounds, P671_i_AttackType))
+            //    { /* Actual attack is P669_ui_Attack +/- (P669_ui_Attack / 8) */
+            //        L0986_i_DamagedChampionCount++;
+            //    }
+            //}
+            //return L0986_i_DamagedChampionCount;
         }
 
         public Pit(PitInitializer initializer) : base(initializer)

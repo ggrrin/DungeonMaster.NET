@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
                 return false;
             }
             //F162_afzz_DUNGEON_GetSquareFirstObject(); //TODO is it possible to put item from one side of the wall and take it from antoher ? 
-            if ((theron.Hand?.Factory != Data) || (Storage == null))
+            if ((theron.Hand?.FactoryBase != Data) || (Storage == null))
                 return false;
 
             var handItem = theron.Hand;

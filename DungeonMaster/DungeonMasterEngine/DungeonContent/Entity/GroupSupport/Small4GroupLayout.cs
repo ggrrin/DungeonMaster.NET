@@ -24,15 +24,20 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
             },
         };
 
-        public IEnumerable<ISpace> AllSpaces => fabric.Cast<FourthSpace>();
-
-        public IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, ITile currentTile, MapDirection mapDirection)
+        public FourthSpace GetSpace(Point gridPosition)
         {
-            //TODO remake
-            ISpace currentSpace = liveEntity.Location.Space;// currentTile.LayoutManager.FindCurrentSpace(entity);
+            return allSpaces.First(x => x.GridPosition == gridPosition);
+        }
+
+        private IEnumerable<FourthSpace> allSpaces => fabric.Cast<FourthSpace>();
+        public IEnumerable<ISpace> AllSpaces => allSpaces;
+
+        public IEnumerable<ISpaceRouteElement> GetToSide(ISpaceRouteElement location, MapDirection mapDirection, bool useFullSpaces)
+        {
+            ISpace currentSpace = location.Space;// currentTile.LayoutManager.FindCurrentSpace(entity);
             ISpace destSpace = null;
 
-            searcher.LayoutManager = currentTile.LayoutManager;
+            searcher.LayoutManager = useFullSpaces ? null : location.Tile.LayoutManager;
             searcher.StartSearch(AllSpaces.First(), currentSpace, 1, (space, layer, bundle) =>
             {
                 if (space.Sides.Any(x => x == mapDirection))
@@ -42,17 +47,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
                 }
             });
 
-            return destSpace != null ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile)) : null;
+            return destSpace != null ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, location.Tile)) : null;
         }
-        private IEnumerable<ISpaceRouteElement> GetToSpace(ILiveEntity liveEntity, ITile currentTile, ISpace destSpace)
+        private IEnumerable<ISpaceRouteElement> GetToSpace(ISpaceRouteElement location, ISpace destSpace, bool useFullSpaces)
         {
             bool found = false;
-            ISpace currentSpace = liveEntity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
+            ISpace currentSpace = location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
 
             if (currentSpace == destSpace)
-                return new FourthSpaceRouteElement(currentSpace, currentTile).ToEnumerable();
+                return new FourthSpaceRouteElement(currentSpace, location.Tile).ToEnumerable();
 
-            searcher.LayoutManager = currentTile.LayoutManager;
+            searcher.LayoutManager = useFullSpaces ? null : location.Tile.LayoutManager;
             searcher.StartSearch(AllSpaces.First(), currentSpace, 1, (space, layer, bundle) =>
             {
                 if (space == destSpace)
@@ -62,21 +67,21 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
                 }
             });
 
-            return found ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, currentTile)) : null;
+            return found ? searcher.GetShortestRoute(destSpace).Select(s => new FourthSpaceRouteElement(s, location.Tile)) : null;
         }
 
-        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, ITile currentTile, ITile targetTile)
+        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ISpaceRouteElement location, ITile targetTile, bool useFullSpaces)
         {
-            var moveDirection = currentTile.Neighbors.Single(t => t.Item1 == targetTile).Item2;
-            var currentSpace = liveEntity.Location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
+            var moveDirection = location.Tile.Neighbors.Single(t => t.Item1 == targetTile).Item2;
+            var currentSpace = location.Space; //currentTile.LayoutManager.FindCurrentSpace(entity);
 
-            var curTileBridges = liveEntity.GroupLayout.AllSpaces
+            var curTileBridges = AllSpaces
                 .Where(s => s.Sides.Contains(moveDirection))
-                .Where(s => s == currentSpace || currentTile.LayoutManager.IsFree(s));
+                .Where(s => s == currentSpace || useFullSpaces || location.Tile.LayoutManager.IsFree(s));
 
-            var targetTileBridges = liveEntity.GroupLayout.AllSpaces
+            var targetTileBridges = AllSpaces
                 .Where(s => s.Sides.Contains(moveDirection.Opposite))
-                .Where(s => targetTile.LayoutManager.IsFree(s));
+                .Where(s => useFullSpaces || targetTile.LayoutManager.IsFree(s));
 
             var bridges = curTileBridges.Join(targetTileBridges,
                 ospace => ospace.Sides.First(s => s != moveDirection),
@@ -84,7 +89,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
                 Tuple.Create);
 
             var bridgesRoutes = bridges
-                .Select(b => GetToSpace(liveEntity, currentTile, b.Item1)?.Concat(new FourthSpaceRouteElement(b.Item2, targetTile).ToEnumerable()).ToArray())
+                .Select(b => GetToSpace(location, b.Item1, useFullSpaces)?.Concat(new FourthSpaceRouteElement(b.Item2, targetTile).ToEnumerable()).ToArray())
                 .Where(r => r != null)
                 .ToArray();
 
@@ -99,7 +104,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
 
         public ISpaceRouteElement GetSpaceElement(ISpace space, ITile tile)
         {
-            return  new FourthSpaceRouteElement(space, tile);
+            return new FourthSpaceRouteElement(space, tile);
         }
 
         protected Small4GroupLayout()

@@ -3,20 +3,21 @@ using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
 {
     public class ContainerItemFactory : GrabableItemFactoryBase
     {
-        public ContainerItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture) {}
+        public ContainerItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer) {}
 
         public Container Create<TItemInitializator>(TItemInitializator initializator) where TItemInitializator : IContainerInitializer
         {
             return new Container(initializator, this);
         }
 
-        public override IGrabableItem Create()
+        public override IGrabableItem CreateItem()
         {
             return Create(new ContainerInitializer {content = new IGrabableItem[0]});
         }

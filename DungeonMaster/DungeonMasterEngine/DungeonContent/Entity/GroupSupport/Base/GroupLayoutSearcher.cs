@@ -21,8 +21,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base
 
         protected override void OnSearchStart()
         {
-            if (LayoutManager == null)
-                throw new InvalidOperationException("Group server has to be set.");
+            //removed to support searching on all spaces
+            //if (LayoutManager == null)
+            //    throw new InvalidOperationException("Group server has to be set.");
 
             base.OnSearchStart();
         }
@@ -31,7 +32,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base
         {
             var spaces = currentTile.Neighbors
                 .Select(t => t.Item1)
-                .Where(layoutManager.IsFree);
+                .Where(s => LayoutManager?.IsFree(s) ?? true);//if layout manager not specified use all spaces
 
             foreach (var s in spaces)
                 Enqueue(s, layer, currentTile);

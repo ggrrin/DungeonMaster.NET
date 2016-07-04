@@ -7,18 +7,19 @@ using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
+using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
     public class Door : IRenderable, IEntity
     {
-        private readonly Dictionary<IPropertyFactory,IProperty> properties;
+        private readonly Dictionary<IPropertyFactory, IProperty> properties;
         private bool open;
         public IGroupLayout GroupLayout => FullTileLayout.Instance;
         public bool Destroyed => GetProperty(PropertyFactory<HealthProperty>.Instance).Value <= 0;
         public bool CanItemsFly { get; }
-        public bool IsTransparent { get; } 
+        public bool IsTransparent { get; }
 
         public bool Open
         {
@@ -43,7 +44,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             CanItemsFly = canItemsFly;
             IsTransparent = isTransparent;
 
-            properties = new Dictionary<IPropertyFactory, IProperty>(); 
+            properties = new Dictionary<IPropertyFactory, IProperty>();
             SetupProperties(defense, meleAttackDestructible, magicAttackDestructible);
         }
 
@@ -58,24 +59,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             properties.Add(antiMagic.Type, antiMagic);
         }
 
-        bool F232_dzzz_GROUP_IsDoorDestroyedByAttack(int P506_i_Attack, bool P507_B_MagicAttack, int P508_i_Ticks)
-        {
-            //if ((P507_B_MagicAttack && !MagicDestructible) ||
-            //    (!P507_B_MagicAttack && !MeleeDestructible))
-            //{
-            //    return false;
-            //}
 
-            //if (P506_i_Attack >= Defense)
-            //{
-            //    if (Closed)
-            //    {
-            //        Destroyed = true;
-            //        return true;
-            //    }
-            //}
-            return false;
-        }
+
 
 
         public IProperty GetProperty(IPropertyFactory propertyType)

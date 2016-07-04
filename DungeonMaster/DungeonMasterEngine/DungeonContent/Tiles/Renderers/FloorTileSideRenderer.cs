@@ -31,7 +31,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             int j = 1;
             foreach (var space in TileSide.Spaces)
             {
-                Matrix floorStorageTransformation = Matrix.CreateTranslation(GetPosition(space.GridPosition) + new Vector3(0, 0, j * Epsilon)) * finalTransformation;
+                Matrix floorStorageTransformation = Matrix.CreateTranslation(GetPosition(space.RelativeGridPosition) + new Vector3(0, 0, j * Epsilon)) * finalTransformation;
                 foreach (var item in space.Items)
                     item.Renderer.Render(ref floorStorageTransformation, effect, parameter);
             }
@@ -47,7 +47,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 
             foreach (var space in TileSide.Spaces)
             {
-                var p = GetBoundingBox(space.GridPosition);
+                var p = GetBoundingBox(space.RelativeGridPosition);
                 var transformedRay = ray.Transform(ref resultTransformationInverse);
                 if (transformedRay.Intersects(p) != null)
                 {

@@ -7,9 +7,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base
     {
         IEnumerable<ISpace> AllSpaces { get; }
 
-        IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, ITile currentTile, MapDirection mapDirection);
+        IEnumerable<ISpaceRouteElement> GetToSide(ISpaceRouteElement location, MapDirection mapDirection, bool useFullSpaces);
 
-        IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, ITile currentTile,  ITile targetTile);
+        IEnumerable<ISpaceRouteElement> GetToNeighbour(ISpaceRouteElement location, ITile targetTile, bool useFullSpaces);
 
         ISpaceRouteElement GetSpaceElement(ISpace space, ITile tile);
     }

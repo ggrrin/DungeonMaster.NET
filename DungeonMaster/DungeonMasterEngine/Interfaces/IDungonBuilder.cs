@@ -3,9 +3,9 @@ using DungeonMasterEngine.DungeonContent;
 
 namespace DungeonMasterEngine.Interfaces
 {
-    public interface IDungonBuilder
+    public interface IDungonBuilder<in TFactories> where TFactories : IFactories
     {
-        DungeonLevel GetLevel(int i, Point? startTile);
+        DungeonLevel GetLevel(TFactories factories, int level, Point? startTile);
 
     }
 }

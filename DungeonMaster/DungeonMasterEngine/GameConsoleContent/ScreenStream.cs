@@ -41,7 +41,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
 
         string line = "";
-        private List<string> lines = new List<string>();
+        private readonly List<string> lines = new List<string>();
         public IReadOnlyList<string> Lines => lines;
         public override void Write(byte[] buffer, int offset, int count)
         {

@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
             if (!isLast)
                 return false;
 
-            L0753_B_DoNotTriggerSensor = ((Data == theron.Hand?.Factory) == RevertEffect);
+            L0753_B_DoNotTriggerSensor = ((Data == theron.Hand?.FactoryBase) == RevertEffect);
 
             if (!L0753_B_DoNotTriggerSensor)
                 theron.Hand = null;

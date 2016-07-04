@@ -2,7 +2,7 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {
-    internal class AntiFireProperty : Property {
+    public class AntiFireProperty : Property {
         public AntiFireProperty(int value)
         {
             BaseValue = this.value = value;

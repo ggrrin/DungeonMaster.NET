@@ -7,6 +7,8 @@ using System;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
+using DungeonMasterEngine.Player;
+using DungeonMasterParser;
 
 namespace DungeonMasterEngine
 {
@@ -42,7 +44,12 @@ namespace DungeonMasterEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
-            dungeon = new Dungeon(new LegacyMapBuilder(), GraphicsDevice);
+            var dungeonParser = new DungeonParser();
+            dungeonParser.Parse();
+            var renderers = new DefaulRenderers();
+            var factoreis = new LegacyFactories(dungeonParser.Data, renderers);
+            var theron = new Theron();
+            dungeon = new Dungeon(new LegacyMapBuilder(dungeonParser.Data, renderers), factoreis, theron, GraphicsDevice);
             GameConsole.InitializeConsole(this, dungeon);
             GameConsole.Instance.DrawOrder = 1;
         }

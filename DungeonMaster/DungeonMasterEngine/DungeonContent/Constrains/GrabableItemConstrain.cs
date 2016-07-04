@@ -24,7 +24,7 @@ namespace DungeonMasterEngine.DungeonContent.Constrains
             if (item == null)
                 return false;
             var i = item as GrabableItem;
-            return i?.Factory == DataIndex ^ InvertConstraion;
+            return i?.FactoryBase == DataIndex ^ InvertConstraion;
         }
 
         public override string ToString()

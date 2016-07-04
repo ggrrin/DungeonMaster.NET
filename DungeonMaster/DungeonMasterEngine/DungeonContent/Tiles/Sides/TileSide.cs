@@ -1,15 +1,9 @@
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 {
-    public interface ITileSide : IRenderable, IMessageAcceptor<Message>
-    {
-        
-    }
-
     public class TileSide : ITileSide 
     {
         public MapDirection Face { get; }

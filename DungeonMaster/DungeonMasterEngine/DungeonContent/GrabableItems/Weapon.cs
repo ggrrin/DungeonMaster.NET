@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
     public class Weapon : GrabableItem
     {
         public WeaponItemFactory FactoryType { get; }
-        public override IGrabableItemFactoryBase Factory => FactoryType; 
+        public override IGrabableItemFactoryBase FactoryBase => FactoryType; 
 
         public Weapon(IWeaponInitializer initializer, WeaponItemFactory weaponItemFactory)
         {

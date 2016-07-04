@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterParser.Enums;
+using DungeonMasterParser.Tiles;
 
 namespace DungeonMasterParser.Items
 {
@@ -16,7 +17,9 @@ namespace DungeonMasterParser.Items
         //parent//public int NextObjectID { get; set; }
 
         //    02h(2) 1 word: Next possession object ID. Although not recommended, it is possible to put a creature as a possession of another creature. When the creature dies, the other one is released.
-        public int NextPossessionObjectID { get; set; }
+        public ObjectID NextPossessionObjectID { get; set; }
+
+        public List<GrabableItemData> PossessionItems { get; set; } 
 
         //    04h(4) 1 byte: Creature type. Here are the possible values in Dungeon Master and Chaos Strikes Back:
         public CreatureType Type { get; set; }
@@ -84,6 +87,13 @@ namespace DungeonMasterParser.Items
             yield return Tuple.Create(Creature3Position, HitPointsCreature3);
             yield return Tuple.Create(Creature4Position, HitPointsCreature4);
 
+        }
+
+        public IEnumerable<ItemData> GetEnumerator(DungeonData dungeon)
+        {
+            var it = new ItemEnumerator(dungeon, NextPossessionObjectID);
+            while (it.MoveNext())
+                yield return it.Current;
         }
 
 

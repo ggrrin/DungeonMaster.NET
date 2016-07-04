@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
         private readonly Inventory inventoryImplementation = new Inventory(ChestStorageType.Instance); 
 
         public  ContainerItemFactory FactoryType { get; }
-        public override IGrabableItemFactoryBase Factory => FactoryType; 
+        public override IGrabableItemFactoryBase FactoryBase => FactoryType; 
 
         public Container(IContainerInitializer initializer, ContainerItemFactory factory)
         {

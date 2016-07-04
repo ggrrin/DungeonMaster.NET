@@ -20,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
             }
             else
             {
-                if ((theron.Hand?.Factory != Data) || Storage != null)
+                if ((theron.Hand?.FactoryBase != Data) || Storage != null)
                     return false;
 
                 Storage = theron.Hand;

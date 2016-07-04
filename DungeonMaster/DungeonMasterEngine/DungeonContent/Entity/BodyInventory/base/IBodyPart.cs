@@ -10,6 +10,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
         int SharpResistance { get; }
         bool IsWound { get; set; }
         float HitProbability { get; }
-        float DamageFactor { get; }
+        int InjuryMultipler { get; }
     }
 }

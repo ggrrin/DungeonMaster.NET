@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders.ActuatorCreator;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
@@ -62,7 +63,7 @@ namespace DungeonMasterEngine.Builders.TileCreator
         private IGrabableItem SetupItem(ItemData itemData, ITile tile)
         {
             var item = builder.ItemCreator.CreateItem(itemData);
-            item.SetLocationNoEvents(tile);
+            item.SetLocationNoEvents(new FourthSpaceRouteElement(null, tile));//space is overridden by floor itself
             return item;
         } 
 

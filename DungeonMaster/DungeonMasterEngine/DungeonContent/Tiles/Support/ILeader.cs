@@ -10,6 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface ILeader : ILocalizable<ITile>
     {
+        event EventHandler LocationChanged;
         IReadOnlyList<ILiveEntity> PartyGroup { get; }
         IGrabableItem Hand { get; set; }
 
@@ -17,8 +18,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         ILiveEntity Leader { get; }
         Matrix View { get; }
         Matrix Projection { get; }
-        event EventHandler LocationChanged;
+        bool Enabled { get; set; }
 
+        bool AddChampoinToGroup(ILiveEntity entity);
         void Draw(BasicEffect effect);
     }
 }

@@ -39,16 +39,17 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 		/// <returns>Return appropriate command interpreter or null if unrecognized</returns>
 		public IInterpreter<Application> ParseCommand(string command)
 		{
+		    command = command.Trim();
             command += " ";
             ICommandFactory<Application> factory;
-            int tokenEnd = (command.TrimStart()).IndexOf(' ');
+            int tokenEnd = command.TrimStart().IndexOf(' ');
             if (tokenEnd > 0)
             {
                 factories.TryGetValue(command.Trim().Substring(0, tokenEnd), out factory);
                 if (factory != null)
                 {
                     var interpreter = factory.GetNewInterpreter();
-                    var ParamParser = factory.ParameterParser == null ? new DefaultParameterParser() : factory.ParameterParser;
+                    var ParamParser = factory.ParameterParser ?? new DefaultParameterParser();
                     interpreter.Parameters = ParamParser.ParseParameters(command.Trim().Substring(tokenEnd));
                     return interpreter;
                 }

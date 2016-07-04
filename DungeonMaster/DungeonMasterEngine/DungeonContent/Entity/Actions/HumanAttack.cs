@@ -9,9 +9,8 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Actions
 {
-    public abstract class HumanAttack : IAction
+    public abstract class HumanAttack : AttackBase 
     {
-        protected static readonly Random rand = new Random();
         protected readonly HumanActionFactoryBase factoryBase;
         protected readonly ILiveEntity attackProvider;
 
@@ -27,7 +26,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
         {
             //TODO rework using rectangle intersection
             var targetTile = attackProvider.Location.Tile.Neighbors.GetTile(partyDirection);
-            var enemy = targetTile?.LayoutManager.Entities.Where(e => attackProvider.RelationManager.IsEnemy(e.RelationManager.RelationToken)) //todo or otherwise
+            var enemy = targetTile?.LayoutManager.Entities
+                .Where(e => attackProvider.RelationManager.IsEnemy(e.RelationManager.RelationToken)) //todo or otherwise
                 .MinObj(c => Vector3.Distance(c.Position, attackProvider.Position));
 
             if (enemy != null)
@@ -43,7 +43,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
             return enemy;
         }
 
-        public async void ApplyAttack(MapDirection direction)
+        public override async void ApplyAttack(MapDirection direction)
         {
             var delay = factoryBase.Fatigue;
             var requiredSkill = attackProvider.GetSkill(factoryBase.SkillIndex);

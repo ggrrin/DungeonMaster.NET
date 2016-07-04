@@ -10,12 +10,12 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
         public IEnumerable<ISpace> AllSpaces { get; }
         public static IGroupLayout Instance { get; set; }
 
-        public IEnumerable<ISpaceRouteElement> GetToSide(ILiveEntity liveEntity, ITile currentTile, MapDirection mapDirection)
+        public IEnumerable<ISpaceRouteElement> GetToSide(ISpaceRouteElement currentTile, MapDirection mapDirection, bool useFullSpaces)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ILiveEntity liveEntity, ITile currentTile, ITile targetTile)
+        public IEnumerable<ISpaceRouteElement> GetToNeighbour(ISpaceRouteElement location, ITile targetTile, bool useFullSpaces)
         {
             throw new NotImplementedException();
         }

@@ -32,7 +32,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             Matrix finalTransformation = transformation * GetCurrentTransformation(ref currentTransformation);
             base.Render(ref currentTransformation, effect, parameter);
 
-            if (!Tile.ContentActivated)
+            if (!Tile.Closing && !Tile.ContentActivated)
                 Tile.Door.Renderer.Render(ref finalTransformation, effect, parameter);
 
             DrawModel(frameModel, ref finalTransformation, effect);

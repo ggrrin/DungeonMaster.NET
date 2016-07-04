@@ -38,13 +38,13 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
             else if (Parameters.Length == 1)
             {
-                champoin = GetItemAt(t.partyGoup, 0);
+                champoin = GetItemAt(t.partyGroup, 0);
                 action = await GetFromItemIndex(champoin?.CurrentCombos.ToArray());
 
             }
             else if (Parameters.Length == 2)
             {
-                champoin = GetItemAt(t.partyGoup, 0);
+                champoin = GetItemAt(t.partyGroup, 0);
                 action = GetItemAt(champoin?.CurrentCombos.ToArray(), 1);
             }
 

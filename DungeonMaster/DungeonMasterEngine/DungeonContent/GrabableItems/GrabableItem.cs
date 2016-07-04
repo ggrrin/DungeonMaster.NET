@@ -1,4 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
+﻿using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
@@ -6,29 +7,33 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
 {
     public abstract class GrabableItem : IGrabableItem
     {
-        private ITile location;
-        public abstract IGrabableItemFactoryBase Factory { get; }
+        private ISpaceRouteElement location;
+        public abstract IGrabableItemFactoryBase FactoryBase { get; }
 
 
         public override string ToString()
         {
-            return $"{GetType().Name} : {Factory.Name}";
+            return $"{GetType().Name} : {FactoryBase.Name}";
         }
 
-        public IRenderer Renderer { get; set; }
+        public IRenderer Renderer
+        {
+            get { return FactoryBase.Renderer; }
+            set { throw new System.NotImplementedException(); }
+        }
 
-        public ITile Location
+        public ISpaceRouteElement Location
         {
             get { return location; }
             set
             {
-                location?.OnObjectLeft(this);
+                location?.Tile?.OnObjectLeft(this);
                 location = value;
-                location?.OnObjectEntered(this);
+                location?.Tile?.OnObjectEntered(this);
             }
         }
 
-        public void SetLocationNoEvents(ITile tile)
+        public void SetLocationNoEvents(ISpaceRouteElement tile)
         {
             location = tile;
         }

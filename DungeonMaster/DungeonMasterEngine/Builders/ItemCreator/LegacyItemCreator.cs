@@ -29,48 +29,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
             descriptor = builder.Data.GetItemDescriptor(itemData.ObjectID.Category, ((GrabableItemData)itemData).ItemTypeIndex );
 
             var item = itemData.CreateItem(this);
-            item.Renderer = builder.RendererSource.GetItemRenderer(item, item.Factory.Texture);
             return item;
-        }
-
-
-        public IEnumerable<IStorageType> GetStorageTypes(CarrryLocations locations)
-        {
-            Array values = Enum.GetValues(typeof(CarrryLocations));
-
-            return values.Cast<CarrryLocations>()
-                .Where(c => (c & locations) == c && c != CarrryLocations.HandsAndBackpack
-                && c != CarrryLocations.Hands && c != CarrryLocations.None)
-                .Select<CarrryLocations, IStorageType>(c =>
-                 {
-                     switch (c)
-                     {
-                         case CarrryLocations.Consumable:
-                             return ConsumableStorageType.Instance;
-                         case CarrryLocations.Head:
-                             return HeadStorageType.Instance;
-                         case CarrryLocations.Neck:
-                             return NeckStorageType.Instance;
-                         case CarrryLocations.Torso:
-                             return TorsoStorageType.Instance;
-                         case CarrryLocations.Legs:
-                             return LegsStorageType.Instance;
-                         case CarrryLocations.Feet:
-                             return FeetsStorageType.Instance;
-                         case CarrryLocations.Quiver1:
-                             return BigQuiverStorageType.Instance;
-                         case CarrryLocations.Quiver2:
-                             return SmallQuiverStorageType.Instance;
-                         case CarrryLocations.Pouch:
-                             return PouchStorageType.Instance;
-                         case CarrryLocations.Chest:
-                             return ChestStorageType.Instance;
-                         default:
-                             throw new InvalidOperationException();
-                     }
-                 })
-                .Concat(new IStorageType[] { ActionHandStorageType.Instance,HandStorageType.Instance, BackPackStorageType.Instance })
-                .ToArray();
         }
 
         public IGrabableItem CreateContainer(ContainerItemData container)
@@ -83,7 +42,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
                     .Select(x => new LegacyItemCreator(builder).CreateItem(x))
                     .ToArray()
             };
-            return builder.ContainerFactories[descriptor.InCategoryIndex].Create(initializator);
+            return builder.Factories.ContainerFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreatePotion(PotionItemData potion)
@@ -93,7 +52,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
             {
                 PotionPower = potion.PotionPower
             };
-            return builder.PotionFactories[descriptor.InCategoryIndex].Create(initializator);
+            return builder.Factories.PotionFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateWeapon(WeaponItemData weapon)
@@ -106,7 +65,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
                 IsCursed = weapon.IsCursed,
                 IsPoisoned = weapon.IsPoisoned
             };
-            return builder.WeaponFactories[descriptor.InCategoryIndex].Create(initializator);
+            return builder.Factories.WeaponFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateScrool(ScrollItemData scroll)
@@ -116,7 +75,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
             {
                 Text = scroll.Text
             };
-            return builder.ScrollFactories[descriptor.InCategoryIndex].Create(initializator);
+            return builder.Factories.ScrollFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateMisc(MiscellaneousItemData misc)
@@ -126,7 +85,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
             {
                 Attribute = misc.AttributeValueIndex
             };
-            return builder.MiscFactories[descriptor.InCategoryIndex].Create(initializator);
+            return builder.Factories.MiscFactories[descriptor.InCategoryIndex].Create(initializator);
         }
 
         public IGrabableItem CreateCloth(ClothItemData cloth)
@@ -138,7 +97,7 @@ namespace DungeonMasterEngine.Builders.ItemCreator
                 IsBroken = cloth.IsBroken
             };
 
-            return builder.ClothFactories[descriptor.InCategoryIndex].Create(initalizator);
+            return builder.Factories.ClothFactories[descriptor.InCategoryIndex].Create(initalizator);
         }
 
         public IGrabableItem CreateCreature(CreatureItem creature)

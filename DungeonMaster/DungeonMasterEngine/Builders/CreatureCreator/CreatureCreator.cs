@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
@@ -18,7 +19,7 @@ namespace DungeonMasterEngine.Builders.CreatureCreator
 
         public virtual IEnumerable<Creature> AddCreature(CreatureItem creatureData, Tile tile)
         {
-            var factory = builder.CreatureFactories[(int)creatureData.Type];
+            var factory = builder.Factories.CreatureFactories[(int)creatureData.Type];
 
             var res = new List<Creature>();
 
@@ -32,6 +33,7 @@ namespace DungeonMasterEngine.Builders.CreatureCreator
                     Location = factory.Layout.GetSpaceElement(space, tile),
                     RelationToken = builder.CreatureToken,
                     EnemiesTokens = builder.ChampionToken.ToEnumerable(),
+                    PossessionItems = creatureData.PossessionItems.Select(x => builder.ItemCreator.CreateItem(x))
                 });
                 creature.Renderer = builder.RendererSource.GetCreatureRenderer(creature, factory.Texture);
 

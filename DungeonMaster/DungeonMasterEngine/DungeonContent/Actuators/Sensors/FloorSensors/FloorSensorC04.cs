@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.FloorSensors
         {
             var item = obj as IGrabableItem;
 
-            if (item == null || (Data != item.Factory) || containsThingOfSameType)
+            if (item == null || (Data != item.FactoryBase) || containsThingOfSameType)
             {
                 return false;
             }

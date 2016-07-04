@@ -20,8 +20,9 @@ namespace DungeonMasterEngine.DungeonContent
         public List<ILiveEntity> Creatures { get; }
 
         public IReadOnlyDictionary<Point, Tile> TilesPositions { get; }
+        public int Difficulty { get; }
 
-        public DungeonLevel(List<ILiveEntity> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap)
+        public DungeonLevel(List<ILiveEntity> creatures, int levelIndex, IReadOnlyDictionary<Point,Tile> positions, Tile startTile, Texture2D minimap, int difficulty)
         {
             TilesPositions = positions;
 
@@ -29,6 +30,7 @@ namespace DungeonMasterEngine.DungeonContent
             StartTile = startTile;
             LevelIndex = levelIndex;
             MiniMap = minimap;
+            Difficulty = difficulty;
             Creatures = creatures;
         }
     }

@@ -110,7 +110,11 @@ namespace DungeonMasterParser
 
                 foreach (var item in tile.GetItems(Data))
                     itemSorter.CreateItem(item, tile);
+            }
 
+            foreach (var creature in Data.Creatures)
+            {
+                creature.PossessionItems = creature.GetEnumerator(Data).Cast<GrabableItemData>().ToList();
             }
         }
 
@@ -393,7 +397,7 @@ namespace DungeonMasterParser
         {
             var c = new CreatureItem();
             c.NextObjectID = r.ReadUInt16();
-            c.NextPossessionObjectID = r.ReadUInt16();
+            c.NextPossessionObjectID = new ObjectID(r.ReadUInt16());
             c.Type = (CreatureType)r.ReadByte();
 
             byte data = r.ReadByte();

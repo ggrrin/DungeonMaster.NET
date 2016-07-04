@@ -31,12 +31,12 @@ namespace DungeonMasterEngine.GameConsoleContent
                 }
             }
             else
-                Output.WriteLine("Invalid paramter");
+                Output.WriteLine("Invalid parameter");
         }
 
         private async Task ChampoinReincarnation()
         {
-            Output.WriteLine("Champoin builder:");
+            Output.WriteLine("Champion builder:");
             if (ConsoleContext.AppContext.Leader.PartyGroup.Count == 4)
             {
                 Output.WriteLine("Group is full!!");
@@ -60,7 +60,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             {
                 Actuator.Champion = null;
                 ConsoleContext.AppContext.Leader.AddChampoinToGroup(champion);
-                Output.WriteLine("Champoin succesfully added to group.");
+                Output.WriteLine("Champion successfully added to group.");
             }
         }
 

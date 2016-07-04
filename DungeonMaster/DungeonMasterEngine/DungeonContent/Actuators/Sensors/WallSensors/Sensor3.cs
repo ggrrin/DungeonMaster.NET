@@ -7,7 +7,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
     {
         protected override bool TryInteract(ILeader theron, WallActuator actuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)
         {
-            L0753_B_DoNotTriggerSensor = ((Data == theron.Hand?.Factory) == RevertEffect);
+            L0753_B_DoNotTriggerSensor = ((Data == theron.Hand?.FactoryBase) == RevertEffect);
             return true; ;
         }
 

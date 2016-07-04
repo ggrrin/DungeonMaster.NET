@@ -3,6 +3,7 @@ using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
@@ -15,10 +16,10 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
         public int ShootDamage { get;  }
         public int Strength { get; }
 
-        public WeaponItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass @class, int kineticEnergy, int shootDamage, int strength, Texture2D texture) : base(name, weight, attackCombo, carryLocation, texture)
+        public WeaponItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass weaponClass, int kineticEnergy, int shootDamage, int strength, IRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
         {
             DeltaEnergy = deltaEnergy;
-            Class = @class;
+            Class = weaponClass;
             KineticEnergy = kineticEnergy;
             ShootDamage = shootDamage;
             Strength = strength;
@@ -29,7 +30,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
             return new Weapon(initiator, this);
         }
 
-        public override IGrabableItem Create()
+        public override IGrabableItem CreateItem()
         {
             return Create(new WeaponInitializer
             {

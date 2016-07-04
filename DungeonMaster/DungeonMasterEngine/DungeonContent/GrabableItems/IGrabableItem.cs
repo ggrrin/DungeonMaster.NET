@@ -1,14 +1,15 @@
 ﻿using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems
 {
-    public interface IGrabableItem : IRenderable, ILocalizable<ITile>
+    public interface IGrabableItem : IRenderable, ILocalizable<ISpaceRouteElement>
     {
-        IGrabableItemFactoryBase Factory { get; }
+        IGrabableItemFactoryBase FactoryBase { get; }
 
-        void SetLocationNoEvents(ITile tile);
+        void SetLocationNoEvents(ISpaceRouteElement tile);
     }
 }

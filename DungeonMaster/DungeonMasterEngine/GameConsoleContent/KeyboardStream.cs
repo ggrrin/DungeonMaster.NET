@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
     public class KeyboardStream : Stream
     {
-        private MemoryStream stream;
-        private StreamWriter inputWriter;
+        private readonly MemoryStream stream;
+        private readonly StreamWriter inputWriter;
 
         public override bool CanRead => true;
 
@@ -30,11 +31,26 @@ namespace DungeonMasterEngine.GameConsoleContent
             lock(streamLock) inputWriter.Flush();
         }
 
-        object streamLock = new object();
+        readonly object streamLock = new object();
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int readCount = Math.Min(WaitForData().Result, count);//blocking
+            throw new NotSupportedException();
+        }
+
+        private int remainReadCount = 0;
+
+        public new async Task<int> ReadAsync(Byte[] buffer, int offset, int count)
+        {
+            int availableReadCount;
+            if (remainReadCount <= 0)
+                availableReadCount = await WaitForData();
+            else
+                availableReadCount = remainReadCount;
+
+            int readCount = Math.Min(availableReadCount, count);//blocking
+
+            remainReadCount = availableReadCount - count;
 
             if (readCount > 0)
                 lock (streamLock)
@@ -43,6 +59,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             Position += readCount;
             return readCount;
         }
+
 
         TaskCompletionSource<bool> inputAvalible = new TaskCompletionSource<bool>();
 
@@ -54,8 +71,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                 inputWriter.Flush();
             }
 
-            if (line.Length > 0)
-                inputAvalible.TrySetResult(true);
+            inputAvalible.TrySetResult(true);
         }
 
         private async Task<int> WaitForData()

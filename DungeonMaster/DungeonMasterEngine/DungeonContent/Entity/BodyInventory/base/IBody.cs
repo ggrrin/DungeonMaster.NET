@@ -10,6 +10,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 
         IInventory GetStorage(IStorageType type);
 
-        IBodyPart GetBodyStoratge(IStorageType storageType);
+        IBodyPart GetBodyStorage(IStorageType storageType);
     }
 }

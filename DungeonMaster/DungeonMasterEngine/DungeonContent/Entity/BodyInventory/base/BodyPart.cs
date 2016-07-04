@@ -4,10 +4,10 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 {
     public class BodyPart : Inventory, IBodyPart
     {
-        public BodyPart(IStorageType storageType, float hitProbability, float damageFactor) : base(storageType)
+        public BodyPart(IStorageType storageType, float hitProbability, int injuryMultipler) : base(storageType)
         {
             HitProbability = hitProbability;
-            DamageFactor = damageFactor;
+            InjuryMultipler = injuryMultipler;
         }
 
         public IEnumerable<IEntityPropertyEffect> Effects => null;
@@ -20,7 +20,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 
         public float HitProbability { get; }
 
-        public float DamageFactor { get; }
+        public int InjuryMultipler { get; }
 
         public override string ToString() => Type.GetType().Name;
     }

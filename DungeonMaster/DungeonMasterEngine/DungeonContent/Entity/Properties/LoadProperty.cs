@@ -5,7 +5,7 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties
 {
-    internal class LoadProperty : Property
+    public class LoadProperty : Property
     {
         private readonly ILiveEntity liveEntity;
         public override int MaxValue => F309_awzz_CHAMPION_GetMaximumLoad();

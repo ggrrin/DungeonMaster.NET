@@ -1,17 +1,4 @@
-﻿// ***********************************************************************
-// Assembly         : FTPClient
-// Author           : ggrrin_
-// Created          : 07-17-2015
-//
-// Last Modified By : ggrrin_
-// Last Modified On : 07-26-2015
-// ***********************************************************************
-// <copyright file="ClientInterpreter.cs" company="">
-//     Copyright ©  2015
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,9 +11,9 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
     /// </summary>
     public class BaseInterpreter : Interpreter
     {
-        private CommandParser<ConsoleContext<Dungeon>> parser;
+        private readonly CommandParser<ConsoleContext<Dungeon>> parser;
 
-        private KeyboardStream inputStream;
+        private readonly KeyboardStream inputStream;
 
         /// <summary>
         /// Initialize interpreter.
@@ -102,7 +89,14 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 
         private async Task<IInterpreter<ConsoleContext<Dungeon>>> WaitForInput()
         {
-            string command = await Input.ReadLineAsync();
+            string command;
+
+            do
+            {
+                command = await Input.ReadLineAsync();
+            }
+            while (string.IsNullOrWhiteSpace(command));
+
             return parser.ParseCommand(command);
         }
 

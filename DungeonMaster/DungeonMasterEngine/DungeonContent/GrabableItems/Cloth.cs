@@ -5,19 +5,19 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
 {
     public class Cloth : GrabableItem
     {
-        private readonly ClothItemFactory clothItemFactory;
+        public ClothItemFactory ClothItemFactoryBase { get; }
 
-        public override IGrabableItemFactoryBase Factory => clothItemFactory;
+        public override IGrabableItemFactoryBase FactoryBase => ClothItemFactoryBase;
 
         public bool IsBroken { get; }
         public bool IsCruised{ get; }
 
 
-        public Cloth(IClothInitializer initializer, ClothItemFactory clothItemFactory)
+        public Cloth(IClothInitializer initializer, ClothItemFactory clothItemFactoryBase)
         {
             IsBroken = initializer.IsBroken;
             IsCruised = initializer.IsCruised;
-            this.clothItemFactory = clothItemFactory;
+            this.ClothItemFactoryBase = clothItemFactoryBase;
         }
 
 

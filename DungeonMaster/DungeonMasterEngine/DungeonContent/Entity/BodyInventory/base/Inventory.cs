@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 
         public virtual bool AddItemTo(IGrabableItem item, int index)
         {
-            if (index >= 0 && index < storage.Length && storage[index] == null && item.Factory.CanBeStoredIn(Type))
+            if (index >= 0 && index < storage.Length && storage[index] == null && item.FactoryBase.CanBeStoredIn(Type))
             {
                 storage[index] = item;
                 return true;
@@ -52,7 +52,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
         public virtual bool AddItem(IGrabableItem item)
         {
             int freeIndex = Array.FindIndex(storage, i => i == null);
-            if (freeIndex != -1 && item.Factory.CanBeStoredIn(Type))
+            if (freeIndex != -1 && item.FactoryBase.CanBeStoredIn(Type))
             {
                 storage[freeIndex] = item;
                 return true;

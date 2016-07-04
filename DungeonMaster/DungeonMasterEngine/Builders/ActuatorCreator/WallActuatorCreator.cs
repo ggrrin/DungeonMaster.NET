@@ -97,7 +97,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreator
             var face = builder.ChampionTextures[data.Data];
             var sensor127initializer = new ChampionSensorInitializer
             {
-                Champion = new ChampionFactory(builder).GetChampion(pos, face),
+                Champion = new ChampionCreator(builder).GetChampion(pos, face, items),
                 GridPosition = pos,
             };
             await SetupInitializer(sensor127initializer, data);
@@ -111,7 +111,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreator
         {
             var factory = builder.GetItemFactory(data);
 
-            var res = items.Single(i => i.Factory == factory);
+            var res = items.Single(i => i.FactoryBase == factory);
             items.Remove(res);
             return res;
         }
