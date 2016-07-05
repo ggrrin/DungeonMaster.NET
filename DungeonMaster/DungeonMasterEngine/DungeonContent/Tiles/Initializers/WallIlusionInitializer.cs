@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
 
         public bool Imaginary { get; set; }
         public bool Open { get; set; }
-        public bool RandomDecoration { get; set; }
+        public int? RandomDecoration { get; set; }
 
         protected override void OnInitialing()
         {

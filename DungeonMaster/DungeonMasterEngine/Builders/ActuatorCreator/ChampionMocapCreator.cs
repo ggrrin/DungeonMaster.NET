@@ -1,5 +1,5 @@
-﻿using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+﻿using DungeonMasterEngine.DungeonContent.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
 using DungeonMasterEngine.DungeonContent.Entity.Renderers;

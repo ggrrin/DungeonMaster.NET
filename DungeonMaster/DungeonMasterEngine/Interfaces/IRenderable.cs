@@ -6,4 +6,10 @@ namespace DungeonMasterEngine.Interfaces
     {
         IRenderer Renderer { get; set; }
     }
+
+    public interface ITextureRenderable : IRenderable
+    {
+        new ITextureRenderer Renderer { get; set; }
+        
+    }
 }

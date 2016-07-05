@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,9 +15,9 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
         public int Weight { get; }
         public IEnumerable<IActionFactory> ActionCombo => combos;
         public IEnumerable<IStorageType> CarryLocation => locations;
-        public IRenderer Renderer { get; }
+        public ITextureRenderer Renderer { get; }
 
-        protected GrabableItemFactoryBase(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer)
+        protected GrabableItemFactoryBase(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, ITextureRenderer renderer)
         {
             Name = name;
             Weight = weight;

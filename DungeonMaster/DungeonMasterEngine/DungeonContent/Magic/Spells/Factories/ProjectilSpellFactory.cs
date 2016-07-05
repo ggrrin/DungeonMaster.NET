@@ -1,6 +1,5 @@
 using System.CodeDom;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using Microsoft.Xna.Framework;

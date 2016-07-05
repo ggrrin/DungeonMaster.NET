@@ -69,7 +69,12 @@ namespace DungeonMasterEngine.Helpers
             if (setLocation)
                 movableObject.Location = newLocation;
 
-            animationPromise?.SetResult(true); 
+            animationPromise?.TrySetResult(true); 
+        }
+
+        public void AbortFinishAsync()
+        {
+            animationPromise?.TrySetResult(false);
         }
     }
 }

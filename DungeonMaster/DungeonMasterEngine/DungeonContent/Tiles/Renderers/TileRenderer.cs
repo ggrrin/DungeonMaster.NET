@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
@@ -28,8 +30,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
                 renderer.Render(ref finalTransformation, effect, parameter);
             }
 
-            foreach (var subItem in Tile.SubItems)
-                (subItem as IRenderable)?.Renderer?.Render(ref currentTransformation, effect, parameter);
+            foreach (var subItem in Tile.Drawables.Concat(Tile.SubItems.OfType<IRenderable>()))
+                subItem.Renderer?.Render(ref currentTransformation, effect, parameter);
 
             return finalTransformation;
         }

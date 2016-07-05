@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         public IEnumerable<IGrabableItem> Items => items;
 
         public ISpace Space { get; }
-        public Point RelativeGridPosition => Space.GridPosition * new Point(2) - new Point(1);
+        public Point RelativeGridPosition => (Space.GridPosition * new Point(2) - new Point(1)) * /*flip y axis*/ new Point(1,-1);
 
         public event EventHandler<IGrabableItem> ItemAdding;
         public event EventHandler<IGrabableItem> ItemRemoving;

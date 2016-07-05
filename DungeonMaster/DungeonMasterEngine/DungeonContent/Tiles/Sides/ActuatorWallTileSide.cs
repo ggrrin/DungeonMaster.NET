@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
     {
         public IActuatorX Actuator { get; }
 
-        public ActuatorWallTileSide(IActuatorX actuator, MapDirection direction) : base(direction, false)
+        public ActuatorWallTileSide(IActuatorX actuator, MapDirection direction) : base(direction)
         {
             Actuator = actuator;
         }

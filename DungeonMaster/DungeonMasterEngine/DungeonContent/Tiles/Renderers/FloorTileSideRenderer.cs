@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class FloorTileSideRenderer<TFloorTileSide> : TileWallSideRenderer<TFloorTileSide> where TFloorTileSide : FloorTileSide
     {
-        public FloorTileSideRenderer(TFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture, decorationTexture) { }
+        public FloorTileSideRenderer(TFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture) { }
 
         const float size = 0.25f;
 

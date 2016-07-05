@@ -17,10 +17,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
         private readonly FourthSpace[,] fabric = {
             {
                 new FourthSpace(0, 0, new [] {MapDirection.West,MapDirection.North}),
-                new FourthSpace(1, 0, new [] {MapDirection.North,MapDirection.East})},
-            {
                 new FourthSpace(0, 1, new [] {MapDirection.West, MapDirection.South}),
-                new FourthSpace(1, 1, new [] {MapDirection.South, MapDirection.East})
+            },
+            {
+                new FourthSpace(1, 0, new [] {MapDirection.North,MapDirection.East}),
+                new FourthSpace(1, 1, new [] {MapDirection.South, MapDirection.East}),
             },
         };
 

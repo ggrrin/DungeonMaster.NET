@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
 
         public IReadOnlyList<FloorItemStorage> Spaces { get; protected set; }
 
-        public FloorTileSide(bool randomDecoration, MapDirection face, IEnumerable<IGrabableItem> topLeftItems, IEnumerable<IGrabableItem> topRightItems, IEnumerable<IGrabableItem> bottomLeftItems, IEnumerable<IGrabableItem> bottomRightItems) : base(face, randomDecoration)
+        public FloorTileSide(bool randomDecoration, MapDirection face, IEnumerable<IGrabableItem> topLeftItems, IEnumerable<IGrabableItem> topRightItems, IEnumerable<IGrabableItem> bottomLeftItems, IEnumerable<IGrabableItem> bottomRightItems) : base(face)
         {
             Spaces = new[]
             {

@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser.Tiles
+﻿using System;
+
+namespace DungeonMasterParser.Tiles
 {
     public class PitTileData : TileData
     {
@@ -23,5 +25,8 @@
         {
             return t.GetTile(this);
         }
+
+        public override void SetupDecorations(DungeonMap map, Random rand)
+        { }
     }
 }

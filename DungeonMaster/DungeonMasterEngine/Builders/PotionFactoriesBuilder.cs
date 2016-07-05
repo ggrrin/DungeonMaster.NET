@@ -18,23 +18,7 @@ namespace DungeonMasterEngine.Builders
         public PotionFactoriesBuilder(LegacyFactories builder)
         {
             this.builder = builder;
-            EmptyPotionFactory = InitEmptyPotionFactory(builder);
         }
-
-        private EmptyPotionFactory InitEmptyPotionFactory(LegacyFactories builder)
-        {
-            var emptyPotionDescriptor = builder.Data.PotionDescriptors[20];
-            var itemDescriptor = builder.Data.GetItemDescriptor(ObjectCategory.Potion, emptyPotionDescriptor.Identifer);
-            return new EmptyPotionFactory(
-                emptyPotionDescriptor.Name,
-                emptyPotionDescriptor.Weight,
-                builder.ActionCombos[itemDescriptor.AttackCombo],
-                builder.GetStorageTypes(itemDescriptor.CarryLocation),
-                builder.RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(emptyPotionDescriptor.TexturePath)));
-        }
-
-        public EmptyPotionFactory EmptyPotionFactory { get; }
-
 
         public virtual PotionFactory[] InitPotionFactories()
         {
@@ -70,9 +54,8 @@ namespace DungeonMasterEngine.Builders
                 case 14:
                     return GetDrinkablePotionFactory<ViPotion>(p, itemDescriptor);
                 case 15:
-                    return EmptyPotionFactory.WaterCreator = GetDrinkablePotionFactory<WaterPotion>(p, itemDescriptor);
-                case 20:
-                    return EmptyPotionFactory;
+                    return GetDrinkablePotionFactory<WaterPotion>(p, itemDescriptor);
+                //case 20: empty flask
                 default:
                     return GetPotionFactory(p, itemDescriptor);
             }
@@ -85,8 +68,7 @@ namespace DungeonMasterEngine.Builders
                 potionDescriptor.Weight,
                 builder.ActionCombos[itemDescriptor.AttackCombo],
                 builder.GetStorageTypes(itemDescriptor.CarryLocation),
-                builder.RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(potionDescriptor.TexturePath)),
-                EmptyPotionFactory);
+                builder.RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(potionDescriptor.TexturePath)));
 
         }
 
@@ -97,8 +79,7 @@ namespace DungeonMasterEngine.Builders
                 p.Weight,
                 builder.ActionCombos[itemDescriptor.AttackCombo],
                 builder.GetStorageTypes(itemDescriptor.CarryLocation),
-                builder.RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(p.TexturePath)),
-                EmptyPotionFactory);
+                builder.RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(p.TexturePath)));
         }
     }
 }

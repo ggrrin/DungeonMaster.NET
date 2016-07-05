@@ -107,7 +107,6 @@ namespace DungeonMasterParser
             {
                 tile.FirstObject = Data.ObjectIDs[k++];
 
-
                 foreach (var item in tile.GetItems(Data))
                     itemSorter.CreateItem(item, tile);
             }
@@ -115,6 +114,25 @@ namespace DungeonMasterParser
             foreach (var creature in Data.Creatures)
             {
                 creature.PossessionItems = creature.GetEnumerator(Data).Cast<GrabableItemData>().ToList();
+            }
+
+            SetupRandomDecorations();
+        }
+
+        
+
+
+
+
+        private void SetupRandomDecorations()
+        {
+            Random rand = new Random(Data.DungenSeed);
+            foreach (var map in Data.Maps)
+            {
+                foreach (TileData tileData in map.Tiles)
+                {
+                    tileData.SetupDecorations(map, rand);
+                }
             }
         }
 

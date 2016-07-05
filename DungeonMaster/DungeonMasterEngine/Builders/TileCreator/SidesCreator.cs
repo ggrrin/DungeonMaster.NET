@@ -30,15 +30,12 @@ namespace DungeonMasterEngine.Builders.TileCreator
             floorCreator = new FloorActuatorCreator(builder);
         }
 
-        
-
-
-        public async void SetupSidesAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
+        public async void SetupSidesAsync(FloorInitializer initalizer, Point pos, ITile tile)
         {
-            await SetupSidesAwaitableAsync(initalizer, pos, allowRandomDecoration, tile);
+            await SetupSidesAwaitableAsync(initalizer, pos, tile);
         }
 
-        public virtual async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, bool allowRandomDecoration, ITile tile)
+        public virtual async Task SetupSidesAwaitableAsync(FloorInitializer initalizer, Point pos, ITile tile)
         {
             var sides = await Task.WhenAll(MapDirection.Sides
                             .Select(d => Tuple.Create(d, builder.CurrentMap.GetTileData(pos + d)))
@@ -50,12 +47,12 @@ namespace DungeonMasterEngine.Builders.TileCreator
                 .Concat(new[] { GetCeelingSide() })
                 .ToArray();
 
-            initalizer.FloorSide = await GetFloorSide(pos, allowRandomDecoration, tile);
+            initalizer.FloorSide = await GetFloorSide(pos, tile);
         }
 
         private TileSide GetCeelingSide()
         {
-            var ceeling = new TileSide(MapDirection.Up, false);
+            var ceeling = new TileSide(MapDirection.Up);
             ceeling.Renderer = builder.RendererSource.GetCeelingRenderer(ceeling, builder.WallTexture);
             return ceeling;
         }
@@ -65,17 +62,21 @@ namespace DungeonMasterEngine.Builders.TileCreator
             var item = builder.ItemCreator.CreateItem(itemData);
             item.SetLocationNoEvents(new FourthSpaceRouteElement(null, tile));//space is overridden by floor itself
             return item;
-        } 
+        }
 
-        private async Task<FloorTileSide> GetFloorSide(Point point, bool allowRandomDecoration, ITile tile)
+        private async Task<FloorTileSide> GetFloorSide(Point point, ITile tile)
         {
             var tileData = builder.CurrentMap[point.X, point.Y];
-            Texture2D texture = allowRandomDecoration ? builder.RandomFloorDecoration : null;
 
             var topleft = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.North_TopLeft).Select(x => SetupItem(x, tile));
             var topRight = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.East_TopRight).Select(x => SetupItem(x, tile));
-            var bottomLeft= tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.South_BottomLeft).Select(x => SetupItem(x, tile));
+            var bottomLeft = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.South_BottomLeft).Select(x => SetupItem(x, tile));
             var bottomRifgh = tileData.GrabableItems.Where(x => x.TilePosition == TilePosition.West_BottomRight).Select(x => SetupItem(x, tile));
+
+            var floorTile = tileData as FloorTileData;
+            Texture2D texture = null;
+            if (floorTile != null)
+                texture = floorTile.RandomDecoration != null ? builder.FloorTextures[floorTile.RandomDecoration.Value] : null;
 
             if (!tileData.Actuators.Any())
             {
@@ -101,6 +102,18 @@ namespace DungeonMasterEngine.Builders.TileCreator
 
             TextDataItem textData = wall?.TextTags.FirstOrDefault(x => x.TilePosition == wallDirection.Opposite.ToTilePosition());
 
+            int? randomTexture;
+            if (!sensorsData.Any() && AllowedRandomDecoration(wallDirection, wall, out randomTexture))
+                sensorsData = new[]
+                {
+                    new ActuatorItemData
+                    {
+                        ActuatorType = 0,
+                        IsLocal = true,
+                        Decoration = randomTexture.Value + 1
+                    }
+                };
+
             if (textData != null)
             {
                 var res = new TextTileSide(wallDirection, textData.IsVisible, textData.Text);
@@ -109,9 +122,8 @@ namespace DungeonMasterEngine.Builders.TileCreator
             }
             else if (!sensorsData.Any())
             {
-                Texture2D randomTexture;
-                var res = new TileSide(wallDirection, AllowedRandomDecoration(wallDirection, wall, out randomTexture));
-                res.Renderer = builder.RendererSource.GetWallSideRenderer(res, builder.WallTexture, randomTexture);
+                var res = new TileSide(wallDirection);
+                res.Renderer = builder.RendererSource.GetWallSideRenderer(res, builder.WallTexture);
                 return res;
             }
             else
@@ -121,36 +133,27 @@ namespace DungeonMasterEngine.Builders.TileCreator
                     .ToList();
 
                 var res = new ActuatorWallTileSide(await wallCreator.ParseActuatorX(sensorsData, items, pos), wallDirection);
-                res.Renderer = builder.RendererSource.GetActuatorWallSideRenderer(res, builder.WallTexture, null);
+                res.Renderer = builder.RendererSource.GetActuatorWallSideRenderer(res, builder.WallTexture);
                 return res;
             }
         }
 
-        private bool AllowedRandomDecoration(MapDirection direction, WallTileData data, out Texture2D texture)
+        private bool AllowedRandomDecoration(MapDirection direction, WallTileData data, out int? decorationNumber)
         {
-            bool res = false;
+            decorationNumber = null;
             if (data != null)
             {
                 if (direction == MapDirection.North)
-                    res = data.AllowNorthRandomDecoration;
+                    decorationNumber = data.NorthRandomDecoration;
                 if (direction == MapDirection.South)
-                    res = data.AllowSouthRandomDecoration;
+                    decorationNumber = data.SouthRandomDecoration;
                 if (direction == MapDirection.East)
-                    res = data.AllowEastRandomDecoration;
+                    decorationNumber = data.EastRandomDecoration;
                 if (direction == MapDirection.West)
-                    res = data.AllowWestRandomDecoration;
+                    decorationNumber = data.WestRandomDecoration;
             }
 
-            if (res)
-            {
-                texture = builder.RandomWallDecoration;
-                return texture != null;
-            }
-            else
-            {
-                texture = null;
-                return false;
-            }
+            return decorationNumber != null;
         }
 
 

@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser.Tiles
+﻿using System;
+
+namespace DungeonMasterParser.Tiles
 {
     public class WallTileData :  TileData
     {
@@ -9,22 +11,36 @@
         //Bit 3:
         //    '0' Do not allow random decoration on North side
         //    '1' Allow random decoration on North side
-        public bool AllowNorthRandomDecoration { get; set; }
+        internal bool AllowNorthRandomDecoration { get; set; }
+        public int? NorthRandomDecoration { get; set; }
 
         //Bit 2:
         //    '0' Do not allow random decoration on East side
         //    '1' Allow random decoration on East side
-        public bool AllowEastRandomDecoration { get; set; }
+        internal bool AllowEastRandomDecoration { get; set; }
+        public int? EastRandomDecoration { get; set; }
 
         //Bit 1:
         //    '0' Do not allow random decoration on South side
         //    '1' Allow random decoration on South side
-        public bool AllowSouthRandomDecoration { get; set; }
+        internal bool AllowSouthRandomDecoration { get; set; }
+        public int? SouthRandomDecoration { get; set; }
 
         //Bit 0:
         //    '0' Do not allow random decoration on West side
         //    '1' Allow random decoration on West side
-        public bool AllowWestRandomDecoration { get; set; }
+        internal bool AllowWestRandomDecoration { get; set; }
+        public int? WestRandomDecoration { get; set; }
+
+        
+
+        public override void SetupDecorations(DungeonMap map, Random rand)
+        {
+            NorthRandomDecoration = AllowNorthRandomDecoration ? GetRandomWallDecoration(map, rand) : null;
+            EastRandomDecoration = AllowEastRandomDecoration ? GetRandomWallDecoration(map, rand) : null;
+            SouthRandomDecoration = AllowSouthRandomDecoration ? GetRandomWallDecoration(map, rand) : null;
+            WestRandomDecoration = AllowWestRandomDecoration ? GetRandomWallDecoration(map, rand) : null;
+        }
 
 
         public override T GetTile<T>(ITileCreator<T> t)

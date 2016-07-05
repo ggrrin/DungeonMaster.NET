@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
         public bool TextVisible { get; private set; }
         public string Text { get; }
 
-        public TextTileSide(MapDirection face, bool textVisible, string text) : base(face, false)
+        public TextTileSide(MapDirection face, bool textVisible, string text) : base(face)
         {
             TextVisible = textVisible;
             Text = text;

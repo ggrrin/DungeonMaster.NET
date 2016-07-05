@@ -1,7 +1,9 @@
 using System;
+using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
@@ -9,6 +11,8 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
     public abstract class DrinkablePotion : Potion, IHasEffect
     {
         public bool Used { get; protected set; } = false;
+        public string Message => "Potion successfully drank!";
+
         protected DrinkablePotion(IPotionInitializer initializer) : base(initializer) { }
 
         protected DrinkablePotion()
@@ -46,5 +50,9 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
         //void F349_dzzz_INVENTORY_ProcessCommand70_ClickOnMouth(ILiveEntity entity) => source for children
         public abstract bool ApplyEffect(ILiveEntity entity);
 
+        public IGrabableItem GetUsedOutcomeItem(IFactories factories)
+        {
+            return factories.PotionFactories[20].Create(new PotionInitializer());
+        }
     }
 }

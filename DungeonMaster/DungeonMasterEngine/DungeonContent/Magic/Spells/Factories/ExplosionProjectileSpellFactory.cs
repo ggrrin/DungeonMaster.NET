@@ -1,10 +1,9 @@
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
+using DungeonMasterEngine.DungeonContent.Projectiles.Impacts;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

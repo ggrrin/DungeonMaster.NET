@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
     {
         private readonly TextureRenderer textRenderer;
 
-        public TextTileSideRenderer(TextTileSide tileSide, Texture2D wallTexture) : base(tileSide, wallTexture, null)
+        public TextTileSideRenderer(TextTileSide tileSide, Texture2D wallTexture) : base(tileSide, wallTexture)
         {
             textRenderer = new TextureRenderer(Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(new Vector3(0, 0, -0.499f)),
                 ResourceProvider.Instance.DrawRenderTarget(TileSide.Text.Replace('|', '\n'), Color.Transparent, Color.White));

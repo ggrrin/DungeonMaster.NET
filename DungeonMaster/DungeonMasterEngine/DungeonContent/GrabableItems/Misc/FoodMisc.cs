@@ -4,6 +4,7 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
 {
@@ -17,6 +18,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
         }
 
         public bool Used { get; protected set; }
+        public string Message => GetType().Name + " eaten.";
 
         public bool ApplyEffect(ILiveEntity entity)
         {
@@ -26,6 +28,11 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
             var food = entity.GetProperty(PropertyFactory<FoodProperty>.Instance);
             food.Value += FoodFactory.FoodValue;
             return Used = true;
+        }
+
+        public IGrabableItem GetUsedOutcomeItem(IFactories factories)
+        {
+            return null;
         }
     }
 }

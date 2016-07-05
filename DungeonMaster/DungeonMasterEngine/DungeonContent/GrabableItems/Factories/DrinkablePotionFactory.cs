@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
 {
     public class DrinkablePotionFactory<TPotion> : PotionFactory where TPotion : DrinkablePotion, new()
     {
-        public DrinkablePotionFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer, EmptyPotionFactory emptyPotionFactory) : base(name, weight, attackCombo, carryLocation, renderer,emptyPotionFactory) { }
+        public DrinkablePotionFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, ITextureRenderer renderer ) : base(name, weight, attackCombo, carryLocation, renderer) { }
 
         public override IGrabableItem Create(IPotionInitializer initializer)
         {

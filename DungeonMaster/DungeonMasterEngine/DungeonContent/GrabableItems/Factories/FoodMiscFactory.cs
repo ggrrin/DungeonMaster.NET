@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Misc;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
@@ -8,18 +9,28 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
 
     public class WaterMiscFactory : MiscItemFactory
     {
-        public int WaterValue { get; }
-        public WaterMiscFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer, int waterValue) : base(name, weight, attackCombo, carryLocation, renderer)
+        public int WaterValuePerCharge { get; }
+        public WaterMiscFactory(int waterValuePerCharge, string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, ITextureRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
         {
-            WaterValue = waterValue;
+            WaterValuePerCharge = waterValuePerCharge;
+        }
+
+        public override Miscellaneous Create<TItemInitiator>(TItemInitiator initiator)
+        {
+            return new WaterFlaskMisc(initiator, this); 
         }
     }
     public class FoodMiscFactory : MiscItemFactory
     {
         public int FoodValue { get; }
-        public FoodMiscFactory( string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer, int foodValue) : base(name, weight, attackCombo, carryLocation, renderer)
+        public FoodMiscFactory(int foodValue, string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, ITextureRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
         {
             FoodValue = foodValue;
+        }
+
+        public override Miscellaneous Create<TItemInitiator>(TItemInitiator initiator)
+        {
+            return new FoodMisc(initiator, this);
         }
     }
 }

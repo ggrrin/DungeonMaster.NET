@@ -9,21 +9,21 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
     public class TileWallSideRenderer<TSide> : Renderer where TSide : TileSide
     {
         public Texture2D WallTexture { get; }
-        public Texture2D DecorationTexture { get; }
+        //public Texture2D DecorationTexture { get; }
         public TSide TileSide { get; }
 
         protected Matrix transformation;
-        protected  readonly DecorationRenderer<IActuatorX> decorationRenderer;
+        //protected  readonly DecorationRenderer<IActuatorX> decorationRenderer;
 
         public WallResource Resource => WallResource.Instance;
 
-        public TileWallSideRenderer(TSide tileSide, Texture2D wallTexture, Texture2D decorationTexture)
+        public TileWallSideRenderer(TSide tileSide, Texture2D wallTexture )
         {
             WallTexture = wallTexture;
-            DecorationTexture = decorationTexture;
+            //DecorationTexture = decorationTexture;
             TileSide = tileSide;
 
-            decorationRenderer = new DecorationRenderer<IActuatorX>(decorationTexture, null);
+            //decorationRenderer = new DecorationRenderer<IActuatorX>(decorationTexture, null);
 
             Matrix rotation;
             GetTransformation(tileSide.Face, out rotation);
@@ -46,8 +46,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             Matrix finalTransformation = GetCurrentTransformation(ref currentTransformation);
             RenderWall(effect, ref finalTransformation);
 
-            if (TileSide.RandomDecoration)
-                decorationRenderer.Render(ref finalTransformation, effect, parameter);
+            //if (TileSide.RandomDecoration)
+            //    decorationRenderer.Render(ref finalTransformation, effect, parameter);
 
             return finalTransformation;
         }

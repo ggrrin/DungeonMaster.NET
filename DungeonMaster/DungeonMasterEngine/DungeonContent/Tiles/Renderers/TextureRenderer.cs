@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
-    public class TextureRenderer : Renderer
+    public class TextureRenderer : Renderer, ITextureRenderer
     {
-        public Texture2D DecorationTexture { get; }
+        public Texture2D Texture { get; }
 
         public DecorationResource Resource => DecorationResource.Instance;
 
@@ -15,15 +15,15 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 
         public TextureRenderer(Matrix transformation, Texture2D decorationTexture)
         {
-            DecorationTexture = decorationTexture ?? Resource.DefaultTexture;
-            Vector3 scale = new Vector3(DecorationTexture.Width / (float)DecorationTexture.Height, 1, 1);
+            Texture = decorationTexture ?? Resource.DefaultTexture;
+            Vector3 scale = new Vector3(Texture.Width / (float)Texture.Height, 1, 1);
             this.transformation = Matrix.CreateScale(scale) * transformation;
         }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
             Matrix finalTransformation = GetCurrentTransformation(ref currentTransformation);
-            if (DecorationTexture != null)
+            if (Texture != null)
                 RenderDecoration(effect, ref finalTransformation);
             return finalTransformation;
         }
@@ -68,7 +68,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             var color = Highlighted ? Color.Orange : Color.White;
             effect.DiffuseColor = color.ToVector3();
             effect.World = finalTransformation;
-            effect.Texture = DecorationTexture;
+            effect.Texture = Texture;
             effect.GraphicsDevice.Indices = Resource.IndexBuffer;
             effect.GraphicsDevice.SetVertexBuffer(Resource.VertexBuffer);
 

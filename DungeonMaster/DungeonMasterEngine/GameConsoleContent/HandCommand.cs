@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
 using DungeonMasterEngine.Helpers;
@@ -38,8 +40,8 @@ namespace DungeonMasterEngine.GameConsoleContent
                     case "putsub":
                         await PutSubItem();
                         break;
-                    case "throw":
-                        ThrowItem();
+                    case "use":
+                        await UseItem();
                         break;
                     default:
                         Output.WriteLine("invalid command!");
@@ -52,17 +54,37 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
         }
 
-        private void ThrowItem()
+        private async Task UseItem()
         {
-            uint distance = 0;
-            if (Parameters.Length == 1 || (Parameters.Length == 2 && uint.TryParse(Parameters[1], out distance)))
+            if (theron.Hand == null)
             {
-                if (!theron.ThrowOutItem(distance))
-                    Output.WriteLine("Invalid Location");
+                Output.WriteLine("No item in hand!.");
+                return;
+            }
+
+            var effect = theron.Hand as IHasEffect;
+            if (effect != null)
+            {
+                if (effect.Used)
+                {
+                    Output.WriteLine("Item is already used!.");
+                }
+                else
+                {
+                    Champion champion = await GetFromItemIndex(theron.PartyGroup);
+                    if (champion != null)
+                    {
+                        if (effect.ApplyEffect(champion))
+                        {
+                            theron.Hand = effect.GetUsedOutcomeItem(ConsoleContext.AppContext.Factories);
+                            Output.WriteLine(effect.Message);
+                        }
+                    }
+                }
             }
             else
             {
-                Output.WriteLine("Invalid Parameters!");
+                Output.WriteLine("Item cannot be used!.");
             }
         }
 

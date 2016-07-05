@@ -119,13 +119,13 @@ namespace DungeonMasterParser
                     var res = new ChampionDescriptor()
                     {
                         Identifer = int.Parse(tr.Element("td").InnerText),
-                        TexturePath = GetTextureName(tr,"./Textures/Champions/" ,1,0)
+                        TexturePath = GetTextureName(tr, "./Textures/Champions/", 1, 0)
                     };
                     return res;
                 })
                 .ToArray();
 
-            Array.Sort(champions, Comparer<ChampionDescriptor>.Create((x,y) => x.Identifer.CompareTo(y.Identifer)));
+            Array.Sort(champions, Comparer<ChampionDescriptor>.Create((x, y) => x.Identifer.CompareTo(y.Identifer)));
             return champions;
         }
 
@@ -140,18 +140,23 @@ namespace DungeonMasterParser
         {
             var documet = new HtmlDocument();
             documet.LoadHtml(File.ReadAllText("Data/misc.html"));
+            var foodRegex = new Regex("Food Value: *([0-9]+)", RegexOptions.IgnoreCase);
+            var waterRegex = new Regex("Water Value: *([0-9]+)", RegexOptions.IgnoreCase);
 
             return documet.DocumentNode.SelectSingleNode("//table")
                 .Descendants("tr")
-                .Skip(1)//skipp header
+                .Skip(1)//skip header
                 .Select(tr =>
                 {
                     var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
+                    int value;
                     var res = new MiscDescriptor()
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        FoodValue = int.TryParse(foodRegex.Match(columns[3]).Groups[1].Value, out value) ? value : (int?)null,
+                        WaterValue = int.TryParse(waterRegex.Match(columns[3]).Groups[1].Value, out value) ? value : (int?)null,
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -173,8 +178,8 @@ namespace DungeonMasterParser
                     var res = new PotionDescriptor()
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -196,8 +201,8 @@ namespace DungeonMasterParser
                     var res = new ContainerDescriptor()
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -219,8 +224,8 @@ namespace DungeonMasterParser
                     var res = new ScrollDescriptor()
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -244,10 +249,10 @@ namespace DungeonMasterParser
                     var res = new ArmorDescriptor
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
                         ArmorStrength = int.Parse(classDelta[0]),
                         SharpResistance = int.Parse(classDelta[1]),
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;
@@ -357,7 +362,7 @@ namespace DungeonMasterParser
 
                         if (tuple.Item2 == nameof(res.Number))
                         {
-                            res.Number = (FightActionEnum) int.Parse(tuple.Item1);
+                            res.Number = (FightActionEnum)int.Parse(tuple.Item1);
                             continue;
                         }
 
@@ -405,7 +410,7 @@ namespace DungeonMasterParser
 
         private string GetTextureName(HtmlNode tr, string directory, int column = 0, int imageIndex = 0)
         {
-            var pathx = tr.Elements("td").ElementAt(column).Elements("img").ElementAt(imageIndex).GetAttributeValue("src",  null);
+            var pathx = tr.Elements("td").ElementAt(column).Elements("img").ElementAt(imageIndex).GetAttributeValue("src", null);
             return directory + Path.GetFileNameWithoutExtension(pathx);
         }
 
@@ -425,13 +430,13 @@ namespace DungeonMasterParser
                     var res = new WeaponDescriptor
                     {
                         Name = columns[0].Trim(),
-                        Weight = (int) (10 *float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
+                        Weight = (int)(10 * float.Parse(columns[1].Trim(), CultureInfo.InvariantCulture)),
                         Strength = int.Parse(columns[3]),
                         KineticEnergy = int.Parse(columns[4]),
                         ShootDamage = int.Parse(columns[5]),
                         Class = int.Parse(classDelta[0]),
                         DeltaEnergy = int.TryParse(classDelta[1], out val) ? (int?)val : null,
-                        TexturePath = GetTextureName(tr,"./Textures/GrabableItems/")
+                        TexturePath = GetTextureName(tr, "./Textures/GrabableItems/")
                     };
                     descriptorMaping.Add(GetKey(res.Name), res);
                     return res;

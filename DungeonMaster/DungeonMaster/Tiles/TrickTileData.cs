@@ -1,4 +1,6 @@
-﻿namespace DungeonMasterParser.Tiles
+﻿using System;
+
+namespace DungeonMasterParser.Tiles
 {
     public class TrickTileData : TileData
     {
@@ -17,11 +19,17 @@
         //Bit 3:
         //    '0' Do not allow random decoration
         //    '1' Allow random decoration
-        public bool AllowRandomDecoration { get; set; }
+        internal bool AllowRandomDecoration { get; set; }
+        public int? RandomDecoration { get; set; }
 
         public override T GetTile<T>(ITileCreator<T> t)
         {
             return t.GetTile(this);
+        }
+
+        public override void SetupDecorations(DungeonMap map, Random rand)
+        {
+            RandomDecoration = AllowRandomDecoration ? GetRandomWallDecoration(map, rand) : null;
         }
     }
 }

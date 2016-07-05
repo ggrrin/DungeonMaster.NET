@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Actions;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
@@ -74,6 +74,7 @@ namespace DungeonMasterEngine.Builders
         {
             return new ISkillFactory[]
             {
+                //TODO remo unnecesary classes
                 SkillFactory<FighterSkill>.Instance,
                 SkillFactory<NinjaSkill>.Instance,
                 SkillFactory<PriestSkill>.Instance,
@@ -266,12 +267,35 @@ namespace DungeonMasterEngine.Builders
                             RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
 
                     default:
-                        return new MiscItemFactory(
-                            wd.Name,
-                            wd.Weight,
-                            ActionCombos[itemDescriptor.AttackCombo],
-                            GetStorageTypes(itemDescriptor.CarryLocation),
-                            RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                        if (wd.FoodValue != null)
+                        {
+                            return new FoodMiscFactory(
+                                wd.FoodValue.Value,
+                                wd.Name,
+                                wd.Weight,
+                                ActionCombos[itemDescriptor.AttackCombo],
+                                GetStorageTypes(itemDescriptor.CarryLocation),
+                                RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                        }
+                        else if (wd.WaterValue != null)
+                        {
+                            return new WaterMiscFactory(
+                                 wd.WaterValue.Value,
+                                 wd.Name,
+                                 wd.Weight,
+                                 ActionCombos[itemDescriptor.AttackCombo],
+                                 GetStorageTypes(itemDescriptor.CarryLocation),
+                                 RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                        }
+                        else
+                        {
+                            return new MiscItemFactory(
+                                wd.Name,
+                                wd.Weight,
+                                ActionCombos[itemDescriptor.AttackCombo],
+                                GetStorageTypes(itemDescriptor.CarryLocation),
+                                RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                        }
                 }
             })
             .ToArray();
@@ -361,6 +385,18 @@ namespace DungeonMasterEngine.Builders
                             Skills[action.ImprovedSkill],
                             action.Stamina,
                             -1);
+                    case FightActionEnum.C042_ACTION_THROW:
+                        return new ThrowActionFactory(
+                            action.Name,
+                            action.ExperienceGain,
+                            action.DefenseModifier,
+                            action.HitProbability,
+                            action.Damage,
+                            action.Fatigue * 1000 / 6,
+                            Skills[action.ImprovedSkill],
+                            action.Stamina,
+                            -1,
+                            RenderersSource);
 
                     default:
                         return new ActionMocap(
@@ -393,8 +429,9 @@ namespace DungeonMasterEngine.Builders
 
     }
 
-    public class ActionMocap : HumanActionFactoryBase {
-        public ActionMocap(string name, int experienceGain, int defenseModifer, int hitProbability, int damage, int fatigue, ISkillFactory skillIndex, int stamina, int mapDifficulty) : base(name, experienceGain, defenseModifer, hitProbability, damage, fatigue, skillIndex, stamina, mapDifficulty) {}
+    public class ActionMocap : HumanActionFactoryBase
+    {
+        public ActionMocap(string name, int experienceGain, int defenseModifer, int hitProbability, int damage, int fatigue, ISkillFactory skillIndex, int stamina, int mapDifficulty) : base(name, experienceGain, defenseModifer, hitProbability, damage, fatigue, skillIndex, stamina, mapDifficulty) { }
 
         public override IAction CreateAction(ILiveEntity actionProvider)
         {

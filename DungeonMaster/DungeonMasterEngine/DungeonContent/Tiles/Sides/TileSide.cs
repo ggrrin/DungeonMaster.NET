@@ -7,12 +7,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Sides
     public class TileSide : ITileSide 
     {
         public MapDirection Face { get; }
-        public bool RandomDecoration { get; }
 
-        public TileSide(MapDirection face, bool randomDecoration)
+        public TileSide(MapDirection face)
         {
             Face = face;
-            RandomDecoration = randomDecoration;
         }
 
         public IRenderer Renderer { get; set; }

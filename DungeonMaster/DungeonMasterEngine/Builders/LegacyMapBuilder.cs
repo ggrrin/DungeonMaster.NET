@@ -11,8 +11,6 @@ using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.Builders.TileCreator;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
@@ -35,7 +33,7 @@ namespace DungeonMasterEngine.Builders
 {
     public class LegacyMapBuilder : IDungonBuilder<IFactories>
     {
-        protected static readonly Random rand = new Random();
+        protected static readonly Random rand = new Random(1);
         public Random Rand => rand;
         private readonly Dictionary<int, DungeonLevel> loadedLevels = new Dictionary<int, DungeonLevel>();
         private Point start;
@@ -66,25 +64,7 @@ namespace DungeonMasterEngine.Builders
         private TaskCompletionSource<bool> tileInitialized;
         public IFactories Factories { get; protected set; }
         public virtual IRenderersSource RendererSource { get; }
-
-        public virtual Texture2D RandomWallDecoration
-        {
-            get
-            {
-                int val = rand.Next(29);
-                return val < CurrentMap.WallDecorationGraphicsCount ? WallTextures[val] : null;
-            }
-        }
-
-        public virtual Texture2D RandomFloorDecoration
-        {
-            get
-            {
-                int val = rand.Next(29);
-                return val < CurrentMap.FloorDecorationGraphicsCount ? FloorTextures[val] : null;
-            }
-        }
-
+        
         public Texture2D DoorButtonTexture { get; protected set; }
         public Texture2D TeleportTexture { get; protected set; }
 

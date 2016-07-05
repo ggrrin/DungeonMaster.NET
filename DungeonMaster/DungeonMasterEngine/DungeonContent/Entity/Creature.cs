@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.CreatureCreator;
+using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
@@ -80,7 +80,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if (!alreadyOnTile)
                 {
                     location?.Tile?.OnObjectLeft(this);
-                    location?.Tile?.Level?.Updateables.Remove(this);
+                    if (differentLevel)
+                        location?.Tile?.Level?.Updateables.Remove(this);
                 }
 
                 location = value;
@@ -89,7 +90,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if (!alreadyOnTile)
                 {
                     location?.Tile?.OnObjectEntered(this);
-                    location?.Tile?.Level?.Updateables.Add(this);
+
+                    if (differentLevel)
+                        location?.Tile?.Level?.Updateables.Add(this);
                 }
             }
         }

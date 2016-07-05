@@ -86,7 +86,6 @@ namespace DungeonMasterParser.Items
             yield return Tuple.Create(Creature2Position, HitPointsCreature2);
             yield return Tuple.Create(Creature3Position, HitPointsCreature3);
             yield return Tuple.Create(Creature4Position, HitPointsCreature4);
-
         }
 
         public IEnumerable<ItemData> GetEnumerator(DungeonData dungeon)

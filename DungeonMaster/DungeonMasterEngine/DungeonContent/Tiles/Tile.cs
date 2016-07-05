@@ -92,6 +92,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public virtual Vector3 StayPoint => Position + new Vector3(0.5f);
 
         public virtual bool ContentActivated { get; protected set; }
+        public ICollection<IRenderable> Drawables { get; } = new HashSet<IRenderable>();
 
         public virtual void ActivateTileContent()
         {
@@ -122,15 +123,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public event EventHandler<object> ObjectEntered;
 
         public event EventHandler<object> ObjectLeft;
-
-        public virtual void Update(GameTime gameTime)
-        {
-            //TODO is it need somewhere ? 
-            //foreach (var item in SubItems.OfType<IUpdate>().ToArray())
-            //{
-            //    item.Update(gameTime);
-            //}
-        }
 
         public virtual void AcceptMessageBase(Message message)
         {

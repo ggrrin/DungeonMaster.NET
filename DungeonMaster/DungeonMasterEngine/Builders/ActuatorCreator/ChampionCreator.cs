@@ -126,6 +126,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreator
                 new VitalityProperty(GetValueOfDMHexEncoding(descriptor[5].Substring(8, 2))),
                 new AntiMagicProperty(GetValueOfDMHexEncoding(descriptor[5].Substring(10, 2))),
                 new AntiFireProperty(GetValueOfDMHexEncoding(descriptor[5].Substring(12, 2))),
+                new ChampionDefenseProperty(champion, 0), 
                 new SpellShieldDefenseProperty(),
                 new FireShieldDefenseProperty(),
                 new ShieldDefenseProperty(),

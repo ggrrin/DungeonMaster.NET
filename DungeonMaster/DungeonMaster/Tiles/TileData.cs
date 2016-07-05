@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DungeonMasterParser.Items;
 
 namespace DungeonMasterParser.Tiles
@@ -33,5 +34,12 @@ namespace DungeonMasterParser.Tiles
                 yield return d.Current;
         }
 
+        protected virtual int? GetRandomWallDecoration(DungeonMap CurrentMap, Random rand)
+        {
+            int val = rand.Next(29);
+            return val < CurrentMap.WallDecorationGraphicsCount ? val : (int?)null;
+        }
+
+        public abstract void SetupDecorations(DungeonMap map, Random rand);
     }
 }

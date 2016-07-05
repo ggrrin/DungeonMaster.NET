@@ -34,8 +34,12 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
             var prevLevel = SkillLevel;
             var prevExp = Experience;
             var prevtempExp = TemporaryExperience;
+
             F304_apzz_CHAMPION_AddSkillExperience(experience);
-            $"{GetType().Name}: exp: {Experience}/{TemporaryExperience}; {Experience - prevExp}/{ TemporaryExperience - prevtempExp} level:{SkillLevel}; {SkillLevel - prevLevel}".Dump();
+
+            //$"{GetType().Name}: exp: {Experience}/{TemporaryExperience}; {Experience - prevExp}/{ TemporaryExperience - prevtempExp} level:{SkillLevel}; {SkillLevel - prevLevel}".Dump();
+            if (prevLevel != SkillLevel)
+                $"{GetType().Name}: gained level!!".Dump(); 
         }
 
         public void AddInitExperience(long experience)

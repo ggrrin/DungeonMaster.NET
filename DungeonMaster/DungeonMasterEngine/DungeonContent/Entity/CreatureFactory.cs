@@ -1,6 +1,6 @@
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.CreatureCreator;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -98,5 +98,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         {
             return new Creature(initiator, this);
         }
+
+
     }
 }

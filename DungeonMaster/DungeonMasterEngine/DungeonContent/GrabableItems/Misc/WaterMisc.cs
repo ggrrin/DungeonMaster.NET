@@ -5,6 +5,7 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
 {
@@ -17,14 +18,15 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
             WaterFactory = miscItemFactory;
         }
 
-        public bool Used => ChargeCount <= 0; 
+        public bool Used => ChargeCount <= 0;
+        public string Message => "Water drank.";
 
         public bool ApplyEffect(ILiveEntity entity)
         {
             if (ChargeCount-- > 0)
             {
                 var water = entity.GetProperty(PropertyFactory<WaterProperty>.Instance);
-                water.Value += 800;
+                water.Value += WaterFactory.WaterValuePerCharge;
 
                 return true;
             }
@@ -34,7 +36,12 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Misc
             }
         }
 
-        public IGrabableItem  Fill()
+        public IGrabableItem GetUsedOutcomeItem(IFactories factories)
+        {
+            return this;
+        }
+
+        public IGrabableItem  Fill(IFactories factories)
         {
             ChargeCount = 4;
             return this;

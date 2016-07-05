@@ -14,7 +14,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
     {
         public bool IsImaginary { get; private set; }
         public bool IsOpen { get; private set; }
-        public bool RandomDecoration { get; private set; }
 
         public override bool IsAccessible => IsImaginary || IsOpen;
 
@@ -27,7 +26,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         {
             IsImaginary = initializer.Imaginary;
             IsOpen = initializer.Open;
-            RandomDecoration = initializer.RandomDecoration;
 
             initializer.Initializing -= Initialize;
         }

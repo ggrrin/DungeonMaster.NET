@@ -1,5 +1,6 @@
 using DungeonMasterEngine.Builders.ItemCreator;
 using DungeonMasterEngine.DungeonContent.Actuators;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
 {
@@ -8,11 +9,9 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
         public EmptyPotion(PotionInitializer initializer):base(initializer)
         { }
 
-        public IGrabableItem Fill()
+        public IGrabableItem Fill(IFactories factories)
         {
-            var res = new WaterPotion();
-            res.Initialize(new PotionInitializer {Factory = base.Type.EmptyPotionCreator.WaterCreator});
-            return res;
+            return factories.PotionFactories[15].Create(new PotionInitializer());
         }
     }
 }

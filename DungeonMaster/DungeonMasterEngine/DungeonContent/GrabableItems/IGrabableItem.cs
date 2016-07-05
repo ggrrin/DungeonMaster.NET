@@ -6,7 +6,7 @@ using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems
 {
-    public interface IGrabableItem : IRenderable, ILocalizable<ISpaceRouteElement>
+    public interface IGrabableItem : ITextureRenderable, ILocalizable<ISpaceRouteElement>
     {
         IGrabableItemFactoryBase FactoryBase { get; }
 

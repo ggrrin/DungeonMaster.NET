@@ -142,7 +142,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreator
                     return altair;
 
                 case GraphicsItemState.Fountain:
-                    var fountain = new Fountain();
+                    var fountain = new Fountain(builder.Factories);
                     fountain.Renderer = builder.RendererSource.GetFountainDecoration(fountain, texture);
                     return fountain;
 

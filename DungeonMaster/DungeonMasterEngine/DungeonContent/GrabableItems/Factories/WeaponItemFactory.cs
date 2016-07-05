@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.Builders.ItemCreator;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
         public int ShootDamage { get;  }
         public int Strength { get; }
 
-        public WeaponItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass weaponClass, int kineticEnergy, int shootDamage, int strength, IRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
+        public WeaponItemFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, int? deltaEnergy, WeaponClass weaponClass, int kineticEnergy, int shootDamage, int strength, ITextureRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
         {
             DeltaEnergy = deltaEnergy;
             Class = weaponClass;

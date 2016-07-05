@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Spells;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
+using DungeonMasterEngine.DungeonContent.Projectiles.Impacts;
 using HtmlAgilityPack;
 using Microsoft.Xna.Framework.Graphics;
 

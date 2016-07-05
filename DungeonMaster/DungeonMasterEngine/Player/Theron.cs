@@ -85,6 +85,9 @@ namespace DungeonMasterEngine.Player
                 RotateParty(oldDirection, midle);
                 RotateParty(midle, newDirection);
             }
+
+            foreach (var champion in PartyGroup)
+                champion.MapDirection = MapDirection;
         }
 
         protected override void OnLocationChanging(ITile oldLocation, ITile newLocation)
@@ -159,38 +162,6 @@ namespace DungeonMasterEngine.Player
                     Debug.Assert(targetLocation.LayoutManager.TryGetSpace(champoin, champoin.Location.Space));
                 }
             }
-        }
-
-        public bool ThrowOutItem(uint distance = 0)
-        {
-            if (Hand != null)
-            {
-                var targetLocation = CheckRoute(distance);
-
-                if (targetLocation != null)
-                {
-                    //TODO throwing
-                    Hand = null;
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-                return false;
-        }
-
-        private ITile CheckRoute(uint distance)
-        {
-            var direction = MapDirection;
-            var curLocation = Location;
-            for (int i = 0; i < distance; i++)
-            {
-                curLocation = curLocation.Neighbors.GetTile(direction);
-                if (curLocation == null || !curLocation.IsAccessible)
-                    return null;
-            }
-            return curLocation;
         }
 
         public bool AddChampoinToGroup(ILiveEntity entity)

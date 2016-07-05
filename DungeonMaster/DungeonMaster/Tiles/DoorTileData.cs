@@ -1,4 +1,5 @@
-﻿using DungeonMasterParser.Enums;
+﻿using System;
+using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 
 namespace DungeonMasterParser.Tiles
@@ -28,5 +29,6 @@ namespace DungeonMasterParser.Tiles
             return t.GetTile(this);
         }
 
+        public override void SetupDecorations(DungeonMap map, Random rand) { }
     }
 }

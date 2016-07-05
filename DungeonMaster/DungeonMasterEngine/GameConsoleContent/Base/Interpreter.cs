@@ -23,6 +23,13 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
         {
             Output.WriteLine("Select index:");
             int j = 0;
+
+            if (!list.Any())
+            {
+                Output.WriteLine($"No items to choose from!!!");
+                return null;
+            }
+
             foreach (var i in list)
                 Output.WriteLine($"{j++} {i?.ToString() ?? "--slot_empty--"}");
 

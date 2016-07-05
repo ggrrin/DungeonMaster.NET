@@ -1,5 +1,5 @@
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 

@@ -42,17 +42,6 @@ namespace DungeonMasterEngine
 
         public static readonly int id = Thread.CurrentThread.ManagedThreadId;
 
-
-        //async Task x()
-        //{
-        //    if(id != Thread.CurrentThread.ManagedThreadId)
-        //        throw new Exception();
-
-        //    await Task.Yield();
-
-        //}
-
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -60,14 +49,6 @@ namespace DungeonMasterEngine
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            //while (true)
-            //{
-            //    //Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
-            //    await x();
-            //}
-
-
 
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
             var dungeonParser = new DungeonParser();

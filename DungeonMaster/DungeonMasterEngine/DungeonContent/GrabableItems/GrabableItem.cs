@@ -1,7 +1,9 @@
-﻿using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+﻿using System;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
+using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems
 {
@@ -16,10 +18,10 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
             return $"{GetType().Name} : {FactoryBase.Name}";
         }
 
-        public IRenderer Renderer
+        public ITextureRenderer Renderer
         {
             get { return FactoryBase.Renderer; }
-            set { throw new System.NotImplementedException(); }
+            set { throw new InvalidOperationException("Render of factory is used!"); }
         }
 
         public ISpaceRouteElement Location
@@ -39,5 +41,10 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems
         }
 
         public MapDirection MapDirection { get; set; }
+        IRenderer IRenderable.Renderer
+        {
+            get { return Renderer; }
+            set { throw new InvalidOperationException("Render of factory is used!"); }
+        }
     }
 }

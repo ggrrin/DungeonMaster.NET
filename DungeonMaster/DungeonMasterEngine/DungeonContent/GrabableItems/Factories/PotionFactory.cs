@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.Builders.ItemCreator;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
@@ -11,12 +11,9 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
 {
     public class PotionFactory : GrabableItemFactoryBase
     {
-        public virtual EmptyPotionFactory EmptyPotionCreator { get; }
 
-        public PotionFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, IRenderer renderer, EmptyPotionFactory emptyPotionCreator) : base(name, weight, attackCombo, carryLocation, renderer)
-        {
-            EmptyPotionCreator = emptyPotionCreator;
-        }
+        public PotionFactory(string name, int weight, IEnumerable<IActionFactory> attackCombo, IEnumerable<IStorageType> carryLocation, ITextureRenderer renderer) : base(name, weight, attackCombo, carryLocation, renderer)
+        { }
 
         public override IGrabableItem CreateItem()
         {

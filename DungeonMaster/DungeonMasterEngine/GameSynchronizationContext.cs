@@ -16,10 +16,10 @@ namespace DungeonMasterEngine
 
         public override void Post(SendOrPostCallback d, object state)
         {
-            //Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
             var t = Tuple.Create(d, state);
             lock (executionQueue)
                 executionQueue.Enqueue(t);
+            //Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
         }
 
         public override void Send(SendOrPostCallback d, object state)

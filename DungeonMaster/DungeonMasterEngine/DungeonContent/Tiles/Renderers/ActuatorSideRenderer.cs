@@ -7,7 +7,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public class ActuatorSideRenderer : TileWallSideRenderer<ActuatorWallTileSide>
     {
-        public ActuatorSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture, Texture2D decorationTexture) : base(side, wallTexture, decorationTexture) { }
+        public ActuatorSideRenderer(ActuatorWallTileSide side, Texture2D wallTexture) : base(side, wallTexture) { }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {

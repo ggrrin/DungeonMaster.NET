@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DungeonMasterEngine.Builders.ItemCreator;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Actuators;
-using DungeonMasterEngine.DungeonContent.Entity.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
@@ -91,7 +92,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                     Kill();
                 else if (value > 0)
                     Activated = true;
-                    
+
             };
         }
 
@@ -135,8 +136,15 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public IEnumerable<IActionFactory> CurrentCombos
         {
-            get { return Body.BodyParts.First(x => x.Type == ActionHandStorageType.Instance).Storage[0]?.FactoryBase.ActionCombo ?? Enumerable.Empty<IActionFactory>(); }
+            get
+            {
+                var actionHand = Body.BodyParts.First(x => x.Type == ActionHandStorageType.Instance);
+                var item = actionHand.Storage[0];
+                return item?.FactoryBase.ActionCombo ?? Enumerable.Empty<IActionFactory>();
+            }
         }
+
+        public bool ReadyForAction { get; protected set; } = true;
 
         public override void MoveTo(ITile newLocation, bool setNewLocation)
         {
@@ -151,5 +159,16 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public override string ToString() => Name;
 
+        public async void DoAction(IActionFactory actionFactory)
+        {
+            if (ReadyForAction)
+            {
+                ReadyForAction = false;
+                var action = actionFactory.CreateAction(this);
+                await Task.Delay(action.ApplyAttack(MapDirection));
+                "Action available.".Dump();
+                ReadyForAction = true;
+            }
+        }
     }
 }
