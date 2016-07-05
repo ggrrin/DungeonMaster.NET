@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         IRelationManager RelationManager { get; }
         IBody Body { get; }
-        bool Activated { get; set; }
+        bool Activated { get; }
 
         ISkill GetSkill(ISkillFactory skillType);
     }

@@ -1,5 +1,6 @@
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {

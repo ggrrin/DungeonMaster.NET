@@ -25,18 +25,9 @@ namespace DungeonMasterEngine.DungeonContent
         {
             LastAddedLevel = item;
             queue.Enqueue(item);
-            foreach (var creature in item.Creatures)
-            {
-                creature.Activated = true;
-            }
 
             if (Count > 3)
-            {
-                foreach (var creature in queue.Dequeue().Creatures)
-                {
-                    creature.Activated = false;
-                }
-            }
+                queue.Dequeue();
         }
 
         public virtual void Clear()
@@ -46,10 +37,10 @@ namespace DungeonMasterEngine.DungeonContent
 
         public virtual bool Contains(DungeonLevel item)
         {
-            return queue.Contains(item);            
+            return queue.Contains(item);
         }
 
-        public virtual  bool Contains(int levelIndex, out DungeonLevel level)
+        public virtual bool Contains(int levelIndex, out DungeonLevel level)
         {
             foreach (var l in queue)
                 if (l.LevelIndex == levelIndex)
@@ -72,6 +63,6 @@ namespace DungeonMasterEngine.DungeonContent
             throw new InvalidOperationException("Operiation not supported");
         }
 
-        
+
     }
 }

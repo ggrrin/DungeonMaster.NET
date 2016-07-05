@@ -1,8 +1,8 @@
-using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
+namespace DungeonMasterEngine.DungeonContent.Actuators.Renderers
 {
     public class ChampionMirrorRenderer : DecorationRenderer<ChampionDecoration>
     {

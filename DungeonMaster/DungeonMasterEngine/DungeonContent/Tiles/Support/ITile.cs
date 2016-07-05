@@ -10,6 +10,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 {
     public interface ITile : IWorldObject,IStopable, INeighbourable<ITile>
     {
+        bool IsInitialized { get; }
+        event EventHandler Initialized;
         bool IsAccessible { get; }
         bool CanFlyItems { get; }
         bool IsTransparent { get; }

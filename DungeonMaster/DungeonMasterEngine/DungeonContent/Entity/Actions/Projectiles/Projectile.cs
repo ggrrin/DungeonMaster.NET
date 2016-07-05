@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Entity.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
-using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles
 {
-    public class Projectile : IMovable<ISpaceRouteElement>
+    public class Projectile : IMovable<ISpaceRouteElement>, IRenderable
     {
         protected static readonly Random rand = new Random();
 
@@ -36,12 +36,30 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
         }
 
         protected readonly Animator<Projectile, ISpaceRouteElement> animator = new Animator<Projectile, ISpaceRouteElement>();
+        private ISpaceRouteElement location;
         public Vector3 Position { get; set; }
         public float TranslationVelocity => 4.4f;
         public MapDirection MapDirection { get; set; }
         public MapDirection Direction { get; protected set; }
         public virtual IGroupLayout Layout => Small4GroupLayout.Instance;
-        public ISpaceRouteElement Location { get; set; }
+        public bool Active { get; protected set; } = true;
+
+        public ISpaceRouteElement Location
+        {
+            get { return location; }
+            set
+            {
+                if (location != null && location.Tile.LevelIndex != value.Tile.LevelIndex)
+                    Destory();
+
+                location = value;
+            }
+        }
+
+        private void Destory()
+        {
+            Active = false;
+        }
 
         public Projectile(int kineticEnergy, int stepEnergy, int attack)
         {
@@ -54,8 +72,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
         {
             Direction = direction;
             Location = GetInitialLocation(casterSpace, direction);
+            Location.Tile.Level.Updateables.Add(this);
 
-            while (true)
+            while (Active)
             {
                 var newSpace = Location.Space.Neighbors.FirstOrDefault(neighbour => neighbour.Item2 == direction)?.Item1;
                 if (newSpace != null)//move to space
@@ -165,6 +184,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Actions
             throw new NotImplementedException();
         }
 
-
+        public IRenderer Renderer { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Threading;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
@@ -33,7 +35,23 @@ namespace DungeonMasterEngine
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             SynchronizationContext.SetSynchronizationContext(new GameSynchronizationContext(taskQueue));
+
+
+            Debug.WriteLine(id);
         }
+
+        public static readonly int id = Thread.CurrentThread.ManagedThreadId;
+
+
+        //async Task x()
+        //{
+        //    if(id != Thread.CurrentThread.ManagedThreadId)
+        //        throw new Exception();
+
+        //    await Task.Yield();
+
+        //}
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -43,10 +61,18 @@ namespace DungeonMasterEngine
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //while (true)
+            //{
+            //    //Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
+            //    await x();
+            //}
+
+
+
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
             var dungeonParser = new DungeonParser();
             dungeonParser.Parse();
-            var renderers = new DefaulRenderers();
+            var renderers = new DefaulRenderers(Content, GraphicsDevice);
             var factoreis = new LegacyFactories(dungeonParser.Data, renderers);
             var theron = new Theron();
             dungeon = new Dungeon(new LegacyMapBuilder(dungeonParser.Data, renderers), factoreis, theron, GraphicsDevice);
@@ -56,7 +82,10 @@ namespace DungeonMasterEngine
 
         protected override void Update(GameTime gameTime)
         {
-            dungeon.Update(gameTime);
+
+
+
+            dungeon?.Update(gameTime);
             while (taskQueue.Count > 0)
             {
                 Tuple<SendOrPostCallback, object> task;
@@ -70,8 +99,8 @@ namespace DungeonMasterEngine
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(dungeon.Effect.FogColor));
-            dungeon.Draw(gameTime);
+            GraphicsDevice.Clear(new Color(dungeon?.Effect.FogColor ?? Color.CornflowerBlue.ToVector3()));
+            dungeon?.Draw(gameTime);
 
             base.Draw(gameTime);
         }

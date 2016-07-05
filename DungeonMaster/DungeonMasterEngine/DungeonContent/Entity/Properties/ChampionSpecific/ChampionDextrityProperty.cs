@@ -3,7 +3,7 @@ using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.ChampionSpecific
 {
     public class ChampionDextrityProperty : Property {
         private static readonly Random rand = new Random();

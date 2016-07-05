@@ -22,5 +22,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 
         bool AddChampoinToGroup(ILiveEntity entity);
         void Draw(BasicEffect effect);
+        void Update(GameTime time);
     }
 }

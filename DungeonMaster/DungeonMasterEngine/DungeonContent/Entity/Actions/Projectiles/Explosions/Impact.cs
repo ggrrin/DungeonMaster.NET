@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions
 {
     public abstract class Impact
     {

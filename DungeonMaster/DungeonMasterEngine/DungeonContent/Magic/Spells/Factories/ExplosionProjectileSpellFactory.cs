@@ -1,15 +1,26 @@
+using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
+using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 {
     public class ExplosionProjectileSpellFactory<TImpact> : ProjectilSpellFactory<ExplosionProjectilSpell<TImpact>> where TImpact : ExplosionImpact, new()
     {
-        public ExplosionProjectileSpellFactory(SpellFactoryInitializer initializer) : base(initializer) { }
+        public IRenderersSource RenderersSource { get; }
+        public Texture2D Texture { get; }
+
+        public ExplosionProjectileSpellFactory(SpellFactoryInitializer initializer, IRenderersSource renderersSource, Texture2D texture) : base(initializer)
+        {
+            RenderersSource = renderersSource;
+            Texture = texture;
+        }
 
         protected override ExplosionProjectilSpell<TImpact> ApplySpellEffect(ILiveEntity l1270PsChampion, IPowerSymbol l1268IPowerSymbolOrdinal, int a1267UiSkillLevel)
         {
@@ -18,7 +29,9 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
             if (values != null)
             {
                 var val = values.Value;
-                return new ExplosionProjectilSpell<TImpact>(val.KineticEnergy, val.StepEnergy, val.Attack);
+                var res = new ExplosionProjectilSpell<TImpact>(val.KineticEnergy, val.StepEnergy, val.Attack);
+                res.Projectile.Renderer = RenderersSource.GetProjectileSpellRenderer(res.Projectile, Texture);
+                return res;
             }
             else
             {

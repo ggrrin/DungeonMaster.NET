@@ -1,8 +1,9 @@
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles
 {
     public class ImpactProjectile : Projectile
     {

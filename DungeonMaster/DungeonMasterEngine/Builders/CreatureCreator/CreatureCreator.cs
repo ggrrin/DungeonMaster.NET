@@ -5,6 +5,7 @@ using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterParser.Items;
+using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.Builders.CreatureCreator
 {
@@ -17,7 +18,7 @@ namespace DungeonMasterEngine.Builders.CreatureCreator
             this.builder = builder;
         }
 
-        public virtual IEnumerable<Creature> AddCreature(CreatureItem creatureData, Tile tile)
+        public virtual IEnumerable<Creature> AddCreature(CreatureItem creatureData, Tile tile, Point position)
         {
             var factory = builder.Factories.CreatureFactories[(int)creatureData.Type];
 

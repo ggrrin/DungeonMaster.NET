@@ -30,7 +30,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         public virtual void Update(GameTime time) { }
 
         public abstract IBody Body { get; }
-        public virtual bool Activated { get; set; }
+        public virtual bool Activated { get; protected set; }
 
         public abstract IProperty GetProperty(IPropertyFactory propertyType);
 

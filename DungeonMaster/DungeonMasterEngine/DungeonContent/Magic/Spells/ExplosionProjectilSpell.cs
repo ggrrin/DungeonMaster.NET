@@ -1,5 +1,7 @@
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;

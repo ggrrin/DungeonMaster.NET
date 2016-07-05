@@ -1,8 +1,8 @@
-using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.CreatureSpecific;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions
 {
     public abstract class FireBaseExplosionImpact : ExplosionImpact
     {

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders.ActuatorCreator;
 using DungeonMasterEngine.Builders.ItemCreator;
@@ -19,6 +20,7 @@ using DungeonMasterEngine.DungeonContent.Entity.Skills;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
+using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
@@ -43,8 +45,6 @@ namespace DungeonMasterEngine.Builders
         private Texture2D[] wallTextures;
         private Texture2D[] floorTextures;
         private Texture2D[] championTextures;
-
-        public List<ILiveEntity> Creatures { get; private set; } = new List<ILiveEntity>();
 
         public DungeonData Data { get; }
         public DungeonMap CurrentMap { get; private set; }
@@ -104,7 +104,6 @@ namespace DungeonMasterEngine.Builders
             legacyTileCreator = new LegacyTileCreator(this);
             FloorActuatorCreator = new FloorActuatorCreator(this);
             ItemCreator = new LegacyItemCreator(this);
-            Creatures = new List<ILiveEntity>();
             InitializeMapTextures();
             TileInitializers = new List<TileInitializer>();
 
@@ -129,13 +128,16 @@ namespace DungeonMasterEngine.Builders
 
             SetupNeighbours(TilesPositions, TileInitializers);
 
-            dungeonLevel = new DungeonLevel(Creatures, level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap, CurrentMap.Difficulty);
+            dungeonLevel = new DungeonLevel(level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap, CurrentMap.Difficulty);
 
             foreach (var tileInitializer in TileInitializers)
             {
                 tileInitializer.Level = dungeonLevel;
                 tileInitializer.Initialize();
             }
+
+            foreach (var tileInitializer in TileInitializers)
+                tileInitializer.NotifyInitialized();
 
             loadedLevels.Add(level, dungeonLevel);
             return dungeonLevel;

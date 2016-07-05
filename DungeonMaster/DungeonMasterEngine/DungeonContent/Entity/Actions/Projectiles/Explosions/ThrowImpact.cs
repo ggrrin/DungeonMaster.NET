@@ -1,6 +1,6 @@
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions
 {
     public class ThrowImpact<TItem> : Impact where TItem : IGrabableItem
     {

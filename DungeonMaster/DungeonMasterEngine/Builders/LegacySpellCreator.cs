@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Actions;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Spells;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using HtmlAgilityPack;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders
 {
@@ -19,13 +21,15 @@ namespace DungeonMasterEngine.Builders
         public IReadOnlyList<ISpellSymbol> SpellSymbol { get; }
         public IReadOnlyList<ISkillFactory> Skills { get; }
         public IReadOnlyList<PotionFactory> PotionFactories { get; }
+        public IRenderersSource RenderersSource { get; }
 
-        public LegacySpellCreator(IReadOnlyList<ISpellSymbol> spellSymbol, IReadOnlyList<ISkillFactory> skills, IReadOnlyList<PotionFactory> potionFactories)
+        public LegacySpellCreator(IReadOnlyList<ISpellSymbol> spellSymbol, IReadOnlyList<ISkillFactory> skills, IReadOnlyList<PotionFactory> potionFactories, IRenderersSource renderersSource)
         {
             SpellSymbol = spellSymbol;
             symbolTokens = SpellSymbol.ToDictionary(t => t.Name.ToLowerInvariant());
             Skills = skills;
             PotionFactories = potionFactories;
+            RenderersSource = renderersSource;
         }
 
         protected virtual HtmlDocument GetDocument()
@@ -83,18 +87,24 @@ namespace DungeonMasterEngine.Builders
 
         protected virtual ISpellFactory<ISpell> GetSpell(string token, SpellFactoryInitializer initializer)
         {
+               
             switch (token)
             {
                 case "Fireball":
-                    return new ExplosionProjectileSpellFactory<FireballExplosionImpact>(initializer);
+                    return new ExplosionProjectileSpellFactory<FireballExplosionImpact>
+                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "WeakenNonmaterialBeings":
-                    return new ExplosionProjectileSpellFactory<HarmNonMaterialExplosionImpact>(initializer);
+                    return new ExplosionProjectileSpellFactory<HarmNonMaterialExplosionImpact>
+                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonBolt":
-                    return new ExplosionProjectileSpellFactory<PoisonBoltExplosionImpact>(initializer);
+                    return new ExplosionProjectileSpellFactory<PoisonBoltExplosionImpact>
+                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonCloud":
-                    return new ExplosionProjectileSpellFactory<PoisonCloudExplosionImpact>(initializer);
+                    return new ExplosionProjectileSpellFactory<PoisonCloudExplosionImpact>
+                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "LightningBolt":
-                    return new ExplosionProjectileSpellFactory<LightingBoltExplosionImpact>(initializer);
+                    return new ExplosionProjectileSpellFactory<LightingBoltExplosionImpact>
+                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonPotion":
                     return new PotionSpellFactory(initializer, PotionFactories[3]);
                 case "DexterityPotion":

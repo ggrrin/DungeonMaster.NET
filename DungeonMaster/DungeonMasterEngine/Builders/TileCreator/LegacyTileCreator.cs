@@ -63,8 +63,7 @@ namespace DungeonMasterEngine.Builders.TileCreator
 
             if (initializer != null)
             {
-                initializer.Creatures = tileInfo.Tile.Creatures.SelectMany(x => creatureCreator.AddCreature(x, tile)).ToArray();
-                builder.Creatures.AddRange(initializer.Creatures);
+                initializer.Creatures = tileInfo.Tile.Creatures.SelectMany(x => creatureCreator.AddCreature(x, tile, tileInfo.Position)).ToArray();
                 initializer.GridPosition = GridPosition;
                 builder.TileInitializers.Add(initializer);
                 initializer = null;

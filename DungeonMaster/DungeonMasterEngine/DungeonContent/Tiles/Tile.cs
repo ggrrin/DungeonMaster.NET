@@ -39,7 +39,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
     public abstract class Tile :  ITile
     {
-        public abstract IEnumerable<object> SubItems { get; } 
+        public abstract IEnumerable<object> SubItems { get; }
+        public bool IsInitialized => Level != null; 
 
         protected Tile(TileInitializer initializer)
         {
@@ -52,12 +53,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             Renderer?.Initialize();
             foreach (var liveEntity in initializer.Creatures)
             {
-                OnObjectEntered(liveEntity);
-                liveEntity.Position = liveEntity.Location.StayPoint;
             }
 
             initializer.Initialized -= AfterInitialized;
+            Initialized?.Invoke(this, new EventArgs());
         }
+
 
         private void Initialize(TileInitializer initializer)
         {
@@ -75,6 +76,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         INeighbors<ITile> INeighbourable<ITile>.Neighbors => Neighbors;
 
+        public event EventHandler Initialized;
         public abstract bool IsAccessible { get; }
         public virtual bool CanFlyItems => true;
         public virtual bool IsTransparent => true;
@@ -123,10 +125,11 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach (var item in SubItems.OfType<IUpdate>().ToArray()) 
-            {
-                item.Update(gameTime);
-            }
+            //TODO is it need somewhere ? 
+            //foreach (var item in SubItems.OfType<IUpdate>().ToArray())
+            //{
+            //    item.Update(gameTime);
+            //}
         }
 
         public virtual void AcceptMessageBase(Message message)

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions
 {
     public class SmokeExplosionImpact : ExplosionImpact
     {

@@ -67,7 +67,7 @@ namespace DungeonMasterEngine.Builders
             CreatureFactories = InitCreatureFactories();
             PowerSymbol = InitPowerSymbols();
             SpellSymbols = InitSpellSymbols();
-            SpellFactories = new LegacySpellCreator(SpellSymbols, Skills, PotionFactories).InitSpellFactories();
+            SpellFactories = new LegacySpellCreator(SpellSymbols, Skills, PotionFactories, renderersSource).InitSpellFactories();
         }
 
         protected virtual IReadOnlyList<ISkillFactory> InitSkills()

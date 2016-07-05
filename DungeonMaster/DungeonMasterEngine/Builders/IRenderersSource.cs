@@ -1,17 +1,22 @@
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Builders
 {
     public interface IRenderersSource
     {
+        ContentManager Content { get; }
+        GraphicsDevice Device { get; }
+
         //tiles
         Renderer GetTileRenderer(Tile tile);
         Renderer GetPitTileRenderer(Pit pit1);
@@ -47,5 +52,7 @@ namespace DungeonMasterEngine.Builders
         Renderer GetItemRenderer(Texture2D texture2D);
         Renderer GetChampionRenderer(Champion res, Texture2D face);
         Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D);
+
+        IRenderer GetProjectileSpellRenderer(Projectile projectile, Texture2D texture);
     }
 }

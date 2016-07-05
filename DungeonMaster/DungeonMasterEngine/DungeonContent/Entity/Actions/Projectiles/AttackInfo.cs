@@ -1,4 +1,4 @@
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles
 {
     public struct AttackInfo
     {

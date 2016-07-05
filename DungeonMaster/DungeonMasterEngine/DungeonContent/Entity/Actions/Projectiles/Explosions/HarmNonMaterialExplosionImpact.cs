@@ -1,6 +1,4 @@
-using System.Linq;
-
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles.Explosions
 {
     public class HarmNonMaterialExplosionImpact : ExplosionImpact
     {

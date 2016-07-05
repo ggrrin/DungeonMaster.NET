@@ -1,33 +1,35 @@
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Graphics;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Renderers
 {
-    class LiveEntityRenderer<TEntity> : Renderer where TEntity : ILiveEntity
+    class MovableRenderer<TMovable> : Renderer where TMovable : IMovable<ISpaceRouteElement>
     {
         protected readonly CubeGraphic cube;
-        public TEntity Entity { get; }
+        public TMovable Movable { get; }
 
-        public LiveEntityRenderer(TEntity entity, Texture2D face)
+        public MovableRenderer(TMovable movable, Texture2D face)
         {
-            Entity = entity;
+            Movable = movable;
 
             cube = new CubeGraphic
             {
                 Texture = face,
-                Position = Entity.Position,
+                Position = Movable.Position,
                 DrawFaces = CubeFaces.All,
                 Outter = true,
-                Scale = new Vector3(0.1f,0.3f, 0.1f),
+                Scale = new Vector3(0.1f, 0.3f, 0.1f),
             };
         }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
-            cube.Position = Entity.Position;
+            cube.Position = Movable.Position;
             cube.Draw(effect);
             return currentTransformation;
         }

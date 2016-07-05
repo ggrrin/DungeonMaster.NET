@@ -5,6 +5,10 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public void Initialize()
         {
             OnInitialing();
+        }
+
+        public void NotifyInitialized()
+        {
             OnInitialized();
         }
 

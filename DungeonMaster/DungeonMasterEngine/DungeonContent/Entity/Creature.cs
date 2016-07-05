@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.CreatureCreator;
@@ -10,6 +11,7 @@ using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.CreatureSpecific;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
@@ -64,19 +66,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected IReadOnlyList<ITile> homeRoute = null;
 
-        public bool Alive { get; private set; } = true;
-
-        public override bool Activated
-        {
-            get { return base.Activated; }
-            set
-            {
-                base.Activated = value;
-                if (Activated == value)
-                    Live();
-            }
-        }
-
         public override ISpaceRouteElement Location
         {
             get { return location; }
@@ -86,57 +75,93 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                     throw new InvalidOperationException("Cannot move from space to itself.");
 
                 bool alreadyOnTile = location?.Tile == value.Tile;
+                bool differentLevel = location?.Tile?.Level != value?.Tile?.Level;
 
                 if (!alreadyOnTile)
+                {
                     location?.Tile?.OnObjectLeft(this);
+                    location?.Tile?.Level?.Updateables.Remove(this);
+                }
 
                 location = value;
                 Position = location.StayPoint;
 
                 if (!alreadyOnTile)
+                {
                     location?.Tile?.OnObjectEntered(this);
+                    location?.Tile?.Level?.Updateables.Add(this);
+                }
             }
         }
 
         public IReadOnlyList<IGrabableItem> Possessions { get; }
+
+
+        private static int j = 0;
+        public int ID { get; }
+
         public Creature(ICreatureInitializer initializer, CreatureFactory factory)
         {
+            ID = j++;
             Factory = factory;
-            location = initializer.Location;
-            if (!location.Tile.LayoutManager.TryGetSpace(this, location.Space))
-                throw new ArgumentException("Location is not accessible!");
-
-            watchAroungOrigin = location.Tile;
             RelationManager = new DefaultRelationManager(initializer.RelationToken, initializer.EnemiesTokens);
             Possessions = initializer.PossessionItems.ToList();
 
+            var loc = initializer.Location;
+            if (!initializer.Location.Tile.IsInitialized)
+                initializer.Location.Tile.Initialized += (s, e) => InitializeTileRelated(loc);
+            else
+                InitializeTileRelated(initializer.Location);
+
+            //if (!initializer.Location.Tile.LayoutManager.TryGetSpace(this, initializer.Location.Space))
+            //    throw new ArgumentException("Location is not accessible!");
+
             HealthProperty health;
-            properties = new Dictionary<IPropertyFactory, IProperty>
+            properties = InitProperties(initializer.HitPoints, out health);
+            health.ValueChanged += TryDie;
+        }
+
+        private Dictionary<IPropertyFactory, IProperty> InitProperties(int hitPoints, out HealthProperty health)
+        {
+            return new Dictionary<IPropertyFactory, IProperty>
             {
-                {PropertyFactory<HealthProperty>.Instance, health = new HealthProperty(initializer.HitPoints) },
+                {PropertyFactory<HealthProperty>.Instance, health = new HealthProperty(hitPoints) },
                 {PropertyFactory<ExperienceProperty>.Instance, new ExperienceProperty(Factory.Experience)},
                 {PropertyFactory<DefenseProperty>.Instance, new DefenseProperty(Factory.Defense)},
                 {PropertyFactory<DextrityProperty>.Instance, new DextrityProperty(Factory.Dexterity)},
                 {PropertyFactory<AntiFireProperty>.Instance, new DextrityProperty(Factory.FireResistance)},
                 {PropertyFactory<AntiPoisonProperty>.Instance, new DextrityProperty(Factory.PoisonResistance)},
             };
+        }
 
-            health.ValueChanged += async (sender, value) =>
+        private async void TryDie(object sender, int value)
+        {
+            if (Activated && value <= 0)
             {
-                if (Alive && value <= 0)
+                Activated = false;
+
+                await animator.AnimatingTask;
+                location.Tile.LayoutManager.FreeSpace(this, location.Space);
+                location.Tile.OnObjectLeft(this);
+                location.Tile.Level.Updateables.Remove(this);
+
+                foreach (var item in Possessions)
                 {
-                    Alive = false;
-
-                    await animator.AnimatingTask;
-                    location.Tile.LayoutManager.FreeSpace(this, location.Space);
-                    location.Tile.OnObjectLeft(this);
-
-                    foreach (var item in Possessions)
-                    {
-                        item.Location = GroupLayout.GetSpaceElement(location.Space, location.Tile);
-                    }
+                    item.Location = GroupLayout.GetSpaceElement(location.Space, location.Tile);
                 }
-            };
+            }
+        }
+
+        protected void InitializeTileRelated(ISpaceRouteElement element)
+        {
+            element.Tile.Level.Updateables.Add(this);
+            Location = element;
+
+            if (!element.Tile.LayoutManager.TryGetSpace(this, element.Space))
+                throw new ArgumentException("Location is not accessible!");
+
+            watchAroungOrigin = element.Tile;
+            LiveAsync();
         }
 
         public override IProperty GetProperty(IPropertyFactory propertyType)
@@ -157,9 +182,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         }
 
         #region Simple AI
-        protected virtual async void Live()
+        protected virtual async void LiveAsync()
         {
-            while (Activated && Alive)
+            Activated = true;
+            //function is not split on every await, 
+            //instead only if some "bigger operation" occurred
+            //such as Task.Yeiald(), Task.Delay(), waiting
+            //for TaskCompletionSource etc.
+            //Thus here we want to return from async call
+            //to let creature move after whole initialization
+            await Task.Yield();
+            while (Activated)
             {
                 if (hounting)
                     await Hount();
@@ -255,21 +288,21 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
             //TODO current location is outside of range ?? shouldnt by solved by go home rutine ? 
             int distanceFromOrigin = (int)(watchAroungOrigin.GridPosition - Location.Tile.GridPosition).ToVector2().Length();
-            watchAroundArea.StartSearch(watchAroungOrigin, Location.Tile,Math.Max(distanceFromOrigin, watchAroundRadius), (tile, distance, bundle) =>
-            {
-                if (tile == null)
-                    throw new Exception();
+            watchAroundArea.StartSearch(watchAroungOrigin, Location.Tile, Math.Max(distanceFromOrigin, watchAroundRadius), (tile, distance, bundle) =>
+             {
+                 if (tile == null)
+                     throw new Exception();
 
-                if (distance > maxTravelDistance)
-                    watchAroundArea.StopSearch();
+                 if (distance > maxTravelDistance)
+                     watchAroundArea.StopSearch();
 
-                if ((desDist < distance) || (desDist == distance && destTileUsages < bundle))
-                {
-                    destTile = tile;
-                    destTileUsages = bundle;
-                    desDist = distance;
-                }
-            });
+                 if ((desDist < distance) || (desDist == distance && destTileUsages < bundle))
+                 {
+                     destTile = tile;
+                     destTileUsages = bundle;
+                     desDist = distance;
+                 }
+             });
 
             if (destTile == null)
                 throw new Exception();
@@ -434,7 +467,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public override string ToString()
         {
-            return "creature";
+            return $"creature {ID}";
         }
 
     }

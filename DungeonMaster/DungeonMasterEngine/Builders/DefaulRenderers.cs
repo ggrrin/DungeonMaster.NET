@@ -1,12 +1,14 @@
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles;
 using DungeonMasterEngine.DungeonContent.Entity.Renderers;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using DecorationItem = DungeonMasterEngine.DungeonContent.Actuators.DecorationItem;
 
@@ -14,6 +16,16 @@ namespace DungeonMasterEngine.Builders
 {
     public class DefaulRenderers : IRenderersSource
     {
+
+        public ContentManager Content { get; }
+        public GraphicsDevice Device { get; }
+
+        public DefaulRenderers(ContentManager content, GraphicsDevice device)
+        {
+            Content = content;
+            Device = device;
+        }
+
         public virtual  Renderer GetWallSideRenderer(TileSide side, Texture2D wallTexture, Texture2D decorationTexture)
         {
             return new TileWallSideRenderer<TileSide>(side, wallTexture, decorationTexture);
@@ -48,6 +60,7 @@ namespace DungeonMasterEngine.Builders
         {
             return new FountainRenderer(texture, fountain);
         }
+
 
         public virtual  Renderer GetTileRenderer(Tile tile)
         {
@@ -87,7 +100,7 @@ namespace DungeonMasterEngine.Builders
 
         public virtual  Renderer GetChampionRenderer(Champion res, Texture2D face)
         {
-            return new LiveEntityRenderer<Champion>(res, face);
+            return new MovableRenderer<Champion>(res, face);
         }
 
         public virtual  Renderer GetTeleportFloorSideRenderer(FloorTileSide floorTileSide, Texture2D wallTexture, Texture2D teleportTexture)
@@ -113,6 +126,11 @@ namespace DungeonMasterEngine.Builders
         public virtual  Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D)
         {
             return new CreatureRenderer(creature, texture2D);
+        }
+
+        public IRenderer GetProjectileSpellRenderer(Projectile projectile, Texture2D texture)
+        {
+            return new MovableRenderer<Projectile>(projectile, texture);
         }
 
         public virtual  Renderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)

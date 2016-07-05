@@ -64,9 +64,9 @@ namespace DungeonMasterEngine.DungeonContent
 
             ActiveLevels = new LevelCollection();
             DungeonLevel level;
-            //level = LoadLevel(1, new Point(4,14));
+            level = LoadLevel(1, new Point(4,14));
             //level = LoadLevel(1, new Point(7,21));
-            level = LoadLevel(0, new Point(9, 7));
+            //level = LoadLevel(0, new Point(9, 7));
             //level = LoadLevel(0, null);// start
             Leader = leader;
             Leader.Location = level.StartTile;
@@ -151,8 +151,14 @@ namespace DungeonMasterEngine.DungeonContent
                 Effect.View = Leader.View;
                 Effect.Projection = Leader.Projection;
 
+                Leader.Update(gameTime);
                 foreach (var tile in CurrentLevel.Tiles)
                     tile.Update(gameTime);
+
+                foreach (var level in ActiveLevels)
+                {
+                    level.Update(gameTime);
+                }
             }
         }
 

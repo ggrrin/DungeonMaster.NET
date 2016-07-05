@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
-namespace DungeonMasterEngine.DungeonContent.Entity.Properties
+namespace DungeonMasterEngine.DungeonContent.Entity.Properties.CreatureSpecific
 {
     internal class NonMaterialProperty :IProperty {
 

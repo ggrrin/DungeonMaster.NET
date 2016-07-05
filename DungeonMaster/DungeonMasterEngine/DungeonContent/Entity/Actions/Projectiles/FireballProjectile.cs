@@ -1,14 +1,4 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
-using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
-using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Helpers;
-using Microsoft.Xna.Framework;
-
-namespace DungeonMasterEngine.DungeonContent.Entity.Actions
+namespace DungeonMasterEngine.DungeonContent.Entity.Actions.Projectiles
 {
     public abstract class NoesFireballProjectile
     {

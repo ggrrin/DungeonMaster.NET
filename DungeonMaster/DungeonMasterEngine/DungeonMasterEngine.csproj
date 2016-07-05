@@ -114,7 +114,7 @@
     <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\ShieldDefenseProperty.cs" />
     <Compile Include="DungeonContent\Entity\Properties\ChampionSpecific\SpellShieldDefenseProperty.cs" />
     <Compile Include="DungeonContent\Entity\Renderers\CreatureRenderer.cs" />
-    <Compile Include="DungeonContent\Entity\Renderers\LiveEntityRenderer.cs" />
+    <Compile Include="DungeonContent\Entity\Renderers\MovableRenderer.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\FullTileLayout.cs" />
     <Compile Include="DungeonContent\Entity\ILiveEntity.cs" />
     <Compile Include="DungeonContent\Entity\GroupSupport\OnethSpace.cs" />
