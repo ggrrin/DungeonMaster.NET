@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.Helpers;
@@ -11,11 +12,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
         protected static readonly Random rand = new Random();
 
         protected readonly ILiveEntity liveEntity;
+        private int temporaryExperience;
 
         public abstract ISkillFactory Type { get; }
 
         public long Experience { get; protected set; }
-        public long TemporaryExperience { get; protected set; }
+
+        public int TemporaryExperience
+        {
+            get { return temporaryExperience; }
+            set { temporaryExperience = MathHelper.Clamp(value, 0, int.MaxValue); }
+        }
 
         public abstract SkillBase BaseSkill { get; }
 
@@ -39,7 +46,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
 
             //$"{GetType().Name}: exp: {Experience}/{TemporaryExperience}; {Experience - prevExp}/{ TemporaryExperience - prevtempExp} level:{SkillLevel}; {SkillLevel - prevLevel}".Dump();
             if (prevLevel != SkillLevel)
-                $"{GetType().Name}: gained level!!".Dump(); 
+                $"{GetType().Name}: gained level!!".Dump();
         }
 
         public void AddInitExperience(long experience)
@@ -66,7 +73,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
 
                 int levelBefore = skill.BaseSkillLevel;
 
-                
+
                 if (BaseSkill != null) //TODO finish// &&  (G361_l_LastCreatureAttackTime > (G313_ul_GameTime - 25)) )
                     exp <<= 1;
 

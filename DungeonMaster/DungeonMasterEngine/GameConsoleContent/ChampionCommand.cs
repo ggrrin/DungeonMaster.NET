@@ -59,6 +59,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (champion != null)
             {
                 Actuator.Champion = null;
+                champion.Rebirth();
                 ConsoleContext.AppContext.Leader.AddChampoinToGroup(champion);
                 Output.WriteLine("Champion successfully added to group.");
             }

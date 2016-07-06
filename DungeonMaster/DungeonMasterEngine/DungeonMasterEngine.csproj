@@ -189,7 +189,6 @@
     <Compile Include="DungeonContent\Actuators\IActuatorX.cs" />
     <Compile Include="DungeonContent\Tiles\Sides\FloorSpaceManager.cs" />
     <Compile Include="DungeonContent\Tiles\Sides\ITileSide.cs" />
-    <Compile Include="DungeonContent\Timm.cs" />
     <Compile Include="GameConsoleContent\KeyboardStreamReader.cs" />
     <Compile Include="Interfaces\IFactories.cs" />
     <Compile Include="Interfaces\IMessageAcceptor.cs" />

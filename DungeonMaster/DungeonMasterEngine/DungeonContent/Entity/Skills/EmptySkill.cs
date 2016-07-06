@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills
         public ISkillFactory Type { get; }
         public SkillBase BaseSkill { get; }
         public long Experience { get; }
-        public long TemporaryExperience { get; }
+        public int TemporaryExperience { get; set; }
         public int SkillLevel { get; }
         public int BaseSkillLevel { get; }
 

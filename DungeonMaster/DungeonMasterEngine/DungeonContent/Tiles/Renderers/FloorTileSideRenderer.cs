@@ -50,10 +50,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
                 var p = GetBoundingBox(space.RelativeGridPosition);
                 var transformedRay = ray.Transform(ref resultTransformationInverse);
                 if (transformedRay.Intersects(p) != null)
-                {
-                    space.Trigger(leader);
-                    break;
-                }
+                    return space.Trigger(leader);
             }
 
             return false;

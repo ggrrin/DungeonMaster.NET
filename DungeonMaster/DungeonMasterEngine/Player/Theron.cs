@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.Builders.ActuatorCreator;
 using DungeonMasterEngine.DungeonContent;
+using DungeonMasterEngine.DungeonContent.Actions;
+using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using Microsoft.Xna.Framework;
@@ -23,10 +26,9 @@ namespace DungeonMasterEngine.Player
 {
     public class Theron : PointOfViewCamera, ILeader
     {
+        private readonly IFactories factorie;
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
-
-
 
         public readonly List<Champion> partyGroup = new List<Champion>();
         private IGrabableItem hand;
@@ -49,10 +51,13 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        private Champion leader;
-        public ILiveEntity Leader => leader;
+        public ILiveEntity Leader => PartyGroup.FirstOrDefault();
         public bool Enabled { get; set; } = true;
 
+        public Theron(IFactories factorie)
+        {
+            this.factorie = factorie;
+        }
 
         private void InitMocap()
         {
@@ -198,14 +203,35 @@ namespace DungeonMasterEngine.Player
                     .ToArray();
 
                 var matrix = Matrix.Identity;
+                var anyTriggered = false;
                 foreach (var tile in tiles)
                     if (tile.Renderer.Interact(this, ref matrix, null))
+                    {
+                        anyTriggered = true;
                         break;
+                    }
 
+                if (!anyTriggered && Hand != null)
+                    ThrowItem();
             }
 
             prevMouse = Mouse.GetState();
             prevKeyboard = Keyboard.GetState();
+        }
+
+        private void ThrowItem()
+        {
+            var storageType = ActionHandStorageType.Instance;
+            var actionHand = Leader.Body.GetBodyStorage(storageType);
+            var item = actionHand.TakeItemFrom(0);
+            actionHand.AddItemTo(Hand, 0);
+            Hand = null;
+
+            var action = new ThrowAttakc((ThrowActionFactory)factorie.FightActions[42], Leader, storageType);
+            action.ApplyAttack(MapDirection);
+
+            if(item != null)
+                actionHand.AddItemTo(item, 0);
         }
 
         public bool IsActive => true;

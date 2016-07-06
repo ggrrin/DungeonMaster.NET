@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
         public event EventHandler<int> ValueChanged;
 
         protected int value;
-        public virtual int MaxValue => BaseValue + AdditionalValues.Sum(x => x.Value); 
+        public virtual int MaxValue => BaseValue + AdditionalValues.Sum(x => x.Value);
         public abstract int BaseValue { get; set; }
 
         public virtual int Value
@@ -23,8 +23,14 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties.Base
                 var prevVal = this.value;
                 this.value = MathHelper.Clamp(value, 0, MaxValue);
                 $"{GetType().Name}: {Value} of {MaxValue} ; {this.value - prevVal}".Dump();
-                ValueChanged?.Invoke(this, Value);
+                InvokeValueChanged();
             }
+        }
+
+
+        protected void InvokeValueChanged()
+        {
+            ValueChanged?.Invoke(this, Value);
         }
 
         public abstract IPropertyFactory Type { get; }

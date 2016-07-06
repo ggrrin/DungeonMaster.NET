@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
@@ -14,19 +15,14 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
         public override bool Trigger(ILeader leader)
         {
             var bones = leader.Hand as ChampionBones;
-            if (bones != null)
+            if (bones != null && leader.PartyGroup.Count < 4)
             {
-                var health = bones.Champion.GetProperty(PropertyFactory<HealthProperty>.Instance);
-                health.Value = health.MaxValue;
-                if (leader.AddChampoinToGroup(bones.Champion))
-                {
-                    leader.Hand = null;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                bones.Champion.Rebirth();
+                if (!leader.AddChampoinToGroup(bones.Champion))
+                    throw new InvalidOperationException();
+
+                leader.Hand = null;
+                return true;
             }
             else
             {

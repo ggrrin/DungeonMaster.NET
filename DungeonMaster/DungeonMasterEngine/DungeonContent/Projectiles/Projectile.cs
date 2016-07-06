@@ -158,7 +158,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
             else
             {
                 //smash it right on caster space
-                return GetClosestSpace(casterSpace, Layout.AllSpaces.Select(x => Layout.GetSpaceElement(x, Location.Tile)));
+                return GetClosestSpace(casterSpace, Layout.AllSpaces.Select(x => Layout.GetSpaceElement(x, casterSpace.Tile)));
             }
         }
 
