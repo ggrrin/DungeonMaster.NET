@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
             if (targetTile?.Entity != null)
             {
                 //F064_aadz_SOUND_RequestPlay_COPYPROTECTIOND(C16_SOUND_COMBAT, G306_i_PartyMapX, G307_i_PartyMapY, C01_MODE_PLAY_IF_PRIORITIZED);
-                delay = 6;
+                delay = 1000;
                 F232_dzzz_GROUP_IsDoorDestroyedByAttack(targetTile.Entity, F312_xzzz_CHAMPION_GetStrength(attackProvider, ActionHandStorageType.Instance), false);
                 //F064_aadz_SOUND_RequestPlay_COPYPROTECTIOND(C04_SOUND_WOODEN_THUD, G306_i_PartyMapX, G307_i_PartyMapY, C02_MODE_PLAY_ONE_TICK_LATER);
             }

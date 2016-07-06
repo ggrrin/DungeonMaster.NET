@@ -45,14 +45,13 @@ namespace DungeonMasterEngine.Player
             get { return hand; }
             set
             {
-                if (hand != value && hand != null && value != null)
-                    throw new InvalidOperationException("Assign null first;");
                 hand = value;
             }
         }
 
         public ILiveEntity Leader => PartyGroup.FirstOrDefault();
         public bool Enabled { get; set; } = true;
+        public ushort MagicalLightAmount { get; set; }
 
         public Theron(IFactories factorie)
         {

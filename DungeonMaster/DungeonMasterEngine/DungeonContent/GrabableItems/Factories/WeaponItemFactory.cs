@@ -25,7 +25,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
             Strength = strength;
         }
 
-        public Weapon Create<TItemInitiator>(TItemInitiator initiator) where TItemInitiator : IWeaponInitializer
+        public virtual Weapon Create<TItemInitiator>(TItemInitiator initiator) where TItemInitiator : IWeaponInitializer
         {
             return new Weapon(initiator, this);
         }

@@ -9,6 +9,7 @@ using DungeonMasterEngine.DungeonContent.Magic.Spells;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.DungeonContent.Projectiles.Impacts;
+using DungeonMasterEngine.Interfaces;
 using HtmlAgilityPack;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -16,19 +17,13 @@ namespace DungeonMasterEngine.Builders
 {
     public class LegacySpellCreator
     {
+        public IFactories Factories { get; }
         protected readonly Dictionary<string, ISpellSymbol> symbolTokens;
-        public IReadOnlyList<ISpellSymbol> SpellSymbol { get; }
-        public IReadOnlyList<ISkillFactory> Skills { get; }
-        public IReadOnlyList<PotionFactory> PotionFactories { get; }
-        public IRenderersSource RenderersSource { get; }
 
-        public LegacySpellCreator(IReadOnlyList<ISpellSymbol> spellSymbol, IReadOnlyList<ISkillFactory> skills, IReadOnlyList<PotionFactory> potionFactories, IRenderersSource renderersSource)
+        public LegacySpellCreator(IFactories factories)
         {
-            SpellSymbol = spellSymbol;
-            symbolTokens = SpellSymbol.ToDictionary(t => t.Name.ToLowerInvariant());
-            Skills = skills;
-            PotionFactories = potionFactories;
-            RenderersSource = renderersSource;
+            Factories = factories;
+            symbolTokens = Factories.SpellSymbols.ToDictionary(t => t.Name.ToLowerInvariant());
         }
 
         protected virtual HtmlDocument GetDocument()
@@ -72,7 +67,7 @@ namespace DungeonMasterEngine.Builders
         private ISkillFactory ParseSkill(string s)
         {
             var identifer = int.Parse(new string(s.TakeWhile(x => x >= '0' && x <= '9').ToArray()));
-            return Skills[identifer];
+            return Factories.Skills[identifer];
         }
 
         private IEnumerable<ISpellSymbol> ParseCastingSequence(string tokensString)
@@ -91,43 +86,44 @@ namespace DungeonMasterEngine.Builders
             {
                 case "Fireball":
                     return new ExplosionProjectileSpellFactory<FireballExplosionImpact>
-                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
+                        (initializer, Factories.RenderersSource, Factories.RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "WeakenNonmaterialBeings":
                     return new ExplosionProjectileSpellFactory<HarmNonMaterialExplosionImpact>
-                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
+                        (initializer, Factories.RenderersSource, Factories.RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonBolt":
                     return new ExplosionProjectileSpellFactory<PoisonBoltExplosionImpact>
-                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
+                        (initializer, Factories.RenderersSource, Factories.RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonCloud":
                     return new ExplosionProjectileSpellFactory<PoisonCloudExplosionImpact>
-                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
+                        (initializer, Factories.RenderersSource, Factories.RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "LightningBolt":
                     return new ExplosionProjectileSpellFactory<LightingBoltExplosionImpact>
-                        (initializer, RenderersSource, RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
+                        (initializer, Factories.RenderersSource, Factories.RenderersSource.Content.Load<Texture2D>("Textures/Explosions/" + token));
                 case "PoisonPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[3]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[3], Factories.PotionFactories);
                 case "DexterityPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[6]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[6], Factories.PotionFactories);
                 case "StrengthPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[7]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[7], Factories.PotionFactories);
                 case "WisdomPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[8]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[8], Factories.PotionFactories);
                 case "VitalityPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[9]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[9], Factories.PotionFactories);
                 case "CurePoisonPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[10]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[10], Factories.PotionFactories);
                 case "StaminaPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[11]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[11], Factories.PotionFactories);
                 case "ShieldPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[12]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[12], Factories.PotionFactories);
                 case "ManaPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[13]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[13], Factories.PotionFactories);
                 case "HealthPotion":
-                    return new PotionSpellFactory(initializer, PotionFactories[14]);
+                    return new PotionSpellFactory(initializer, Factories.PotionFactories[14], Factories.PotionFactories);
                 case "FireShield":
                 case "Shield":
                 case "Darkness":
                 case "Torch":
+                    return new MagicTorchSpellFactory(initializer, Factories.LightPowerToLightAmount);
                 case "Light":
                 case "OpenDoor":
                 case "MagicFootprints":
@@ -142,7 +138,7 @@ namespace DungeonMasterEngine.Builders
 
     public class SpellFactoryMocap : SpellFactory<ISpell>
     {
-        protected override ISpell ApplySpellEffect(ILiveEntity l1270PsChampion, IPowerSymbol l1268IPowerSymbolOrdinal, int a1267UiSkillLevel)
+        protected override ISpell ApplySpellEffect(ILiveEntity entity, IPowerSymbol powerSymbol, int skillLevel)
         {
             throw new NotImplementedException();
         }

@@ -10,6 +10,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
         public ISpace Space { get; }
         public ITile Tile { get; }
 
+        public ISpaceRouteElement GetNew(ITile tile)
+        {
+            return new OnethSpaceRouteElement(Space, tile);
+        }
+
         public OnethSpaceRouteElement(ISpace space, ITile tile)
         {
             Space = space;

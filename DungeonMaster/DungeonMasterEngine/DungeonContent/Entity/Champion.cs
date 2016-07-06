@@ -25,6 +25,7 @@ using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Entity
 {
@@ -40,7 +41,18 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         protected readonly IDictionary<ISkillFactory, ISkill> skills;
 
         public event EventHandler<Champion> Died;
-        public bool Sleeping { get; protected set; } = false;
+
+        protected int timeEffectInterval = 30000;
+        public bool Sleeping
+        {
+            get { return sleeping; }
+            set
+            {
+                sleeping = value;
+                timeEffectInterval = sleeping ? 75 : 30000;
+            }
+        }
+
         public IRenderer Renderer { get; set; }
         public override float TranslationVelocity => 4.4f;
         public override IGroupLayout GroupLayout => Small4GroupLayout.Instance;
@@ -76,6 +88,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
 
         private TaskCompletionSource<bool> timeEffectStopped;
+        private bool sleeping = false;
 
         public Champion(IChampionInitializer initializator, RelationToken relationToken, IEnumerable<RelationToken> enemiesRelationTokens)
         {
@@ -107,10 +120,17 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             timeEffectStopped = new TaskCompletionSource<bool>();
             Activated = true;
 
+            int notUpdateTime = 0;
             while (Activated)
             {
-                F331_auzz_CHAMPION_ApplyTimeEffects_COPYPROTECTIONF();
-                await Task.Delay(30000);//TODO adjust interval
+                if (notUpdateTime > timeEffectInterval)
+                {
+                    F331_auzz_CHAMPION_ApplyTimeEffects_COPYPROTECTIONF();
+                    notUpdateTime = 0;
+                }
+                const int loopInterval = 1000;
+                notUpdateTime += loopInterval; 
+                await Task.Delay(loopInterval);//TODO adjust interval
             }
 
             timeEffectStopped.SetResult(true);
@@ -185,7 +205,11 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             {
                 ReadyForAction = false;
                 var action = actionFactory.CreateAction(this);
-                await Task.Delay(action.ApplyAttack(MapDirection));
+                if(action != null)
+                    await Task.Delay(action.ApplyAttack(MapDirection));
+                else
+                    "Invalid action. => null".Dump();
+
                 "Action available.".Dump();
                 ReadyForAction = true;
             }

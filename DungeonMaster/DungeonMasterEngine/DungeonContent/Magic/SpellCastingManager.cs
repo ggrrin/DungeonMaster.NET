@@ -74,10 +74,13 @@ namespace DungeonMasterEngine.DungeonContent.Magic
                 return false;
 
             var factory = spellFactories.FirstOrDefault(f => f.CastingSequence.SequenceEqual(currentSequence));
-            factory?.CastSpell(CurrentPowerSymbol, Entity).Run(Entity, Entity.MapDirection);
+            var spell = factory?.CastSpell(CurrentPowerSymbol, Entity);
+
+            spell?.Run(Entity, Entity.MapDirection);
+
             currentSequence = new List<ISpellSymbol>();
             CurrentPowerSymbol = null;
-            return factory != null;
+            return factory != null && spell != null;
         }
     }
 

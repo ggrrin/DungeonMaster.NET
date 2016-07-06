@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DungeonMasterEngine.Builders;
 using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
@@ -11,6 +12,9 @@ namespace DungeonMasterEngine.Interfaces
 {
     public interface IFactories
     {
+        ushort MaxLight { get; } 
+        IReadOnlyList<ushort> LightPowerToLightAmount { get; }
+        IReadOnlyList<ushort> PaletteIndexToLightAmount { get; }
         IReadOnlyList<ISpellFactory<ISpell>> SpellFactories { get; }
         IReadOnlyList<ISpellSymbol> SpellSymbols { get; }
         IReadOnlyList<IPowerSymbol> PowerSymbol { get; }
@@ -26,5 +30,6 @@ namespace DungeonMasterEngine.Interfaces
         IReadOnlyList<PotionFactory> PotionFactories { get; }
         IReadOnlyList<MiscItemFactory> MiscFactories { get; }
         IReadOnlyList<CreatureFactory> CreatureFactories { get; }
+        IRenderersSource RenderersSource { get; }
     }
 }

@@ -18,12 +18,13 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
             //        A1269_ui_Ticks = 10000 + ((A1267_ui_SpellPower - 8) << 9);
             //        A1267_ui_LightPower = (A1267_ui_SpellPower >> 1);
             //        A1267_ui_LightPower--;
-            //        goto T412_019;
+            //        G407_s_Party.MagicalLightAmount += G039_ai_Graphic562_LightPowerToLightAmount[A1267_ui_LightPower];
+            //        F404_xxxx_MENUS_CreateEvent70_Light(-A1267_ui_LightPower, A1269_ui_Ticks);
+            //        break;
             //    case C5_SPELL_TYPE_OTHER_MAGIC_TORCH:
             //        A1269_ui_Ticks = 2000 + ((A1267_ui_SpellPower - 3) << 7);
             //        A1267_ui_LightPower = (A1267_ui_SpellPower >> 2);
             //        A1267_ui_LightPower++;
-            //        T412_019:
             //        G407_s_Party.MagicalLightAmount += G039_ai_Graphic562_LightPowerToLightAmount[A1267_ui_LightPower];
             //        F404_xxxx_MENUS_CreateEvent70_Light(-A1267_ui_LightPower, A1269_ui_Ticks);
             //        break;

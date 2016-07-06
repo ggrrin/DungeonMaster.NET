@@ -7,5 +7,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base
     {
         ISpace Space { get; }
         ITile Tile { get; }
+
+        ISpaceRouteElement GetNew(ITile tile);
     }
 }

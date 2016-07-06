@@ -129,6 +129,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreator
                 new ChampionDefenseProperty(champion, 0), 
                 new SpellShieldDefenseProperty(),
                 new FireShieldDefenseProperty(),
+                new MagicalLightProperty(), 
                 new ShieldDefenseProperty(),
                 new WaterProperty(1500 + rand.Next(256), 2048), 
                 new FoodProperty(1500 + rand.Next(256), 2048), 

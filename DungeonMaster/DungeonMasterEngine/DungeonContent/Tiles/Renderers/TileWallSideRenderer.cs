@@ -60,16 +60,16 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 
         protected void RenderWall(BasicEffect effect, ref Matrix finalTransformation)
         {
-            Color color = Color.Black;
+            Color color = Color.Yellow;
 
-            if(TileSide.Face == MapDirection.North)
-                color = Color.Red;
-            if(TileSide.Face == MapDirection.West)
-                color = Color.Green;
-            if(TileSide.Face == MapDirection.South)
-                color = Color.Blue;
-            if(TileSide.Face == MapDirection.East)
-                color = Color.Yellow;
+            //if(TileSide.Face == MapDirection.North)
+            //    color = Color.Red;
+            //if(TileSide.Face == MapDirection.West)
+            //    color = Color.Green;
+            //if(TileSide.Face == MapDirection.South)
+            //    color = Color.Blue;
+            //if(TileSide.Face == MapDirection.East)
+            //    color = Color.Yellow;
 
             if (Highlighted)
             {
@@ -77,7 +77,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             }
 
 
-            effect.DiffuseColor = color.ToVector3();
+            //effect.DiffuseColor = color.ToVector3();
             effect.World = finalTransformation;
             effect.Texture = WallTexture;
             effect.GraphicsDevice.Indices = Resource.IndexBuffer;

@@ -67,6 +67,11 @@
     <Compile Include="DungeonContent\Actions\Factories\ThrowActionFactory.cs" />
     <Compile Include="DungeonContent\Actions\CreatureAttack.cs" />
     <Compile Include="DungeonContent\Actions\CreatureAttackType.cs" />
+    <Compile Include="DungeonContent\Entity\Properties\Base\MagicalLightProperty.cs" />
+    <Compile Include="DungeonContent\GrabableItems\Factories\TorchWeaponItemFactory.cs" />
+    <Compile Include="DungeonContent\GrabableItems\TorchWeapon.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\MagicTorchSpell.cs" />
+    <Compile Include="DungeonContent\Magic\Spells\Factories\MagicTorchSpellFactory.cs" />
     <Compile Include="DungeonContent\Projectiles\AttackInfo.cs" />
     <Compile Include="DungeonContent\Projectiles\ImpactProjectile.cs" />
     <Compile Include="DungeonContent\Projectiles\Impacts\ExplosionImpact.cs" />

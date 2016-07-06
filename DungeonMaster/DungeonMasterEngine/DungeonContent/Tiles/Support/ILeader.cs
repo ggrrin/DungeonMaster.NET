@@ -19,7 +19,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         Matrix View { get; }
         Matrix Projection { get; }
         bool Enabled { get; set; }
-
         bool AddChampoinToGroup(ILiveEntity entity);
         void Draw(BasicEffect effect);
         void Update(GameTime time);

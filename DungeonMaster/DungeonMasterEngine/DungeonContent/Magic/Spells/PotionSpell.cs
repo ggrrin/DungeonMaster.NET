@@ -25,11 +25,11 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
         public override void Run(ILiveEntity caster, MapDirection direction)
         {
             var actionHandStorage = caster.Body.GetBodyStorage(ActionHandStorageType.Instance);
-            var actionHandItem = actionHandStorage.Storage[0] as EmptyPotion;
+            Potion actionHandItem = actionHandStorage.Storage[0] as Potion;
             var readyHandStorage = caster.Body.GetBodyStorage(ReadyHandStorageType.Instance);
-            var readyHandItem = readyHandStorage.Storage[0] as EmptyPotion;
-            EmptyPotion flask = actionHandItem ?? readyHandItem;
-            if (flask != null)
+            Potion readyHandItem = readyHandStorage.Storage[0] as Potion;
+            Potion flask = actionHandItem ?? readyHandItem;
+            if (flask != null && flask.FactoryBase == Factory.PotionFactories[20])
             {
                 IBodyPart usedStorage = flask == actionHandItem ? actionHandStorage : readyHandStorage;
                 usedStorage.TakeItemFrom(0);

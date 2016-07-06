@@ -1,4 +1,5 @@
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
@@ -76,7 +77,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void TeleportItem(object obj)
         {
-            var localizable = obj as ILocalizable<ITile>;
+            var localizable = obj as ILocalizable<ISpaceRouteElement>;
             if (localizable != null && Open && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)//TODO how to set taget location creatures
             {
                 if (AbsoluteDirection)
@@ -87,7 +88,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 {
                     localizable.MapDirection = localizable.MapDirection.GetRotated(Direction.Index + 1);
                 }
-                localizable.Location = NextLevelEnter; 
+                localizable.Location = localizable.Location.GetNew(NextLevelEnter);
             }
         }
 

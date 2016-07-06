@@ -28,6 +28,14 @@ namespace DungeonMasterEngine.GameConsoleContent
                     case "list":
                         await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup, false);
                         break;
+                    case "sleep":
+                        foreach (var champion in ConsoleContext.AppContext.Leader.partyGroup)
+                            champion.Sleeping = true;
+                        break;
+                    case "wake":
+                        foreach (var champion in ConsoleContext.AppContext.Leader.partyGroup)
+                            champion.Sleeping = false;
+                        break;
                 }
             }
             else

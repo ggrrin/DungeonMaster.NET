@@ -33,6 +33,12 @@ namespace DungeonMasterEngine.Builders
         public IRenderersSource RenderersSource { get; }
         public DungeonData Data { get; }
 
+
+        public ushort MaxLight { get; } = 2048;
+        public IReadOnlyList<ushort> LightPowerToLightAmount { get; }
+
+        public IReadOnlyList<ushort> PaletteIndexToLightAmount { get; }
+
         public IReadOnlyList<ISpellFactory<ISpell>> SpellFactories { get; }
 
         public IReadOnlyList<ISpellSymbol> SpellSymbols { get; }
@@ -67,14 +73,17 @@ namespace DungeonMasterEngine.Builders
             CreatureFactories = InitCreatureFactories();
             PowerSymbol = InitPowerSymbols();
             SpellSymbols = InitSpellSymbols();
-            SpellFactories = new LegacySpellCreator(SpellSymbols, Skills, PotionFactories, renderersSource).InitSpellFactories();
+            LightPowerToLightAmount = GetLightPowers();
+            PaletteIndexToLightAmount = GetLightToPaleteMaping();
+
+            SpellFactories = new LegacySpellCreator(this).InitSpellFactories();
+
         }
 
         protected virtual IReadOnlyList<ISkillFactory> InitSkills()
         {
             return new ISkillFactory[]
             {
-                //TODO remo unnecesary classes
                 SkillFactory<FighterSkill>.Instance,
                 SkillFactory<NinjaSkill>.Instance,
                 SkillFactory<PriestSkill>.Instance,
@@ -326,17 +335,34 @@ namespace DungeonMasterEngine.Builders
                 .Select(wd =>
                 {
                     var itemDescriptor = Data.GetItemDescriptor(ObjectCategory.Weapon, wd.Identifer);
-                    return new WeaponItemFactory(
-                        wd.Name,
-                        wd.Weight,
-                        ActionCombos[itemDescriptor.AttackCombo],
-                        GetStorageTypes(itemDescriptor.CarryLocation),
-                        wd.DeltaEnergy,
-                        (WeaponClass)wd.Class,
-                        wd.KineticEnergy,
-                        wd.ShootDamage,
-                        wd.Strength,
-                        RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+
+                    switch (itemDescriptor.InCategoryIndex)
+                    {
+                        case 2:
+                            return new TorchWeaponItemFactory(
+                                wd.Name,
+                                wd.Weight,
+                                ActionCombos[itemDescriptor.AttackCombo],
+                                GetStorageTypes(itemDescriptor.CarryLocation),
+                                wd.DeltaEnergy,
+                                (WeaponClass)wd.Class,
+                                wd.KineticEnergy,
+                                wd.ShootDamage,
+                                wd.Strength,
+                                RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                        default:
+                            return new WeaponItemFactory(
+                                wd.Name,
+                                wd.Weight,
+                                ActionCombos[itemDescriptor.AttackCombo],
+                                GetStorageTypes(itemDescriptor.CarryLocation),
+                                wd.DeltaEnergy,
+                                (WeaponClass)wd.Class,
+                                wd.KineticEnergy,
+                                wd.ShootDamage,
+                                wd.Strength,
+                                RenderersSource.GetItemRenderer(ResourceProvider.Instance.Content.Load<Texture2D>(wd.TexturePath)));
+                    }
                 })
                 .ToArray();
         }
@@ -425,6 +451,52 @@ namespace DungeonMasterEngine.Builders
                 .ToArray();
         }
 
+        protected virtual ushort[] GetLightPowers()
+        {
+            return new ushort[16]
+            {
+                //unknown
+                0,
+                (ushort) (MaxLight/7),
+                //from testing with torch spell
+                //for level 1 => light to power [2] = 1/6 max light amount
+                (ushort) (MaxLight/6),
+                //for level 2 => light to power [3] = 1/5 max light amount
+                (ushort) (MaxLight/5),
+                //for level 3 => light to power [4] = 1/4 max light amount
+                (ushort) (MaxLight/4),
+                //for level 4 => light to power [5] = 1/3 max light amount
+                (ushort) (MaxLight/3),
+                //for level 5 => light to power [6] = 1/2 max light amount
+                (ushort) (MaxLight/2),
+                //for level 6 => light to power [7] = 1/1 max light amount
+                (ushort) (MaxLight/1), 
+                /////////////unknown
+                (ushort) (MaxLight*1.1f),
+                (ushort) (MaxLight*1.3f),
+                (ushort) (MaxLight*1.5f),
+                (ushort) (MaxLight*1.7f),
+                (ushort) (MaxLight*1.9f),
+                (ushort) (MaxLight*2.1f),
+                (ushort) (MaxLight*2.3f),
+                (ushort) (MaxLight*2.5f),
+            };
+
+        }
+
+        protected virtual ushort[] GetLightToPaleteMaping()
+        {
+            return new ushort[6]
+                {
+                    MaxLight,
+                    (ushort) (MaxLight * 5/12f),
+                    (ushort) (MaxLight * 4/12f),
+                    (ushort) (MaxLight * 3/12f),
+                    (ushort) (MaxLight * 2/12f),
+                    (ushort) (MaxLight * 1/12f),
+                };
+
+        }
 
 
     }
@@ -435,7 +507,7 @@ namespace DungeonMasterEngine.Builders
 
         public override IAction CreateAction(ILiveEntity actionProvider)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

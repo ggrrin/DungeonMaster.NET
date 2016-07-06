@@ -11,13 +11,10 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Renderers
 
         public override bool Interact(ILeader leader, ref Matrix currentTransformation, object param)
         {
-            if (Actuator.SensorsEnumeration.LastOrDefault()?.GraphicsBase.Renderer.Interact(leader, ref currentTransformation, param) ?? false)
-            {
-                return Actuator.Trigger(leader);
-            }
-            return false;
+            bool decorationInteract = Actuator.SensorsEnumeration.LastOrDefault()?.GraphicsBase.Renderer.Interact(leader, ref currentTransformation, param) ?? false;
+            return Actuator.Trigger(leader) || decorationInteract;
         }
 
-        public WallActuatorRenderer(WallActuator actuator) : base(actuator) {}
+        public WallActuatorRenderer(WallActuator actuator) : base(actuator) { }
     }
 }

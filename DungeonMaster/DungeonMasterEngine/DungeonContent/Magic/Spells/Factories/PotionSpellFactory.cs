@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
@@ -7,14 +8,17 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
     public class PotionSpellFactory : SpellFactory<PotionSpell>
     {
         public PotionFactory PotionFactory { get; }
-        public PotionSpellFactory(SpellFactoryInitializer initializer, PotionFactory potionFactory) : base(initializer)
+        public IReadOnlyList<PotionFactory> PotionFactories { get; }
+
+        public PotionSpellFactory(SpellFactoryInitializer initializer, PotionFactory potionFactory, IReadOnlyList<PotionFactory> potionFactories) : base(initializer)
         {
             PotionFactory = potionFactory;
+            PotionFactories = potionFactories;
         }
 
-        protected override PotionSpell ApplySpellEffect(ILiveEntity l1270PsChampion, IPowerSymbol l1268IPowerSymbolOrdinal, int a1267UiSkillLevel)
+        protected override PotionSpell ApplySpellEffect(ILiveEntity entity, IPowerSymbol powerSymbol, int skillLevel)
         {
-            return new PotionSpell(l1268IPowerSymbolOrdinal, this);
+            return new PotionSpell(powerSymbol, this);
         }
     }
 }

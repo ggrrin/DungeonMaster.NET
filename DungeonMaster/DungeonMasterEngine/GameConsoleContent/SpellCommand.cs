@@ -103,7 +103,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
 
             if (!manger.TryCastSpell(factories.SpellFactories))
-                Output.WriteLine($"Meaningless sequence!");
+                Output.WriteLine($"Meaningless sequence or not enough practice!");
             else
             {
                 Output.WriteLine($"Spell successfully casted!");

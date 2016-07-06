@@ -33,7 +33,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
                 SkillLevel = initializer.SkillLevel;
             }
 
-            protected abstract TSpell ApplySpellEffect(ILiveEntity l1270PsChampion, IPowerSymbol l1268IPowerSymbolOrdinal, int a1267UiSkillLevel);
+            protected abstract TSpell ApplySpellEffect(ILiveEntity entity, IPowerSymbol powerSymbol, int skillLevel);
 
             public virtual TSpell CastSpell(IPowerSymbol powerSymbol, ILiveEntity caster)
             {
