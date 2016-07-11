@@ -1,76 +1,402 @@
-﻿\chapter{Úvod}
-Originální hra Dungeon Master pochází z dob , kdy její autoři byli značné limitování tehdejším hardwarem i softwarem.
-Jedná se především o nedostatek výkonu, paměti a absence vyšších programovacích jazyků.Zejména kvůli poslednímu
-bodu je celá původní hra implementována staticky. Z čehož plyne, že s jakýmkoli rozšířením enginu je zapotřebí
-upravovat stávající kód. Což dnes již víme, že je značně neefektivní. Datový soubor, který obsahuje data o levelech
-originální hry, obsahuje následující prvky. Především obsahuje jednotlivé mapy, kdy jedna mapa odpovídá vždy jedné
-hladině a čím vyšší level tím hlouběji se dostáváme. Každá mapa je složena z dlaždic a má danou výšku a šířku.
-Celá plocha je vyplněna dlaždicemi různých typů. Je to například zeď, podlaha, teleport, jáma, schody, iluze zdi, 
-otevírací zeď, dveře atp. Na každé dlaždici mohou být objekty. Mohou to být věci, které se dají sbírat a nějak 
-používat. Dále pak příšery, hráč, dveře, teleport a přepínače, které tvoří základní mechaniky  dungeonu. Pro každé tyto
-objekty, je ještě definovaný jejich konkrétní typ. Tzn. může být mnoho druhů přepínačů, příšer, dveří atp.
+\chapter{Úvod}
 
-Jelikož je tato hra velmi známá, existuje již několik klonů, oproti nim se ale tato práce snaží zejména o vyřešení 
-problému s rozšiřitelností a udržitelnosti enginu. Z toho důvodu je celý engine naprogramovaný v jazyce c\#, který
-obsahuje dostatečné silné koncepty pro dosažení tohoto cíle.
+\begin{figure}[ht]\centering
+\includegraphics[width=\textwidth]{./img/DM-original-screen.png}
+\caption{Screenshot originální hry Dungeon Master}
+\label{obr0:uvod}
+\end{figure}
 
-Dalším cílem je samozřejmě to, aby byla reimplementace co nejpodobnější originální hře. Avšak již není kladen důraz
-na t, aby obsahovala veškeré detaily. A to protože z předchozího odstave vyplývá, že by mělo být jednoduché dodělat
-detaily kdykoliv jindy jako rozšíření. Jelikož se jedná pouze o další rozšíření,  na které by měl být engine připravený.
+Dungeon Master je počítačová hra žánru RPG(role playing game) vyvinuta firmou Faster Then Light v roce 1987.
+Byla to první real-time hra tohoto typu s pseudo 3D pohledem a ovládáním pomocí myši. Hráč má k dispozici skupinu až čtyř hrdinů,
+s kterými prochází podzemní bludiště a bojuje s nepřáteli\cc{obr0:uvod}. Tito hrdinové se ve hře nazývají šampioni a mohou se 
+zdokonalovat v různých dovednostech. 
 
+Bludiště se skládá z několika úrovní uspořádaných vertikálně pod sebou. 
+Jednotlivé úrovně pak nemusí být stejně velké a mohou být od sebe různě horizontálně odsazené.
+Každá úroveň je tvořena obdélníkovou plochou s pravidelnou mřížkou\cc{obr1:uvod}. Pole vymezena mřížkou nazýváme dlaždice a je jich 
+ve hře několik typů, které definují jejích vzhled a funkci. Některé dlaždice lze aktivovat tzv. přepínači. Takové typy dlaždic
+jsou například dveře nebo jáma\cc{obr0:uvod}, které lze takto otvírat či zavírat. Přepínače mohou být buď nášlapné na podlaze nebo aktivovatelné
+pomocí myši na zdech. Mezi úrovněmi lze sestupovat pomocí dlaždic typu schody.  Dále je možné se teleportovat mezi dlaždicemi, a to i v různých úrovních, pomocí dlaždice
+typu teleport. 
 
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{./img/DM-levels.png}
+\caption{Ilustrace uspořádání herních úrovní.}
+\label{obr1:uvod}
+\end{figure}
 
-Z předchozích cílů vyplývají následující podcíle, které je třeba vyřešit. 
+Hráč je na začátku postaven do nejvýše položené úrovně, kde si vybere svoji skupinu šampionů. 
+Pohyb skupiny mezi dlaždicemi je zcela diskrétní, to znamená, že se nelze se skupinou zastavit mezi dlaždicemi, ale pohyb je vždy dokončen
+až na vedlejší dlaždici. Se skupinou je tedy vždy asociována pouze jedna dlaždice. Na dlaždicích pak mohou
+být různé předměty, které je možné sbírat. Šampioni mohou s předměty provádět různé akce.
+Například se zbraněmi lze bojovat nebo lektvary je možné pít a zlepšit si tak dočasně vlastnosti. Kromě těchto 
+akcí může ještě šampion vyvolávat kouzla. Nicméně k tomu potřebuje dostatečnou úroveň odpovídající dovednosti.
+Tímto způsobem je možné vytvářet lektvary nebo vyvolávat útočná či obraná kouzla.
+
+Ve hře je celá řada nepřátelský entit. Liší se vzhledem, útokem a pohybem. Pohyb některých entit 
+probíhá ještě po hustší mřížce než jsou dlaždice. Každá entita má definovaný prostor dlaždice, který zaujímá. Je to buď prostor
+celé dlaždice, polovina či čtvrtina. \cc{obr2:uvod} Pohyb entit je potom opět diskrétní jako v případě hráčovi skupiny, 
+ale tentokrát mezi definovanými částmi dlaždic. 
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{./img/DM-group-example.png}
+\caption{Ilustrace prostorů zaujímaných entitami.}
+\label{obr2:uvod}
+\end{figure}
+
+Cílem této práce je vytvořit engine pro hru Dungeon Master, tak aby splňovala následující požadavky:
 \begin{itemize}
-\item Samotné rozparsovaní a interpretace dat obsahující herní mapy. 
-\item Reprezentace dungeonu jako celku.
-\item Reprezentace samotných levelů.
-\item Reprezentace dlaždic v jednotlivých levelech.
-\item Reprezentace přepínačů 
-\item Sestavování herních map a inicializování objektů
-\item Renderování a interakce s objekty.
-\item Reprezentace herních entit.
-\item Uspořádaní entit na dlaždicích
-\item Reprezentace vlastností a schopností entit
-\item Reprezentace relací mezi entitami
-\item Reprezentace těl entit a jejich inventářů
-\item Reprezentace předmětů objevujících se v dungeonu
-\item Reprezentace akcí s předměty.
-\item Reprezentace kouzel.
+\item Engine bude naprogramovaný v jazyce C\#.
+\item Engine bude schopný sestavit herní úrovně podle vstupních dat použitých v originální hře. Nicméně
+	bude také poskytovat možnost, dodělat si podporu pro jiné formáty.
+\item Engine bude obsahovat podporu pro funkce a mechaniky vyskytující se ve hře Dungeon Master.
+\item Engine bude obsahovat oddělenou zobrazovací vrstvu, tak aby mohl být její výstup jednoduše změněn.
+\item Bude kladen důraz na dobrý objektový návrh, tak aby bylo možné do enginu dodávat jednoduše nové funkce.
+\item Projekt bude cílený pro vzdělávaní, tak aby si studenti mohli vyzkoušet do enginu doprogramovat další funkce.
 \end{itemize}
-	
-\chapter{Related works}
 
 \chapter{Analýza}
-Tato kapitola pojednává o postupech a řešeních použitých pro jednotlivé části enginu. Jsou zde popsáný jak slepé a špatné
-návrhy, tak návrhy, které se ukázaly jako nejlepší.
 
-\section{Parsování binárních dat}
-Aby bylo celé dílo vůbec proveditelné, bylo nutné zajistit, že bude možné rozparsovat data map originální hry. K tomuto účelu
-dobře posloužila existující technická dokumentace (viz. \citet{TechnicalDocumentationFontanel05}). Zmíněná dokumentace obsahuje
-popis binárního formátu herních map. Není však vždy úplně jasný vztah konkrétních věcí vzhledem k celému projektu. Z toho důvodu
-se při interpretaci dat muselo projít mnoho slepých cest metodou pokus omyl. 
+Tato kapitola nejprve blíže popisuje formát a mechaniky originální hry a dále pojednává o postupech a řešeních použitých 
+při implementaci nového enginu. Jsou zde popsány jak slepé a nevhodné návrhy, tak návrhy, které se ukázaly 
+jako nejvhodnější řešení.
 
-I z předchozího důvodu se ukázalo lepší vytvořit samostatnou vrstvu, která data rozparsuje do datových objektů, ke kterým
-je přistupováno z vrstev vyšších. Formát herních map obsahuje některá specifika, kvůli kterým, bylo vhodné nad samotnými
-rozparsovanými daty provést ještě post-processing. Například se jedná o uložení objektů, na dlaždicích. Každá taková dlaždice
-má v původním formátu spojový seznam tzv. objektových identifikátorů. Tyto identifikátory obsahují typ věci, na který odkazují
-a potom index do datové struktury daného typu. V rámci post-processingu je v každé dlaždici vytvořen seznam pro konkrétní typ.
-Tyto seznamy jsou pak naplněny daty ze spojového seznamu. Tento přístup ulehčí a zpřehlední práci vyšší vrstvě používající tato
-data.
+Pro splnění práce bylo v prvé řadě zapotřebí získat vstupní data originální hry Dungeon Master. Nejdůležitější data 
+jsou obsažená ve dvou souborech: DUNGEON.DAT a GRAPHICS.DAT. První z nich obsahuje definice herních úrovní a seznamy 
+použitých předmětů, přepínačů a nepřátelských entit. Druhý z nich obsahuje konkrétní vlastnosti objektů a entit použitých v prvním souboru. 
+Soubor GRAPHICS.DAT pak také obsahuje definicí akcí, vlastnosti kouzel, textury, atd. Později se ukázalo, že pouze data hry nebudou
+pro implementaci většiny funkcí dostačující - jedná se například o přesný způsob získávání dovedností šampionů, 
+vyvolávání kouzel nebo provádění akcí. Dalším zdrojem jsou dekompilované zdrojové kódy\cite{DMDecompilation} originální hry v jazyce K\&R C.
+Tyto zdrojové kódy jsou často náročné na porozumění, nicméně potřebné informace pro dokončení této práce se z nich podařilo získat.
 
-Výše popsaná data obsahují pouze popis herních map. Samotné vlastnosti daných objektů, které nejsou ovlivnitelné při návrhu
-herních map neobsahují. Tyto data jsou obsažena v dalších binárních souborech. Nicméně tuto práci již odvedlo mnoho jiných a 
-jsou například vystavená na webových stránkách v HTML formátu (viz. \cite{HtmlDataFontanel05}). Proto jsem se rozhodl tuto 
-práci využít a rozparsovat přímo HTML data do datových objektů. Tato fáze je opět přidána do parsovací vrstvy. K usnadnění 
-práce s HTML jsem použil knihovnu \citet{HtmlAgilityPack}. Některé části HTML souborů jsou manuálně upraveny, pro usnadnění
-parsování. Z těchto souborů jsem také získal některé textury, například pro věci, příšery, a portréty šampionů. Další potřebné
-textury jsou buď z vlastni tvorby nebo získané pomocí extraktoru (\citet{TextureExtractor}). 
+Pro detailnější popis dat Dungeon Masteru si bude dobré nejprve ujasnit vlastnosti a schopnosti šampionů.
+Každý šampion má následující vlastnosti:
+\begin{itemize}
+\item zdraví - určuje kolik útoku šampion vydrží než zemře,
+\item výdrž - určuje kolik akcí je schopen šampion vykonat než se unaví, 
+\item mana - reprezentuje magickou energii pro vyvolávání kouzel, 
+\item zatížení - určuje maximální hmotnost, kterou je šampion schopen unést,
+\item síla - hodnota je používána pro výpočet zranění, síly hodu předmětů a maximální výše zatížení,
+\item obratnost - zvyšuje pravděpodobnost zásahu nepřítele a pomáhá se vyhnou nepřátelským útokům,
+\item moudrost - je to vlastnost důležitá pro kouzelníky a kněze, určuje rychlost obnovy many,
+\item vitalita - určuje rychlost obnovy zdraví a výdrže,
+\item odolnost proti magii - snižuje účinnost magických útoků,
+\item odolnost proti ohni - snižuje účinnost ohnivých útoků,
+\item hodnota jídla a vody - pomocí těchto hodnot je obnovována výdrž a zdraví
+\item štěstí - zvyšuje či snižuje pravděpodobnost provedení akce.
+\end{itemize}
 
-Tato vrstva je navíc oddělena do speciálního projektu a to z toho důvodu, že v době její tvorby ještě nebylo rozhodnuto jaký framework
-bude použit pro přístup ke grafické kartě.
+Každý šampion má ve hře čtyři základní dovednosti a to bojovník, ninja, kněz a kouzelník.
+Kromě základních dovedností má šampion ještě šestnáct skrytých dovedností, které nejsou hráči zobrazeny.
+Každá z těchto skrytých dovedností náleží k nějaké ze základních dovedností.
+Jak moc daný šampion disponuje danou dovedností určuje úroveň dovednosti. 
+Tato úroveň lze navyšovat pomocí zkušeností, které lze získat souboji nebo prováděním akcí. Každá
+akce pak může navyšovat zkušenosti pro jinou dovednost. Pokud jsou v některé ze skrytých dovedností 
+získány zkušenosti, dostane odpovídající zkušenosti i její základní dovednost. Po získání dostatečného
+počtu zkušeností v nějaké dovednosti, získá šampion v této dovednosti novou úroveň. Nová úroveň potom
+navýší určité vlastnosti šampiona. Přesné hodnoty potřebných zkušeností a navyšovaných vlastností pro 
+odpovídající dovednosti jsou pevně stanovené ve zdrojových kódech hry.
+
+\section{Vstupní data pro herní úrovně}\label{dungeon-objects}
+
+Originální hra má herní úrovně definované v binárním souboru DUNGEON.DAT. Formát tohoto souboru nebyl tvůrci nikdy zveřejněn,
+nicméně kolem hry se vytvořila početná komunita, která k němu dokumentaci\cite{TechnicalDocumentationFontanel05} vytvořila.
+Tuto dokumentaci jsme použili k porozumění obsahu souboru. Následuje stručný popis zmíněného souboru, pro 
+kompletní dokumentaci navštivte přímo stránky dokumentace.
+
+Soubor DUNGEON.DAT obsahuje jednotlivé herních úrovně a objekty v nich obsažené. Nejprve definuje základní 
+vlastnosti o každé herní úrovni. První z nich jsou rozměry dané úrovně, tj. počet dlaždic na šířku a výšku. Dále
+definuje obtížnost úrovně, která je použita pro výpočet získaných zkušeností nebo zdraví nepřátelských entit. Každá úroveň má
+také určené použité podmnožiny dekorací na zdech, dveřích a přepínačích. Dekorace jsou v originální hře identifikovány čísly, která
+jsou napevno zabudovaná v kódu hry. Některé dekorace tak mohou mít ještě speciální význam, který je identifikován
+pouze podle zmíněného číselného identifikátoru. Jedná se například o dekorace s výklenky, které mohou být umístěné na zdech.
+V tomto případě originální herní engine rozpozná, že lze na dané místo vkládat předměty.
+
+Pomocí přepínačů lze dlaždicím zaslat zprávu, na kterou může cílová dlaždice reagovat. Zpráva obsahuje akci a datovou položku. 
+Akce dlaždici říká, zda se má aktivovat či deaktivovat. Co daná datová položka znamená si určuje každý typ cílové dlaždice sám. 
+Originální hra pak pracuje s následujícími typy dlaždic:
+\begin{itemize}
+\item Zeď - zajišťuje zobrazování stěn a nelze na ni vstoupit. Pro každou stěnu(sever, východ, jih, západ - viz obr. \ref{wall:analyza}) dlaždice zdi
+	je určeno, zda může mít tzv. náhodnou dekoraci. Pokud ji může mít, engine podle náhodného generátoru
+	určí jaká to bude (případně žádná). Každá strana může obsahovat přepínač, který si může do zdi uložit předměty.
+	Pokud má některá strana zdi dekoraci výklenku, jsou v něm zobrazeny předměty uložené ve zdi.
+	Na stěnách zdi ještě mohou být popisky, které lze zobrazovat nebo skrývat pomocí zaslání zprávy. Aktivační zpráva 
+	popisek zviditelní a deaktivační skryje. Datová položka zprávy zde určuje, pro kterou ze stěn zdi je zpráva určena.
+
+\item Podlaha - Po těchto dlaždicích se hráč běžně pohybuje se svoji skupinou. Obdobně jako u stran zdí může definovat,
+	zda zobrazuje na podlaze náhodnou dekoraci. Podlaha dále může mít nášlapný přepínač. Dlaždice obsahuje čtyři pozice,
+	na které lze pokládat předměty. Tyto pozice vzniknou rozdělením plochy dlaždice na čtvrtiny \cc{floor:analyza}.
+
+
+\item Jáma - Jáma může být buď otevřená nebo zavřená. Nicméně lze na ni vždy vstoupit a pokud je otevřená 
+	hráč spadne s svoji skupinou o úroveň níže. Pád může být i přes několik úrovní. Živé objekty pak po
+	dopadu obdrží zranění. Přijmutím aktivační zprávy se jáma otevře a deaktivační se zavře.
+
+\item Schody - Po této dlaždici se může hráč dostat o úroveň výše resp. níže.
+
+\item Dveře - Na těchto dlaždicích je vždy objekt dveře. Na dlaždici lze vstoupit pouze v případě, že jsou dveře
+	otevřeny. Otevření je možné provést aktivační zprávou či pomocí tlačítka - pokud ho dveře obsahují. 
+	Některé dveře lze také rozbít útokem, to si ale definuje již samotný objekt dveří.
+
+\item Teleport - Tyto dlaždice obsahují objekt teleport, který určuje, které objekty dokáže přenést. Mohou to být
+	předměty, hráčova skupina nebo nepřátelské entity. Po vstupu resp. vložení objektu na dlaždici, je objekt teleportován, pokud
+	je odpovídajícího typu. Příjem aktivační resp. deaktivační zprávy aktivuje resp. deaktivuje teleport.
+
+\item Iluze zdi - Tato dlaždice může být buď iluze zdi a nebo otevíratelná zeď. V obou případech je vizuálně neodlišitelná
+	od dlaždice typu zdi. V prvním případě je možné na dlaždici vstoupit vkročením do zdi. V druhém případě lze
+	zeď odstranit pomocí zaslání odpovídající zprávy na dlaždici. Aktivační zpráva otevře zeď, deaktivační zavře.
+\end{itemize}
+
+	\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{./img/DM-wall-sides.png}
+        \caption{Dlaždice zeď - stěny.}
+        \label{wall:analyza}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{./img/DM-floor-spaces.png}
+        \caption{Dlaždice podlaha - pozice.}
+        \label{floor:analyza}
+    \end{subfigure}
+    \caption{Možné pozice pro uložení objektů na dlaždici.}\label{tile-positions:analyza}
+\end{figure}
+
+\begin{figure}[p]\centering
+\includegraphics[width=\textwidth]{./img/DM-dungeon-dat.png}
+\caption{Ilustrace formátu souboru DUNGEON.DAT}
+\label{DM-dungeon-dat:analyza}
+\end{figure}
+
+V binárním souboru jsou často data uložena po slovech procesoru, které v tomto případě mají velikost dvou bajtů. 
+V další části souboru jsou uložena data s použitými texty ve hře. Tyto texty používají speciální kódování,
+kdy jednotlivé znaky jsou uloženy do slov(těch procesorových) a každé toto slovo obsahuje tři znaky. Všechny 
+texty jsou pak uloženy za sebou v jednom bloku a ke konkrétním textům je přistupováno přes offsety počtu bajtů
+od začátku textových dat. Přesný popis může být opět nalezený v dokumentaci\cite{TechnicalDocumentationFontanel05}.
+
+Kromě sbíratelných předmětů obsahují data ještě další objekty. Řadí se sem dveře, 
+teleport, nepřátelské entity, textové popisky a senzory(přepínače). Tyto objekty si lze představit jako instance typů objektů, 
+jejichž vlastnosti jsou definované v souboru GRAPHICS.DAT a vymezují pouze vlastnosti, které mohou být různé pro každou instanci.
+Za tímto účelem má každý předmět uložený index typu předmětu v dané kategorii.  
+
+Sbíratelné objekty se dělí do následujících kategorií:
+\begin{itemize}
+\item zbraně - lze je vložit šampionům do ruky a pak s nimi mohou bojovat,
+\item oblečení - lze jím obléknout šampiony, a tak zvýšit jejich odolnost,
+\item svitky - obsahují text, který může hráči usnadnit hru, 
+\item lektvary - dělí se na lektvary modifikující šampionovi schopnosti a na lektvary provádějící nějaké
+	akce - např.: výbuch. Každá instance má vlastnost určující sílu efektu.
+\item kontejnery - mohou obsahovat další předměty,
+\item různé - v této kategorii je například jídlo a pak různé předměty, s kterými nelze provádět žádné akce.
+\end{itemize}
+
+
+Objekt dveře může být pouze na dlaždici typu dveře a obsahuje informace, zda-li jsou dveře rozbitelné a jestli 
+mají tlačítko, kterým je lze otevřít. Teleporty mohou být pouze na dlaždici typu teleport a 
+definují cílovou dlaždici a kategorii objektů, které teleportují. Textové popisky mohou být pouze na 
+dlaždici typu zeď a obsahují odkaz na konkrétní text. Nepřátelské entity jsou definovány po skupinách a určují 
+typ příšer ve skupině, jejich počet a využití prostoru na dlaždici. Posledními objekty jsou senzory, 
+které vytvářejí základní herní mechaniky bludiště. Senzory mají daný číselný typ, pomocí kterého hra 
+určí jakým způsobem je možné senzor
+aktivovat. Po aktivaci senzor buď může provést lokální akci nebo odeslat zprávu s akcí na vzdálenou 
+dlaždici. Přepínače se pak typicky skládají z několika senzorů. Více o přepínačích a senzorech bude zmíněno
+v následujících sekcích. 
+
+Ke každému objektu popsanému v předchozích dvou odstavcích existuje unikátní identifikátor\cc{DM-dungeon-dat:analyza}. 
+Tento identifikátor se skládá z pozice, která lze buď interpretovat jako světová strana nebo 
+umístění na dlaždici - jedná-li se o podlahu. Dále obsahuje kategorii, v které je objekt
+uložen. Pro každou kategorii existuje
+v datovém souboru seznam instancí objektů dané kategorie. Poslední složkou identifikátoru 
+je index do seznamu v dané kategorii. Tyto identifikátory se dají chápat jako reference 
+na konkrétní instance objektů.
+
+Každá dlaždice specifikuje, zda může obsahovat spojový seznam složený z objektů zmíněných v předchozích odstavcích. 
+Objekty se na sebe potom odkazují pomocí identifikátorů. Další částí datového souboru je pak 
+seznam prvních identifikátoru na dlaždicích. Tento seznam obsahuje první identifikátory pro dlaždice
+ve všech úrovních. Je seřazen od nejnižší úrovně po nejvyšší od první dlaždice po poslední - bráno  
+v každé úrovni po sloupcích.
+
+Samotné úrovně jsou pak vždy definovány následujícími seznamy v tomto pořadí:
+\begin{itemize}
+\item seznam dlaždic - seřazeny po sloupcích dané úrovně,
+\item seznam dekorací příšer,
+\item seznam dekorací zdí, 
+\item seznam dekorací podlah.
+\end{itemize}
+Počty jednotlivých dekorací a dlaždic jsou popsány ve vlastnostech úrovní.
+
+\section{Data s vlastnostmi objektů }\label{dungeon-properties}
+
+Soubor GRAPHICS.DAT obsahuje textury dekorací, vlastnosti předmětů a objektů, definici akcí a kouzel.
+Formát tohoto souboru nebyl tvůrci uveřejněn, avšak komunitě se opět podařilo data
+vyextrahovat i z tohoto souboru. K některým částem také existuje dokumentace\cite{DMGraphicsDAT}, 
+nicméně už není tak přehledná a ucelená jako v případě dokumentace pro soubor DUNGEON.DAT. Zároveň 
+jsou vyextrahovaná data zveřejněna na webu v HTML formátu. Z toho důvodů jsme se rozhodli 
+pro využití již extrahovaných dat v HTML formátu. Dále následuje podrobnější popis využitého obsahu souboru.
+
+\subsection{Akce a komba}
+
+S předměty je možné provádět akce. Množina akcí pro daný předmět se nazývá kombo a obsahuje 
+až tři akce. Ve hře je k dispozici čtyřicet čtyři akcí a stejný počet komb. Kompletní seznam jednotlivých
+akcí a komb viz\cite{DMActions}. Zde popišme alespoň jejich vlastnosti.
+
+Vlastnosti akcí jsou :
+\begin{itemize}
+\item název 
+\item zkušenosti - počet zkušeností získaných po provedení akce,
+\item dovednost - identifikátor dovednosti, která získá zkušenosti,
+\item obrana - modifikátor obrany při používání akce,
+\item výdrž - modifikátor výdrže nutné pro provedení akce, 
+\item pravděpodobnost provedení akce 
+\item zranění - modifikátor pro výpočet konečného zranění nepřítele, 
+\item únava - doba po kterou nelze provádět žádné akce. 
+\end{itemize}
+
+Vlastnosti pro každou akci komba jsou:
+\begin{itemize}
+\item index akce ze seznamu akcí, 
+\item úroveň dovednosti - minimální úroveň dovednosti pro úspěšné provedení akce. 
+\end{itemize}
+
+
+\subsection{Předměty}
+
+Ke každému typu předmětu existují v tomto souboru popisovače vlastností\cite{DMItemDescriptors}.
+Pro každý předmět jsou definovány následující vlastnosti:  
+\begin{itemize}
+\item globální identifikátor - unikátní identifikátor, který je použit k identifikaci konkrétního typu předmětu například v přepínačích,
+\item index útočného komba,
+\item lokace - místo, na kterou část těla nebo, do kterého inventáře šampiona lze předmět vložit,
+\item index v kategorii - index typu předmětu v dané kategorii.
+\end{itemize}
+
+Globální identifikátor lze z instance předmětu získat pomocí jeho kategorie a indexu typu předmětu,
+který má každá instance předmětu. Každý předmět má také definovanou hmotnost. Zbraně a oblečení mají navíc
+definované následující vlastnosti\cite{DMItems}.
+
+Zbraně:
+\begin{itemize}
+\item poškození - hodnota zranění aplikována při útoku na nepřítele,
+\item kinetická energie - hodnota udává, jak daleko lze zbraň hodit,
+\item střelné poškození - hodnota dodatečného poškození u střelných zbraní.
+\end{itemize}
+
+Oblečení:
+\begin{itemize}
+\item síla brnění - obrana, kterou oblečení poskytuje, 
+\item odolnost proti útoky ostrými předměty. 
+\end{itemize}
+
+\subsection{Kouzla a symboly}
+
+Další častí dat uložené v souboru GRAPHICS.DAT jsou vlastnosti kouzel. Pojďme si nejprve přiblížit,
+jak se ve hře kouzla přesně vyvolávají. Každé kouzlo je složeno z několika symbolů, přičemž první 
+z nich je speciální a jde o tzv. ,,power symbol". Power symbol určuje, jak bude celkové kouzlo silné.
+Další symboly už určují konkrétní kouzlo. Každé vyvolání symbolu stojí šampiona manu. Po stanovení 
+všech symbolů může šampion vyvolat samotné kouzlo. Vyvolání kouzla může selhat, pokud nemá šampion 
+dostatečnou úroveň dovednosti vyžadované kouzlem. Datový soubor tedy obsahuje pro každý symbol při odpovídajícím
+power symbolu množství potřebné many pro jeho vyvolání. Dále obsahuje následující vlastnosti kouzel\cite{DMSpells}:
+
+\begin{itemize}
+\item modifikátor obtížnosti,
+\item dobu - po které šampion nemůže vyvolávat další kouzla,
+\item úroveň dovednosti - nutné pro vyvolání kouzla.
+\end{itemize}
+
+\subsection{Nepřátelské entity}
+
+Poslední částí obsaženou v souboru GRAPHICS.DAT, kterou jsme využili, jsou vlastnosti nepřátelských entit.
+Následující výčet obsahuje vlastnosti, které implementuje nový engine. 
+\begin{itemize}
+\item doba mezi pohybem 
+\item doba mezi útoky
+\item síla brnění
+\item zdraví
+\item síla útoku
+\item otrava - určuje, zda útok může způsobit otravu
+\item obrana 
+\item dohled 
+\item vzdálenost, na kterou detekuje nepřítele bez vidění 
+\item odolnost proti ohni
+\item odolnost proti jedu
+\item pravděpodobnosti zranění určitých částí těla
+\end{itemize}
+
+Celý seznam vlastností je možné nalézt v dokumentaci\cite{DMCreatures}.
+
+
+\section{Parsování vstupních dat}
+
+V této fázi práce ještě nebylo jasné, zda nalezená dokumentace\cite{TechnicalDocumentationFontanel05} bude dostatečná
+pro splnění práce. Parser je proto oddělen od zbytku enginu do zvláštní assembly, která nereferencuje žádnou knihovnu
+pro zobrazování grafiky. Cílem této assembly je tedy pouze převést struktury obsažené ve vstupních datech do odpovídajících
+datových tříd v jazyce C\#. Tento balík dat se potom předá enginu, který z něj nich vytvoří herní úrovně. Tuto zjednodušenou
+představu znázorňuje obrázek \ref{parser-preview:analyza}.
+
+\begin{figure}[h]\centering
+\includegraphics[width=\textwidth]{./img/DM-parser-preview.png}
+\caption{Ilustrace vztahu parseru k enginu.}
+\label{parser-preview:analyza}
+\end{figure}
+
+\subsection{Herní úrovně - DUNGEON.DAT}\label{dungeon-parser}
+
+Parsování herních úrovní je rozděleno do dvou fází. V první fázi probíhá samotné čtení dat objektů\vref{dungeon-objects} ze souboru DUNGEON.DAT
+a transformování je na odpovídající objekty v jazyce C\#. V druhé fázi jsou pak objekty z první fáze upraveny,
+aby měli přehlednější strukturu. 
+
+
+\subsubsection{První fáze}
+
+V této fázi je nejprve vytvořen datový objekt, který bude shromažďovat všechny ostatní data. Tento objekt obsahuje:
+
+\begin{itemize}
+\item metadata z hlavičky souboru - to jsou zejména velikosti všech seznamů s objekty\vref{dungeon-objects} a počet map,
+\item seznamy objektů - to jsou seznamy objektů jazyka C\# vzniklé rozparsováním odpovídajících dat objektů v souboru,
+\item seznam herních úrovní - to jsou objekty reprezentující data herních úrovní, které obsahují jejich vlastnosti\vref{dungeon-objects} a seznam jejich dlaždic, dekoraci, atd. 
+\end{itemize}
+
+Dále parser rozparsuje všechny data vstupního souboru dle dokumentace\cite{TechnicalDocumentationFontanel05} a vytvoří z nich 
+adekvátní objekty, které uloží do zmíněného datového objektu.
+
+\subsubsection{Druhá fáze}
+Po skončení první fáze je struktura vzniklého datového objektu podobná struktuře souboru DUNGEON.DAT. Tím máme namysli, že
+například spojové seznamy jsou reprezentovány pomocí objektových identifikátorů\vref{dungeon-objects}, což není příliš intuitivní a pro práci 
+s těmito daty by engine musel rozumět jejich formátu. Navíc spojové seznamy obsahují objekty různých typů. Proto pro zjednodušení 
+následného čtení těchto dat enginem tato fáze inicializuje v datových objektech pro dlaždice následující položky:
+\begin{itemize} 
+\item seznam sbíratelných předmětů,
+\item seznam senzorů,
+\item seznam popisků,
+\item seznam nepřátelských entit,
+\item položku dveří pro dlaždici typu dveře,
+\item položku teleport pro dlaždici typu teleport,
+\item a pro dlaždici typu zeď a podlaha stanoví identifikátory náhodných dekorací.
+\end{itemize} 
+
+Na počátku vývoje projekt neobsahoval druhou fázi, její vytvoření vedlo k zjednodušení kódu v enginu.
+
+\subsection{Vlastnosti objektů - GRAPHICS.DAT}
+
+Pro sestavení herních úrovní potřebuje engine také vlastnosti společné pro všechny konkrétní typy objektů ze
+souboru DUNGEON.DAT. Jak bylo zmíněno v sekci \ref{dungeon-properties} tyto vlastnosti jsou v souboru GRAPHICS.DAT. Nicméně
+data z tohoto souboru již existují vyextrahovaná v HTML formátu. Pro zjednodušení práce s HTML soubory byla
+použita knihovna HTML Agility Pack\cite{HtmlAgilityPack}. Pro každý typ vlastností je pak vytvořen datový objekt.
+Tyto seznamy jsou pak uloženy do výsledného datového objektu zmíněného v předchozí
+sekci\ref{dungeon-parser}. V této části jsou získána data vlastností všech objektů\vref{dungeon-objects} až na kouzla.
+Vlastnosti kouzel jsou rozparsovány v enginu přímo do objektů v něm použitých. Proto by případné vytváření datových souborů
+v této vrstvě bylo zbytečné. Celý proces zobrazuje diagram na obrázku \ref{parser:analyza}.
+
+\begin{figure}[p]\centering
+\includegraphics[width=\textwidth]{./img/DM-parser.png}
+\caption{Průběh parsování herních dat.}
+\label{parser:analyza}
+\end{figure}
 
 \section{Použití frameworku pro práci s grafickou kartou}
+
 Celý projekt není nikterak extrémně vázaný na konečně vybranou platformu. Samozřejmě pro použití jiné platformy by bylo 
 třeba provést portaci. Ale jelikož použitý rendering je pouze ve fázi proof of concept, neobsahuje žádné pokročilejší akce
 s grafickým hardwarem. A je tedy závislý pouze na několika strukturách. Troufám si tedy říct, že případná portace by s dostatkem
@@ -78,7 +404,7 @@ s grafickým hardwarem. A je tedy závislý pouze na několika strukturách. Tro
 
 I z předchozího důvodu jsem se nakonec rozhodl přistoupit k výběru frameworku, s kterým už některé zkušenosti mám. Jedná se 
 tedy o XNA Framework od firmy Microsoft. Nicméně protože tento framework již není firmou nadále podporován a vyvíjen, použil jsem 
-konečně jeho klon MonoGame (\citet{MonoGame}). Velkou výhodou je, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
+konečně jeho klon MonoGame (\cite{MonoGame}). Velkou výhodou je, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
 iOS, Android, MacOS, Linux, Windows , OUYA, PS4, PSVita, Xbox One.
 
 \section{Reprezentace dungeonu jako celku}
@@ -154,7 +480,7 @@ spoustu předdefinovaných šablon a jednoduše by mohl nastat případ, že pro
 \subsubsection{Třetí reprezentace}
 Nezbylo teď jiné možnosti než se přiblížit více k implementaci podobné originální hře. Za tímto účelem jsem se začal poohlížet po 
 po zdrojových kódech originálu. Originální zdrojový kód pravděpodobně nebyl a nebude nikdy publikovaný. Naštěstí  se ale našel člověk,
-který celou hru dekompiloval, takže po zkompilování tehdejším kompilátorem výsledná binárka odpovídala té originální (viz. \citet{DMDekompilation}).
+který celou hru dekompiloval, takže po zkompilování tehdejším kompilátorem výsledná binárka odpovídala té originální (viz.\cite{DMDekompilation}).
 Kód to je sice těžko čitelný, ale obsahuje přesný popis, jak které senzory mají fungovat. Vytvořil jsem tedy objekt přepínač, který má v sobě sekvenci senzorů, tak jako
 tomu je v originální hře. S využitím zdrojových kód jsem vytvořil odpovídající objektově orientovaný kód v jazyce c\#. Je tedy například možné 
 dovytvořit další nové senzory. V bylo toto rozšiřovaní jen značně omezené, jednotlivé type senzorů se odlišovali číselným identifikátorem.
@@ -615,7 +941,7 @@ dekorací v se v dungeonu vyskytují dekorace, které provádějí nějakou funk
 hře nenáleží žádné senzory. Jedná se o tzv. náhodné dekorace, kdy každá zeď má definováno, zda může obsahovat náhodné dekorace.
 Při generování mapy se pak s určitou pravděpodobností dekorace na zeď dá či nikoliv. Z toho důvodu tento engine
 neobsahuje stejné dekorace na stejných místech, protože není znám náhodný generátor k tomu použitý. Nicméně zpět 
-k problému akcí po kliknutí na dekoraci. Studii dekompilovaného kódu originální hry  (viz. \citet{DMDekompilation}) se ukázalo,
+k problému akcí po kliknutí na dekoraci. Studii dekompilovaného kódu originální hry  (viz.\cite{DMDekompilation}) se ukázalo,
 že některé akce jsou fixovány na konkrétní typy dekorací. Takže například v dekorace s výklenky mají napevno implementovaný 
 kód umožnující vkládaní předmětů do výklenku. Dalším příkladem jsou fontánky, které naplňují lahve s vodou. Posledním příkladem
 speciální dekorace je Vi Altair výklenek, který dokáže po vložení kostí oživit šampiona. Jelikož tyto dekorace
@@ -940,7 +1266,7 @@ Pro více informací o příkazech je možné napsat příkaz \ccc{help} do konz
 
 V rámci této práce byl naimplementovaný engine pro Hru Dungeon Master. Engine 
 neobsahuje přesně všechny funkce, jaké byly v originální hře. Nicméně drtivou většinu
-z nich se podařilo uskutečnit. Pro implementaci byl použit jazyk c#, platforma .NET
+z nich se podařilo uskutečnit. Pro implementaci byl použit jazyk C\#, platforma .NET
 a framework MonoGame. Většina částí enginu je jednoduše rozšiřitelná či modifikovatelná.
 To vede na dobrou udržitelnost celého systému. Primárně je engine určený pro hru 
 Dungeon Master a dokáže si herní úrovně načíst z originální binárních dat. Nicméně
@@ -949,5 +1275,6 @@ načítání map je v oddělené vrstvě. Proto je možné tuto vrstvu upravit k
 jiné vstupní formáty. Takže je možné tento engine využít i pro implementaci jiných her.
 Engine má také oddělenou renderovací vrstvu. Z toho opět vyplývá, že renderovací vrstva lze jednoduše
 rozšiřovat.
+
 
 

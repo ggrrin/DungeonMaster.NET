@@ -11,6 +11,7 @@
 \setlength\topmargin{0mm}
 \setlength\headsep{0mm}
 \setlength\headheight{0mm}
+\setlength{\emergencystretch}{5em}
 % \openright zařídí, aby následující text začínal na pravé straně knihy
 \let\openright=\clearpage
 
@@ -29,6 +30,7 @@
 \usepackage[czech]{babel}
 \usepackage[IL2]{fontenc}
 
+
 %% Použité kódování znaků: obvykle latin2, cp1250 nebo utf8:
 \usepackage[utf8]{inputenc}
 
@@ -40,9 +42,12 @@
 			    % (čtverečky, hvězdičky, tužtičky, nůžtičky, ...)
 \usepackage{bm}             % tučné symboly (příkaz \bm)
 \usepackage{graphicx}       % vkládání obrázků
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{fancyvrb}       % vylepšené prostředí pro strojové písmo
 \usepackage{indentfirst}    % zavede odsazení 1. odstavce kapitoly
-\usepackage{natbib}         % zajištuje možnost odkazovat na literaturu
+\usepackage[numbers]{natbib}         % zajištuje možnost odkazovat na literaturu
+
 			    % stylem AUTOR (ROK), resp. AUTOR [ČÍSLO]
 \usepackage[nottoc]{tocbibind} % zajistí přidání seznamu literatury,
                             % obrázků a tabulek do obsahu
@@ -59,7 +64,7 @@
 %%% Údaje o práci
 
 % Název práce v jazyce práce (přesně podle zadání)
-\def\NazevPrace{Hra DungeonMaster pro platformu .NET}
+\def\NazevPrace{Hra Dungeon Master pro platformu .NET}
 
 % Název práce v angličtině
 \def\NazevPraceEN{Dungeon Master Game for the .NET Platform}
@@ -80,7 +85,7 @@
 \def\TypPracovisteEN{Department}
 
 % Vedoucí práce: Jméno a příjmení s~tituly
-\def\Vedouci{Mgr. Jezek Pavel Ph.D.}
+\def\Vedouci{Mgr. Ježek Pavel Ph.D.}
 
 % Pracoviště vedoucího (opět dle Organizační struktury MFF)
 \def\KatedraVedouciho{Katedra distribuovaných a spolehlivých systémů}
@@ -98,17 +103,24 @@ Děkuji svému vedoucímu práce Mgr. Pavlu Ježkovi Ph. D. jak za pomoc s výb�
 
 % Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
 \def\Abstrakt{%
-Cílem bakalářské práce je reimplementovat hru Dungeon Master. V současné době existuje již několik klonu teto 
-známe hry. Nicméně oproti nim se tato práce zaměřuje především na následující aspekty. Hra bude naprogramována 
-v jazyce C\# s využitím platformy .NET. Dále celý engine je navrhnuty směrem k udržitelnosti a rozšiřitelnosti. 
-Tzn. s využitím tohoto enginu bude možné naprogramovat i jinou hru založenou na podobných základech. Ale 
-především by melo byt jednoduché přidávat do enginu nové funkce nad rámec této práce. Engine by měl také být 
-připravený na rozdílné vstupní formáty map. Dále by mela byt kompletně oddělena zobrazovací vrstva. Vzhledem 
-k povaze projektu by engine mel sloužit jako ukázkový příklad použitelný pro vzdělávání.
+Cílem bakalářské práce je reimplementovat hru Dungeon Master. V současné době existuje již několik klonů této 
+známé hry. Nicméně oproti nim se tato práce zaměřuje především na následující aspekty. Hra je naprogramována 
+v jazyce C\# s využitím platformy .NET. Dále celý engine je navrhnutý směrem k udržitelnosti a rozšiřitelnosti. 
+Tzn. s využitím tohoto enginu je možné naprogramovat i jinou hru založenou na podobných základech. Ale 
+především je jednoduché přidávat do enginu nové funkce. Engine je také 
+připravený na rozdílné vstupní formáty herních úrovní. Dále je také kompletně oddělena zobrazovací vrstva. Vzhledem 
+k povaze projektu by engine měl sloužit jako ukázkový příklad použitelný pro vzdělávání.
 
 }
 \def\AbstraktEN{%
-Abstract.
+The aim of this thesis is to reimplement the game Dungeon Master. There are currently several 
+clones of this wellknown game. However, compared to them this work focuses on the following aspects.
+The game is programmed in C\# using .NET platform. Furthermore, the entire engine is designed
+towards sustainability and scalability. That means that by using this engine it is possible to program 
+slightly differrent game based on the same basics. Especially, it is easy to add new features to the
+engine. The engine is also prepared for different input formats of levels. Also the rendering layer
+of the game engine is completely separate. Due to nature of the project the engine should serve as prime example
+used for education.
 }
 
 % 3 až 5 klíčových slov (doporučeno), každé uzavřeno ve složených závorkách
@@ -128,13 +140,16 @@ Abstract.
 \hypersetup{pdfkeywords=\KlicovaSlova}
 \hypersetup{urlcolor=blue}
 
-\newcommand{\ccc}[1]{\textbf{#1}}
+\newcommand{\ccc}[1]{{\fontfamily{lmtt}\selectfont\textbf{#1}}}
+\newcommand{\cc}[1]{(viz obr. \ref{#1})}
+\newcommand{\vref}[1]{(viz \ref{#1})}
 
 %% Definice různých užitečných maker (viz popis uvnitř souboru)
 \include{makra}
 
 %% Titulní strana a různé povinné informační strany
 \begin{document}
+
 \include{titulka}
 
 %%% Strana s automaticky generovaným obsahem bakalářské práce
@@ -144,6 +159,7 @@ Abstract.
 %%% Jednotlivé kapitoly práce jsou pro přehlednost uloženy v samostatných souborech
 %%%\include{uvod}
 %%%\include{kap01}
+
 \include{bcnotes}
 
 %%% Seznam použité literatury
@@ -173,4 +189,5 @@ Abstract.
 \chapwithtoc{Přílohy}
 
 \openright
+
 \end{document}

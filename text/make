@@ -1,0 +1,4 @@
+pdflatex prace.tex 
+bibtex prace
+pdflatex prace.tex 
+pdflatex prace.tex 

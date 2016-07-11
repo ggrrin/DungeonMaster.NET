@@ -260,8 +260,6 @@ namespace DungeonMasterParser
                 .ToArray();
         }
 
-
-
         private void ConnectDescriptorToItemDescriptor()
         {
             foreach (var desc in ItemDescriptors)

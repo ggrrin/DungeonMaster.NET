@@ -119,11 +119,6 @@ namespace DungeonMasterParser
             SetupRandomDecorations();
         }
 
-        
-
-
-
-
         private void SetupRandomDecorations()
         {
             Random rand = new Random(Data.DungenSeed);
