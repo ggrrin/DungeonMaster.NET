@@ -57,7 +57,7 @@
 \usepackage{paralist}       % lepší enumerate a itemize
 \usepackage[usenames]{xcolor}  % barevná sazba
 \usepackage{textcomp}
-
+\usepackage{float}
 
 
 
@@ -142,7 +142,9 @@ used for education.
 
 \newcommand{\ccc}[1]{{\fontfamily{lmtt}\selectfont\textbf{#1}}}
 \newcommand{\cc}[1]{(viz obr. \ref{#1})}
-\newcommand{\vref}[1]{(viz \ref{#1})}
+\newcommand{\vref}[1]{(viz sekce \ref{#1})}
+\newcommand{\vbref}[1]{(viz bod \ref{#1})}
+\newcommand{\aref}[1]{(viz cíl práce \ref{#1})}
 
 %% Definice různých užitečných maker (viz popis uvnitř souboru)
 \include{makra}
@@ -167,7 +169,7 @@ used for education.
 
 %%% Obrázky v bakalářské práci
 %%% (pokud jich je malé množství, obvykle není třeba seznam uvádět)
-%%%\listoffigures
+\listoffigures
 
 %%% Tabulky v bakalářské práci (opět nemusí být nutné uvádět)
 %%% U matematických prací může být lepší přemístit seznam tabulek na začátek práce.

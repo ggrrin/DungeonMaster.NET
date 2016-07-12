@@ -167,19 +167,6 @@ namespace DungeonMasterEngine.DungeonContent
 
         }
 
-        public async void x()
-        {
-            while (true)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    await Task.Delay(3000);
-                    Light = i;
-                }
-
-            }
-        }
-
 
         public virtual void Update(GameTime gameTime)
         {
@@ -195,7 +182,6 @@ namespace DungeonMasterEngine.DungeonContent
                 Effect.Projection = Leader.Projection;
 
                 Leader.Update(gameTime);
-                foreach (var tile in CurrentLevel.Tiles) { }
 
                 foreach (var level in ActiveLevels)
                 {

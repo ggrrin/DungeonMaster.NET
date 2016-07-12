@@ -1,6 +1,6 @@
 \chapter{Úvod}
 
-\begin{figure}[ht]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-original-screen.png}
 \caption{Screenshot originální hry Dungeon Master}
 \label{obr0:uvod}
@@ -19,7 +19,7 @@ jsou například dveře nebo jáma\cc{obr0:uvod}, které lze takto otvírat či 
 pomocí myši na zdech. Mezi úrovněmi lze sestupovat pomocí dlaždic typu schody.  Dále je možné se teleportovat mezi dlaždicemi, a to i v různých úrovních, pomocí dlaždice
 typu teleport. 
 
-\begin{figure}[h]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-levels.png}
 \caption{Ilustrace uspořádání herních úrovní.}
 \label{obr1:uvod}
@@ -38,22 +38,23 @@ probíhá ještě po hustší mřížce než jsou dlaždice. Každá entita má 
 celé dlaždice, polovina či čtvrtina. \cc{obr2:uvod} Pohyb entit je potom opět diskrétní jako v případě hráčovi skupiny, 
 ale tentokrát mezi definovanými částmi dlaždic. 
 
-\begin{figure}[h]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-group-example.png}
 \caption{Ilustrace prostorů zaujímaných entitami.}
 \label{obr2:uvod}
 \end{figure}
 
 Cílem této práce je vytvořit engine pro hru Dungeon Master, tak aby splňovala následující požadavky:
-\begin{itemize}
+\begin{enumerate}
 \item Engine bude naprogramovaný v jazyce C\#.
-\item Engine bude schopný sestavit herní úrovně podle vstupních dat použitých v originální hře. Nicméně
+\item\label{aim-mechanics} Engine bude obsahovat podporu pro funkce a mechaniky vyskytující se ve hře Dungeon Master.
+\item\label{aim-extensibility} Bude kladen důraz na dobrý objektový návrh, tak aby byl engine co nejlépe rozšiřitelný a bylo 
+	tak možné do enginu dodávat jednoduše nové funkce.
+\item\label{aim-builders} Engine bude schopný sestavit herní úrovně podle vstupních dat použitých v originální hře. Nicméně
 	bude také poskytovat možnost, dodělat si podporu pro jiné formáty.
-\item Engine bude obsahovat podporu pro funkce a mechaniky vyskytující se ve hře Dungeon Master.
-\item Engine bude obsahovat oddělenou zobrazovací vrstvu, tak aby mohl být její výstup jednoduše změněn.
-\item Bude kladen důraz na dobrý objektový návrh, tak aby bylo možné do enginu dodávat jednoduše nové funkce.
+\item\label{aim-rendering} Engine bude obsahovat oddělenou zobrazovací vrstvu, tak aby mohl být její výstup jednoduše změněn.
 \item Projekt bude cílený pro vzdělávaní, tak aby si studenti mohli vyzkoušet do enginu doprogramovat další funkce.
-\end{itemize}
+\end{enumerate}
 
 \chapter{Analýza}
 
@@ -70,7 +71,7 @@ vyvolávání kouzel nebo provádění akcí. Dalším zdrojem jsou dekompilovan
 Tyto zdrojové kódy jsou často náročné na porozumění, nicméně potřebné informace pro dokončení této práce se z nich podařilo získat.
 
 Pro detailnější popis dat Dungeon Masteru si bude dobré nejprve ujasnit vlastnosti a schopnosti šampionů.
-Každý šampion má následující vlastnosti:
+Každý šampion má následující vlastnosti:\label{properties-skills}
 \begin{itemize}
 \item zdraví - určuje kolik útoku šampion vydrží než zemře,
 \item výdrž - určuje kolik akcí je schopen šampion vykonat než se unaví, 
@@ -147,7 +148,7 @@ Originální hra pak pracuje s následujícími typy dlaždic:
 	zeď odstranit pomocí zaslání odpovídající zprávy na dlaždici. Aktivační zpráva otevře zeď, deaktivační zavře.
 \end{itemize}
 
-	\begin{figure}
+	\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=\textwidth]{./img/DM-wall-sides.png}
@@ -164,7 +165,7 @@ Originální hra pak pracuje s následujícími typy dlaždic:
     \caption{Možné pozice pro uložení objektů na dlaždici.}\label{tile-positions:analyza}
 \end{figure}
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-dungeon-dat.png}
 \caption{Ilustrace formátu souboru DUNGEON.DAT}
 \label{DM-dungeon-dat:analyza}
@@ -181,7 +182,7 @@ teleport, nepřátelské entity, textové popisky a senzory(přepínače). Tyto 
 jejichž vlastnosti jsou definované v souboru GRAPHICS.DAT a vymezují pouze vlastnosti, které mohou být různé pro každou instanci.
 Za tímto účelem má každý předmět uložený index typu předmětu v dané kategorii.  
 
-Sbíratelné objekty se dělí do následujících kategorií:
+Sbíratelné objekty se dělí do následujících kategorií:\label{grabable-items}
 \begin{itemize}
 \item zbraně - lze je vložit šampionům do ruky a pak s nimi mohou bojovat,
 \item oblečení - lze jím obléknout šampiony, a tak zvýšit jejich odolnost,
@@ -202,7 +203,7 @@ které vytvářejí základní herní mechaniky bludiště. Senzory mají daný 
 určí jakým způsobem je možné senzor
 aktivovat. Po aktivaci senzor buď může provést lokální akci nebo odeslat zprávu s akcí na vzdálenou 
 dlaždici. Přepínače se pak typicky skládají z několika senzorů. Více o přepínačích a senzorech bude zmíněno
-v následujících sekcích. 
+v sekci \ref{actuator-analyza}. 
 
 Ke každému objektu popsanému v předchozích dvou odstavcích existuje unikátní identifikátor\cc{DM-dungeon-dat:analyza}. 
 Tento identifikátor se skládá z pozice, která lze buď interpretovat jako světová strana nebo 
@@ -236,7 +237,7 @@ nicméně už není tak přehledná a ucelená jako v případě dokumentace pro
 jsou vyextrahovaná data zveřejněna na webu v HTML formátu. Z toho důvodů jsme se rozhodli 
 pro využití již extrahovaných dat v HTML formátu. Dále následuje podrobnější popis využitého obsahu souboru.
 
-\subsection{Akce a komba}
+\subsection{Akce a komba}\label{action-combos}
 
 S předměty je možné provádět akce. Množina akcí pro daný předmět se nazývá kombo a obsahuje 
 až tři akce. Ve hře je k dispozici čtyřicet čtyři akcí a stejný počet komb. Kompletní seznam jednotlivých
@@ -261,7 +262,7 @@ Vlastnosti pro každou akci komba jsou:
 \end{itemize}
 
 
-\subsection{Předměty}
+\subsection{Předměty}\label{item-descriptors}
 
 Ke každému typu předmětu existují v tomto souboru popisovače vlastností\cite{DMItemDescriptors}.
 Pro každý předmět jsou definovány následující vlastnosti:  
@@ -289,7 +290,7 @@ Oblečení:
 \item odolnost proti útoky ostrými předměty. 
 \end{itemize}
 
-\subsection{Kouzla a symboly}
+\subsection{Kouzla a symboly}\label{magic-symbols}
 
 Další častí dat uložené v souboru GRAPHICS.DAT jsou vlastnosti kouzel. Pojďme si nejprve přiblížit,
 jak se ve hře kouzla přesně vyvolávají. Každé kouzlo je složeno z několika symbolů, přičemž první 
@@ -305,7 +306,7 @@ power symbolu množství potřebné many pro jeho vyvolání. Dále obsahuje ná
 \item úroveň dovednosti - nutné pro vyvolání kouzla.
 \end{itemize}
 
-\subsection{Nepřátelské entity}
+\subsection{Nepřátelské entity}\label{properties-creatures}
 
 Poslední částí obsaženou v souboru GRAPHICS.DAT, kterou jsme využili, jsou vlastnosti nepřátelských entit.
 Následující výčet obsahuje vlastnosti, které implementuje nový engine. 
@@ -327,7 +328,7 @@ Následující výčet obsahuje vlastnosti, které implementuje nový engine.
 Celý seznam vlastností je možné nalézt v dokumentaci\cite{DMCreatures}.
 
 
-\section{Parsování vstupních dat}
+\section{Parsování vstupních dat}\label{level-parsing}
 
 V této fázi práce ještě nebylo jasné, zda nalezená dokumentace\cite{TechnicalDocumentationFontanel05} bude dostatečná
 pro splnění práce. Parser je proto oddělen od zbytku enginu do zvláštní assembly, která nereferencuje žádnou knihovnu
@@ -335,7 +336,7 @@ pro zobrazování grafiky. Cílem této assembly je tedy pouze převést struktu
 datových tříd v jazyce C\#. Tento balík dat se potom předá enginu, který z něj nich vytvoří herní úrovně. Tuto zjednodušenou
 představu znázorňuje obrázek \ref{parser-preview:analyza}.
 
-\begin{figure}[h]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-parser-preview.png}
 \caption{Ilustrace vztahu parseru k enginu.}
 \label{parser-preview:analyza}
@@ -359,7 +360,7 @@ V této fázi je nejprve vytvořen datový objekt, který bude shromažďovat v�
 \end{itemize}
 
 Dále parser rozparsuje všechny data vstupního souboru dle dokumentace\cite{TechnicalDocumentationFontanel05} a vytvoří z nich 
-adekvátní objekty, které uloží do zmíněného datového objektu.
+adekvátní objekty, které uloží do zmíněného datového objektu. Ilustrace této fáze je na obrázku \ref{dungeon-parser}.
 
 \subsubsection{Druhá fáze}
 Po skončení první fáze je struktura vzniklého datového objektu podobná struktuře souboru DUNGEON.DAT. Tím máme namysli, že
@@ -389,255 +390,364 @@ sekci\ref{dungeon-parser}. V této části jsou získána data vlastností všec
 Vlastnosti kouzel jsou rozparsovány v enginu přímo do objektů v něm použitých. Proto by případné vytváření datových souborů
 v této vrstvě bylo zbytečné. Celý proces zobrazuje diagram na obrázku \ref{parser:analyza}.
 
-\begin{figure}[p]\centering
+\begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-parser.png}
 \caption{Průběh parsování herních dat.}
 \label{parser:analyza}
 \end{figure}
 
-\section{Použití frameworku pro práci s grafickou kartou}
+\section{Výběr frameworku pro práci s grafickým výstupem}
 
-Celý projekt není nikterak extrémně vázaný na konečně vybranou platformu. Samozřejmě pro použití jiné platformy by bylo 
-třeba provést portaci. Ale jelikož použitý rendering je pouze ve fázi proof of concept, neobsahuje žádné pokročilejší akce
-s grafickým hardwarem. A je tedy závislý pouze na několika strukturách. Troufám si tedy říct, že případná portace by s dostatkem
-času nebyl až takový problém.
-
-I z předchozího důvodu jsem se nakonec rozhodl přistoupit k výběru frameworku, s kterým už některé zkušenosti mám. Jedná se 
-tedy o XNA Framework od firmy Microsoft. Nicméně protože tento framework již není firmou nadále podporován a vyvíjen, použil jsem 
-konečně jeho klon MonoGame (\cite{MonoGame}). Velkou výhodou je, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
+Po úspěšném rozparsování herní dat se bylo třeba rozhodnout, kterou knihovnou použít pro zobrazení grafického výstupu enginu. 
+Cílem této práce je vytvořit herní engine s dobrým návrhem\aref{aim-extensibility}. Proto stačí, aby byl grafický výstup ve formě proof of concept. 
+Aby se bylo možné soustředit hlavně na samotný návrh enginu, použili jsem framework, s který už jsme měli nějaké zkušenosti.
+Jedná se o XNA Framework od firmy Microsoft. Nicméně protože tento framework již není firmou nadále podporován a vyvíjen, využili jsme 
+konečně jeho klon MonoGame\cite{MonoGame}. Výhodou této volby může být, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
 iOS, Android, MacOS, Linux, Windows , OUYA, PS4, PSVita, Xbox One.
 
-\section{Reprezentace dungeonu jako celku}
-Dungeon je logicky rozdělen do jednotlivých levelů, o tyto levely se pak stará samotné jádro enginu. Jádro enginu se ve výsledku stará
-pouze o načítání levelů a vykreslování správné oblasti dle pozice hráče. Pro načítání levelů se používají buildery, které jsou zároveň
-bodem rozšiřitelnosti. Naprogramováním různých builderů je dosaženo toho, že engine dokáže načítat mapy v různých formátech.
+\section{Reprezentace jádra enginu}\label{engine-core-section}
 
-Při každé změně pozice hráče se vyhledají viditelné dlaždice. Pokud je některá z těchto dlaždic označená jako spojnice levelů,
-engine propojí tyto dlaždice s odpovídajícími dlaždicemi v cílovém levelu. V originální hře jsou takové dlaždice například schody,
-teleport nebo jámy. Nicméně je opět na programátorovi, jaké dlaždice tak označí. Viditelné dlaždice jsou potom aktualizované a renderované.
+O samotnou herní smyčku se stará framework MonoGame. Na jádru enginu jsou pak volány už pouze aktualizační a vykreslovací obsluhy\cc{engine-core}.
+Jádro enginu pak obsahuje následující tři důležité komponenty:
+\begin{itemize}
+\item Hráč - tato komponenta zajišťuje interakci s uživatelem. Skrze ni lze ovládat hráčovu skupinu šampionů, bojovat nebo sbírat předměty.
+\item Builder herních úrovní - tato komponenta zajišťuje sestavování herních úrovní.
+\item Objekt obsahující továrny na herní objekty - pro každý typ popsaný v sekci \ref{dungeon-properties} existuje odpovídající
+	továrna obsahující jeho vlastnosti. Továrny, u kterých to dává smysl, mohou vytvářet objekty, které reprezentují. Toto bude konkrétně
+	specifikováno později, nicméně důležité je, že skrze jádro enginu lze k těmto továrnám přistupovat.
+\end{itemize}
+Konkrétní implementace předchozích komponent lze do jádra enginu vložit při jeho inicializaci. Tímto způsobem může být herní 
+engine rozšířen o nové funkce. Následující funkce enginu jsou znázorněny na obrázku \ref{engine-core}.
 
-\section{Reprezentace levelů}
-Samotné struktury levelů obsahují pouze seznam dlaždic na dané úrovní dungeonu, identifikátor levelu a seznam živých entit. 
-Engine vždy pracuje se třemi posledně načtenými levely.
+Prvním úkolem jádra enginu je starat se ve správný moment o načítání a propojování herních úrovní. Pro splnění této funkce
+obsahuje jádro kolekci právě používaných úrovní. Tato kolekce si pamatuje vždy tři poslední načtené úrovně.
+Při každé změně aktuální dlaždice hráče se vyhledají dlaždice v jeho viditelném dosahu, který je určen podle výše aktuálního osvětlení.
+Pokud některá z těchto dlaždic vede do jiné úrovně, pak je tato úroveň načtena pomocí builderu. Samotné objekty reprezentující herní úrovně 
+obsahují pouze seznam dlaždic, číslo úrovně, obtížnost úrovně a umožňují vyhledat dlaždici dle její pozice. 
 
-\section{Reprezentace dlaždic} 
-V originální hře jsou dlaždice vždy uloženy v nějakém obdélníkovém poli. To znamená, že dlaždice, které nejsou využity pro~chodby
-, jsou vždy vyplněny zdmi. Za účelem udělat engine co nejdynamičtější, nerozhodl jsem se ukládat dlaždice
-do obdélníkového pole, ale reprezentovat vazby mezi nimi jako obousměrný orientovaný graf. Jednak pro hodně řídké mapy to může
-ušetřit nějaké místo. Nicméně důležitějším důvodem bylo, že při takovéto reprezentaci lze jednoduše získat sousedy pouze
-ze znalosti konkrétní dlaždice. Kromě toho je takto celý engine obecnější. Například by takto bylo jednoduší rozšířit celý engine
-tak, aby nemusely byt jednotlivé dlaždice na mřížce nebo aby mohli mít dlaždice více sousedů. Byla by to sice velký zásah do celého 
-enginu, ale mnoho částí by se takto dalo znovu použít nebo jen drobně upravit.
+Jádro se také stará o vykreslování všech objektů. Každá dlaždice má u sebe uložený seznam objektů, které požadují vykreslování.
+Je na samotných objektech, aby se do kolekcí na odpovídajících dlaždicích přehlašovaly resp. odhlašovaly. Jádro pak při 
+cyklu vykreslování projde všechny viditelné dlaždice a vykreslí jejich objekty. Hráčovy objekty jsou vykreslovány skrze komponentu hráče.
 
-Předchozí rozhodnutí má následující důsledek. Například již nejsou potřeba dlaždice typu zeď.
-Což je dost výrazná změna oproti originální hře, kde dekorace, přepínače, předměty atp. jsou uložené právě v dlaždicích typu zeď.
-Namísto originálního přístupu jsem se rozhodl, že zdi boudu definovány v samotných dlaždicích typu podlaha. Toto rozhodnutí vedlo také
-k některým problémům. Například pro vytváření podlahy bylo nutné číst i další dlaždice kolem té právě vytvářené. Zejména je pak nutné 
-posílat zprávy původně cílené zdím na odpovídající dlaždice podlahy. Ve výsledku si myslím, že tato reprezentace je vhodnější
-například kvůli možnému rozšíření popsaném v předchozím odstavci. Zdá se být také intuitivnější a tedy srozumitelnější reprezentací.
+Některé objekty také potřebují aktualizovat svůj stav. Takové objekty se pak musí zaregistrovat do kolekce v herní úrovni,
+do které náleží. V každém cyklu herní smyčky se potom projdou všechny aktivní úrovně a aktualizují se objekty v jejich kolekci.
+Hráč je opět aktualizován přímo skrze komponentu hráče.
 
-Zdi jsou tedy součástí dlaždic. Nyní přichází otázka, jak tyto zdi tedy reprezentovat. Buď přímo v samotných dlaždicích nebo
-zeď udělat jako zvláštní objekt, který je součástí dlaždic. Ze začátku byl v enginu použit první zmiňovaný způsob. Ukazovalo se ale, 
+Posledním úkolem jádra je aktualizovat osvětlení. Osvětlení je aktualizované v každým cyklu herní smyčky. Úroveň osvětlení 
+se pak vypočítá na základě světelných zdrojů, které mají šampioni v hráčově skupině.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/engine-core.png}
+\caption{Ilustrace funkce jádra enginu.}
+\label{engine-core}
+\end{figure}
+
+
+\section{Reprezentace dlaždic}\label{tile-representation}
+
+V originální hře jsou dlaždice vždy uloženy v obdélníkovém poli\vref{dungeon-objects}. To znamená, že dlaždice, které nejsou využity pro~chodby,
+jsou vždy vyplněny zdmi. Jelikož jedním z cílů této práce je udělat engine co nejrozšiřitelnější\aref{aim-extensibility}, rozhodli jsme se tento problém vyřešit
+o něco obecněji. Mezi dlaždicemi jsou vazby, které s nimi dohromady tvoří obousměrný orientovaný graf. Nicméně, pro dlaždice stále platí, že musí být
+uspořádané do mřížky. Každá z dlaždic má potom stále nejvýše čtyři sousedy. Tato reprezentace pro hodně řídké mapy může ušetřit nějakou paměť.
+Nicméně důležitější je, že při takové reprezentaci lze jednoduše získat sousedy pouze ze znalosti konkrétní dlaždice. V takové 
+podobě by také bylo jednoduší, engine upravit tak, aby dlaždice nemusely být na mřížce a aby mohli mít více sousedů.
+
+Předchozí rozhodnutí také vede k tomu, že již nejsou potřeba dlaždice typu zeď\cc{tile-representation-img}, jelikož její stěny můžou být definovány ve 
+dlaždicích typu podlaha. Při vytváření podlahy je pak nutné číst i její sousední dlaždice. Pokud je soused daným směrem zeď, 
+vytvoří se na této straně stěna a soused není nastaven. V opačném případě je soused nastaven na odpovídající dlaždici.
+Zprávy původně cílené zdím je také třeba posílat na odpovídající dlaždice podlahy. Tato reprezentace zdí opět vede k
+vyšší flexibilitě, jelikož případné místo využité původními dlaždicemi typu zdi lze využít jiným způsobem, což by jinak nebylo možné.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/tile-representation.png}
+\caption{Uložení dlaždic v originálním vs tomto enginu.}
+\label{tile-representation-img}
+\end{figure}
+
+Když jsou tedy stěny součástí dlaždic, dalším problémem je jejich reprezentace. Buď je možné, aby se o vše spjaté se stěnami starala přímo
+dlaždice a nebo je možné tyto části delegovat do zvláštních objektů. Ze začátku byl v enginu použit první zmiňovaný způsob. Ukazovalo se ale, 
 že tato reprezentace není příliš vhodná, protože potom samotná dlaždice řeší věci, které k ní přímo nenáleží.
-Nakonec tato reprezentace byla změněna a v enginu bylo použita druha zmiňovaná možnost. Vedlo k ní zejména předělání oddělené grafické 
-vrstvy od té logické. Výhoda tohoto přístupu byla kromě samotného oddělení kódu i možnost znovu použití kódu za pomocí dědičnosti. 
-Například zeď s nějakým přepínačem může dědit z normální prázdné zdi. Nicméně ukázala se i nevýhoda tohoto přístupu. A to že komunikace směrem 
-ze zdi k dlaždici je trochu těžkopádná. Buď by bylo zapotřebí předat zdi referenci na jejich rodičovské dlaždice nebo se museli použít události.
-Pokud to bylo v některých případech třeba, přiklonil jsem se k použití událostí.
+Nakonec tato reprezentace byla změněna a v enginu byla použita druha zmiňovaná možnost. Vedlo k ní zejména oddělení zobrazovací vrstvy 
+vrstvy od logické. Výhoda tohoto přístupu byla kromě samotného oddělení kódu i možnost znovu použití kódu za pomocí dědičnosti. 
+Například stěna, která obsahuje přepínač může dědit z normální prázdné stěny. Nicméně ukázala se i nevýhoda tohoto přístupu. A to že komunikace směrem 
+ze stěny k dlaždici je trochu těžkopádná. Buď by bylo zapotřebí předat zdi referenci na jejich rodičovské dlaždice nebo se museli použít události.
+Pokud to bylo v některých případech nutné, přiklonili jsem se k použití událostí.
 
-\section{Přepínače}
-\section{Popis funkce a složení}
-Základní mechaniky map dungeon Masteru tvoří tzv. přepínače. Jsou to objekty, které lze nějakým způsobem aktivovat. V originální
-hře je to možné kliknutím myši na dekoraci přepínače, přesunem na dlaždici s přepínačem nebo aktivací jiným přepínačem. Ve 
-skutečnosti se každý přepínač může skládat z několika senzorů, kde poslední z nich určuje dekoraci přepínače. Každý senzor přepínače
-obdrží aktivaci a případně provede svoji akci. Každý sensor může provést lokální nebo vzdálenou akci. Pro lokální akce je to 
-zarotování sekvencí senzorů přepínače nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy, která se skládá ze samotné akce, tj.
-deaktivace, aktivace, přehození stavu. A dále obsahuje směr, který může být interpretován jako strana dlaždice typu zdi, která má 
-být aktivována. Nebo pro speciální přepínače může určovat jinou akci. Kromě toho obsahuje další vlastnosti jako typ, zda je opakovatelný, zda je 
-použitelný pouze jednou, jakou ma dekoraci, doba, po které se provede akce.
+\section{Přepínače}\label{actuator-analyza}
+Přepínače tvoří základní mechaniky v herních úrovních Dungeon Masteru. Přepínače mohou být buď na stěnách nebo na podlaze. 
+Na stěnách je lze aktivovat kliknutím myši a na podlaze potom přesunutím hráče na dlaždici s přepínačem. Aktivace pak ještě
+může být podmíněna dalšími faktory jako obsah daného typu předmětu v ruce nebo směr kterým je hráč otočen.  
+
+Ve skutečnosti se každý přepínač skládat z řady senzorů a platí, že:
+\begin{itemize}
+\item poslední senzor určuje dekoraci přepínače,
+\item při pokusu o aktivaci přepínače, dojde postupně k pokusu aktivace každého senzoru,
+\item každý senzor může definovat akci, kterou provede pokud byl aktivován.
+\end{itemize}
+
+Senzor má následující vlastnost:
+\begin{itemize}
+\item Typ - číselné označení, podle kterého originální herní engine určí způsob aktivace.
+\item Akce - může být buď lokální nebo vzdálená. Pro lokální akce je to zarotování sekvencí senzorů\cc{actuator-rotation} 
+	přepínače nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy\vref{dungeon-objects} na danou cílovou dlaždici. 
+\item Data pro lokální resp. vzdálenou akci.
+\item Zpoždění - doba, po které se provede akce.
+\item Opačný efekt - liší se dle typu senzoru, nicméně většinou otáčí podmínku aktivace pro daný typ senzoru. 
+\item Opakovatelnost - určuje, zda lze senzor aktivovat neomezeně krát nebo pouze jednou.
+\item Dekorace  
+\end{itemize}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/actuator-rotation.png}
+\caption{Ilustrace rotace sekvence senzorů.}
+\label{actuator-rotation}
+\end{figure}
+
 
 Výše popsaný systém přepínačů přináší hned několik problémů:
-	Jakým způsobem efektivně a přehledně rozparsovat data senzorů.
-	Z technické dokumentace není zcela zřejmé, jak se mají jaké vlastnosti senzorů použit.
-	Jak vůbec reprezentovat přepínače.
-	Jakým způsobem provádět vzdálené akce.
+\begin{enumerate}
+\item\label{actuator-unclear} Z technické dokumentace\cite{TechnicalDocumentationFontanel05} není vždy přesně zřejmé, jaká je aktivační podmínka senzoru pro určitý typ.
+\item\label{actuator-effective} Jakým způsobem efektivně a přehledně rozparsovat data senzorů, když má tolik nezávislých vlastností.
+\item\label{actuator-representation} Jak reprezentovat přepínače v novém enginu.
+\item\label{actuator-remote-actions} Jakým způsobem provádět vzdálené akce.
+\end{enumerate}
 
+\subsection{Reprezentace přepínačů}
+První tři body problémů(viz \ref{actuator-unclear}, \ref{actuator-effective}, \ref{actuator-representation}) řeší tato sekce.
 
-\subsection{Reprezentace přepínač}
-\subsubsection{První reprezentace}
-Jako první způsob jsem se rozhodl vždy pro sekvenci senzorů originální hry vytvořit objekt, který měl stejné nebo o něco obecnější vlastnosti dané sekvence.
-Ze začátku se totiž zdálo, že jen výjimečně jsou sekvence senzorů větší či složitější. Proto jsem se rozhodl vytvořit v
-novém enginu objekty, které mají obecnější vlastnosti pro několik sekvencí. A určitá sekvence senzorů si poté
-inicializuje objekt podle svých vlastností. Vlastnosti senzorů jsem určoval podle textového popisu v dokumentaci, která nebyla úplně dostačující. 
-I proto čím více přepínačů jsem naimplementoval, tím více ukazovalo problémů. Nakonec jsem dospěl k závěru, že tento způsob reprezentace je nemožný.
+\subsubsection{První reprezentace}\label{rep-v1}
+
+Jako první způsob jsem se rozhodl vždy pro několik sekvencí senzorů původní hry vytvořit objekt, který měl stejné nebo o něco obecnější vlastnosti jak dané sekvence.
+Z počátku se totiž zdálo, že jen výjimečně jsou sekvence senzorů větší či složitější. Proto jsme se rozhodli vytvořit v
+novém enginu objekty, které mají obecnější vlastnosti, a tak mohou být použité pro několik podobných sekvencí. Dle určité sekvence senzorů se poté
+objektu inicializují jeho vlastnosti. Celou situaci ilustruje obr. \ref{actuator-object}.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/actuator-object.png}
+\caption{Ilustrace transformace sekvence senzorů na objekt přepínač.}
+\label{actuator-object}
+\end{figure}
+
+Tento způsob sice řeší problém samotné reprezentace\vbref{actuator-representation}, ale později se ukázalo, že velice špatně. Například
+kód převádějící sekvence na přepínače je složitý a nepřehledný. Bylo také složité vytvořit přepínač podle technické dokumentace\cite{TechnicalDocumentationFontanel05}
+tak, aby fungoval opravdu správně. Popis v dokumentaci\cite{TechnicalDocumentationFontanel05} také asi není dostatečně přesný pro vytvoření tohoto úkolu.
+I proto čím více přepínačů jsme tímto způsobem naimplmentovali, tím více se ukazovalo problémů. Nakonec jsme dospěli k závěru, že tento způsob reprezentace je nemožný.
 
 \subsubsection{Druha reprezentace}
-Jiná varianta se stále spoléhala na typ objektů z předchozího případu. Parsování sekvence senzorů jsem se rozhodl udělat pomocí konečného 
-automatu. Tedy tak,  že pro každý objekt existovaly předdefinované sekvence senzorů. A tak se pro každou sekvenci senzorů našel správně 
-reprezentující objekt. Později se ale ukázalo, že i malá změna v sekvenci senzorů může generovat podobný objekt. Takže by bylo třeba
-spoustu předdefinovaných šablon a jednoduše by mohl nastat případ, že pro některou sekvenci neexistuje žádný objekt.
 
-\subsubsection{Třetí reprezentace}
-Nezbylo teď jiné možnosti než se přiblížit více k implementaci podobné originální hře. Za tímto účelem jsem se začal poohlížet po 
-po zdrojových kódech originálu. Originální zdrojový kód pravděpodobně nebyl a nebude nikdy publikovaný. Naštěstí  se ale našel člověk,
-který celou hru dekompiloval, takže po zkompilování tehdejším kompilátorem výsledná binárka odpovídala té originální (viz.\cite{DMDekompilation}).
-Kód to je sice těžko čitelný, ale obsahuje přesný popis, jak které senzory mají fungovat. Vytvořil jsem tedy objekt přepínač, který má v sobě sekvenci senzorů, tak jako
-tomu je v originální hře. S využitím zdrojových kód jsem vytvořil odpovídající objektově orientovaný kód v jazyce c\#. Je tedy například možné 
-dovytvořit další nové senzory. V bylo toto rozšiřovaní jen značně omezené, jednotlivé type senzorů se odlišovali číselným identifikátorem.
-Jelikož jsem ale nechtěl případné rozšiřitele enginu limitovat tímto způsobem tvorby herních mechanik. Je samozřejmě možný, vytvořit jiný přepínač, který se bude
-chovat tak, jak si programátor zvolí. Takže případné nové přepínače nemusí vůbec senzory používat. To jak funguje senzor uvnitř je tedy čistě na
-programátorovi.
+Tato reprezentace se snažila vyřešit problém nepřehlednosti\vbref{actuator-effective} kódu převádějícího sekvence na objekty přepínačů.
+Proto je i zde použit typ objektu přepínač z první reprezentace v sekci \ref{rep-v1}. Parsování sekvence senzorů jsem se rozhodl udělat pomocí konečného 
+automatu. Tedy tak, že pro každý objekt přepínače existovaly předdefinované sekvence senzorů. Konečný automat potom pomocí vstupní sekvence
+identifikoval výsledný objekt přepínače. Při inicializaci objektu přepínače zde pak byla sekvence jasně definovaná, což řešilo problém s přehledností \vbref{actuator-effective}.
+Později se nicméně ukázalo, že i malá změna v sekvenci senzorů může generovat podobný objekt. Takže by bylo třeba
+spoustu předdefinovaných šablon, které se lišily ve drobnostech. Tím se ukázalo, že tento přístup není dostatečně obecný a nelze tedy použít. 
 
-\subsubsection{Reprezentace zprávy přepínače}
-Jak již jsem psal,  celý systém přepínačů je závislý na posílání zpráv. V originální hře je cíl odeslané zprávy vázán na souřadnice dlaždice, na kterou 
-se má zpráva odeslat. Jelikož jsem se v enginu nechtěl na plno vázat na tyto pevné souřadnice, rozhodl jsem se to i 
-zde udělat trošku jinak. Například jsem zmiňoval, že je principiálně možné, aby dlaždice měla více sousedů, u kterých by pak souřadnice
-nešli přesně nastavit. Z tohoto důvodu jsem se rozhodl přepínačům při jejich inicializaci předat referenci na jejich cílovou dlaždici. 
-To řeší problémy, které jsem popsal v předchozích větách, nicméně přináší pár dalších (viz. inicializace). Jak jsem již zmiňoval,
-v originální hře jsou zprávy opět reprezentovány pevnou datovou strukturou. V této části jsem chtěl dát také programátorovi větší svobodu. 
-A to tak, aby bylo možné posílat vlastní zprávy alespoň vlastně vytvořeným dlaždicím. Toho je nakonec možné dosáhnout tak, že vlastní dlaždice bude 
-poděděna z generické dlaždice, která bere jako typový parameter typ dané zprávy. Zpráva pak musí alespoň dědit ze základní zprávy, která odpovídá
-zprávě v původní hře.
+\subsubsection{Třetí reprezentace - výsledná}
 
-\section{Builder map}
-Builder map je objekt, který je schopen dodávat levely samotnému enginu. A stojí na něm, aby vytvořil potřebné mapy z dostupných dat.
-Vytvoření builderu je samozřejmě opět na programátorovi. Builder by se měl také start o případně kešování, již načtených levelů. 
-Tato práce obsahuje pouze builder schopny rozparsovat mapy originální hry.
+Tato reprezentace se tedy oproti předchozím snažila přiblížit co nejvíce k systému použitém v enginu originální hry.
+K dosažení tohoto cíle jsme se rozhodli použít dekompilované zdrojové kódy\cite{DMDecompilation} hry. Tím
+je vyřešen problém nedostatečné dokumentace ve věci přepínačů\vbref{actuator-unclear}.
 
-Jelikož jsem si původně myslel, že některé zdi nebude vůbec nutné parsovat, rozhodl jsem se v prvotních fázích procházet data map
-pomocí algoritmu depth first search. Nakonec se ale ukázalo, že i některé nepřístupně části map jsou používané. 
-Například pomocí teleportu, nebo vazbami mezi přepínači. Proto jsem později zvolil techniku, že projdu všechny dlaždice od shora dolů. 
-A podle nich vytvořím odpovídající objekty v novém enginu.
+Vytvořili jsme tedy objekt přepínač, který má v sobě sekvenci senzorů, tak jako tomu je v originální hře.
+Tím je vyřešen i problém nepřehlednosti převodního kód\vbref{actuator-effective}, jelikož jsou tyto reprezentace téměř identické.
+S využitím zdrojových kódů jsme vytvořili odpovídající objektově orientovaný kód v jazyce C\#. Tato reprezentace
+tak zajišťuje maximální korektnost implementace a přitom poskytuje možnost rozšíření - což je jedním z cílů\aref{aim-extensibility} této práce. 
+Je tedy možné vytvořit nové senzory, které budou mít vlastní aktivační podmínky, a ty pak použít v přepínačích.
+V originálním enginu je toto rozšiřovaní jen značně omezené, jednotlivé typy senzorů se tam odlišují jednobajtovým číselným identifikátorem.
+Nicméně, jelikož jsme nechtěli rozšiřování enginu limitovat pouze na tento způsob vytváření senzorů, je si možné vytvořit přepínač, který
+bude fungovat na úplně jiné bázi. Takže případné nové přepínače nemusí vůbec senzory používat. 
 
-\section{Inicializace a sestavení herních map a objektů}
-V celém projektu jsem se snažil držet paradigmatu defenzivní programovaní. Tedy jde o to nechávat veřejně pouze takové položky, u kterých
-je to nezbytně nutné. Na to navazuje problém s inicializací takových tříd. jelikož například přepínače potřebují referenci na cílovou dlaždici, ale zároveň
-jsou obsahem dlaždice, je třeba oddělit fázi inicializace dlaždic od inicializace přepínačů. Potom ale nejde přepínače předat do dlaždic,
-aniž by to narušovalo cíl držet se defenzivního programovaní. Kromě toho mají konstruktory takových tříd mnoho parametrů. Nejprve jsem 
-inicializaci řešil právě těmito konstruktory, ale z předchozích důvodu jsem přišel s tzv. inicializátory.
+\subsection{Reprezentace zprávy přepínače}
 
-Inicializátor je datová třída obsahující vlastnosti, které by normálně, byly parametry konstruktoru inicializovaného objektu.
-Místo těchto parametrů je do konstruktoru předán inicializátor. Inicializátor má také události vyvolané
-při inicializaci a při dokončení inicializace. Třída beroucí inicializátor jako parametr konstruktoru se zaregistruje na tyto události.
-Tím pádem není nutná žádná přebytečná položka ve třídě pro inicializátor. události jsou pak volané skrze metodu v inicializátoru.
-Inicializátorem inicializovaná třída si z něj nakopíruje parametry a odhlásí událost. Od té chvíle už není možné třídu modifikovat.
-Data inicializátoru se tedy mohou postupně naplňovat a po jejich naplnění se inicializace provede zavoláním jejich metody.
-S využitím a asynchronních metod, je navíc možné vyvolat inicializaci prvku (např. přepínačů, které potřebují reference na dlaždice) 
-již při vytváření dlaždic. Což vede k přehlednějšímu kódu a celkově k inicializaci cyklických struktur, bez porušení našeho
-požadavku defenzivního programování.
+Jak již bylo řečeno\vref{dungeon-objects}, celý systém mechanik herních úrovní je závislý na posílání zpráv. 
+V originální hře je cíl odeslané zprávy vázán na souřadnice dlaždice, na kterou se má zpráva odeslat. 
+Jelikož jsme se v enginu nechtěli vázat na tyto pevné souřadnice, rozhodli jsem se namísto nich
+cílovou dlaždici identifikovat její referencí. To by případně ulehčilo práci při transformaci enginu tak, aby
+dlaždice mohli mít více sousedů nebo aby nemusely být na pevné mřížce\vref{tile-representation}.
+Při takovéto reprezentaci nicméně může nastává problém s inicializací dlaždic a přepínačů\vref{level-inicialization}.
 
-S využitím dědičnosti inicializátorů je možné nasimulovat volání rutin konstruktorů, tak jak je v c\#  běžné. Na každé úrovní dědičnosti
-se využijí některé vlastnosti inicializátoru. Nechť inicializátor B
-je potomek inicializátoru A v hiearchii dědičnosti. A nechť C a D jsou třídy, které chceme inicializovat a zároveň D je potomkem C.
-A také platí, že konstruktor třídy D bere inicializátor třídy B a konstruktor třídy C bere inicializátor A. potom inicializátor B můžeme
-použít pro oba konstruktory tříd C i D. Přičemž na každé úrovni dědičnosti inicializátoru může být zvláštní inicializaci oznamující událost.
-Pokud tedy inicializátor volá inicializační události v e správném pořadí, může to nasimulovat pořadí inicializace běžné u konstruktorů.
-Při inicializaci dlaždic je právě tento způsob používán.
+V originální hře lze mezi dlaždicemi posílat pouze jeden typ zprávy. Jelikož cílem této práce je udělat engine
+co nejrozšiřitelnější\aref{aim-extensibility}, engine poskytuje za určitých podmínek používat i jiné typy zpráv.
+Těmito podmínkami jsou:
+\begin{itemize}
+\item Vlastní zprávy lze zasílat pouze vlastně vytvořením dlaždicím, které na daný typ zprávy musí být připraveny.
+\item Všechny dlaždice musí umět přijímat originální typ zprávy - nicméně nemusí na ně reagovat.
+\item Třída reprezentující vlastní zprávu musí být potomkem originální zprávy v hiearchii dědičnosti jazyka C\#.
+\end{itemize}
 
-\section{Renderování a interakce}
-Interakcí je myšleno reakce kliku myší na herní objekt. Z počátku si renderovaní řešil každý objekt sám v sobě. Pozicování
-těchto objektů bylo z pravidla absolutní. Naopak interakce byla zase řešena pro všechny objekty stejně pomocí bounding boxu.
-Obojí se později ukázalo jako špatný přístup. 
+\section{Reprezentace entit}
 
-Namísto toho vznikla nová vrstva, oddělená od~samotných objektů zajišťující jak renderování tak interakci. Každý objekt
-který to vyžaduje má tak vlastní renderer-interactor na míru. Jak takový objekt vypadá uvnitř je zpravidla na programátorovi. 
-Nicméně obvyklý přístup je takový, že renderer má referenci na konkrétní renderovaný objekt. Podle jeho zpravidla readonly vlastnosti potom určuje
-chování vykreslovaní nebo interakce. Pokud se jedná o renderery pro statické objekty (např. dlaždice), tak se zpravidla pozicování určuje relativně
-vůči rodiči. Takže interakční či renderovací funkce dostane jako parametr dosavadní transformační matici.
+V originální hře existují pouze dva typy živých objektů, tj. nepřátelské entity a šampioni. Za účelem udělat engine
+co nejrozšiřitelnější\aref{aim-extensibility} jsme se rozhodli pro živé objekty vytvořit následující abstrakci.  
+Entitou je v tomto enginu každý objekt, s jehož vlastnostmi může interagovat nějaká akce\vref{action-combos}. Například akce
+útok může entitu zranit nebo poškodit - pokud je neživá. Entity se dále dělí na živé a neživé. Příkladem v enginu použité neživé entity
+jsou dveře, které je možné rozbít útokem. Živé entity tedy disponují následujícími vlastnostmi.
 
-Celá výhoda tkví v tom, že za takovýchto podmínek je možné renderovací-interakční vrstvu libovolně přepracovat. Oproti originální hře
-, je právě v tomto projektu odlišně provedené renderování. Nicméně nic nebraní tomu napsati s vlastní vrstvu, tak aby vpadala jako originál.
+\begin{itemize}
+\item vlastnosti - jsou to vlastnosti jako zdraví, odolnost,  atd. (viz sekce \ref{properties-skills}),
+\item dovednosti - to ve výsledku znamená, že jsou schopny používat akce,
+\item relaci vůči ostatním živým entitám - určuje, zda jsou vůči daným entitám přátelské či nepřátelské,
+\item části těla a inventáře,
+\item definují, jaké část dlaždic mohou zaujímat.
+\end{itemize}
 
-\section{Herní entity}
-\subsection{Úvod}
-V originální hře existují pouze dva typy entit. Jsou to nepřátelské příšery a hráčovi šampioni. Každé tyto entity se mohou lišit 
-v závislosti na jejich vlastnostech. Tedy ve hře existuje několik druhů šampionů a několik druhů příšer. V originální hře jsou 
-tyto dva světy naprosto oddělené. Já jsem se nicméně rozhodl udělat celou situaci o něco obecnější.
+Každý z těchto bodů lze rozšířit, což může být užitečné v případě použití enginu pro implementaci jiné hry než Dungeon Master. 
 
-Entitou v tomto enginu může být téměř cokoliv, s čím je potřeba nějak interagovat ve smyslu bojů. Tedy entita je cokoliv co má nějaké vlastnosti,
-které jsou ovlivnitelné například útokem.
-Entity si dále definují tzn. uspořádaní na dlaždici. Takže například dveře jsou entita, která má vlastnosti jako zdraví, odolnost atp.
-Tento příklad je ukázkovou věcí, která je v originální hře řešena staticky. S využitím entit v těchto případech je možné dosáhnout  větší obecnosti
-a tím pádem je se možné vyhnout zbytečně specializovanému a podobnému kódu.
+\subsection{Vlastnosti}
 
-Kromě entit jsou v enginu ještě tzv. živé entity. Což jsou entity s tím rozdílem, že kromě vlastností mají také schopnosti.
-Dále mají definovanou pozici dle uspořádaní, relaci vůči ostatním živým entitám(zda jsou přátelští či nepřátelští) a 
-konečně části těla a inventáře.
+V původní hře jsou vlastnosti šampionů\vref{properties-skills} a nepřátelských entit\vref{properties-creatures} pevně definované. 
+Několik vlastností nepřátelských entit je odlišných od tě šampionových, nicméně ve většině se shodují.
+S těmito odlišnostmi musí počítat akce, které modifikují vlastnosti entit. Pokud entita nějakou vlastností nedisponuje, je vrácena 
+vlastnost se základní hodnotou. Například pokud provádíme akci útok magickou ohnivou koulí a entita nemá žádnou z vlastností
+odolnost proti magii či odolnost proti ohni - jsou tyto vlastnosti v základním stavu. Útok akce tedy není v tomto případě
+nijak modifikován. 
 
-Z hlediska enginu jsou teď oproti originální hře šampioni i příšery na rovnocenné úrovni.
+ \subsection{Dovednosti}
 
-\subsection{Vlastnosti a schopnosti entit}
-Cílem nového enginu je opět poskytnout možnost rozšíření vlastností a schopností.
-Za následujících podmínek je teď možné na tomto enginu postavit hru, která si sama definuje, jaké vlastnosti a schopnosti, které entity budou mít.
-Dále je možné nadefinovat akce, které tyto vlastnosti a schopnosti budou využívat. Tim je dosaženo opět další dynamičnosti enginu.
-
-\subsubsection{Vlastnosti}
-V původní hře jsou vlastnosti opět pevně definované. Jsou to například vlastnosti jako zdraví, mana, výdrž, síla atp.
-Šampioni a příšery mají většinu vlastnosti odlišných, tím pádem i způsob jejich použití je odlišný. Jak jsme si ale řekli v předchozí sekci,
-tak příšery i šampioni v novém enginu jsou nyní na stejné úrovni. Zároveň některé entity některé vlastnosti mít nemusí a tím pádem jsou u nich 
-tyto vlastnosti v základní hodnotě. Z toho důvodu jsem se rozhodl nechat seznam vlastnosti na každé entitě zvlášť zcela dynamicky.
-Pokud daná entita některou vlastnost nemá, vrátí svoji základní hodnotu. Potom při konání některé akce ovlivňující vlastnosti dané entity se
- akce sama rozhodne, které vlastnosti nějakým způsobem použije. Například pokud provádíme akci útok magickou ohnivou koulí a entita nemá žádné vlastnosti 
- odolnost proti magii či odolnost proti ohni. Jsou tyto vlastnosti v základním stavu, čili nijak neovlivní damage způsobené touto akcí.
-
- \subsubsection{Schopnosti}
- Schopnosti jsou stejně jako vlastnosti v originální hře pevně definovány. I v tomto bodě se nový engine snaží o větší
- dynamičnost. Opět ne všechny entity musí mít všechny schopnosti. Pokud určitou schopnost entita nemá, vrátí se její hodnota s levelem nula.
- Podle schopností se určuje, zda je entita danou akci schopna provést. Tedy každá akce má definovaný minimální levely pro sadu schopností.
- Pokud pak levely vyhovují, může být daná akce provedena.
-
- V originální hře jsou dva typy schopností. Jsou to základní schopnosti a skryté schopnosti. Pokud některá akce vylepšuje schopnost skrytou
- rozdělí se získané zkušenosti mezi obě schopnosti. Tento koncept schopností není v enginu vyžadován. Je možné si udělat jednoúrovňové 
- schopnosti nebo klidně několika úrovňové schopnosti. Vše záleží na tom jaké chování programátor daným schopnostem naprogramuje. 
+ Dovednosti šampionů jsou stejně jako jejich vlastnosti v originální hře pevně definovány\vref{properties-skills}. I v tomto bodě se nový engine snaží o větší
+ dynamičnost. Opět platí, že každá entita nemusí mít všechny dovednosti. Pokud určitou dovednost entita nemá, vrátí se její hodnota s úrovní nula.
+ V originální hře jsou dva typy dovedností a to základní a nebo skryté. Pokud některá akce vylepšuje skrytou dovednost
+ rozdělí se získané zkušenosti mezi obě dovednosti\vref{properties-skills}. Tento koncept schopností není v enginu vyžadován a 
+ záleží potom na konkrétní implementaci dovednosti. Konkrétní implementace také specifikuje množství zkušeností nutné pro 
+ získání nových úrovní. Implementace dovedností pro hru Dungeon Master odpovídá implementaci nalezené ve zdrojových kódech hry.\cite{DMDecompilation}.
 
  \subsection{Relace mezi entitami}
  Další funkcí kterou oproti originálu engine umožňuje je definovat pro entity jejich nepřátelé. Každá živá entita má token identifikující
  skupinu. Entity v této skupině jsou mezi sebou přátelské. Každá entita si může nadefinovat svoje nepřátelské tokeny.
- Podle vzoru originálu jsou v této konkrétní hře pouze dva relační tokeny. Jeden pro šampiony a druhý pro příšery. Nicméně
- celý tento system je navržen právě pro stanovení obecnějších vztahů mezi entitami. To může být aplikováno v libovolném rozšíření hry.
+ Podle vzoru originálu jsou v hře pouze dva relační tokeny - první pro šampiony a druhý pro nepřátelské entity. Nicméně
+ celý tento system je navržen právě pro stanovení obecnějších vztahů mezi entitami a to může být aplikováno v libovolném rozšíření hry.
  
 \subsection{Tělo a inventáře}
 Každá živá entita má definované její části těla. Oproti originálu, kde se řeší pouze části těla šampionů,
 zde je možné definovat tělo pro každou entitu. Je tak možné pracovat s částmi těla entit, které nemají humanoidní formu.
-Některé části těla se dají použít jako úložiště věcí. Předměty potom mají nadefinováno s jakým typem úložiště jsou kompatibilní.
+Některé části těla se dají použít jako úložiště předmětů, ty potom mají nadefinováno s jakým typem úložiště jsou kompatibilní.
 Tato reprezentace dává dobrý smysl. Například pokud máme lidskou část těla - nohy. A medvědí část těla - nohy. Tak lidské
 kalhoty by měli jít nasadit pouze na lidské nohy, nikoliv medvědí. Naopak medvědí chrániče na nohy půjdou dát pouze na
-nohy medvědí. Takto pokročilejší věci v originální hře nejsou použity, předměty tam mohou sbírat pouze šampioni. Nicméně
-pro případné rozšiřitele je principiálně možné navrhnout hru, v které se tyto techniky budou používat.
+nohy medvědí. Takto pokročilejší mechanismy v originální hře nejsou použity, předměty tam mohou sbírat pouze šampioni. Nicméně
+při použití tohoto enginu k implementaci jiné hry jsou tyto mechanismy k dispozici. 
 
-Kromě částí těla jsou zde ještě definovány další externí úložiště, které slouží jako hlavní úložný prostor. O velikosti
-a typu těchto úložišť opět rozhoduje tvůrce konkretních entit. Nicméně stejně tak jako v originální hře, i tato instance má implementované 
-úložiště pouze pro šampiony. Mezi taktové úložiště patří například batoh, kapsa, bedna, toulec atp.
+Předměty lze pak dále ukládat do dalších úložných prostorů.  O velikosti a typu těchto úložišť opět rozhoduje tvůrce konkretních 
+entit. Nicméně stejně tak jako v originální hře, i tato instance má implementované 
+úložiště pouze pro šampiony. Mezi taktové úložiště patří například batoh, kapsa, truhla, toulec atd.
 
-\section{Předměty}
-Tato sekce pojednává o předmětech, které se objevují v mapách hry Dungeon Master. Myšleno předměty, které jdou sebrat ze země,
-vložit do ruky hráče či šampiona, vložit do inventáře či úložiště kdekoliv v dungeonu(např. do výklenků). Takovéto předměty 
-mohou zejména definovat akce, které s nimi lze provádět. Předměty v originální hře se dělí do několika skupin tj. zbraně,
-zbroje, lektvary, truhly a další. Každý předmět může mít několik akcí a je na uživateli enginu, jakou akci danému předmětu přiřadí.
+\section{Reprezentace předmětů}
 
-V originální hře má každiý předmět unikátní číselný identifikátor, který používá pro jednoznačnou identifikaci typu předmětu.
-Nikoliv typu jako typ proměnné, ale jako například jeden konkrétní typ zbraně. Tyto identifikátory jsou používány především
-u různých druhů klíčů, ale není to podmínkou. Identifikátory jsou obecně používané sensory, například tak, že konkrétní senzor
-se aktivuje pouze pokud má hráč v ruce předmět s určitým identifikátorem. Není tedy pravda, že každá instance, například klíče, má
-rozdílný identifikátor. Naopak, všechny instance klíče stejného druhu, mají stejný identifikátor.
+V herních úrovních jsou různě rozmístěné předměty, které lze sbírat a ukládat si je do inventářů šampionů.
+Každý takový předmět náleží do nějaké kategorie(zbraň, lektvar, atd. - viz sekce \ref{grabable-items}). Každá
+tato kategorie pak obsahuje několik typů předmětů. Pro každý typ předmětu pak existuje jednoznačný globální identifikátor\vref{item-descriptors}.
+Identifikátory jsou použité například v přepínačích pro identifikaci typu předmětu, dle kterého se pak rozhodnou zda se aktivovat či nikoliv.
+Platí tedy, že všechny instance daného typu předmětu mají stejný identifikátor.
 
-Z počátku jsem pro stanovení identifikátoru zvolil stejnou strategii jako tvůrci originální hry, ale celou dobu se mi 
-to zdálo jako dosti dřevní řešení. Tento problém nakonec vyřešil problém jiný a to jakým způsobem přesně reprezentovat předměty. Tak aby neměli zbytečně
-položky uložené několikrát a aby se dali snadno vytvářet. Ze začátku měli všechny předměty uložené 
-všechny jejich vlastnosti u sebe. Bylo to tak i s položkami, které byly vždy pro instanci jednoho typu stejné. Tak jsem se
-tyto položky rozhodl delegovat do zvláštních tříd, odpovídající jednotlivým identifikátorům. Reference těchto tříd
-tedy není slouží jako identifikátory. Samotné instance předmětů potom obsahují právě reference na tyto třídy.
+Z počátku jsme pro stanovení identifikátorů zvolili stejnou strategii jako tvůrci originální hry, tedy každá
+instance měla daný číselný identifikátor.
+Nicméně takto zvolený způsob reprezentace identifikátorů by byl nepřehledný pro případné rozšiřitele, jelikož
+by nemuselo být jasné, které identifikátory už jsou obsazené a které nikoliv. Dále v počátcích každá instance
+předmětu měla všechny jeho vlastnosti a to i ty, které byl společné pro všechny instance daného typu\vref{item-descriptors}.
 
-Navíc třídy popsané v předchozím odstavci slouží jako továrny na předměty jejich typu jakožto identifikátoru. Se znalostmi továrny lze buď
-vytvořit předmět se základními hodnotami jejich vlastností. A nebo se znalostmi konkrétního typu(myšleno jazykového) továrny, lze předáním inicializátoru vytvořit nový předmět 
-s hodnotami dle inicializátoru. Každá továrna má také následující vlastnosti: hmotnost, jméno, akce, které lze s předměty provádět, a definice míst v inventáři
-, kam lze předmět uložit. Specializované typy, myšleno jako zbraně, lektvary, atp. pak mají některé další vlastnosti.
+Pro splnění cíle \ref{aim-extensibility} teto práce bylo zapotřebí reprezentaci předmětů vylepšit.
+Řešením problému bylo delegování společných vlastností předmětů do zvláštních tříd\cc{item-factories}, které odpovídají jednotlivým identifikátorům.
+Tyto třídy navíc slouží jako továrny na předměty daného typu. Reference na konkrétní instanci třídy pak slouží jako identifikátor.
+To ale znamená, že reference na tyto továrny jsou potřeba pro vytváření přepínačů. Z toho důvodu je součástí jádra enginu
+objekt obsahující všechny továrny splňující tento vzor\vref{engine-core}.
 
-\section{Akce}
-TODO
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/item-factories.png}
+\caption{Ilustrace vztahu objektů a jejich továren.}
+\label{item-factories}
+\end{figure}
 
-\section{Kouzla}
-TODO
+Každá továrna na předměty má také následující vlastnosti:
+\begin{itemize}
+\item hmotnost, 
+\item jméno, 
+\item kombo - definuje akce, které lze s předměty provádět,  
+\item definice míst v inventáři, kam lze předmět uložit. 
+\end{itemize}
+
+\section{Reprezentace komb a akcí}
+Každý typy akce definuje svoji továrnu, která je uložena v jádře enginu\vref{engine-core} - jako je tomu v případě předmětů.
+Tyto továrny obsahují vlastnosti\vref{action-combos} o dané akci, které také určují požadavky pro provedení dané akce.
+Pomocí továrny lze pak vytvořit samotný objekt reprezentující konkrétní danou akci, kterou lze následně vyvolat určitým 
+směrem(sever, východ, jih, západ). Jak podmínky vytvoření akce, tak její provedení je naimplementováno dle dekompilovaných
+zdrojových kódů\cite{DMDecompilation} originální hry. Každá továrna na předměty má potom specifikovaný seznam továren akcí,
+které lze s předměty provádět.
+
+\section{Reprezentace kouzel}
+V jádře enginu jsou uloženy všechny symboly, včetně power symbolů\vref{magic-symbols}.
+Tyto symboly mají definovány, kolik je třeba many pro jejich vyvolaní při daném power levelu.
+Každé kouzlo potom definuje svoji továrnu, která je rovněž uložena v jádře enginu\vref{engine-core} - stejně jako je tomu v případě předmětů a akcí.
+Objekt reprezentující kouzlo lze pak opět vytvořit pomocí jeho továrny. Pro vyvolání kouzla je potom třeba určit směr a entitu,
+která kouzlo vyvolává. Chování vyvolávání a provádění kouzel je opět naimplementováno dle dekompilovaných
+zdrojových kódů\cite{DMDecompilation} originální hry. Modifikace vlastnosti entity při vyvolávání symbolů
+kouzla pak zajišťuje speciální manager. 
+
+\section{Builder herních úrovní}
+
+Aby bylo možné sestavovat herní úrovně z různých vstupní formátů\aref{aim-builders} bylo nutné tuto část vyčlenit do samostatného
+objektu, který je pak předán jádru enginu\vref{engine-core-section}. Tento objekt budeme dále nazývat tzv. builder. Jádro enginu
+pak po builderu vyžaduje vytvoření herních úrovní, přičemž mu předá sadu továren - který je rovněž uložen v jádře. Builder
+by se měl také starat o kešování načtených úrovní, jelikož je engine po něm může požadovat několikrát. Objekt builderu
+je předán jádru enginu při jeho vytváření, tímto způsobem je možné jádru předat vlastní implementaci builderu.
+
+Tato práce obsahuje pouze jeden builder, který je schopný sestavit herní úrovně z datového objektu popsaném v sekci \ref{level-parsing}.
+V sekci \ref{tile-representation} se došlo k závěru, že dlaždice zdí nebudou v tomto enginu existovat. Z toho důvodu jsme se 
+v prvních fázích projektu rozhodli při vytváření herní úrovně procházet pouze dlaždice, které jsou od pozice hráče přístupné.
+Toho bylo docíleno použitím algoritmu prohledávání do hloubky. Nicméně později se ukázalo, že některé nepřístupné části herní úrovně
+jsou používané teleporty nebo přepínači. Z toho důvodu se od tohoto způsobu procházení dat dlaždic upustilo a nyní se procházejí 
+postupně všechny dlaždice.
+
+Pro transformování dat na objekty srozumitelné enginu se používají ještě další pomocné subbuildery\cc{sub-builders}. 
+Samotné sestavování herní úrovně potom probíhá následovně. V cyklu jsou vytvářeny všechny dlaždice - přitom se za pomocí továren 
+z jádra enginu provádí vytváření veškerých objektů, které dlaždice obsahuje.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/sub-builders.png}
+\caption{Ilustrace struktury builderu.}
+\label{sub-builders}
+\end{figure}
+
+
+\section{Inicializace objektů}\label{level-inicialization}
+
+Tento projet si klade za cíl\aref{aim-extensibility} vytvořit co nejlepší objektový návrh. Jedním z faktorů, který by měl takový návrh
+zahrnovat je, že veřejné budou jen nezbytně nutné položky tříd. Na to navazuje problém s inicializací takových tříd. 
+Například přepínače potřebují referenci na cílovou dlaždici, ale zároveň jsou obsahem dlaždic, je tedy třeba oddělit fázi inicializace 
+dlaždic od inicializace přepínačů. Nicméně potom nelze přepínače předat do dlaždic v konstruktoru a tím pádem je pro tuto akci třeba 
+vytvořit veřejnou funkci nebo vlastnost, která tak provede. Tato funkce pak narušuje náš cíl, protože tuto funkci může kdokoliv
+zvolat později, kdy už to není validní. Z toho důvodu jsme přišli s konceptem tzv. inicializátorů.
+
+Inicializátor je datová třída obsahující vlastnosti, které by běžně byly parametry konstruktoru inicializovaného objektu.
+Místo těchto parametrů je do konstruktoru předán inicializátor, který má také události vyvolané
+při inicializaci a při dokončení inicializace. Třída beroucí inicializátor jako parametr konstruktoru se zaregistruje na tyto události a
+tím pádem není nutná žádná přebytečná položka ve třídě pro inicializátor. Události jsou pak volané skrze metodu v inicializátoru.
+Inicializátorem inicializovaná třída si z něj nakopíruje parametry a odhlásí událost. Od té chvíle už není možné třídu modifikovat.
+Data inicializátoru se tedy mohou postupně naplňovat a po jejich naplnění se inicializace provede zavoláním jejich metody.
+S využitím a asynchronních metod, je navíc možné vyvolat inicializaci prvku (např. přepínačů, které potřebují reference na dlaždice) 
+již při vytváření dlaždic. Což vede k přehlednějšímu kódu a celkově k inicializaci cyklických struktur bez nutnosti přebytečných 
+veřejných položek. 
+
+S využitím dědičnosti inicializátorů je možné nasimulovat volání rutin konstruktorů, tak jak je v C\#  běžné. Na každé úrovní dědičnosti
+se využijí některé vlastnosti inicializátoru. Nechť inicializátor B
+je potomek inicializátoru A v hiearchii dědičnosti. A nechť C a D jsou třídy, které chceme inicializovat a zároveň D je potomkem C.
+A také platí, že konstruktor třídy D vyžaduje inicializátor třídy B a konstruktor třídy C vyžaduje inicializátor A. potom inicializátor B můžeme
+použít pro oba konstruktory tříd C i D. Přičemž na každé úrovni dědičnosti inicializátoru může být zvláštní inicializaci oznamující událost.
+Pokud tedy inicializátor volá inicializační události ve správném pořadí, může to nasimulovat pořadí inicializace běžné u konstruktorů.
+Při inicializaci dlaždic je právě tento způsob používán. Celou situaci znázorňuje obrázek \ref{initializer-inherence}.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/initializer-inherence.png}
+\caption{Ilustrace použití inicializátoru.}
+\label{initializer-inherence}
+\end{figure}
+
+\section{Renderování a interakce}
+Dalším cílem\aref{aim-rendering} tohoto projektu je oddělit v enginu zobrazovací vrstvu, tak aby ji bylo možné jednoduše nahradit za jinou.
+Se zobrazovací vrstvou nicméně úzce souvisí jakým způsobem bude prováděna interakce s objekty, proto je v této vrstvě zahrnuta i ona. 
+Každý objekt, který to vyžaduje má vytvořený vlastní renderer-interactor na míru. Jak renderer vypadá uvnitř je zpravidla na programátorovi. 
+Nicméně obvyklý přístup je takový, že renderer má referenci na konkrétní renderovaný objekt. Podle jeho zpravidla readonly vlastnosti potom určuje
+chování vykreslovaní nebo interakce. Pokud se jedná o renderery pro statické objekty(např. dlaždice), tak se zpravidla pozicování určuje relativně
+vůči rodiči. Zobrazovací vrstva v tomto enginu nemá stejný grafický výstup jako originální hra, nicméně nic nebrání tomu napsat 
+si tuto vrstvu tak, aby jí odpovídala.
 
 \chapter{Vývojová dokumentace}
 Následující sekce této kapitoly jsou určeny především pro lidi, kteří chtějí porozumět více celému enginu. Především
@@ -941,7 +1051,7 @@ dekorací v se v dungeonu vyskytují dekorace, které provádějí nějakou funk
 hře nenáleží žádné senzory. Jedná se o tzv. náhodné dekorace, kdy každá zeď má definováno, zda může obsahovat náhodné dekorace.
 Při generování mapy se pak s určitou pravděpodobností dekorace na zeď dá či nikoliv. Z toho důvodu tento engine
 neobsahuje stejné dekorace na stejných místech, protože není znám náhodný generátor k tomu použitý. Nicméně zpět 
-k problému akcí po kliknutí na dekoraci. Studii dekompilovaného kódu originální hry  (viz.\cite{DMDekompilation}) se ukázalo,
+k problému akcí po kliknutí na dekoraci. Studii dekompilovaného kódu originální hry  (viz.\cite{DMDecompilation}) se ukázalo,
 že některé akce jsou fixovány na konkrétní typy dekorací. Takže například v dekorace s výklenky mají napevno implementovaný 
 kód umožnující vkládaní předmětů do výklenku. Dalším příkladem jsou fontánky, které naplňují lahve s vodou. Posledním příkladem
 speciální dekorace je Vi Altair výklenek, který dokáže po vložení kostí oživit šampiona. Jelikož tyto dekorace
