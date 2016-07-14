@@ -1,0 +1,58 @@
+\chapter{Úvod}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/DM-original-screen.png}
+\caption{Screenshot originální hry Dungeon Master}
+\label{obr0:uvod}
+\end{figure}
+
+Dungeon Master je po?íta?ová hra žánru RPG(role playing game) vyvinuta firmou Faster Then Light v roce 1987.
+Byla to první real-time hra tohoto typu s pseudo 3D pohledem a ovládáním pomocí myši. Hrá? má k dispozici skupinu až ?ty? hrdin?,
+s kterými prochází podzemní bludišt? a bojuje s nep?áteli\cc{obr0:uvod}. Tito hrdinové se ve h?e nazývají šampioni a mohou se 
+zdokonalovat v r?zných dovednostech. 
+
+Bludišt? se skládá z n?kolika úrovní uspo?ádaných vertikáln? pod sebou. 
+Jednotlivé úrovn? pak nemusí být stejn? velké a mohou být od sebe r?zn? horizontáln? odsazené.
+Každá úrove? je tvo?ena obdélníkovou plochou s pravidelnou m?ížkou\cc{obr1:uvod}. Pole vymezena m?ížkou nazýváme dlaždice a je jich 
+ve h?e n?kolik typ?, které definují jejích vzhled a funkci. N?které dlaždice lze aktivovat tzv. p?epína?i. Takové typy dlaždic
+jsou nap?íklad dve?e nebo jáma\cc{obr0:uvod}, které lze takto otvírat ?i zavírat. P?epína?e mohou být bu? nášlapné na podlaze nebo aktivovatelné
+pomocí myši na zdech. Mezi úrovn?mi lze sestupovat pomocí dlaždic typu schody.  Dále je možné se teleportovat mezi dlaždicemi, a to i v r?zných úrovních, pomocí dlaždice
+typu teleport. 
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/DM-levels.png}
+\caption{Ilustrace uspo?ádání herních úrovní.}
+\label{obr1:uvod}
+\end{figure}
+
+Hrá? je na za?átku postaven do nejvýše položené úrovn?, kde si vybere svoji skupinu šampion?. 
+Pohyb skupiny mezi dlaždicemi je zcela diskrétní, to znamená, že se nelze se skupinou zastavit mezi dlaždicemi, ale pohyb je vždy dokon?en
+až na vedlejší dlaždici. Se skupinou je tedy vždy asociována pouze jedna dlaždice. Na dlaždicích pak mohou
+být r?zné p?edm?ty, které je možné sbírat. Šampioni mohou s p?edm?ty provád?t r?zné akce.
+Nap?íklad se zbran?mi lze bojovat nebo lektvary je možné pít a zlepšit si tak do?asn? vlastnosti. Krom? t?chto 
+akcí m?že ješt? šampion vyvolávat kouzla. Nicmén? k tomu pot?ebuje dostate?nou úrove? odpovídající dovednosti.
+Tímto zp?sobem je možné vytvá?et lektvary nebo vyvolávat úto?ná ?i obraná kouzla.
+
+Ve h?e je celá ?ada nep?átelský entit. Liší se vzhledem, útokem a pohybem. Pohyb n?kterých entit 
+probíhá ješt? po hustší m?ížce než jsou dlaždice. Každá entita má definovaný prostor dlaždice, který zaujímá. Je to bu? prostor
+celé dlaždice, polovina ?i ?tvrtina. \cc{obr2:uvod} Pohyb entit je potom op?t diskrétní jako v p?ípad? hrá?ovi skupiny, 
+ale tentokrát mezi definovanými ?ástmi dlaždic. 
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/DM-group-example.png}
+\caption{Ilustrace prostor? zaujímaných entitami.}
+\label{obr2:uvod}
+\end{figure}
+
+Cílem této práce je vytvo?it engine pro hru Dungeon Master, tak aby spl?ovala následující požadavky:
+\begin{enumerate}
+\item Engine bude naprogramovaný v jazyce C\#.
+\item\label{aim-mechanics} Engine bude obsahovat podporu pro funkce a mechaniky vyskytující se ve h?e Dungeon Master.
+\item\label{aim-extensibility} Bude kladen d?raz na dobrý objektový návrh, tak aby byl engine co nejlépe rozši?itelný a bylo 
+	tak možné do enginu dodávat jednoduše nové funkce.
+\item\label{aim-builders} Engine bude schopný sestavit herní úrovn? podle vstupních dat použitých v originální h?e. Nicmén?
+	bude také poskytovat možnost, dod?lat si podporu pro jiné formáty.
+\item\label{aim-rendering} Engine bude obsahovat odd?lenou zobrazovací vrstvu, tak aby mohl být její výstup jednoduše zm?n?n.
+\item Projekt bude cílený pro vzd?lávaní, tak aby si studenti mohli vyzkoušet do enginu doprogramovat další funkce.
+\end{enumerate}
+

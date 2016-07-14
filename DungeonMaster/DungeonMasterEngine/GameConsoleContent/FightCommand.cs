@@ -41,7 +41,7 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         public override async Task Run()
         {
-            Theron t = ConsoleContext.AppContext.Leader;
+            LegacyLeader t = ConsoleContext.AppContext.Leader;
             Champion champoin = null;
             IActionFactory action = null;
             if (Parameters.Length == 0)

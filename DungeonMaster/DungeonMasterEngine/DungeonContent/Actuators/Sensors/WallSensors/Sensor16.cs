@@ -4,7 +4,7 @@ using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
 {
-    class Sensor16 : ItemConstrainSensor<IActuatorX>
+    class Sensor16 : ItemConstrainWallSensor<IActuatorX>
     {
         public IGrabableItem Storage { get; private set; }
 

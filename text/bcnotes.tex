@@ -330,11 +330,11 @@ Celý seznam vlastností je možné nalézt v dokumentaci\cite{DMCreatures}.
 
 \section{Parsování vstupních dat}\label{level-parsing}
 
-V této fázi práce ještě nebylo jasné, zda nalezená dokumentace\cite{TechnicalDocumentationFontanel05} bude dostatečná
+V době implementace této části práce nebylo jasné, zda nalezená dokumentace\cite{TechnicalDocumentationFontanel05} bude dostatečná
 pro splnění práce. Parser je proto oddělen od zbytku enginu do zvláštní assembly, která nereferencuje žádnou knihovnu
 pro zobrazování grafiky. Cílem této assembly je tedy pouze převést struktury obsažené ve vstupních datech do odpovídajících
-datových tříd v jazyce C\#. Tento balík dat se potom předá enginu, který z něj nich vytvoří herní úrovně. Tuto zjednodušenou
-představu znázorňuje obrázek \ref{parser-preview:analyza}.
+datových tříd v jazyce C\#. Tento balík dat se potom předá enginu, který z něj nich vytvoří herní úrovně. Toto schéma 
+znázorňuje následující obrázek \ref{parser-preview:analyza}.
 
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/DM-parser-preview.png}
@@ -344,8 +344,8 @@ představu znázorňuje obrázek \ref{parser-preview:analyza}.
 
 \subsection{Herní úrovně - DUNGEON.DAT}\label{dungeon-parser}
 
-Parsování herních úrovní je rozděleno do dvou fází. V první fázi probíhá samotné čtení dat objektů\vref{dungeon-objects} ze souboru DUNGEON.DAT
-a transformování je na odpovídající objekty v jazyce C\#. V druhé fázi jsou pak objekty z první fáze upraveny,
+Parsování herních úrovní je rozděleno do dvou fází. V první fázi probíhá transformace dat objektů\vref{dungeon-objects} ze souboru DUNGEON.DAT
+ na odpovídající objekty v jazyce C\#. V druhé fázi jsou pak objekty z první fáze upraveny,
 aby měli přehlednější strukturu. 
 
 
@@ -356,7 +356,8 @@ V této fázi je nejprve vytvořen datový objekt, který bude shromažďovat v�
 \begin{itemize}
 \item metadata z hlavičky souboru - to jsou zejména velikosti všech seznamů s objekty\vref{dungeon-objects} a počet map,
 \item seznamy objektů - to jsou seznamy objektů jazyka C\# vzniklé rozparsováním odpovídajících dat objektů v souboru,
-\item seznam herních úrovní - to jsou objekty reprezentující data herních úrovní, které obsahují jejich vlastnosti\vref{dungeon-objects} a seznam jejich dlaždic, dekoraci, atd. 
+\item seznam herních úrovní - to jsou objekty reprezentující data herních úrovní, které obsahují jejich vlastnosti\vref{dungeon-objects}
+ a seznam jejich dlaždic, dekorací, atd. 
 \end{itemize}
 
 Dále parser rozparsuje všechny data vstupního souboru dle dokumentace\cite{TechnicalDocumentationFontanel05} a vytvoří z nich 
@@ -365,8 +366,8 @@ adekvátní objekty, které uloží do zmíněného datového objektu. Ilustrace
 \subsubsection{Druhá fáze}
 Po skončení první fáze je struktura vzniklého datového objektu podobná struktuře souboru DUNGEON.DAT. Tím máme namysli, že
 například spojové seznamy jsou reprezentovány pomocí objektových identifikátorů\vref{dungeon-objects}, což není příliš intuitivní a pro práci 
-s těmito daty by engine musel rozumět jejich formátu. Navíc spojové seznamy obsahují objekty různých typů. Proto pro zjednodušení 
-následného čtení těchto dat enginem tato fáze inicializuje v datových objektech pro dlaždice následující položky:
+s těmito daty by engine musel rozumět jejich formátu. Navíc spojové seznamy obsahují objekty různých typů. Proto pro zjednodušení práce enginu
+s těmito daty jsou v datových objektech inicializovány ještě následující položky: 
 \begin{itemize} 
 \item seznam sbíratelných předmětů,
 \item seznam senzorů,
@@ -382,10 +383,11 @@ Na počátku vývoje projekt neobsahoval druhou fázi, její vytvoření vedlo k
 \subsection{Vlastnosti objektů - GRAPHICS.DAT}
 
 Pro sestavení herních úrovní potřebuje engine také vlastnosti společné pro všechny konkrétní typy objektů ze
-souboru DUNGEON.DAT. Jak bylo zmíněno v sekci \ref{dungeon-properties} tyto vlastnosti jsou v souboru GRAPHICS.DAT. Nicméně
-data z tohoto souboru již existují vyextrahovaná v HTML formátu. Pro zjednodušení práce s HTML soubory byla
-použita knihovna HTML Agility Pack\cite{HtmlAgilityPack}. Pro každý typ vlastností je pak vytvořen datový objekt.
-Tyto seznamy jsou pak uloženy do výsledného datového objektu zmíněného v předchozí
+souboru DUNGEON.DAT. Jak bylo zmíněno v sekci \ref{dungeon-properties}, tyto vlastnosti jsou v originální hře v souboru GRAPHICS.DAT.
+Nicméně tato data již existují vyextrahovaná v HTML formátu, a proto jsme je použili namísto původních dat.
+Ke zjednodušení parsování dat z HTML souborů byla
+použita knihovna HTML Agility Pack\cite{HtmlAgilityPack}. Pro každé typy vlastností jsou pak vytvořeny odpovídající datové objekty
+které jsou uloženy do seznamů ve výsledném datovém objektu zmíněného v předchozí
 sekci\ref{dungeon-parser}. V této části jsou získána data vlastností všech objektů\vref{dungeon-objects} až na kouzla.
 Vlastnosti kouzel jsou rozparsovány v enginu přímo do objektů v něm použitých. Proto by případné vytváření datových souborů
 v této vrstvě bylo zbytečné. Celý proces zobrazuje diagram na obrázku \ref{parser:analyza}.
@@ -400,21 +402,21 @@ v této vrstvě bylo zbytečné. Celý proces zobrazuje diagram na obrázku \ref
 
 Po úspěšném rozparsování herní dat se bylo třeba rozhodnout, kterou knihovnou použít pro zobrazení grafického výstupu enginu. 
 Cílem této práce je vytvořit herní engine s dobrým návrhem\aref{aim-extensibility}. Proto stačí, aby byl grafický výstup ve formě proof of concept. 
-Aby se bylo možné soustředit hlavně na samotný návrh enginu, použili jsem framework, s který už jsme měli nějaké zkušenosti.
-Jedná se o XNA Framework od firmy Microsoft. Nicméně protože tento framework již není firmou nadále podporován a vyvíjen, využili jsme 
-konečně jeho klon MonoGame\cite{MonoGame}. Výhodou této volby může být, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
+Aby se bylo možné soustředit hlavně na samotný návrh enginu, použili jsme framework, s který už jsme měli nějaké zkušenosti.
+Jedná se o XNA Framework od firmy Microsoft. Nicméně tento framework již není firmou nadále podporován a vyvíjen, proto jsme využili 
+konečně jeho klon MonoGame\cite{MonoGame}. Výhodou této volby je také to, že framework je multiplatformní. Jeho tvůrci tvrdí, že podporuje platformy
 iOS, Android, MacOS, Linux, Windows , OUYA, PS4, PSVita, Xbox One.
 
 \section{Reprezentace jádra enginu}\label{engine-core-section}
 
-O samotnou herní smyčku se stará framework MonoGame. Na jádru enginu jsou pak volány už pouze aktualizační a vykreslovací obsluhy\cc{engine-core}.
+O samotnou herní smyčku se stará framework MonoGame, který na jádru enginu volá aktualizační a vykreslovaní obsluhy\cc{engine-core}.
 Jádro enginu pak obsahuje následující tři důležité komponenty:
 \begin{itemize}
-\item Hráč - tato komponenta zajišťuje interakci s uživatelem. Skrze ni lze ovládat hráčovu skupinu šampionů, bojovat nebo sbírat předměty.
+\item Hráč - tato komponenta zajišťuje interakci s uživatelem. Skrze ni lze ovládat hráčovu skupinu šampionů, sbírat předměty nebo bojovat.
 \item Builder herních úrovní - tato komponenta zajišťuje sestavování herních úrovní.
 \item Objekt obsahující továrny na herní objekty - pro každý typ popsaný v sekci \ref{dungeon-properties} existuje odpovídající
-	továrna obsahující jeho vlastnosti. Továrny, u kterých to dává smysl, mohou vytvářet objekty, které reprezentují. Toto bude konkrétně
-	specifikováno později, nicméně důležité je, že skrze jádro enginu lze k těmto továrnám přistupovat.
+	továrna obsahující jeho vlastnosti. Továrny pak mohou vytvářet objekty, jejichž typ reprezentují. Toto bude konkrétně
+	specifikováno později\vref{item-factories}, nicméně důležité je, že skrze jádro enginu lze k těmto továrnám přistupovat.
 \end{itemize}
 Konkrétní implementace předchozích komponent lze do jádra enginu vložit při jeho inicializaci. Tímto způsobem může být herní 
 engine rozšířen o nové funkce. Následující funkce enginu jsou znázorněny na obrázku \ref{engine-core}.
@@ -448,15 +450,15 @@ se pak vypočítá na základě světelných zdrojů, které mají šampioni v h
 V originální hře jsou dlaždice vždy uloženy v obdélníkovém poli\vref{dungeon-objects}. To znamená, že dlaždice, které nejsou využity pro~chodby,
 jsou vždy vyplněny zdmi. Jelikož jedním z cílů této práce je udělat engine co nejrozšiřitelnější\aref{aim-extensibility}, rozhodli jsme se tento problém vyřešit
 o něco obecněji. Mezi dlaždicemi jsou vazby, které s nimi dohromady tvoří obousměrný orientovaný graf. Nicméně, pro dlaždice stále platí, že musí být
-uspořádané do mřížky. Každá z dlaždic má potom stále nejvýše čtyři sousedy. Tato reprezentace pro hodně řídké mapy může ušetřit nějakou paměť.
-Nicméně důležitější je, že při takové reprezentaci lze jednoduše získat sousedy pouze ze znalosti konkrétní dlaždice. V takové 
-podobě by také bylo jednoduší, engine upravit tak, aby dlaždice nemusely být na mřížce a aby mohli mít více sousedů.
+uspořádané do mřížky. Každá z dlaždic má potom stále nejvýše čtyři sousedy. Tato reprezentace pro hodně řídké mapy může ušetřit paměť.
+Avšak důležitější je, že při takové reprezentaci lze jednoduše získat sousedy pouze ze znalosti konkrétní dlaždice. V této 
+podobě by bylo navíc jednoduší engine upravit tak, aby dlaždice nemusely být na mřížce a aby mohli mít více sousedů.
 
 Předchozí rozhodnutí také vede k tomu, že již nejsou potřeba dlaždice typu zeď\cc{tile-representation-img}, jelikož její stěny můžou být definovány ve 
 dlaždicích typu podlaha. Při vytváření podlahy je pak nutné číst i její sousední dlaždice. Pokud je soused daným směrem zeď, 
 vytvoří se na této straně stěna a soused není nastaven. V opačném případě je soused nastaven na odpovídající dlaždici.
 Zprávy původně cílené zdím je také třeba posílat na odpovídající dlaždice podlahy. Tato reprezentace zdí opět vede k
-vyšší flexibilitě, jelikož případné místo využité původními dlaždicemi typu zdi lze využít jiným způsobem, což by jinak nebylo možné.
+vyšší flexibilitě, jelikož případné místo využité původními dlaždicemi typu zdi lze využít jiným způsobem.
 
 \begin{figure}[H]\centering
 \includegraphics[width=\textwidth]{./img/tile-representation.png}
@@ -464,36 +466,37 @@ vyšší flexibilitě, jelikož případné místo využité původními dlaždi
 \label{tile-representation-img}
 \end{figure}
 
-Když jsou tedy stěny součástí dlaždic, dalším problémem je jejich reprezentace. Buď je možné, aby se o vše spjaté se stěnami starala přímo
-dlaždice a nebo je možné tyto části delegovat do zvláštních objektů. Ze začátku byl v enginu použit první zmiňovaný způsob. Ukazovalo se ale, 
-že tato reprezentace není příliš vhodná, protože potom samotná dlaždice řeší věci, které k ní přímo nenáleží.
+Pokud jsou tedy stěny součástí dlaždic, je třeba vyřešit jejich reprezentaci. Buď je možné, aby veškeré funkce stěn obsahovala přímo
+dlaždice, a nebo je možné tyto části delegovat do zvláštních objektů. Ze začátku byl v enginu použit první zmiňovaný způsob. Nicméně 
+tato reprezentace není příliš vhodná, protože potom samotná dlaždice řeší funkce, které k ní přímo nenáleží.
 Nakonec tato reprezentace byla změněna a v enginu byla použita druha zmiňovaná možnost. Vedlo k ní zejména oddělení zobrazovací vrstvy 
-vrstvy od logické. Výhoda tohoto přístupu byla kromě samotného oddělení kódu i možnost znovu použití kódu za pomocí dědičnosti. 
-Například stěna, která obsahuje přepínač může dědit z normální prázdné stěny. Nicméně ukázala se i nevýhoda tohoto přístupu. A to že komunikace směrem 
-ze stěny k dlaždici je trochu těžkopádná. Buď by bylo zapotřebí předat zdi referenci na jejich rodičovské dlaždice nebo se museli použít události.
-Pokud to bylo v některých případech nutné, přiklonili jsem se k použití událostí.
+od logické. Výhoda tohoto přístupu byla kromě samotného oddělení kódu i možnost znovu použití kódu za pomocí dědičnosti. 
+Například třída reprezentující stěnu, která obsahuje přepínač, může dědit ze třídy reprezentující prázdné stěny. 
+Avšak ukázala se i nevýhoda tohoto přístupu, a to, že komunikace směrem ze stěny k dlaždici je trochu těžkopádná.
+Buď by bylo zapotřebí předat zdi referenci na jejich rodičovské dlaždice, nebo by se museli
+použít události. Pokud to bylo v některých případech nutné, přiklonili jsem se k použití událostí.
 
 \section{Přepínače}\label{actuator-analyza}
-Přepínače tvoří základní mechaniky v herních úrovních Dungeon Masteru. Přepínače mohou být buď na stěnách nebo na podlaze. 
-Na stěnách je lze aktivovat kliknutím myši a na podlaze potom přesunutím hráče na dlaždici s přepínačem. Aktivace pak ještě
-může být podmíněna dalšími faktory jako obsah daného typu předmětu v ruce nebo směr kterým je hráč otočen.  
+Přepínače tvoří základní mechaniky v herních úrovních Dungeon Masteru, mohou být buď na stěnách, nebo na podlaze. 
+Na stěnách je lze aktivovat kliknutím myši a na podlaze potom přesunutím hráče na dlaždici s přepínačem. Aktivace ještě
+může být podmíněna dalšími faktory: obsah daného typu předmětu v ruce nebo směr kterým je hráč otočen.  
 
-Ve skutečnosti se každý přepínač skládat z řady senzorů a platí, že:
+Ve skutečnosti se každý přepínač skládá z řady senzorů a platí, že:
 \begin{itemize}
 \item poslední senzor určuje dekoraci přepínače,
 \item při pokusu o aktivaci přepínače, dojde postupně k pokusu aktivace každého senzoru,
-\item každý senzor může definovat akci, kterou provede pokud byl aktivován.
+\item každý senzor může definovat akci, kterou provede, pokud byl aktivován.
 \end{itemize}
 
 Senzor má následující vlastnost:
 \begin{itemize}
-\item Typ - číselné označení, podle kterého originální herní engine určí způsob aktivace.
-\item Akce - může být buď lokální nebo vzdálená. Pro lokální akce je to zarotování sekvencí senzorů\cc{actuator-rotation} 
-	přepínače nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy\vref{dungeon-objects} na danou cílovou dlaždici. 
+\item Typ - číselné označení, dle kterého originální herní engine určí způsob aktivace.
+\item Akce - může být buď lokální, nebo vzdálená. Pro lokální akce je to zarotování sekvencí senzorů 
+	přepínače\cc{actuator-rotation} nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy\vref{dungeon-objects} na danou cílovou dlaždici. 
 \item Data pro lokální resp. vzdálenou akci.
 \item Zpoždění - doba, po které se provede akce.
 \item Opačný efekt - liší se dle typu senzoru, nicméně většinou otáčí podmínku aktivace pro daný typ senzoru. 
-\item Opakovatelnost - určuje, zda lze senzor aktivovat neomezeně krát nebo pouze jednou.
+\item Opakovatelnost - určuje, zda lze senzor aktivovat neomezeně krát či pouze jednou.
 \item Dekorace  
 \end{itemize}
 
@@ -506,8 +509,8 @@ Senzor má následující vlastnost:
 
 Výše popsaný systém přepínačů přináší hned několik problémů:
 \begin{enumerate}
-\item\label{actuator-unclear} Z technické dokumentace\cite{TechnicalDocumentationFontanel05} není vždy přesně zřejmé, jaká je aktivační podmínka senzoru pro určitý typ.
-\item\label{actuator-effective} Jakým způsobem efektivně a přehledně rozparsovat data senzorů, když má tolik nezávislých vlastností.
+\item\label{actuator-unclear} Z technické dokumentace\cite{TechnicalDocumentationFontanel05} není vždy jasně zřejmé, jaká je aktivační podmínka senzoru pro určitý typ.
+\item\label{actuator-effective} Jakým způsobem efektivně a přehledně rozparsovat data senzorů, když mají tolik nezávislých vlastností.
 \item\label{actuator-representation} Jak reprezentovat přepínače v novém enginu.
 \item\label{actuator-remote-actions} Jakým způsobem provádět vzdálené akce.
 \end{enumerate}
@@ -517,7 +520,7 @@ První tři body problémů(viz \ref{actuator-unclear}, \ref{actuator-effective}
 
 \subsubsection{První reprezentace}\label{rep-v1}
 
-Jako první způsob jsem se rozhodl vždy pro několik sekvencí senzorů původní hry vytvořit objekt, který měl stejné nebo o něco obecnější vlastnosti jak dané sekvence.
+Jako první způsob jsme se rozhodli vždy pro několik sekvencí senzorů vytvořit objekt, který měl stejné nebo o něco obecnější vlastnosti než dané sekvence.
 Z počátku se totiž zdálo, že jen výjimečně jsou sekvence senzorů větší či složitější. Proto jsme se rozhodli vytvořit v
 novém enginu objekty, které mají obecnější vlastnosti, a tak mohou být použité pro několik podobných sekvencí. Dle určité sekvence senzorů se poté
 objektu inicializují jeho vlastnosti. Celou situaci ilustruje obr. \ref{actuator-object}.
@@ -528,49 +531,49 @@ objektu inicializují jeho vlastnosti. Celou situaci ilustruje obr. \ref{actuato
 \label{actuator-object}
 \end{figure}
 
-Tento způsob sice řeší problém samotné reprezentace\vbref{actuator-representation}, ale později se ukázalo, že velice špatně. Například
+Tento způsob sice řeší problém samotné reprezentace\vbref{actuator-representation}, ale později se ukázalo, že velice nevhodně. Například
 kód převádějící sekvence na přepínače je složitý a nepřehledný. Bylo také složité vytvořit přepínač podle technické dokumentace\cite{TechnicalDocumentationFontanel05}
-tak, aby fungoval opravdu správně. Popis v dokumentaci\cite{TechnicalDocumentationFontanel05} také asi není dostatečně přesný pro vytvoření tohoto úkolu.
+tak, aby fungoval správně. Popis v dokumentaci\cite{TechnicalDocumentationFontanel05} také není dostatečně přesný pro vytvoření tohoto úkolu.
 I proto čím více přepínačů jsme tímto způsobem naimplmentovali, tím více se ukazovalo problémů. Nakonec jsme dospěli k závěru, že tento způsob reprezentace je nemožný.
 
-\subsubsection{Druha reprezentace}
+\subsubsection{Druhá reprezentace}
 
-Tato reprezentace se snažila vyřešit problém nepřehlednosti\vbref{actuator-effective} kódu převádějícího sekvence na objekty přepínačů.
-Proto je i zde použit typ objektu přepínač z první reprezentace v sekci \ref{rep-v1}. Parsování sekvence senzorů jsem se rozhodl udělat pomocí konečného 
+Tato reprezentace se snažila vyřešit problém nepřehlednosti kódu\vbref{actuator-effective} převádějícího sekvence na objekty přepínačů.
+Proto je i zde použit typ objektu přepínač z první reprezentace v sekci \ref{rep-v1}. Parsování sekvence senzorů jsme se rozhodli udělat pomocí konečného 
 automatu. Tedy tak, že pro každý objekt přepínače existovaly předdefinované sekvence senzorů. Konečný automat potom pomocí vstupní sekvence
 identifikoval výsledný objekt přepínače. Při inicializaci objektu přepínače zde pak byla sekvence jasně definovaná, což řešilo problém s přehledností \vbref{actuator-effective}.
-Později se nicméně ukázalo, že i malá změna v sekvenci senzorů může generovat podobný objekt. Takže by bylo třeba
-spoustu předdefinovaných šablon, které se lišily ve drobnostech. Tím se ukázalo, že tento přístup není dostatečně obecný a nelze tedy použít. 
+Později se však ukázalo, že i malá změna v sekvenci senzorů může generovat podobný objekt. Takže by bylo třeba
+spoustu předdefinovaných šablon, které by se lišily ve drobnostech. Tím se ukázalo, že tento přístup není dostatečně obecný a nelze jej tedy použít. 
 
 \subsubsection{Třetí reprezentace - výsledná}
 
-Tato reprezentace se tedy oproti předchozím snažila přiblížit co nejvíce k systému použitém v enginu originální hry.
+Tato reprezentace se oproti předchozím snažila přiblížit co nejvíce k systému použitém v enginu originální hry.
 K dosažení tohoto cíle jsme se rozhodli použít dekompilované zdrojové kódy\cite{DMDecompilation} hry. Tím
 je vyřešen problém nedostatečné dokumentace ve věci přepínačů\vbref{actuator-unclear}.
 
 Vytvořili jsme tedy objekt přepínač, který má v sobě sekvenci senzorů, tak jako tomu je v originální hře.
-Tím je vyřešen i problém nepřehlednosti převodního kód\vbref{actuator-effective}, jelikož jsou tyto reprezentace téměř identické.
+Tím je vyřešen i problém nepřehlednosti převodního kódu\vbref{actuator-effective}, jelikož jsou tyto reprezentace téměř identické.
 S využitím zdrojových kódů jsme vytvořili odpovídající objektově orientovaný kód v jazyce C\#. Tato reprezentace
-tak zajišťuje maximální korektnost implementace a přitom poskytuje možnost rozšíření - což je jedním z cílů\aref{aim-extensibility} této práce. 
-Je tedy možné vytvořit nové senzory, které budou mít vlastní aktivační podmínky, a ty pak použít v přepínačích.
+tak zajišťuje maximální korektnost implementace a přitom poskytuje možnost rozšíření - což je jedním z cílů této práce(viz bod \ref{aim-extensibility}). 
+Je tedy možné vytvořit nové senzory, které budou mít vlastní aktivační podmínky a ty následně použít v přepínačích.
 V originálním enginu je toto rozšiřovaní jen značně omezené, jednotlivé typy senzorů se tam odlišují jednobajtovým číselným identifikátorem.
-Nicméně, jelikož jsme nechtěli rozšiřování enginu limitovat pouze na tento způsob vytváření senzorů, je si možné vytvořit přepínač, který
+Ale jelikož jsme nechtěli rozšiřování enginu limitovat pouze na tento způsob vytváření senzorů, je možné si vytvořit přepínač, který
 bude fungovat na úplně jiné bázi. Takže případné nové přepínače nemusí vůbec senzory používat. 
 
-\subsection{Reprezentace zprávy přepínače}
+\subsection{Reprezentace zprávy přepínače}\label{actuator-message-representation}
 
 Jak již bylo řečeno\vref{dungeon-objects}, celý systém mechanik herních úrovní je závislý na posílání zpráv. 
-V originální hře je cíl odeslané zprávy vázán na souřadnice dlaždice, na kterou se má zpráva odeslat. 
+V originální hře je cíl odeslané zprávy vázán na její souřadnice dlaždice. 
 Jelikož jsme se v enginu nechtěli vázat na tyto pevné souřadnice, rozhodli jsem se namísto nich
 cílovou dlaždici identifikovat její referencí. To by případně ulehčilo práci při transformaci enginu tak, aby
 dlaždice mohli mít více sousedů nebo aby nemusely být na pevné mřížce\vref{tile-representation}.
-Při takovéto reprezentaci nicméně může nastává problém s inicializací dlaždic a přepínačů\vref{level-inicialization}.
+Při takovéto reprezentaci však nastává problém s inicializací dlaždic a přepínačů\vref{level-inicialization}.
 
 V originální hře lze mezi dlaždicemi posílat pouze jeden typ zprávy. Jelikož cílem této práce je udělat engine
-co nejrozšiřitelnější\aref{aim-extensibility}, engine poskytuje za určitých podmínek používat i jiné typy zpráv.
+co nejrozšiřitelnější(viz bod \ref{aim-extensibility}), engine poskytuje za určitých podmínek používat i jiné typy zpráv.
 Těmito podmínkami jsou:
 \begin{itemize}
-\item Vlastní zprávy lze zasílat pouze vlastně vytvořením dlaždicím, které na daný typ zprávy musí být připraveny.
+\item Vlastní zprávy lze zasílat pouze vlastně vytvořeným dlaždicím, které na daný typ zprávy musí být připraveny.
 \item Všechny dlaždice musí umět přijímat originální typ zprávy - nicméně nemusí na ně reagovat.
 \item Třída reprezentující vlastní zprávu musí být potomkem originální zprávy v hiearchii dědičnosti jazyka C\#.
 \end{itemize}
@@ -578,73 +581,75 @@ Těmito podmínkami jsou:
 \section{Reprezentace entit}
 
 V originální hře existují pouze dva typy živých objektů, tj. nepřátelské entity a šampioni. Za účelem udělat engine
-co nejrozšiřitelnější\aref{aim-extensibility} jsme se rozhodli pro živé objekty vytvořit následující abstrakci.  
-Entitou je v tomto enginu každý objekt, s jehož vlastnostmi může interagovat nějaká akce\vref{action-combos}. Například akce
-útok může entitu zranit nebo poškodit - pokud je neživá. Entity se dále dělí na živé a neživé. Příkladem v enginu použité neživé entity
-jsou dveře, které je možné rozbít útokem. Živé entity tedy disponují následujícími vlastnostmi.
+co nejrozšiřitelnější\aref{aim-extensibility} jsme se rozhodli rozdělit entity na živé a neživé.   
+Entitou je v tomto enginu každý objekt, s jehož vlastnostmi může interagovat nějaká akce\vref{action-combos}.
+Například akce útok může entitu zranit nebo poškodit(pokud je neživá). Příkladem použité neživé entity 
+jsou dveře, které je možné rozbít útokem. Živé entity disponují následujícími atributy:
 
 \begin{itemize}
 \item vlastnosti - jsou to vlastnosti jako zdraví, odolnost,  atd. (viz sekce \ref{properties-skills}),
 \item dovednosti - to ve výsledku znamená, že jsou schopny používat akce,
 \item relaci vůči ostatním živým entitám - určuje, zda jsou vůči daným entitám přátelské či nepřátelské,
 \item části těla a inventáře,
-\item definují, jaké část dlaždic mohou zaujímat.
+\item poloha na dlaždici - definují, jaké část dlaždic mohou zaujímat.
 \end{itemize}
 
 Každý z těchto bodů lze rozšířit, což může být užitečné v případě použití enginu pro implementaci jiné hry než Dungeon Master. 
 
-\subsection{Vlastnosti}
+\subsection{Vlastnosti}\label{entity-properties}
 
 V původní hře jsou vlastnosti šampionů\vref{properties-skills} a nepřátelských entit\vref{properties-creatures} pevně definované. 
 Několik vlastností nepřátelských entit je odlišných od tě šampionových, nicméně ve většině se shodují.
 S těmito odlišnostmi musí počítat akce, které modifikují vlastnosti entit. Pokud entita nějakou vlastností nedisponuje, je vrácena 
 vlastnost se základní hodnotou. Například pokud provádíme akci útok magickou ohnivou koulí a entita nemá žádnou z vlastností
-odolnost proti magii či odolnost proti ohni - jsou tyto vlastnosti v základním stavu. Útok akce tedy není v tomto případě
-nijak modifikován. 
+odolnost proti magii či odolnost proti ohni, výsledný útok akce nebude nijak modifikován. 
 
  \subsection{Dovednosti}
 
- Dovednosti šampionů jsou stejně jako jejich vlastnosti v originální hře pevně definovány\vref{properties-skills}. I v tomto bodě se nový engine snaží o větší
- dynamičnost. Opět platí, že každá entita nemusí mít všechny dovednosti. Pokud určitou dovednost entita nemá, vrátí se její hodnota s úrovní nula.
- V originální hře jsou dva typy dovedností a to základní a nebo skryté. Pokud některá akce vylepšuje skrytou dovednost
- rozdělí se získané zkušenosti mezi obě dovednosti\vref{properties-skills}. Tento koncept schopností není v enginu vyžadován a 
- záleží potom na konkrétní implementaci dovednosti. Konkrétní implementace také specifikuje množství zkušeností nutné pro 
- získání nových úrovní. Implementace dovedností pro hru Dungeon Master odpovídá implementaci nalezené ve zdrojových kódech hry.\cite{DMDecompilation}.
+V originální hře mají šampioni pevně definované dovednosti\vref{properties-skills}, jako tomu v případě vlastností.
+I v tomto bodě se nový engine snaží o větší dynamičnost. Opět platí, že každá entita nemusí mít všechny dovednosti.
+Pokud je po entitě vyžadována dovednost, kterou entita nedisponuje, je její úroveň nulová.
+V originální hře jsou dva typy dovedností: základní a skryté. Pokud některá akce vylepšuje skrytou dovednost,
+rozdělí se získané zkušenosti mezi obě dovednosti\vref{properties-skills}. Tento koncept schopností není v enginu vyžadován a 
+záleží potom na konkrétní implementaci dovednosti. Ta také specifikuje množství zkušeností nutné pro 
+získání nových úrovní. Implementace dovedností pro hru Dungeon Master odpovídá té ve zdrojových kódech hry.\cite{DMDecompilation}.
 
- \subsection{Relace mezi entitami}
- Další funkcí kterou oproti originálu engine umožňuje je definovat pro entity jejich nepřátelé. Každá živá entita má token identifikující
- skupinu. Entity v této skupině jsou mezi sebou přátelské. Každá entita si může nadefinovat svoje nepřátelské tokeny.
- Podle vzoru originálu jsou v hře pouze dva relační tokeny - první pro šampiony a druhý pro nepřátelské entity. Nicméně
- celý tento system je navržen právě pro stanovení obecnějších vztahů mezi entitami a to může být aplikováno v libovolném rozšíření hry.
+\subsection{Relace mezi entitami}
+Další funkcí, kterou oproti originálu engine umožňuje, je definovat pro entity jejich nepřátelé. Každá živá entita má token identifikující
+skupinu. Entity v této skupině jsou mezi sebou přátelské. Každá entita si může nadefinovat svoje nepřátelské tokeny.
+Podle vzoru originálu jsou v hře pouze dva relační tokeny - první pro šampiony a druhý pro nepřátelské entity. Nicméně
+celý tento system je navržen právě pro stanovení obecnějších vztahů mezi entitami a to může být aplikováno v libovolném rozšíření hry.
  
 \subsection{Tělo a inventáře}
 Každá živá entita má definované její části těla. Oproti originálu, kde se řeší pouze části těla šampionů,
 zde je možné definovat tělo pro každou entitu. Je tak možné pracovat s částmi těla entit, které nemají humanoidní formu.
 Některé části těla se dají použít jako úložiště předmětů, ty potom mají nadefinováno s jakým typem úložiště jsou kompatibilní.
-Tato reprezentace dává dobrý smysl. Například pokud máme lidskou část těla - nohy. A medvědí část těla - nohy. Tak lidské
-kalhoty by měli jít nasadit pouze na lidské nohy, nikoliv medvědí. Naopak medvědí chrániče na nohy půjdou dát pouze na
+Tato reprezentace principiálně umožňuje podporu následujícího příkladu. Pokud máme lidské a medvědí nohy, tak lidské
+kalhoty by měli jít nasadit pouze na lidské nohy, nikoliv na medvědí. Naopak medvědí chrániče na nohy půjdou nasadit pouze na
 nohy medvědí. Takto pokročilejší mechanismy v originální hře nejsou použity, předměty tam mohou sbírat pouze šampioni. Nicméně
-při použití tohoto enginu k implementaci jiné hry jsou tyto mechanismy k dispozici. 
+tyto mechanismy jsou k dispozici při použití tohoto enginu k implementaci jiné hry.
 
-Předměty lze pak dále ukládat do dalších úložných prostorů.  O velikosti a typu těchto úložišť opět rozhoduje tvůrce konkretních 
-entit. Nicméně stejně tak jako v originální hře, i tato instance má implementované 
-úložiště pouze pro šampiony. Mezi taktové úložiště patří například batoh, kapsa, truhla, toulec atd.
+Předměty lze pak dále ukládat do dalších externích úložných prostorů. 
+Mezi taktové úložiště patří například batoh, kapsa, truhla, toulec atd.
+O velikosti a typu těchto úložišť opět rozhoduje tvůrce konkretních 
+entit. Avšak stejně jako v originální hře, i tato instance má implementované 
+úložiště pouze pro šampiony.
 
-\section{Reprezentace předmětů}
+\section{Reprezentace předmětů}\label{item-factories}
 
 V herních úrovních jsou různě rozmístěné předměty, které lze sbírat a ukládat si je do inventářů šampionů.
-Každý takový předmět náleží do nějaké kategorie(zbraň, lektvar, atd. - viz sekce \ref{grabable-items}). Každá
-tato kategorie pak obsahuje několik typů předmětů. Pro každý typ předmětu pak existuje jednoznačný globální identifikátor\vref{item-descriptors}.
-Identifikátory jsou použité například v přepínačích pro identifikaci typu předmětu, dle kterého se pak rozhodnou zda se aktivovat či nikoliv.
-Platí tedy, že všechny instance daného typu předmětu mají stejný identifikátor.
+Každý takový předmět náleží do nějaké kategorie(zbraň, lektvar, atd. - viz sekce \ref{grabable-items}). Všechny 
+tato kategorie obsahují několik typů předmětů. Pro každý typ předmětu pak existuje jednoznačný globální identifikátor\vref{item-descriptors}.
+Identifikátory jsou použité například v přepínačích pro identifikaci typu předmětu, dle kterého se pak rozhodnou, 
+zda se mají aktivovat či nikoliv. Platí tedy, že všechny instance daného typu předmětu mají stejný identifikátor.
 
 Z počátku jsme pro stanovení identifikátorů zvolili stejnou strategii jako tvůrci originální hry, tedy každá
 instance měla daný číselný identifikátor.
 Nicméně takto zvolený způsob reprezentace identifikátorů by byl nepřehledný pro případné rozšiřitele, jelikož
 by nemuselo být jasné, které identifikátory už jsou obsazené a které nikoliv. Dále v počátcích každá instance
-předmětu měla všechny jeho vlastnosti a to i ty, které byl společné pro všechny instance daného typu\vref{item-descriptors}.
+předmětu měla všechny jeho vlastnosti a to i ty, které byli společné pro všechny instance daného typu\vref{item-descriptors}.
 
-Pro splnění cíle \ref{aim-extensibility} teto práce bylo zapotřebí reprezentaci předmětů vylepšit.
+Pro splnění cíle \ref{aim-extensibility} této práce bylo zapotřebí reprezentaci předmětů vylepšit.
 Řešením problému bylo delegování společných vlastností předmětů do zvláštních tříd\cc{item-factories}, které odpovídají jednotlivým identifikátorům.
 Tyto třídy navíc slouží jako továrny na předměty daného typu. Reference na konkrétní instanci třídy pak slouží jako identifikátor.
 To ale znamená, že reference na tyto továrny jsou potřeba pro vytváření přepínačů. Z toho důvodu je součástí jádra enginu
@@ -656,7 +661,7 @@ objekt obsahující všechny továrny splňující tento vzor\vref{engine-core}.
 \label{item-factories}
 \end{figure}
 
-Každá továrna na předměty má také následující vlastnosti:
+Každá továrna na předměty má také následující atributy:
 \begin{itemize}
 \item hmotnost, 
 \item jméno, 
@@ -666,10 +671,10 @@ Každá továrna na předměty má také následující vlastnosti:
 
 \section{Reprezentace komb a akcí}
 Každý typy akce definuje svoji továrnu, která je uložena v jádře enginu\vref{engine-core} - jako je tomu v případě předmětů.
-Tyto továrny obsahují vlastnosti\vref{action-combos} o dané akci, které také určují požadavky pro provedení dané akce.
-Pomocí továrny lze pak vytvořit samotný objekt reprezentující konkrétní danou akci, kterou lze následně vyvolat určitým 
+Tyto továrny obsahují vlastnosti o dané akci\vref{action-combos}, které také určují požadavky pro provedení dané akce.
+Pomocí továrny lze pak vytvořit samotný objekt reprezentující konkrétní akci, kterou lze následně vyvolat určitým 
 směrem(sever, východ, jih, západ). Jak podmínky vytvoření akce, tak její provedení je naimplementováno dle dekompilovaných
-zdrojových kódů\cite{DMDecompilation} originální hry. Každá továrna na předměty má potom specifikovaný seznam továren akcí,
+zdrojových kódů\cite{DMDecompilation} originální hry. Každá továrna na předměty má potom specifikovaný seznam typů akcí,
 které lze s předměty provádět.
 
 \section{Reprezentace kouzel}
@@ -677,15 +682,15 @@ V jádře enginu jsou uloženy všechny symboly, včetně power symbolů\vref{ma
 Tyto symboly mají definovány, kolik je třeba many pro jejich vyvolaní při daném power levelu.
 Každé kouzlo potom definuje svoji továrnu, která je rovněž uložena v jádře enginu\vref{engine-core} - stejně jako je tomu v případě předmětů a akcí.
 Objekt reprezentující kouzlo lze pak opět vytvořit pomocí jeho továrny. Pro vyvolání kouzla je potom třeba určit směr a entitu,
-která kouzlo vyvolává. Chování vyvolávání a provádění kouzel je opět naimplementováno dle dekompilovaných
+která kouzlo vyvolává. Vyvolávání a provádění kouzel je opět naimplementováno dle dekompilovaných
 zdrojových kódů\cite{DMDecompilation} originální hry. Modifikace vlastnosti entity při vyvolávání symbolů
 kouzla pak zajišťuje speciální manager. 
 
 \section{Builder herních úrovní}
 
-Aby bylo možné sestavovat herní úrovně z různých vstupní formátů\aref{aim-builders} bylo nutné tuto část vyčlenit do samostatného
-objektu, který je pak předán jádru enginu\vref{engine-core-section}. Tento objekt budeme dále nazývat tzv. builder. Jádro enginu
-pak po builderu vyžaduje vytvoření herních úrovní, přičemž mu předá sadu továren - který je rovněž uložen v jádře. Builder
+Aby bylo možné sestavovat herní úrovně z různých vstupní formátů\aref{aim-builders}, bylo nutné tuto část vyčlenit do samostatného
+objektu, který je pak předán jádru enginu\vref{engine-core-section}. Tento objekt budeme dále nazývat builder. Jádro enginu
+po builderu vyžaduje vytvoření herních úrovní, přičemž mu předá sadu továren - která je rovněž uložena v jádře. Builder
 by se měl také starat o kešování načtených úrovní, jelikož je engine po něm může požadovat několikrát. Objekt builderu
 je předán jádru enginu při jeho vytváření, tímto způsobem je možné jádru předat vlastní implementaci builderu.
 
@@ -721,15 +726,15 @@ Místo těchto parametrů je do konstruktoru předán inicializátor, který má
 při inicializaci a při dokončení inicializace. Třída beroucí inicializátor jako parametr konstruktoru se zaregistruje na tyto události a
 tím pádem není nutná žádná přebytečná položka ve třídě pro inicializátor. Události jsou pak volané skrze metodu v inicializátoru.
 Inicializátorem inicializovaná třída si z něj nakopíruje parametry a odhlásí událost. Od té chvíle už není možné třídu modifikovat.
-Data inicializátoru se tedy mohou postupně naplňovat a po jejich naplnění se inicializace provede zavoláním jejich metody.
-S využitím a asynchronních metod, je navíc možné vyvolat inicializaci prvku (např. přepínačů, které potřebují reference na dlaždice) 
+Data inicializátoru se tedy mohou postupně naplňovat a po jejich naplnění se inicializace provede zavoláním metody na inicializátoru.
+S využitím asynchronních metod je navíc možné vyvolat inicializaci prvku (např. přepínačů, které potřebují reference na dlaždice) 
 již při vytváření dlaždic. Což vede k přehlednějšímu kódu a celkově k inicializaci cyklických struktur bez nutnosti přebytečných 
 veřejných položek. 
 
 S využitím dědičnosti inicializátorů je možné nasimulovat volání rutin konstruktorů, tak jak je v C\#  běžné. Na každé úrovní dědičnosti
 se využijí některé vlastnosti inicializátoru. Nechť inicializátor B
-je potomek inicializátoru A v hiearchii dědičnosti. A nechť C a D jsou třídy, které chceme inicializovat a zároveň D je potomkem C.
-A také platí, že konstruktor třídy D vyžaduje inicializátor třídy B a konstruktor třídy C vyžaduje inicializátor A. potom inicializátor B můžeme
+je potomek inicializátoru A v hiearchii dědičnosti. Nechť C a D jsou třídy, které chceme inicializovat a zároveň D je potomkem C.
+Také platí, že konstruktor třídy D vyžaduje inicializátor třídy B a konstruktor třídy C vyžaduje inicializátor A. Potom inicializátor B můžeme
 použít pro oba konstruktory tříd C i D. Přičemž na každé úrovni dědičnosti inicializátoru může být zvláštní inicializaci oznamující událost.
 Pokud tedy inicializátor volá inicializační události ve správném pořadí, může to nasimulovat pořadí inicializace běžné u konstruktorů.
 Při inicializaci dlaždic je právě tento způsob používán. Celou situaci znázorňuje obrázek \ref{initializer-inherence}.
@@ -740,335 +745,384 @@ Při inicializaci dlaždic je právě tento způsob používán. Celou situaci z
 \label{initializer-inherence}
 \end{figure}
 
-\section{Renderování a interakce}
+\section{Renderování a interakce}\label{renderer-interactor}
 Dalším cílem\aref{aim-rendering} tohoto projektu je oddělit v enginu zobrazovací vrstvu, tak aby ji bylo možné jednoduše nahradit za jinou.
-Se zobrazovací vrstvou nicméně úzce souvisí jakým způsobem bude prováděna interakce s objekty, proto je v této vrstvě zahrnuta i ona. 
+Se zobrazovací vrstvou nicméně úzce souvisí, jakým způsobem bude prováděna interakce s objekty, proto je v této vrstvě zahrnuta i ona. 
 Každý objekt, který to vyžaduje má vytvořený vlastní renderer-interactor na míru. Jak renderer vypadá uvnitř je zpravidla na programátorovi. 
 Nicméně obvyklý přístup je takový, že renderer má referenci na konkrétní renderovaný objekt. Podle jeho zpravidla readonly vlastnosti potom určuje
 chování vykreslovaní nebo interakce. Pokud se jedná o renderery pro statické objekty(např. dlaždice), tak se zpravidla pozicování určuje relativně
 vůči rodiči. Zobrazovací vrstva v tomto enginu nemá stejný grafický výstup jako originální hra, nicméně nic nebrání tomu napsat 
-si tuto vrstvu tak, aby jí odpovídala.
+ tuto vrstvu tak, aby jí odpovídala.
 
 \chapter{Vývojová dokumentace}
-Následující sekce této kapitoly jsou určeny především pro lidi, kteří chtějí porozumět více celému enginu. Především
-však dobře poslouží lidem, kteří by tento engine chtěli použít pro svoji hru nebo by chtěli jen rozšířit některé části
-tohoto enginu Dungeon Masteru.
+Následující sekce této kapitoly popisuje třídy reprezentující jednotlivé části enginu a vztahy mezi nimi.
 
-\section{Jádro enginu}
-Jádro enginu tvoří třída \ccc{DungeonBase}, jak již bylo řečeno, stará se zejména renderování, aktualizování herních objektů,
-inicializaci hráče, načítání a propojování herních map. Pokud má čtenář zájem o úpravu některých z těchto věcí, je tu správně.
-
-\subsection{Renderovaní}
-Tato sekce slouží pro čtenáře, kteří mají zájem o reimplementaci následujících věcí:
+\section{Jádro enginu - \ccc{DungeonBase}}
+Jádro enginu reprezentuje třída \ccc{DungeonBase}. Jak již bylo zmíněno v analýze\vref{engine-core-section}, jádro
+se skládá ze tří důležitých komponent, které do něj lze předat při jeho vytváření. 
+Za těmito komponentami stojí následující rozhraní:
 
 \begin{itemize}
-\item Způsob výběru dlaždic, které se mají používat pro aktualizaci a rendering.
-\item Pořadí v jakém se jednotlivé dlaždice renderují.
-\item Použití osvětlení a celkově nastavení grafického zařízení.
-\item Dosah viditelnosti
-\item atp.
+\item \ccc{ILeader} - reprezentuje hráče a jeho skupinu, kterou lze skrze něj ovládat.
+\item \ccc{IFactories} - obsahuje továrny pro tvorbu předmětů, nepřátelských entit, kouzel, akcí a definuje úrovně osvětlení.
+\item \ccc{IDungeonBuilder} - vytváří pro engine herní úrovně.
 \end{itemize}
 
-\subsubsection{Výběr a vykreslování použitých dlaždic}
-V základní verzi vždy existuje kolekce právě používaných dlaždic. Tato kolekce se znovu naplní vždy, když hráč změní
-pozici. dlaždice se zde vyhledávají algoritmem breath first search.
+Pro reimplementaci hry Dungeon Master jsou pak použity následující třídy \ccc{LegacyLeader},
+\ccc{LegacyFactories}, \ccc{LegacyMapBuilder}. Konkrétní typy implementací rozhraní
+\ccc{ILeader} a \ccc{IDungeonBase} lze předat jádru jako typové parametry.
+Případný front end potom může skrze instanci jádra pracovat přímo s konkrétními typy\cc{frontend-core}. Tento projekt
+neobsahuje žádné uživatelské rozhraní, namísto něho je pro udávání některých příkazu použita konzole \ccc{GameConsole}.
 
-Vlastní algoritmus výběru dlaždic je možný přidat poděděním třídy \ccc{DungeonBase} a overridnutím  metody \ccc{UpdateVisibleTiles}. 
-Metoda uloží do proměnné \ccc{currentVisibleTiles} vybraný seznam dlaždic. Tato proměnná je pak využívána v metodě \ccc{Draw}, kde se
-ale renderují v opačném pořadí kvůli průhlednosti.
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/frontend-core.png}
+\caption{Ilustrace komunikace frondendu s jádrem enginu. }
+\label{frontend-core}
+\end{figure}
+
+\subsection{Správa herních úrovní a dlaždic}\label{engine-level-management}
+Při inicializaci jádra je na objektu hráče zaregistrována událost \ccc{ILeader.LocationChanged}, která
+je vyvolána po přesunu hráče na novou dlaždici. Zaregistrování resp. odregistrování události se provede po
+přiřazení hodnoty do vlastnosti \ccc{Leader}. V obsluze této události se pak provede aktualizace
+viditelných dlaždic pomocí funkce \ccc{UpdateVisibleTiles}. K nalezení viditelných dlaždic tato funkce používá
+třídu \ccc{RendererSearcher}, která je potomkem třídy \ccc{BreathFirstSearch}. Nalezené dlaždice se
+uloží do protected proměnné \ccc{currentVisibleTiles}. V dalším kroku je zavolána funkce 
+\ccc{SetupLevelConnectors}, jenž projde všechny viditelné dlaždice vedoucího do jiných úrovní. Pro
+každou tuto dlaždici dojde pak voláním funkce \ccc{ConnectLevels} k propojení dané dlaždice s další
+úrovní. Poslední akcí je přiřazení úrovně, v které se hráč vyskytuje, do proměnné \ccc{CurrentLevel}.
+Popsané akce ilustruje diagram \ref{core-tileUpdate}.
+
+Funkce \ccc{ConnetLevels} načte danou úroveň pomocí funkce \ccc{LoadLevel}, která tak učiní skrze builder.
+Načtená úroveň je pak uložena do kolekce \ccc{ActiveLevels}, ve které jsou vždy tři poslední úrovně.
+Dlaždice, které propojují herní úrovně, by měli implementovat rozhraní \ccc{ILevelConnector}.
+Funkce \ccc{ConnectLevels} pak nastaví cílovou dlaždici do vlastnosti \ccc{ILevelConnector.NextLevelEnter}.
+Dlaždice implementující toto rozhraní by měla zajistit její propojení s dlaždicí \ccc{ILevelConnector.NextLevelEnter}.
+Všechny funkce zmíněné v této sekci jsou virtuální, a proto je možné jejich chování upravit přetížením.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/core-tileUpdate.png}
+\caption{Ilustrace funkce jádra. }
+\label{core-tileUpdate}
+\end{figure}
+
+\subsection{Aktualizace a rendering}
+MonoGame zajišťuje herní smyčku, skrze kterou je pak třeba na enginu volat funkce \ccc{Update} a \ccc{Draw}.
+
+V každém zavolání funkce \ccc{Update} se provede aktualizace všech herních úrovní v kolekci \ccc{ActiveLevels}.
+Herní úroveň reprezentuje typ \ccc{DungeonLevel}, který má v sobě uložené dlaždice, obtížnost a objekty vyžadující
+aktualizaci - které se u něj zaregistrovaly\vref{engine-core-section}. Funkce \ccc{DungeonLevel.Update} pak 
+zavolá na všech zaregistrovaných objektech  funkci \ccc{IUpdate.Update}. Všechny tyto objekty musí implementovat
+rozhraní \ccc{IUpdate} a musí se sami starat o odregistrování z kolekce, když už aktualizaci nevyžadují. Dále je volána 
+funkce \ccc{ILeader.Update} na hráči. Při každém provedení aktualizace se ještě zavolá virtuální funkce 
+\ccc{UpdateLight}. Proces reprezentuje obrázek \ref{core-update-draw}.
+
+Funkce \ccc{UpdateLight} přiřadí do proměné \ccc{Light} hodnotu určující úroveň světla, která je v setteru
+vlastnosti přepočítána na vzdálenost, po kterou se vykreslují dlaždice. Getter pak vrací již samotnou vzdálenost,
+nikoliv hodnotu světla. Hodnota světla je 0 až 5, kde 0 reprezentuje největší osvětlení. Takto je to nastaveno
+z důvodu kompatibility se zdrojovými kódy originální hry\cite{DMDecompilation}. 
+ Funkce projde všechny šampiony v kolekci \ccc{ILeader.PartyGroup} a nalezne všechny 
+objekty implementující rozhraní \ccc{ILightSource}. Na základě hodnot \ccc{ILightSource.LightPower} vypočte 
+výslednou hodnotu osvětlení. Tento výpočet lze změnit přetížením funkce. 
+
+V každém zavolání funkce \ccc{Draw} se potom provede vykreslení všech dlaždic v kolekci \ccc{currentVisibleTiles}
+skrze jejich renderer\vref{renderer-interactor}. Dále jsou zavolány funkce \ccc{ILeader.Draw} pro vykreslení objektů
+ve správě hráče a virtuální funkce \ccc{DrawMiniMap()}, která provede vykreslení minimapy.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/core-update-draw.png}
+\caption{Ilustrace aktualizace a vykreslování z pohledu jádra. }
+\label{core-update-draw}
+\end{figure}
 
 
-\subsubsection{Nastavení grafického zařízení}
-Nastavení osvětlení a celkově efektu, textury a batcheru pro vykreslovaní minimapy, se provádí v metodě \ccc{InitializeGraphics}.
-Jejím overridnutím je možné provést modifikace. Pokud nehodláte upravovat všechny popsané věci, je doporučené zavolat nejprve funkci rodiče
-která data zinicializuje na základní hodnotu. Samotná minimapa se vykresluje funkcí \ccc{DrawMiniMap}, která se volá klasicky ve funkci 
-\ccc{Draw}. Overridnutím této funkce je tedy možné například minimapu úplně odstranit, tak jako to je v originální hře. V této sekci je ještě
-možná dobré zmínit proměnou \ccc{FogHorizont}, která je v základu používaná jednak jako maximální vzdálenost, po kterou jsou dlaždice hledány, a za druhé slouží v efektu jako 
-hodnota FogHorizontu.
+\section{Dlaždice - \ccc{ITile}}
+Nejobecnější strukturu dlaždice definuje rozhraní \ccc{ITile}. Každá dlaždice musí mít definované sousedy,
+to zajišťuje položka \ccc{Neighbors} typu \ccc{TileNeighbors}. Tento typ implementuje rozhraní \ccc{INeightbors},
+které vyžaduje pouze enumerátor dvojic se směrem a dlaždicí. Směr reprezentuje struktura \ccc{MapDirection}, kde
+se jednotlivé směry dají získat skrze její statické členy. Třída \ccc{TileNeighbor} potom implementuje ještě
+pomocné funkce a vlastnosti pro jednoduší práci se sousedy. Pomocí této vlastnosti se objekty mohou pohybovat
+mezi dlaždicemi. Po vstupu objektu na dlaždici je třeba zavolat na předchozí dlaždici funkci \ccc{OnObjectLeft} a
+na nové dlaždici funkci \ccc{OnObjectEntered}. Díky tomu může dlaždice reagovat na vstup resp. odchod objektů -
+což je použité například pro přepínače na podlaze. Další vlastností dlaždice je \ccc{LayoutManager}, který 
+musí používat entity při pohybu po dlaždicích a mezi nimi. \ccc{LayoutManager} je třída poskytující správu prostoru
+na dlaždici, tak aby každý prostor zaujímala pouze jedna entita\vref{layout-manager-section}. Před pohybem entity je
+tedy ještě třeba zarezervovat skrze \ccc{LayoutManager} cílový prostor na dlaždici a po dokončení pohybu
+je naopak třeba uvolnit prostor předchozí\cc{layout-reserve}. Poslední položkou potřebnou pro pohyb mezi dlaždicemi je vlastnost
+\ccc{IsAccessible}, která určuje, zda lze na dlaždici vstoupit.
 
-\subsection{Inicializace hráče}
-O abstrakci různých způsobů načítaní levelů se stará interface \ccc{IDungeonBuilder}. Instanci implementace tohoto
-rozhraní je nutné předa Dungeonu v konstruktoru. V základu se nové mapy načítají v momentu, kdy některá ze zobrazených
-dlaždic je dlaždice navazující na další level. Takové dlaždice jsou právě dlaždice implementující  rozhraní  \ccc{ILevelConnector}.
-Poslední tři levely získané skrze \ccc{IDungeonBuilder} jsou uložené v kolekci \ccc{ActiveLevels}. Pokud je nutné změnit 
-strategii načítání levelů, je třeba overridovat metody \ccc{SetupLevelConnectors} popř. \ccc{ConnectLevels}. Pro změnu 
-strategie ukládání a mazání aktivních levelů, je třeba podědit třídu \ccc{LevelCollection}. Kterou je pak nutno nastavit
-do vlastnosti \ccc{ActiveLevels}. 
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/layout-reserve.png}
+\caption{Ilustrace pohybu mezi prostory a dlaždicemi. }
+\label{layout-reserve}
+\end{figure}
 
-Následující sekce popisují jaké objekty lze jakým způsobem rozšířit či upravit. O tom jak takové nové objekty potom používat
-pojednává pozdější sekce.
+Pro implementaci funkce přepínačů je třeba zajistit komunikaci mezi dlaždicemi\vref{actuator-message-representation}.
+Za tímto účelem obsahuje dlaždice vlastnosti pro změnu jejího stavu. Buď lze obsah dlaždice aktivovat přímo
+pomocí funkce \ccc{ActivateTileContent} resp. \ccc{DeactivateTileContent} nebo pomocí zaslání zpráv, k jejichž
+příjetí slouží funkce \ccc{AcceptMessageBase}. Konkrétní stav je obsahuje pak vlastnost \ccc{ContentActivated}.
 
-\section{Rozšiřitelnost dlaždic}
-\subsection{Popis dlaždic}
-Nejobecnější strukturu dlaždice definuje interface \ccc{ITile}. Dlaždice tedy musí obsahovat pozici vzhledem
-k~mřížce dlaždic a potom level, ve kterém se nachází. Tyto vlastnosti používají příšery nebo hráč k~určení
-své pozice. Dále obsahuje vlastnosti sloužící k rozhodovaní pohybu entit, předmětů a orientaci příšer. Další částí
-je již zmiňovaný \ccc{LayoutManager}, který slouží k rozdělení prostoru mezi entitami na dlaždici. Podle něj se 
-příšera či hráč rozhoduje, zda může na danou dlaždici vstoupit a obsadit, tak část jejího prostoru. Má také definované
-soused, podle kterých se zase entity rozhodují při pohybu mezi dlaždicemi. Další část API slouží k modifikaci stavu dlaždice.
-Stav jde buď přímo nastavit pomocí volaní odpovídajících funkcí nebo předáním zprávy. Poslední
-část obsahuje metody a události pro vstup a odchod věcí z dlaždice. O volání těchto  funkcí se musí starat samy objekty,
-které chtějí vstoupit či odejít. Takové objekty jsou poté skrze dlaždici aktualizovány, pokud implementují rozhraní
-\ccc{IUpdateable}. To však již musí zařizovat jednotlivé implementace dlaždic, o niž bude řeč v další sekci.
+
+V poslední řadě rozhraní reprezentující dlaždice obsahuje prvky: 
+\begin{itemize}
+\item \ccc{Position} - absolutní pozice od počátku souřadnic,
+\item \ccc{GridPosition} - souřadnice dlaždice na mřížce, 
+\item \ccc{Drawables} - do této kolekce se mohou zaregistrovat objekty implementující rozhraní \ccc{IRenderable}, 
+	které se nechtějí registrovat u dlaždice pomocí funkcí pro vstup a výstup a zároveň se potřebují renderovat, 
+\item \ccc{ObjectEntered} resp. \ccc{ObjectLeft} - události vyvolané při vstupu resp. odchodu objektu,
+\item \ccc{Level} - reference na level, ve kterém se dlaždice nachází,
+\item \ccc{IsInitialized} - určuje, zda je dlaždice plně inicializovaná\vref{level-inicialization},
+\item \ccc{Initialized} - tato událost je dlaždicí vyvolána pouze jednou a to v momentě, kdy jsou všechny její části inicializované.
+		Tuto událost využívají živé entity k určení doby jejich obživnutí.
+\end{itemize}
+
 
 \subsection{Inicializace dlaždic}
-Jak již bylo zmíněno v analýze, k inicializaci dlaždic jsou použity tzv. inicializátory. Inicializátor
+Jak již bylo zmíněno v analýze\vref{level-inicialization}, k inicializaci dlaždic jsou použity tzv. inicializátory. Inicializátor
 obsahuje vlastností, které by normálně byly předány jako parametry v konstruktoru. Ovšem v moment předávaní
-inicializátoru do konstruktoru, inicializátor ještě nemusí být plný. Namísto toho má události \ccc{Initializing}
+inicializátoru do konstruktoru, inicializátor ještě nemusí mít naplněné všechny hodnoty. Namísto toho má události \ccc{Initializing}
 resp. \ccc{Initialized}, které jsou vyvolány při resp. po inicializaci. Na tuto událost je třeba zaregistrovat
 inicializační funkci, která zkopíruje data z inicializátoru do samotného objektu. Pro každou úroveň hierarchie
 dědičnosti jsou určeny zvláštní vlastnosti a zvláštní inicializační události. Rodičovské události  inicializátoru jsou vždy
-po zdědění rodičovského inicializátory zakryty novými inicializačními událostmi pro danou proveň dědičnosti.
+po zdědění rodičovského inicializátoru zakryty novými inicializačními událostmi pro danou úroveň dědičnosti.
 Tento způsob je použit pouze pro inicializaci dlaždic. Pro jiné objekty, může inicializátor sloužit pouze jako 
-objekt udržující parametry. Parametry, které jsou hned v konstruktoru inicializované. To vše záleží na konvice kterou si
-programátor zvolí.
+objekt udržující parametry, které jsou hned v konstruktoru inicializované. 
 
 \subsection{Implementace dlaždic}
-O částečnou implementaci rozhraní \ccc{ITile} se stará třída \ccc{Tile}. Definuje základní layout manager,
-nicméně je ho popřípadě možné overridovat vlastní implementaci. Zejména se pak ale stará o inicializaci 
-pozic na mřížce, levelu a sousedů skrze \ccc{TileInicializator}. Dále abstraktně deklaruje vlastnost
-\ccc{SubItems}, na jejichž objektech, které implementují \ccc{IUpdateable} volá metodu \ccc{Update} skrze
-metodu \ccc{Update} na dlaždici. Abstraktně deklaruje také vlastnosti \ccc{Sides}, kde těmto stranám přeposílá 
-případné zprávy, které přišli na tuto dlaždici skrze metodu \ccc{AcceptMessageBase}. Dále implementuje
-také funkce pro vstup/odchod objektů tím, že vyvolá odpovídající události na dlaždici. Pokud tedy chcete
-volání těchto událostí zachovat, je při případném overridování metod nutné zavolat implementaci rodiče. Všechny
-předchozí popsané funkce je možné overridovat v potomkovi a tak přizpůsobit prováděné akce.
+Částečnou implementaci rozhraní \ccc{ITile} zajišťuje abstraktní třída \ccc{Tile}, která definuje virtuálně \ccc{LayoutManager}.
+Dále abstraktně deklaruje kolekci \ccc{SubItems}, která obsahuje všechny objekty na dlaždici. Objekty, které 
+implementují rozhraní \ccc{IRenderable}, jsou potom skrze tuto kolekci vykreslovány.
+Dlaždice také má tzv. strany, a jsou to buď stěny, strop nebo podlaha\cc{tile-sides}.
+Pro tyto strany pak abstraktně deklaruje kolekci \ccc{Sides}, jejímž stěnám pak přeposílá
+případné zprávy, které přišly na tuto dlaždici skrze metodu \ccc{AcceptMessageBase}.
+Dále implementuje také funkce \ccc{OnObjectEntered} resp. \ccc{OnObjectLeft} tak, že vyvolá jejich odpovídající událost.
+Proto je pří případném přetížení těchto funkcí v potomkovi nutné zavolat implementaci rodiče. Všechny
+předchozí popsané funkce je možné přetěžovat v potomkovi, a tak přizpůsobit prováděné akce.
+V poslední řadě se tento inicializátor stará o inicializaci pozic na mřížce, úrovně a sousedů skrze \ccc{TileInicializator}. 
 
-Přímý generický potomek \ccc{Tile\textlangle TMessage\textrangle} poskytuje již zmiňovanou možnost přijímat
-v potomcích vlastní zprávy. Poděděním tohoto typu, specifikováním typu zprávy v typovém parametru a následnou implementací metody 
-\ccc{AcceptMessage} lze definovat rutinu při příjmu zprávy. Tato třída overriduje a zároveň uzavírá metodu rodič \ccc{AcceptMessageBase},
-která deleguje zprávy typu \ccc{TMessage} do metody \ccc{AcceptMessage}. Naopak základní implementace metody \ccc{AcceptMessage}
-je zavolání právě rodičovské implementace \ccc{AcceptMessageBase}. Takže při případném overridování této funkce
-stojí za zamyšlení, zda-li  je třeba volat implementaci rodiče či nikoliv. Všechny dlaždice, které dědí ze třídy
-popsané v tomto odstavci vytváří potomky dva. Jednoho pro případně rozšiřitele, která ponechává 
-typový parametr.A druhá, která definuje typový parametr na obecný typ \ccc{Message}. Ještě stojí z zmínku,
-že každá zpráva musí dědit právě ze třídy \ccc{Message}.
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/tile-sides.png}
+\caption{3D ilustrace dlaždice a jejích stran. }
+\label{tile-sides}
+\end{figure}
 
-\subsubsection{Dlaždice podlaha}
-Za zmínku ještě stojí přímý potomek třídy \ccc{FloorTile\textlangle TMessage\textrangle} a 
-to \ccc{FloorTile\textlangle TMessage\textrangle}.  Tato třída se stará jak o interakce, tak rendering
-zdi a podlahy. Stará se tady například o možnost pokládaní předmětů na zem, či u zdí do případných výklenků. 
-Dále se stará  o zobrazování a aktivování případných přepínačů. Z toho důvodu, pokud se chystáte
-vytvářet nějakou novou dlaždici, je dobré se zamyslet, jestli  nevyužít již tuto implementaci. Nicméně nic
-nebrání tomu podědit přímo z \ccc{Tile\textlangle TMessage\textrangle}, pokud by tato implementace z
-nějakého důvodu nevyhovovala. Při drobných úpravách je zase možné třídě podstrčit pozměněné-poděděné implementace 
-jejich stran, ať už zdí nebo podlahy. Třída deleguje veškeré akce vstupu/odchodu do samotné podlahy
-typu \ccc{FloorSide}. Stejně tak implementace kolekce  \ccc{SubItems} se deleguje na podlahu.
+Přímý generický potomek předchozí třídy \ccc{Tile\textlangle TMessage\textrangle}, kde \ccc{TMessage} je alespoň \ccc{Message},
+poskytuje možnost přijímat v potomcích zprávy vlastního typu\vref{actuator-representation}. V případných potomcích teto třídy 
+lze naimplementovat funkci \ccc{AcceptMessage}, která přijímá zprávy typu \ccc{TMessage}. Tato třída přetěžuje a zároveň 
+uzavírá metodu \ccc{AcceptMessageBase} tak, že deleguje zprávy typu \ccc{TMessage} do metody \ccc{AcceptMessage}. 
+Naopak základní implementace metody \ccc{AcceptMessage} je zavolání právě rodičovské implementace \ccc{AcceptMessageBase}. 
+Při případném přetěžování této funkce je třeba rozhodnout, zda je nutné volat implementaci rodiče. Všechny dlaždice,
+které dědí ze třídy \ccc{Tile\textlangle TMessage\textrangle}, vytváří dva potomky. První z nich je pro případné rozšiřitele,
+a proto ponechává typový parametr, druhý pak specifikuje typový parametr na obecný typ \ccc{Message}.
 
-\subsubsection{Další dlaždice}
-Další dlaždice již převážně využívají dědičností právě již zmíněnou předchozí podlahu. Výjimkou jsou například schody.
-Schody jsou příkladem  dlaždice, který implementuje rozhraní  \ccc{ILevelConnector},  které požaduje implementaci 
-následujících vlastností
+\subsubsection{Dlaždice podlaha - \ccc{FloorTile\textlangle TMessage\textrangle}}
+Tato dlaždice implementuje funkci všech jejích stran\cc{tile-sides}. Na stranách, kde
+nemá dlaždice sousedy jsou přidány stěny, které mají podporu pro přepínače\vref{dungeon-objects} a dekorace\vref{actuator-analyza}.
+Dále je přidána strana na místo stropu a podlahy. Na stranu s podlahou pak může obsahovat přepínač a je na ni možné odkládat
+či z ni odebírat předměty. Dlaždice také deleguje veškeré vstupy resp. odchody objektů do samotné strany podlahy
+typu \ccc{FloorSide}\vref{tile-sides-section} a to kvůli podpoře odkládání předmětů na zem.
+
+\subsubsection{Další implementace dlaždic}
+Další dlaždice převážně využívají dědičností dlaždici podlahy. Výjimkou jsou například schody,
+které jsou zároveň příkladem dlaždice implementující rozhraní \ccc{ILevelConnector}. Engine při načtení 
+levelu nastaví vlastnost \ccc{ILevelConnector.NextLevelEnter} na odpovídající dlaždici\vref{engine-level-management}.
+Při změně předchozí vlastnosti provede dlaždice nastavení sousedů vedoucích do dalšího levelu a používá k tomu vlastní 
+implementaci sousedů přetížením vlastnosti \ccc{Neighbors}. Tato možnost je použita ještě u jámy, kvůli propadu do nižšího levelu. 
+Rozhraní spojující levely je ještě použito u teleportu, kde při vstupu správného objektu na teleportační dlaždici 
+dojde k teleportaci objektu na dlaždici \ccc{ILevelConnector.NextLevelEnter}. Další dlaždicí jsou dveře, které opět 
+dědí z podlahy a navíc implementují rozhraní \ccc{IHasEntity}. Toto rozhraní obsahuje vlastnost typu \ccc{Entity},
+která reprezentuje neživou entitu na dlaždici. S touto entitou můžou pak pracovat akce, kterými lze dveře rozbít.
+Poslední dlaždici reprezentuje třída \ccc{LogicTile}, na kterou nelze vstoupit a slouží pouze jako podpora
+pro přepínače\vref{actuators-implementation}.
+
+\subsection{Strany dlaždic - \ccc{ITileSide}}\label{tile-sides-section}
+Jak již bylo naznačeno\cc{tile-sides}, dlaždice mohou mít strany, které jsou buď stěny, podlaha nebo strop.
+Každou tuto stranu reprezentuje samostatný objekt, který má svůj renderer-interactor\vref{renderer-interactor}. 
+Toto rozhraní vyžaduje pouze položku pro renderer a funkci pro přijímání základních zpráv \ccc{Message}. 
+Tato funkce je zde z kompatibilních důvodu s originální hrou, kdy texty na zdech mohou být těmito 
+zprávami skryty či zobrazeny.
+
+Následuje seznam jednotlivých implementací:
 \begin{itemize}
-\item cílový level
-\item pozice cílové dlaždice v cílovém levelu
-\end{itemize}
 
-Jak už bylo zmíněno engine potom při načtení levelu nastaví poslední položku tohoto interface 
-\ccc{NextLevelEnter} na odpovídající dlaždici. A je už na samotné dlaždici, aby při změně této vlastnosti udělala 
-potřebné akce. U schodů je to například nastavení sousedů vedoucích do dalšího levelu. Právě zde se například hodí 
-overridování vlastnosti \ccc{Neighbors} vlastní třídou starající se o sousedy. Tato možnost je použita ještě u jámy,
-kvůli propadu do nižšího levelu. Rozhraní spojující levely je pak ještě u teleportu, kde při vstupu na teleportační
-dlaždici a splnění požadavku teleportu se tento objekt teleportuje na jinou dlaždici. Za zmínku ještě stojí existence
-rozhraní \ccc{IHasEntity}, které obsahuje vlastnost typu entity. Implementuje ho například dlaždice typu dveře,
-která vrací jako entity dveře. Tímto způsobe lze pak například útokem dveře rozbít, protože jsou definované jako 
-entita s vlastností zdraví, odolnost atp. Nikde jinde v enginu toto využito není, tím více prostoru mají případní
-rozšiřité.
+\item \ccc{TileSide} - reprezentuje pouze holou stěnu bez žádných funkcí, která obsahuje
+	pouze vlastnost typu \ccc{MapDirection} určující její pozici. 
 
-\subsection{Strany dlaždic}
-Jak již bylo naznačeno v předchozích sekcích, dlaždice mohou mít strany. To mohou být ať už zdi, tak i podlaha nebo strop.
-Každou tuto stranu reprezentuje samostatný objekt, který má samostatný renderer-interactor. Poděděním z těchto hotových tříd
-si lze tedy ušetřit nějakou práci. Není to však nutnost, je možné si pro své dlaždice implementovat vlastní
-strany implementací rozhraní \ccc{ITileSide}. Toto rozhraní vyžaduje pouze položku pro renderer a z kompatibilních důvodů
-pro starou verzi požaduje, aby byla schopna přijímat zprávy \ccc{Message}.
+\item \ccc{ActuatorTileRenderer} - přímý potomkem předchozí strany, který navíc obsahuje přepínač a renderer, 
+	jenž se navíc stará o jeho vykreslování a interakci. 
 
-\subsubsection{Jednotlivé implementace}
-Třída \ccc{TileSide} slouží jako rodič všech zdí implementovaných ve hře. Nereaguje nijak na interakci
-hráče a její renderer pouze renderuje zdi  texturu na správné místo, popř. dekoraci.
+\item \ccc{TextTileSide} - opět přímý potomek první strany, jejíž renderer navíc zobrazuje na zdi text. Viditelnost textu lze změnit zasláním zprávy
+	této straně. 
 
-Jejím přímým potomkem je třída \ccc{ActuatorTileRenderer},ta navíc obsahuje přepínač a její renderer se navíc
-stará o jeho vykreslování a interakci.
-
-Dalším potomkem je třída \ccc{TextTileSide}, jejíž renderer navíc zobrazuje na zdi text, v závislosti na tom,
-zda-li je viditelný. Viditelnost textu lze změnit zasláním zprávy s odpovídajícími informacemi této straně.
-
-Předposlední a nejsložitější stranou je třída  \ccc{FloorTileSide}.  Tato strana obsahuje čtyři úložiště na předměty,
-kam je může uživatel pokládat. Je to jedno z míst, kde je potřeba komunikovat s rodičovskou dlaždicí, k tomu
+\item \ccc{FloorTileSide} - tato strana obsahuje čtyři úložiště,
+na které může hráč pokládat předměty. Je to jedno z míst, kde je potřeba komunikovat s rodičovskou dlaždicí, k tomu
 slouží událost \ccc{SubItemsChanged}, která se vyvolá vždy, když byl nějaký předmět odebrán nebo přidán.
-Pomocí enumerátoru tohoto objektu je potom možné vyenumerovat obsažené věci. Předměty lze pak na podlahu přidávat dvěma 
-způsoby, jednak přímo z ruky hráče pomocí renderer-interactoru do úložného prostoru na podlaze. Toto
-přidání opět pomocí události informuje přes podlahu rodičovskou dlaždici. Další způsob je zavolání metody 
-\ccc{OnObjectEnter} resp. \ccc{OnObjectLeft},  které také vyvolají notifikační událost o změně a přidají objekt do nějakého prostoru.
-Tento způsob je použit například u teleportu, kde se vědci přidávají do dané dlaždice voláním metody \ccc{OnObjectEnter}.
-Tato metoda pak volá odpovídající metodu podlahy. Poslední stranou je  třída \ccc{ActuatorFloorTileSide}, která pouze navíc přidává 
-nášlapný přepínač.
+Pomocí enumerátoru tohoto objektu je potom možné získat obsažené objekty. Předměty lze pak na podlahu přidávat dvěma 
+způsoby, přičemž oba pomocí události informují rodičovskou dlaždici o změně jejího obsahu. První možností je položení 
+předmětu přímo z ruky hráče pomocí renderer-interactoru. Druhý způsob je zavolání metody \ccc{OnObjectEntered} resp. \ccc{OnObjectLeft} 
+objevující se například při teleportaci nebo hodu předmětu. Celou situaci zobrazuje obrázek \ref{floor-side}.
 
-\section{Renderery}
-Jelikož každá dlaždice a každé strany dlaždic mají renderery, je jím čas věnovat tuto sekci. Všechny tyto objekty
-a mnoho dalších k tomuto účelu implementují rozhraní \ccc{IRenderable}, které pouze vyžaduje  položku typu \ccc{IRenderer}. 
-Stěžejní funkce tohoto rozhraní jsou funkce \ccc{Render} a \ccc{Interact}. 
+\item \ccc{ActuatorFloorTileSide} - přímý potomek předchozí strany podlahy, který navíc přidává na podlahu nášlapný přepínač.
 
-Nejdůležitější z parametrů těchto funkcí je dosavadní transformace. Tj. obsahuje složeninu transformací složenou z jednotlivých
-transformací na cestě z kořene stromu reprezentující závislosti renderer na sobě. Takže například kořen strumu bude renderer
-dlaždice, jeho syn bude strana dlaždice, její syn bude výklenek ve zdi a její syn bude předmět ve
-výklenku(list). Při takovéto reprezentaci se pak musí všechny renderované objekty posunout či jinak transformovat vůči jejich rodiči.
-Tzn. každý renderer si musí zvolit pozicovací konvenci, kterou pak musí závislé renderery dodržovat. Tento způsob renderování je požíván u statických objektu jako
-jsou dlaždice, zdi, výklenky a podobně. Pro pohybující objekty je používaná absolutní pozice a renderery
-těchto objektů transformují objekty přímo na jejich pozici. Volba mezi těmito dvěma případy je na programátorovi.
-
-Renderery jsou vždy dělány na míru objektu, který mají renderovat. Tzn. často se renderer v konstruktoru 
-inicializuje instancí s konkretním typem. Třída této instance pak má zpravidla readonly vlastnosti,
-podle kterých renderer určuje, co má vykreslovat. Jelikož implementovaná grafická vrstva je pouze ve formě proof of concept,
-je co nejjednodušší a neobsahuje například animace. Nicméně ze zde popsané povahy renderer je jasné, že 
-toho může být dosaženo vytvořením událostí na renderovaných objektech, které si renderer zaregistruje.
-Dovedu si představit, že by šla s takovýmto návrhem velmi jednoduše udělat grafická vrstva, která bude
-velmi pěkná, bude mít kvalitní šD modely animace. Zabralo by to jen spoustu času a byla by k tom u potřeba horda grafiků.
-
-Při podědění nějakého rendereru je třeba zjistit dosavadní transformaci, která je normálně vypočítána v rodiči.
-K tomuto záměru slouží funkce \ccc{GetCurrentTransformation}, která bere jako parametr dosavadní transformaci.
-Poděděním jež existujícího rendereru lze ušetřit mnoho práce a opakujícího se kódu. Proto je takový přístup v této implementaci často použit.
-Funkce popsané na začátku sekce jsou samozřejmě virtuální a jdou overridovat,
-obsahují taky jeden parametr typu \ccc{object} pro případné předávaní dodatečných dat mezi renderery. Tohoto parametru není nikde v této implementaci využito.
-
-Jelikož renderery zásadně mění vzhled a pozici všech věcí, je nutné tuto vrstvu propojit i s interakcí.
-Interakční funkce má skrze parametr typu \ccc{ILeader}  přístup k položce interactor, která je typu \ccc{object}.
-Daný renderer musí vědět, pro jaký typ interactoru je a na ten si ho musí vhodně přetypovat. V této implementaci je použit paprsek (\ccc{Ray}). 
-Celý tento koncept interactoru by šel sice udělat genericky, ale prolínal by se celou strukturou rendererů a z toho
-důvodu jsem se rozhodl v tomto místě ustoupit. A udělat situaci jednoduší na úkor kontroly za překladu.
-
-
-\section{Přepínače}
-\subsection{Úvod}
-Jak již bylo řečeno, přepínače se skládají z jednotlivých senzorů. Senzory pak mohou provádět následující akce:
-
-\begin{itemize}
-\item změna stavu  dlaždice
-\item proházení senzorů přepínače
-\item přidání zkušeností hráči
 \end{itemize}
 
-Senzory mohou být aktivovány:
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/floor-side.png}
+\caption{Ilustrace komunikace podlahy s její dlaždicí při přidávání předmětu. }
+\label{floor-side}
+\end{figure}
 
+
+\section{Přepínače - \ccc{IActuatorX}}\label{actuators-implementation}
+
+Za přepínači stojí rozhraní \ccc{IActuatorX}, které vyžaduje pouze API pro příjem zpráv typu \ccc{Message} - pro dodržení
+kompatibility s původní hrou. Toto rozhraní pak implementuje třída \ccc{ActuatorX}, která reprezentuje přepínače používající 
+pro jejich funkci senzory z originální hry\vref{actuator-analyza}. Kromě toho dále existují implementace přepínačů, které jsou provedeny
+jiným způsobem.
+
+\subsection{Implementace obecných přepínačů}
+Tato sekce pojednává o přepínačích, které ke své funkci nepoužívají senzory. V tomto enginu jsou použity pro 
+dekorace, které provádějí nějakou funkci. K těmto dekoracím v originální hře nenáleží žádné senzory. 
+Studií dekompilovaného kódu originální hry\cite{DMDecompilation} se ukázalo, že některé akce jsou fixovány 
+na konkrétní typy dekorací. Například pro dekorace s výklenky je naimplementována možnost vkládaní předmětů.
+Jelikož tyto dekorace mohou být i součástí senzorů, bylo zapotřebí, aby objekty reprezentující dekorace
+implementovali rozhraní \ccc{IActuatorX}, a tak bylo možné naimplementovat funkce pro jejich interakci.
+
+U těchto přepínačů lze zvolit jejich vnitřní formát. Existující implementace jsou:
 \begin{itemize}
-\item Kliknutím na dekoraci senzoru, pokud je senzor na zdi a je to poslední senzor přepínače.
-\item Zprávou od vyslanou jiným senzorem.
+\item \ccc{DecorationItem} - stará se pouze o rendering dekorace, který zajišťuje třída \ccc{DecorationRenderer}. 
+\item \ccc{Alcove} - reprezentuje dekoraci výklenku, o jehož rendering a interakci se stará třída \ccc{AlcoveRenderer}. 
+\item \ccc{ViAltairAlcove} - potomek třídy \ccc{Alcove}, který se navíc stará o reinkarnaci šampionů.
 \end{itemize}
-Tento typ přepínačů odpovídá přepínačům v původní hře.
-
-Dále engine povoluje nové přepínače, který nemusí používat senzory. Je tedy čistě na programátorovi, jakým 
-způsobem se bude přepínač aktivovat. 
 
 \subsection{Implementace přepínačů se senzory}
-Za přepínačem stojí navenek interface \ccc{IActuatorX}. Toto rozhraní pouze vyžaduje API pro příjem 
-zpráv typu  \ccc{Message} pro dodržení kompatibility s původní hrou. Jelikož ostatní aktivace záleží
-na typu přepínače. Protože například nášlapný přepínač se aktivuje jiným způsobem než přepínač na zdi.
+Tyto přepínače se skládají z řady senzorů, které mohou provádět následující akce:
+
+\begin{itemize}
+\item změna stavu vzdálené dlaždice,
+\item zarotování sekvencí senzorů přepínače\cc{actuator-rotation},
+\item přidání zkušeností hráči.
+\end{itemize}
+
+Při pokusu o aktivaci přepínače dojde postupně, k aktivaci všech jeho senzorů.
+Senzory pak mohou být aktivovány následujícími způsoby:
+
+\begin{itemize}
+\item kliknutím myši na dekoraci senzoru, pokud je senzor na zdi, 
+\item vstupem resp. odchodem hráčovi skupiny na dlaždici resp. z dlaždice, 
+\item zprávou vyslanou jiným senzorem.
+\end{itemize}
+
+Více viz sekce \ref{actuator-analyza}.
 
 \subsubsection{Implementace senzorů}
-Senzory provádějí samotné akce přepínačů popsané v úvodu. Odpovídající akce jsou provedeny pouze pokud
-byl daný senzor aktivován. Po kliknutí na přepínač, dojde postupně u všech senzorů o pokus jejich aktivace.
-Každý typ senzoru má jinou podmínku aktivace. Senzory se dělí na senzory použité na podlaze,  na zdi a
+
+Každý typ senzoru má jinou podmínku aktivace. Senzory se dělí na senzory použité na podlaze, zdi a
 na speciální tzv. logické senzory.
 
-Hlavní třídou reprezentující přepínač je třída \ccc{SensorX}. Tato třída obsahuje některé společné funkce,
-které může využít každý potomek. Dále take definuje vlastnosti, které lze rozdělit do tří skupin.
-Tyto vlastnosti jsou inicializovány inicializátorem, který slouží pouze jako datový nosič. Jde o inicializátor
-typu \ccc{SensorInitializerX}. Pro použití v potomcích se můžou použít poděděné verze tohoto inicializátoru.
-Následuje seznam vlastností.
+Hlavní třídou reprezentující senzor je abstraktní třída \ccc{SensorX}. Tato třída obsahuje společné funkce,
+které jsou využívány jejími potomky. Dále také definuje vlastnosti, které lze rozdělit do tří skupin.
+Tyto vlastnosti jsou inicializovány inicializátorem\vref{level-inicialization}, který slouží pouze jako datový nosič.
+Jde o inicializátor, který reprezentuje třída \ccc{SensorInitializerX}. Pro inicializaci potomků jsou 
+používány poděděné implementace tohoto inicializátoru.
 
-Obecné vlastnosti:
+Vlastnosti senzorů třídy \ccc{SensorX}:
 \begin{itemize}
-\item Opoždění akce - čas v milisekundách, po kterém se provede případná akce 
-\item Informace, zda-li je efekt určen lokálně pro rodičovskou dlaždici, či pro nějakou jinou.
-\item Flag opakovatelnost - každý senzor ji používá trochu jinak, ale většinou pokud je true, tak se obrátí cílová akce
-\item Na jedno použití - senzor se po první aktivaci zablokuje, a není dále používán.
-\item Flag určující, zda po aktivaci dojde k přehrání zvuku. (v tomto enginu není použit)
-\end{itemize}
+\item Obecné vlastnosti:
+	\begin{enumerate}
+	\item \ccc{Delay} - opoždění akce v milisekundách, po kterém se provede akce senzor.
+	\item \ccc{LocalEffect} - informace, zda-li je akce určena lokálně pro rodičovskou dlaždici nebo pro vzdálenou.
+	\item \ccc{OnceOnly} - informace, zda-li je senzor možné aktivovat pouze jednou.
+	\item \ccc{RevertEffect} - u většiny přepínačů obrátí efekt výsledné akce, nicméně přesný význam si stanový vždy konkrétní senzor. 
+	\item \ccc{Audiable} - informace určující, zda po aktivaci dojde k přehrání zvuku. (v tomto enginu není použit)
+	\item \ccc{GraphicsBase} - reprezentuje dekoraci a zároveň přepínač obecného typu implementující rozhraní \ccc{IActuatorX}.
+			Pokus o aktivaci tohoto přepínače se provádí pouze pokud je zobrazena dekorace\cc{decoration-actuator}.
+	\end{enumerate}
 
-Vlastnosti pro lokální akci:
-\begin{itemize}
-\item Flag určující, zda-li se má seznam senzorů při aktivaci zarotovat.
-\item Flag určující, zda-li se mají hráči po aktivaci přidat zkušenosti.
-\end{itemize}
-
-Vlastnosti pro vzdálenou akci:
-\begin{itemize}
-\item Efekt - Určuje jaký efekt má odeslaná zpráva po aktivaci. (Akce může být obrácená pomocí flagu popsaného v obecných vlastnostech)
-	Hodnoty efektu jsou následující:
+\item Vlastnosti pro lokální akci:
 	\begin{itemize}
-	\item Aktivace 
-	\item Deaktivace
-	\item Přepnutí stavu
-	\item Drž - Tento stav nelze odeslat ve zprávě a je na senzoru, aby ho interpretoval pomocí aktivace či deaktivace.
+	\item \ccc{Rotate} - informace určující, zda-li se má seznam senzorů při aktivaci zarotovat\cc{actuator-rotation}.
+	\item \ccc{ExperienceGain} - informace určující, zda-li se mají hráči po aktivaci přidat zkušenosti.
 	\end{itemize}
-\item Směr použitý v odeslané zprávě. Směr může být interpretován jako číslo. (Lze získat pomocí \ccc{MapDirection.Index})
-\item Reference na cílovou dlaždici.
+
+\item Vlastnosti pro vzdálenou akci:
+	\begin{itemize}
+	\item \ccc{Effect} - určuje jaká zpráva je odeslaná na cílovou dlaždici. (Akce zprávy může být obrácená pokud je nastavena vlastnost \ccc{RevertEffect}).
+	Hodnoty efektu jsou následující:
+		\begin{itemize}
+		\item Aktivace 
+		\item Deaktivace
+		\item Přepnutí stavu
+		\item Drž - tento stav nelze odeslat ve zprávě a je na senzoru, aby ho interpretoval pomocí aktivace či deaktivace.
+		\end{itemize}
+	\item \ccc{Specifier} - směr použitý v odeslané zprávě, který může být interpretován jako číslo(lze získat pomocí \ccc{MapDirection.Index}).
+	\item \ccc{TargetTile} - reference na cílovou dlaždici.
+	\end{itemize}
 \end{itemize}
 
-Kromě předchozích vlastností obsahuje tato třída funkce pro vykonání akcí senzorů. Funkce  \ccc{TriggerEffect} odešle zprávu 
-podle vlastností senzoru na danou pozici, pokud je cíl vzdálený. Jinak provede akci pro lokální efekt. Lokální efekt lze 
+Kromě předchozích vlastností obsahuje tato třída funkce pro vykonání akcí senzorů. Pokud je efekt senzoru vzdálený, funkce  \ccc{TriggerEffect} odešle zprávu 
+na danou cílovou dlaždici. Jinak provede akci pro lokální efekt, který lze 
 také vykonat přímo zavoláním funkce \ccc{TriggerLocalEffect}. Tyto funkce lze použít pouze v potomcích.
 
-Dále se senzory dělí na senzory použité na zemi resp. na zdi. Tomu odpovídají třídy  \ccc{FloorSensor} a \ccc{WallSensor}.
-Obě tyto třídy mají funkci \ccc{TryTrigger}, která se stará o provedení případného efektu. Zda-li se efekt provede stanoví
-funkce \ccc{TryInteract}. Pro každou variantu mají funkce odlišné parametry. Pokud tedy chcete vytvořit vlastní senzor,
-implementujte funkci \ccc{TryInteract}. Tato funkce bude volána z funkce \ccc{TryTrigger} a bude tedy dělat obecnou funkcionalitu 
-odeslání zprávy a určení výsledného efektu zprávy. Pokud chcete změnit i tuto funkcionalitu, poskytněte vlastní implementaci 
-i pro tuto funkci.
+Následující třídy jsou přímými potomky třídy \ccc{SensorX}:
 
-Kromě předchozích senzorů ještě existují tzv. logické senzory. První z nich je \ccc{LogicGateSensor}, který funguje 
-jako logické hradlo. Celkem má k dispozici osm bitů. Čtyři  nich jsou nastaveny na nějaké hodnoty a ostatní na nuly. 
-S druhou čtveřicí lze manipulovat pomocí zpráv. Index směru zprávy určuje kolikátý bit se má ovlivnit. A tento bit
-je pak ovlivněn akcí zprávy. Pokud se pak stane, že jsou obě čtveřice stejné, je vyvolaný efekt senzoru. Dalším
+\begin{enumerate}
+\item\label{floor-tile-sensor} \ccc{FloorSensor} - tyto senzory lze vložit pouze do přepínačů, které mohou být na podlaze.
+\item\label{wall-tile-sensor} \ccc{WallSensor} - tyto senzory lze vložit pouze do přepínačů, které mohou být na stěně.
+\item \ccc{LogicGateSensor} resp. \ccc{CounterSensor} - pro tyto senzory existuje speciální dlaždice \ccc{LogicGateTile}
+\end{enumerate}
+
+Senzory z bodu \ref{floor-tile-sensor} a \ref{wall-tile-sensor} mají funkci \ccc{TryTrigger}, která se pokusí senzor 
+aktivovat a pokud uspěje, stará se o provedení efektu. Zda-li se senzor aktivuje stanoví abstraktní funkce \ccc{TryInteract},
+kterou implementují potomci. Pro každou variantu senzoru mají funkce odlišné parametry. Pokud je třeba modifikovat způsob 
+provedení výsledného efektu, je možné funkce \ccc{TryTrigger} přetížit.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/decoration-actuator.png}
+\caption{Ilustrace struktury přepínače se senzory.}
+\label{decoration-actuator}
+\end{figure}
+
+
+Kromě předchozích senzorů ještě existují tzv. logické senzory(viz \ref{floor-tile-sensor}). První z nich \ccc{LogicGateSensor} funguje 
+jako logické hradlo, které má k dispozici osm bitů. Čtyři z nich jsou nastaveny při designu na hodnoty a ostatní na nuly. 
+S druhou čtveřicí lze pak manipulovat pomocí zpráv. Index směru zprávy určuje kolikátý bit se má ovlivnit. A tento bit
+je pak ovlivněn akcí zprávy. Pokud jsou obě čtveřice stejné, je vyvolán efekt senzoru. Dalším
 senzorem je \ccc{CounterSensor}, který má dané číslo. Aktivační zprávy toto číslo poté navyšují a deaktivační zprávy
-ho snižují. Pokud je číslo  nula, je vyvolaný efekt.
+ho snižují. Pokud je číslo  nula, je vyvolán efekt.
  
-
 \subsubsection{Implementace přepínačů používající senzory}
-Rodiče všech přepínačů kompatibilních originální hře tvoří třída \ccc{Actuator}. Tato třída poskytuje
-pouze společnou rutinu pro zarotování senzory přepínače. Lze vyvolat pouze z potomků. Zda-li se mají
-senzory zarotovat určuje dle vlastnosti  \ccc{Rotate}, která se poté nastaví na false. Tato funkce se
-volá z potomků pokud proběhl pokus o aktivaci nějakého senzoru.
+
+Rodiči těchto přepínačů je třída \ccc{Actuator}. Tato třída poskytuje funkci pro zarotování senzory přepínače, která
+lze vyvolat pouze z potomků. Zda-li se mají senzory zarotovat se určuje nastavením vlastnosti \ccc{Rotate}, která se po jeho 
+provedení nastaví zpět na false. Samotné zarotování se pak provede zavoláním funkce \ccc{ProcessRotationEffect}.
 
 Prvním potomkem předchozí třídy je třída \ccc{FloorActuator}, která může obsahovat pouze senzory určené
 na podlahu tj. \ccc{FloorSensor}. Pokus o její aktivaci se provádí funkcí \ccc{Trigger}. Jako první parametr se jí předává objekt,
-který vstupuje/odchází z dlaždice. Potom seznam všech objektů na dlaždici a naposled informace zda objekt
-vstupuje či vystupuje. Pro přepínač je vytvořena speciální podlaha \ccc{ActuatorFloorSide}, která se stará 
-o volání zmíněné funkce.
+který vstupuje resp. odchází z dlaždice, dále seznam všech objektů na dlaždici a naposled informace, zda objekt
+vstupuje či odchází. Pro přepínač je vytvořena speciální podlaha \ccc{ActuatorFloorSide}, která se stará 
+o volání funkce \ccc{Trigger}.
 
-Dalším potomkem je třída \ccc{WallActuator}, která může obdobně obsahovat pouze senzory určené na zeď tj. \ccc{FloorSensor}.
-Pokus o její aktivaci se provádí opět funkcí \ccc{Trigger}, která bere jediný parametr typu \ccc{ILeader}. Pro přepínač
-již není vytvořena žádná speciální strana dlaždice, ale je použita strana přijímající obecné přepínače \ccc{ActuatorWallTileSide}.
-Funkce \ccc{Trigger} je pak volána skrze renderer dané strany.
+Dalším potomkem je třída \ccc{WallActuator}, která může obdobně obsahovat pouze senzory určené na zeď tj. \ccc{WallSensor}.
+Pokus o její aktivaci se provádí opět funkcí \ccc{Trigger}, která má jediný parametr typu \ccc{ILeader}. Pro přepínač
+je určena strana \ccc{ActuatorWallTileSide}. Funkce \ccc{Trigger} je pak volána skrze renderer dané strany. 
 
-Poslední speciální implementací je třída \ccc{LogicActuator}, která může obsahovat již zmíněné logické senzory.
-O komunikaci s jejími senzory se stará rodič, pomocí zasílání zpráv. Pro tento přepínač je vytvořená speciální dlaždice, která není 
-odnikud přístupná. Tato dlaždice je reprezentovaná třídou \ccc{LogicTile}. 
+Předchozí dva přepínače se také starají o interakci s přepínačem dekorace posledního senzoru\cc{decoration-actuator}
 
-\subsection{Implementace obecných přepínačů}
-Tato sekce pojednává přepínačích, které ke své funkci nepoužívají senzory. Jejich vznik byl podnícen snahou, dát
-programátorovi větší svobodu při tvorbě přepínačů, nicméně zároveň řeší následující problém. Kromě standardních
-dekorací v se v dungeonu vyskytují dekorace, které provádějí nějakou funkci po kliknutí na ně. K těmto dekoracím však v originální
-hře nenáleží žádné senzory. Jedná se o tzv. náhodné dekorace, kdy každá zeď má definováno, zda může obsahovat náhodné dekorace.
-Při generování mapy se pak s určitou pravděpodobností dekorace na zeď dá či nikoliv. Z toho důvodu tento engine
-neobsahuje stejné dekorace na stejných místech, protože není znám náhodný generátor k tomu použitý. Nicméně zpět 
-k problému akcí po kliknutí na dekoraci. Studii dekompilovaného kódu originální hry  (viz.\cite{DMDecompilation}) se ukázalo,
-že některé akce jsou fixovány na konkrétní typy dekorací. Takže například v dekorace s výklenky mají napevno implementovaný 
-kód umožnující vkládaní předmětů do výklenku. Dalším příkladem jsou fontánky, které naplňují lahve s vodou. Posledním příkladem
-speciální dekorace je Vi Altair výklenek, který dokáže po vložení kostí oživit šampiona. Jelikož tyto dekorace
-mohou být i součástí senzorů, bylo zapotřebí udělat kolem samotných dekorací wrapery, které zajišťují případné akce.
-Tyto wrapery jsou tedy implementací přepínačů tj. rozhraní \ccc{IActuatorX}, kdy dekorace bez akce neprovádějí žádnou akci a dekorace s nějakou akcí
-danou akci provádějí. O samotné vyvolání interakce se opět musí postarat renderery. Takže zmiňované senzory jsou vlastně přepínače v přepínačích. 
+Poslední speciální implementací je třída \ccc{LogicActuator}, která může obsahovat logické senzory.
+Komunikace se senzory probíhá pomocí zasílání zpráv. Pro tento přepínač je vytvořena speciální dlaždice,
+na kterou nelze hráčem vstoupit. Tato dlaždice je reprezentována třídou \ccc{LogicTile}. 
 
-Obecné přepinače tedy nemají nikterak napevno zvolený formát, je čistě na programátorovi, jak implementuje uvnitř jejich funkci a 
-jakým způsobem bude s přepínači prováděna interakce. Existující implementace tedy jsou \ccc{DecorationItem}, která
-neprovádí žádnou interakci, ale pouze rendering o který se stará \ccc{DecorationRenderer}. Dále jde o třídu \ccc{Alcove},
-která reprezentuje výklenek a má odpovídající \ccc{AlcoveRenderer}. A poslední z nich je \ccc{ViAltairAlcove}, který dědí
-ze třídy \ccc{Alcove} a stará se o již zmiňovanou reinkarnaci šampionů.
- 
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/actuator-sensor-hierarchii.png}
+\caption{Ilustrace hierarchie přepínačů a senzorů.}
+\label{actuator-sensor-hierarchii}
+\end{figure}
+
 \section{Herní entity}
-Za deklarací neživých entit stojí rozhraní \ccc{IEntity}. Definuje pouze funkci pro získání vlastnosti dané entity.
-Za živými entitami stojí naopak rozhraní \ccc{ILiveEntity}, která navíc disponuje funkcí pro získání schopností. Dále
-deklaruje:
+
+Za deklarací neživých entit stojí rozhraní \ccc{IEntity}, které definuje funkci \ccc{GetProperty} pro získání vlastnosti dané entity.
+Za živými entitami stojí naopak rozhraní \ccc{ILiveEntity}, která navíc disponuje funkcí \ccc{GetSkill} pro získání schopností. Dále
+také deklaruje:
 
 \begin{itemize}
 \item tělo entity
@@ -1077,33 +1131,33 @@ deklaruje:
 \end{itemize}
 
 \subsection{Implementace vlastností entit}
-Vlastnost deklaruje rozhraní \ccc{IProperty}. Nejprve obsahuje vlastnost \ccc{Value}, která stanovuje nynější hodnotu
-dané vlastnosti. Tato hodnota je jako jediná možná měnit z venčí. V jejím getteru a setteru se typicky provádějí kontroly okrajových hodnot a případné reakce na ně. 
-Další vlastností je \ccc{BaseValue}, což je nejvyšší hodnota, které může vlastnost nabýt, pokud není nějak modifikovaná.
-Maximální hodnotu včetně modifikací určuje vlastnost \ccc{MaxValue}. Poslední vlastností je \ccc{AdditionalValues}, která shromažďuje
-právě dané modifikace. Je to sekvence typu \ccc{IEntityPropertyEffect}, která definuje hodnotu a typ hodnoty. Poslední
-vlastností je již zmíněný typ vlastnosti. Jednotlivé typy vlastností jsou definovány jako reference na třídy implementující
-rozhraní IPropertyFactory. Entita na základě tohoto typu potom vrací příslušné vlastnosti. Typem může být jakákoliv 
-třída implementující toto rozhraní, nicméně typická taková třída nemá žádné položky.
-Proto existuje generická třída \ccc{PropertyFactory}, která bere jako typový parametr právě typ alespoň \ccc{IProperty}.
+
+Vlastnost deklaruje rozhraní \ccc{IProperty}. Nejprve obsahuje vlastnost \ccc{Value}, která stanovuje aktuální hodnotu
+dané vlastnosti. V jejím getteru a setteru se typicky provádějí kontroly okrajových hodnot a případné reakce na ně. 
+Další vlastností je \ccc{BaseValue}, což je aktuální hodnota, které může vlastnost nabýt, pokud není nějak modifikovaná.
+Maximální hodnotu včetně modifikací určuje vlastnost \ccc{MaxValue}. Další vlastností je \ccc{AdditionalValues}, která shromažďuje
+modifikace dané vlastnosti. Je to sekvence typu \ccc{IEntityPropertyEffect}, která definuje hodnotu a typ dovednosti. Posledním
+prvkem rozhraní je typ vlastnosti, který reprezentuje instance implementující rozhraní \ccc{IPropertyFactory}.
+Entita na základě tohoto typu potom vrací příslušné vlastnosti. 
+Pro usnadnění tvorby unikátních typů existuje generická třída \ccc{PropertyFactory}, která má jako typový parametr typ alespoň \ccc{IProperty}.
 Tato třída se řídí vzorem singleton, jejíž jediná instance lze získat přes statickou položkou \ccc{Instance}. Takto lze pak 
-generovat typy pomocí samotné třídy reprezentující vlastnosti, takže není nutné deklarovat stále nové třídy, které nic nedělají.
+generovat typy pomocí třídy reprezentující vlastnost.
 
-Za zmínku ještě stojí částečná implementace rozhraní \ccc{IProperty} a to třída \ccc{Property}. Tato třída definuje 
+Pro usnadnění práce je existuje implementace rozhraní \ccc{IProperty} a to třída \ccc{Property}. Tato třída definuje 
 maximální hodnotu jako součet základních hodnoty a sumu modifikujících hodnot. Dále Při nastavení konkrétní hodnoty ořezává
-hodnotu do povoleného intervalu to je mezi nulou a maximální hodnotou. Také definuje událost vyvolanou při změně hodnoty.
- A naposledy definuje kolekci modifikujících hodnot jako \ccc{HashSet\textlangle T\textrangle}. Všechny vlastnosti 
- jsou deklarovány abstraktně nebo virtuálně. Tato třída lze použít k usnadnění implementace vlastností.
+hodnotu do povoleného intervalu, který je mezi nulou a maximální hodnotou. Také definuje událost vyvolanou při změně hodnoty.
+Všechny vlastnosti jsou deklarovány abstraktně nebo virtuálně. 
 
- Některé vlastnosti mohou požadovat přístup k jiným vlastnostem či přístup k samotné rodičovské entitě. V takovém
- případě je čistě na programátorovi, jak takového cíle dosáhne. Typicky se v takovém případě předá v konstruktoru
+ Některé vlastnosti mohou požadovat přístup k jiným vlastnostem či přístup k rodičovské entitě. V takovém
+ případě je na programátorovi, jak takového cíle dosáhne. Typicky se v takovém případě předá v konstruktoru
  potřebná vlastnost nebo se vytvoří událost, která danou závislost deleguje vně. 
 
  Seznam předdefinovaných vlastností je možné najít ve jemném prostoru \ccc{DungeonMasterEngine.DungeonContent.Entity.Properties}.
- Jak již bylo zmíněno, může nastat, že daná entita vlastnost neobsahuje. V takovém případě je dobré kvůli dodržení konzistentnosti
-vracet předdefinovanou instanci  třídy \ccc{EmptyProperty}. Nicméně rozhodně to není povinností při všech použití enginu.
+ Jak již bylo zmíněno\vref{entity-properties}, může nastat, že daná entita vlastností nedisponuje. V takovém případě 
+ je vrácena instance třídy \ccc{EmptyProperty}. 
 
 \subsection{Implementace schopností entit}
+
 Schopnosti deklaruje rozhraní \ccc{ISkill}. První vlastností tohoto rozhraní je \ccc{SkillLevel}, která udává úroveň,
 na které je daná schopnost. Do této hodnoty jsou započítány i úrovně získané například kouzelnými předměty. Hodnotu
 bez těchto extra úrovní určuje vlastnost \ccc{BaseSkillLevel}. Dále obsahuje vlastnosti \ccc{Experience} a \ccc{TemporaryExperience}
@@ -1117,60 +1171,96 @@ Třída \ccc{SkillBase} implementuje získávání zkušeností schopností jako
 využívající tuto třídu jsou ve jemném prostoru \ccc{DungeonMasterEngine.DungeonContent.Entity.Skill}. Stejně jako
 u vlastností i zde entita nemusí mít dotazovanou schopnost. V takovém případě vrací instanci třídy \ccc{EmptySkill}.
 
-\subsection{Tělo a inventáře entity}
-Následující API umožňuje vytvořit různé druhy těl pro různé entity. Každá část těla může sloužit jako úložiště. Dále pak existují externí
-úložiště. API je natrhnuté tak, aby dovolovalo definovat různé druhy úložišť a těl. V základu obshuje definice pouze pro lidské tělo.
+\subsection{Tělo - \ccc{IBody}}
 
-\subsubsection{Inventář}
-Inventář je definován rozhraním \ccc{IInventory}. Tak především každý inventář má definované jakého je typu. Typ inventáře musí implementovat
-rozhraní \ccc{IStorageType}. Toto rozhraní definuje velikost inventáře. Dále definuje samotné úložiště jako \ccc{ReadOnlyList}. A 
-v poslední řadě obsahuje funkce pro přidávaní a odebírání předmětů z úložného prostoru.
+Následující API umožňuje pro entity vytvořit různé druhy těl.
+Tělo se skládá z částí, které mohou sloužit jako úložiště. Dále pak existují externí
+úložiště. API je navržené tak, aby dovolovalo definovat různé druhy úložišť a těl. 
+Engine obsahuje pouze implementaci pro lidské tělo tj. třída \ccc{HumanBody}.
+Tělo entity je definováno rozhraním \ccc{IBody} a obsahuje následující atributy:
 
-Třída \ccc{Inventory} implementuje všechny funkce inventáře. Je jí tedy možno přímo použít nebo rozšířit.
+\begin{itemize}
+\item \ccc{BodyParts} - obsahuje seznam částí těla,
+\item \ccc{Storages} - obsahuje seznam všech úložišť včetně částí těla,
+\item \ccc{GetStorage} - funkce pro vyhledání úložiště včetně částí těla,
+\item \ccc{GetBodyPart} - funkce  pro vyhledání části těla. 
+\end{itemize}
 
-\subsubsection{Část těla}
-Část těla je definovaná rozhraním \ccc{IBodyPart}, které je potomkem rozhraní \ccc{IInventory}. Navíc definuje TODO
-%%% TODO
+\subsubsection{Inventář - \ccc{IInventory}}
+Každý inventář má definovanou vlastnost \ccc{Type}, což je typ úložiště, který reprezentuje instance třídy 
+implementující rozhraní \ccc{IStorageType}. Dále pak definuje readonly kolekci \ccc{Storage} pro ukládání předmětů.
+A v poslední řadě obsahuje funkce pro přidávaní a odebírání předmětů z úložného prostoru tj. \ccc{TakeItemFrom}, \ccc{AddItemTo}, \ccc{AddItem},
+\ccc{AddRange}. Třída \ccc{Inventory} implementuje všechny funkce inventáře a je jí tedy možno přímo použít nebo rozšířit.
 
-Obecnou implementací rozhraní je tříd \ccc{BodyPart}. Typ konkrétního úložiště předaný v konstruktoru určuje typ části těla. 
+\subsubsection{Část těla - \ccc{IBodyPart}}
+Část těla je definovaná rozhraním \ccc{IBodyPart}, které je potomkem rozhraní \ccc{IInventory}. Toto rozhraní navíc definuje 
+následující vlastnosti: 
+\begin{itemize}
+\item \ccc{IsWound} - definuje, zda je část těla zraněna,
+\item \ccc{InjuryMultipler} - definuje pravděpodobnost zranění části těla.
+\end{itemize}
 
-\subsubsection{Tělo entity}
-Tělo entity je definováno rozhraním \ccc{IBody}.  Obsahuje seznam částí těla, seznam všech úložišť včetně částí těla a funkce pro vyhledání 
-úložiště či části těla dle typu. 
+Obecnou implementací rozhraní je třída \ccc{BodyPart}. 
 
-Engine obsahuje pouze implementaci pro lidské tělo tj. třída \ccc{HumanBody}
+\subsection{Rozmístění entity na dlaždici}\label{layout-manager-section}
 
-\subsection{Rozmístění entity na dlaždici}
-\subsubsection{Definice prostorů a cest na dlaždici}
-Rozhraní \ccc{IGroupLayout} definuje obecně možné rozmístění na dlaždici. Nejprve obsahuje všechny možné prostory, které lze využít.
- Jednotlivě prostory reprezentují rozhraní \ccc{ISpace}. Dale API musí poskytovat funkce pro nalezení cesty z libovolného prostoru
- ,definovaného layoutem, na libovolnou sousední dlaždici nebo k libovolné ze stran dlaždice. Jednotlivé články cesty jsou 
- reprezentovány rozhraním \ccc{ISpaceRouteElement}. Poslední funkce musí umět vytvořit z prostoru a dlaždice článek cesty,
- tedy \ccc{ISpaceRouteElement}.  
+Rozhraní \ccc{IGroupLayout} definuje obecně možné rozmístění na dlaždici. Jeho vlastnost \ccc{AllSpaces} obsahuje všechny možné prostory, které daná entita může využít.
+Toto prostory rozdělují prostor dlaždice na mřížku\cc{space-grid}, která nemusí být rovnoměrná.
+Jednotlivě prostory jsou reprezentovány rozhraním \ccc{ISpace}. Dale API vyžaduje funkci \ccc{GetToNeighbour}, která nalezne cestu skrze prostory
+na cílovou sousední dlaždici\cc{space-route}. Funkce \ccc{GetToSide} vrací cestu k libovolné ze stran dlaždice. Jednotlivé články cesty jsou 
+reprezentovány rozhraním \ccc{ISpaceRouteElement}. Poslední funkce musí umět vytvořit z prostoru a dlaždice článek cesty,
+tedy \ccc{ISpaceRouteElement}.  
 
-Rozhraní \ccc{ISpace} musí definovat, jakým stranám dlaždice je prostor přilehlý. Dále musí definovat prostor, který využívá
-na dlaždici,  pomocí obdélníku. Jak již bylo řečeno obdélník musí zabírat prostor z 1000x1000 pole. Přičemž souřadnice rostou
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/space-grid.png}
+\caption{Ilustrace rozdělení dlaždice na prostory. }
+\label{space-grid}
+\end{figure}
+
+Rozhraní \ccc{ISpace} musí definovat, jakým stranám dlaždice je prostor přilehlý. Dále musí pomocí obdelníku definovat prostor, který na dlaždici využívá.
+Celý prostor dlaždice je pak definovaný na pole o velikosti 1000x1000. Přičemž souřadnice rostou
 shora dolů a zleva doprava. Nahoře je pak sever, vpravo východ, dole jih a vlevo západ. Kromě toho také musí definovat sousední
-prostory, k čemuž využívá již známé generické rozhraní \ccc{INeighborable}.
+prostory, k čemuž využívá generické rozhraní \ccc{INeighborable}. Ilustrace viz obrázek \cc{tile-spaces}
 
-Rozhraní \ccc{ISpaceRouteElement} se potom skládá pouze s prostoru, dlaždice a absolutně pozicované lokace, na které má stát daná entita.
-Pro výpočet pozice se může použít pozice dlaždice a samozřejmě daný prostor. Při definici vlastního layoutu  je možné využit 
-předem připravený hledač nejkratších cest pro prostory \ccc{GroupLayoutSearcher}. Pro reprezentaci sousedů prostorů je tu 
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/space-route.png}
+\caption{Ilustrace nalezení cesty na sousední dlaždici. }
+\label{space-route}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/tile-spaces.png}
+\caption{Ilustrace vlastností prostorů. }
+\label{floor-side}
+\end{figure}
+
+Rozhraní \ccc{ISpaceRouteElement} se potom skládá pouze z prostoru, dlaždice a absolutně pozice, na které má stát daná entita.
+Pro výpočet této pozice se může použít pozice dlaždice a prostor. Při při implementaci tohoto rozhraní je možné využít 
+předem připravený hledač nejkratších cest pro prostory \ccc{GroupLayoutSearcher}. Pro reprezentaci sousedů prostorů mřížky je tu 
 zase tříd \ccc{FourthSpaceNeighbors}.
 
-Celé toto rozhraní je readonly struktura, která pouze definuje prostory na dlaždici a způsob pohybu mezi nimi. Z toho důvodu
-dává dobry smysl instance tříd reprezentující toto rozhraní implementovat jako singletony. Engine definuje tři layouty a to 
-pro čtyři, dvě a jednu entitu. Ostatní možné 
-
+Celé toto rozhraní je immutable objekt, který pouze definuje prostory na dlaždici a způsob pohybu mezi nimi. Z toho důvodu
+instance tříd implementující toto rozhraní mohou být singeltony. Engine definuje layout pro prostor reprezentující celou dlaždici
+a pro prostory jako čtvrtiny dlaždice.
 
 \subsubsection{Řízení obsazeného prostoru na dlaždici}
+
 K předchozímu mechanismu je ještě třeba další část, která bude zaznamenávat samotné využité pozice na dlaždici. K tomuto 
 účelu existuje třída \ccc{LayoutManager}.  Lze pomocí ní získat seznam entity na dlaždici a seznamy využitých prostorů dlaždic.
 Dále poskytuje API pro přidání entity na daný prostor na dlaždici, odebrání prostoru a získání entit, které využívají 
-alespoň část nějakého prostoru. Z toho vyplývá, že entity s různým layoutem mohou být na stejné dlaždici, pokud
-je na ní dostatek prostoru pro oba prostory definované layoutama.
+alespoň část nějakého prostoru. Entity s různými rozmístěními mohou být na stejné dlaždici, pokud
+je na ní dostatek prostoru pro oba\cc{layout-manager}.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/layout-manager.png}
+\caption{Ilustrace vlastností prostorů. }
+\label{layout-manager}
+\end{figure}
+
+
 
 \subsection{Relace s dalšími entitami}
+
 Každá živá entita musí definovat vlastnost typu \ccc{IRelationManager}. Toto rozhraní musí definovat relační token typu
 \ccc{RelationToken} pro danou entitu. Dále definuje funkce, která pro daný token vrátí, zda entity odpovídající danému 
 tokenu je nepřátelská. Jednoduchou implementací tohoto rozhraní je třída \ccc{DefaultRelationManager}, která má
@@ -1178,16 +1268,16 @@ si při svém vzniku definuje své neměnné nepřátelé. Nicméně pokud daná
 aby si vytvořil implementaci vlastní. K dispozici je ještě generátor unikátních tokenů a to statická třída \ccc{RelationTokenFactory}.
 
 \subsection{Implementace entit}
-Jak již bylo zmiňováno, jsou v tomto enginu obsažené dvě implementace živých entit a jedna neživá.
+Engine obsahuje implementaci dvou entit a to pro šampiony jejich nepřátele.
 
 \subsubsection{Šampion}
 Šampion je první živá
 entita a reprezentuje jej třída \ccc{Champion}. Šampion neobsahuje žádnou umělou inteligenci, je ovládán hráčem skrze
-třídu \ccc{Theron}, která reprezentuje hráčovu skupinu šampionů. Inicializace vlastností a schopností probíhá přes
+třídu \ccc{Leader}, která reprezentuje hráčovu skupinu šampionů. Inicializace vlastností a schopností probíhá přes
 datový initializer definovaný rozhraním \ccc{IChampionInitializer}. Resp. jeho předáním do konstruktoru, dále je nutné
 specifikovat relační token a seznam nepřátel. Posunout daného šampiona je možné přiřazením do vlastnosti \ccc{Location}.
 
-Zde je dobré zmínit generickou třídu \ccc{Animator}, která bere dva typové parametry. První z nich je typ posouvaného 
+Zde je dobré zmínit generickou třídu \ccc{Animator}, která má dva typové parametry. První z nich je typ posouvaného 
 objektu, který musí implementovat alespoň rozhraní \ccc{IMovable}. Toto  rozhraní definuje vlastnosti, pomocí kterých lze měnit
 pozice daného objektu. Dalším parametrem je typ prostorů, mezi kterými se objekt pohybuje. Ten musí implementovat alespoň 
 rozhraní \ccc{IStopable}, které definuje pozici, na kterém se má objekt postavit. Animátor poskytuje API pro plynulý
@@ -1195,16 +1285,16 @@ posun objektů mezi prostory.
 
 U šampiona je tento animátor použit automaticky při změně lokace.
 
-\subsubsection{Příšera}
-Další a poslední živou entitou ve hře je příšera, kterou reprezentuje třída \ccc{Creature}. Tato třída reprezentuje všechny 
+\subsubsection{Nepřátelské entity}
+Nepřátele reprezentuje třída \ccc{Creature}. Tato třída reprezentuje všechny 
 příšery ve hře. Vlastnosti jednotlivých typů příšer jsou ve třídách typu \ccc{CreatureFactory}. Každá konkrétní instance 
 příšery má referenci na tuto třídu a její chování je ovlivněné vlastnostmi v ní obsažené. 
 
-Tato třída definuje pro příšery jednoduchou umělou inteligenci. Za zmínku stojí, že ke zjednodušení implementace jsou zde opět využity 
-asynchronní funkce. Ty jsou především využity pro vytváření zpoždění akcí pomocí \ccc{Task.Delay}, bez nutnosti složitého počítání času a vracení se zpět
-do funkce po jeho uplynutí. Asynchronní funkce jsou však prováděny v jednom vlákně a to vždy ve funkci \ccc{Update}. V každém volaní funkce
-je vyprázdněna celá fronta asynchronních funkci, proto je třeba dávat pozor na její přehlcení, které může vést až k neresponzivnosti aplikace.
-Následuje seznam funkcí a jejich popis použitých pro simulování inteligence příšer. Všechny tyto funkce je možné overridovat.
+Tato třída definuje pro příšery jednoduchou umělou inteligenci. K zjednodušení implementace jsou zde využity 
+asynchronní funkce. Ty jsou především využity pro vytváření zpoždění akcí pomocí \ccc{Task.Delay}, bez nutnosti počítání času a vracení se zpět
+do funkce po jeho uplynutí. Důležité je poznamenat, že asynchronní funkce jsou prováděny v jednom vlákně a to vždy ve funkci \ccc{Update}. V každém volaní funkce
+je vyprázdněna celá fronta asynchronních funkci, proto je třeba dávat pozor na její přehlcení, které může v konečném důsledku vést až k neresponzivnosti aplikace.
+Následuje seznam funkcí a jejich popis použitých pro simulování inteligence. Všechny tyto funkce je možné přetěžovat.
 \begin{itemize}
 
 \item \ccc{Live} - V této funkci je nekonečný cyklus, který volá obslužné rutiny podle stavu příšery. Jsou to:
@@ -1251,12 +1341,12 @@ cestu nenalezne založí si domov tam, kde je pomocí funkce \ccc{EstablishNewBa
 K prohledávání do šířky se používá třída \ccc{BreathFirstSearch} nebo některý její potomek. 
 
 \section{Předměty}
-Předměty reprezentuje rozhraní \ccc{IGrabableItem}. Jak již bylo zmíněno v analýze, každý předmět musí mít referenci na svoji 
-továrnu minimálně typu \ccc{IGrabableItemFactoryBase}. Dále musí definovat vlastnost určující dlaždici, na které se nachází. 
+Předměty reprezentuje rozhraní \ccc{IGrabableItem}. Jak již bylo zmíněno v analýze\vref{item-factories}, každý předmět musí mít referenci na svoji 
+továrnu minimálně typu \ccc{IGrabableItemFactoryBase}. Dále musí definovat vlastnost \ccc{Location} určující prostor dlaždice, na kterém se nachází. 
 Přiřazení do této vlastnosti by mělo vyvolat přidání daného předmětu na danou dlaždici. Existují i případy, kdy toto není 
-žádoucí a proto musí ještě definovat funkci, která pouze danou vlastnost nastaví. V poslední řadě musí definovat renderer.
+žádoucí a proto předměty musí ještě definovat funkci \ccc{SetLocation}, která pouze danou vlastnost nastaví. V poslední řadě musí definovat renderer.
 
- Rozhraní továrny na obecné předměty vyžaduje vlastnosti jako název, hmotnost, seznam 
+Rozhraní továrny na obecné předměty vyžaduje vlastnosti jako název, hmotnost, seznam 
 možných akcí s předmětem a také definuje místa, kam lze předmět uložit.
 
 \subsection{Implementace předmětů}
@@ -1273,21 +1363,52 @@ TODO
 \section{Kouzla}
 TODO
 
+\section{Renderery}
+Jak bylo zmíněno v analýze engine odděluje zobrazovací vrstvu od zbytku enginu\vref{renderer-interactor}. Všechny objekty,
+které potřebují mít grafický výstup by měli implementovat rozhraní \ccc{IRenderable}, které vyžaduje položku typu \ccc{IRenderer}. 
+Stěžejní funkce tohoto rozhraní jsou funkce \ccc{Render} a \ccc{Interact}. 
+
+Nejdůležitější z parametrů těchto funkcí je dosavadní transformace. Tj. obsahuje složeninu transformací složenou z jednotlivých
+transformací na cestě z kořene stromu reprezentující závislosti rendererů na sobě. Takže například kořen stromu bude renderer
+dlaždice, jeho syn bude strana dlaždice, její syn bude výklenek ve zdi a její syn bude předmět ve
+výklenku(list). Při takovéto reprezentaci se pak musí všechny renderované objekty posunout či jinak transformovat vůči jejich rodiči.
+Tzn. každý renderer si musí zvolit pozicovací konvenci, kterou pak musí závislé renderery dodržovat. Tento způsob renderování je požíván u statických objektu jako
+jsou dlaždice, stěny, výklenky a podobně. Pro pohybující objekty je používaná absolutní pozice a renderery
+těchto objektů transformují objekty přímo na jejich pozici. Volba mezi těmito dvěma způsoby pozicování stojí vždy z zamyšlení.
+
+Renderery jsou vždy dělány na míru objektu, který mají renderovat. Tzn. často se renderer v konstruktoru 
+inicializuje instancí s konkretním typem. Třída této instance pak má zpravidla readonly vlastnosti,
+podle kterých renderer určuje, co má vykreslovat. Jelikož implementovaná grafická vrstva je pouze ve formě proof of concept,
+je co nejjednodušší a neobsahuje například animace. Nicméně ze zde popsané povahy rendererů je jasné, že 
+toho může být dosaženo vytvořením událostí na renderovaných objektech, které si renderer zaregistruje.
+Dovedeme si představit, že by šla s takovým návrhem velmi jednoduše udělat grafická vrstva, která bude
+velmi pěkná, bude mít kvalitní 3D modely a animace. Zabralo by to jen spoustu času a byla by k tomu potřeba spousta grafiků.
+
+Při rozšíření nějakého rendereru je třeba zjistit dosavadní transformaci, která je normálně vypočítána v rodiči.
+K tomuto záměru slouží funkce \ccc{GetCurrentTransformation}, která bere jako parametr dosavadní transformaci.
+Rozšířením jež existujícího rendereru si lze ušetřit mnoho práce a opakujícího se kódu. Proto je takový přístup v této implementaci často použit.
+Funkce popsané na začátku sekce jsou samozřejmě virtuální a jdou přetěžovat,
+obsahují také jeden parametr typu \ccc{object} pro případné předávaní dodatečných dat mezi renderery. Tohoto parametru není nikde v této implementaci využito.
+
+Jelikož renderery zásadně mění vzhled a pozici všech věcí, je nutné tuto vrstvu propojit i s interakcí.
+Interakční funkce má skrze parametr typu \ccc{ILeader}  přístup k položce interactor, která je typu \ccc{object}.
+Daný renderer musí vědět, pro jaký typ interactoru je a na ten si ho musí vhodně přetypovat. V této implementaci je použit paprsek (\ccc{Ray}). 
+Celý tento koncept interactoru by šel sice udělat genericky, ale prolínal by se celou strukturou rendererů a z toho
+důvodu jsem se rozhodl v tomto místě ustoupit a udělat situaci jednoduší na úkor kontroly za překladu.
+
 \section{Builder map}
-Nyní když máme rozebrané všechny části enginu, které je potenciálně možné rozšířit, je čas popsat, 
-jak se vše sestaví dohromady v herní úroveň.
+Nyní když máme rozebrané všechny části enginu, které je potenciálně možné rozšířit, si můžeme vysvětlit, jak
+se vše sestaví dohromady v herní úroveně.
 
 \subsection{Vlastní implementace builderu}
-Jak již bylo zmíněno builder musí implementovat rozhraní \ccc{IDungeonBuilder}. Toto rozhraní je
-potom dotazované pro načtení levelu jádrem enginu. Je úkolem builderu rozhodnout jak bude jednat
+Jak již bylo zmíněno builder musí implementovat rozhraní \ccc{IDungeonBuilder}\vref{engine-core}. Toto rozhraní je
+potom dotazované pro načtení herní úrovně jádrem enginu. Je úkolem builderu rozhodnout jak bude jednat
 v případě, že je podán několikrát dotaz na stejnou mapu. Typicky je se tedy nutné rozhodnout
-jestli načtené mapy kešovat či nikoliv. Existuje částečná implementace tohoto rozhraní \ccc{BuilderBase},
-která má funkci pro vyplnění sousedů dlaždic do inicializátorů. Nicméně nic jiného neposkytuje, takže
-je zcela v pořádku implementovat přímo dané rozhraní.
+jestli načtené mapy kešovat či nikoliv. 
 
 Správně implementovaný builder by měl načítat mapy zhruba tímto způsobem. 
 
-\begin{itemize}
+\begin{enumerate}
 
 \item Vytvoření dlaždic a naplnění jejich inicializátorů. 
 To znamená vytvořit strany dlaždic a přepínače či předměty v nich obsažené.
@@ -1298,12 +1419,14 @@ To znamená vytvořit strany dlaždic a přepínače či předměty v nich obsa�
 
 \item Dokončení inicializace inicializátoru a zavolaní inicializaci dlaždic skrze inicializátory. 
 
-\item Případné kešování levelu pro případný opakovaný požadavek. 
-\end{itemize}
+\item Případné kešování herní úrovně pro případný opakovaný požadavek. 
+\end{enumerate}
 
 Na tyto body se samozřejmě navazuje spoustu další věcí, které je třeba vyřešit. 
 Je to například vytvoření továren pro akce a předměty. Továrny pro akce jsou pak použity pro
-továrny pro předměty a ty zase pro vytvoření samotných předmětů. Dále je potřeba vyřešit 
+továrny pro předměty a ty zase pro vytvoření samotných předmětů. 
+
+ Dále je potřeba vyřešit 
 nastavení rendererů. Pokud má builder podporovat různé zobrazovací vrstvy, je potřeba 
 nějakým způsobem poskytnout možnost předání jiných rendererů builderu. Je tedy například
 možné vytvořit rozhraní, které bude vracet dané renderery používané v builderu. Odlišnou
@@ -1312,20 +1435,10 @@ implementaci rozhraní se potom budou požívat odlišné renderery.
 
 \subsection{Implementace builderu Dungeon Masteru}
 Builder pro samotnu hru Dungeon Master řeší třída \ccc{LegacyMapBuilder}. Tento builder
-využívá parseru binární dat originální hry a to \ccc{DungeonParser}. Při vytvoření instance 
-builderu předchozím parserem rozparsuje všechna data, která pak jsou skrze něj k dispozici jako 
-třída \ccc{DungeonData}. Jak bylo zmiňováno v analýze, parser kromě samotných dat načítá 
-i ostatní data jako například vlastnosti předmětů atp. Vše je k dispozici ve zmíněné třídě.
-Po rosparsovaní dat, jsou na základě těchto dat vytvořeny továrny pro předměty, akce a příšery.
-To vše stále v konstruktoru. 
-
+využívá již rozparsovaná data reprezentována třídou \ccc{DungeonData}.
 Samotný builder map potom využívá ještě další buildery. Jsou to třídy pro vytváření
 dlaždic, přepínačů, předmětů a příšer. Při požadavku na určitou mapu pak 
 následuje postup zmíněný v předchozí sekci.
-
-
-\subsection{Rozšíření builderů Dungeon Masteru}
-TODO
 
 \chapter{Uživatelská dokumentace}
 Tento projekt si neklade za cíl udělat zcela kompletní a dobře hratelnou reimplementaci Dungeon Master.
@@ -1375,16 +1488,16 @@ Pro více informací o příkazech je možné napsat příkaz \ccc{help} do konz
 \addcontentsline{toc}{chapter}{Závěr}
 
 V rámci této práce byl naimplementovaný engine pro Hru Dungeon Master. Engine 
-neobsahuje přesně všechny funkce, jaké byly v originální hře. Nicméně drtivou většinu
-z nich se podařilo uskutečnit. Pro implementaci byl použit jazyk C\#, platforma .NET
+obsahuje podporu pro všechny funkce z originální hry. Nicméně všechny konkrétní funkce
+nejsou naimplementované do úplných detailů, což dává možnost navázat na práci případným následovníkům. 
+ Pro implementaci byl použit jazyk C\#, platforma .NET
 a framework MonoGame. Většina částí enginu je jednoduše rozšiřitelná či modifikovatelná.
 To vede na dobrou udržitelnost celého systému. Primárně je engine určený pro hru 
 Dungeon Master a dokáže si herní úrovně načíst z originální binárních dat. Nicméně
-načítání map je v oddělené vrstvě. Proto je možné tuto vrstvu upravit kvůli případným rozšířením nebo ji je možné
- nově naimplementovat i pro 
-jiné vstupní formáty. Takže je možné tento engine využít i pro implementaci jiných her.
-Engine má také oddělenou renderovací vrstvu. Z toho opět vyplývá, že renderovací vrstva lze jednoduše
-rozšiřovat.
+načítání map je v oddělené vrstvě a proto je možné tuto vrstvu upravit kvůli případným rozšířením nebo ji je možné
+nově naimplementovat i pro 
+jiné vstupní formáty. Z toho důvodu je možné tento engine využít i pro implementaci jiných her na podobných principech.
+Engine má také oddělenou renderovací vrstvu, která lze jednoduše upravit dle potřeby.
 
 
 

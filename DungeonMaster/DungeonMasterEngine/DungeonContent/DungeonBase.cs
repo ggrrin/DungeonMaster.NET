@@ -17,9 +17,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public class Dungeon : DungeonBase<IFactories, Theron>
+    public class Dungeon : DungeonBase<IFactories, LegacyLeader>
     {
-        public Dungeon(IDungonBuilder<IFactories> builder, IFactories factoreis, Theron leader, GraphicsDevice graphicsDevice) : base(builder, factoreis, leader, graphicsDevice) { }
+        public Dungeon(IDungonBuilder<IFactories> builder, IFactories factoreis, LegacyLeader leader, GraphicsDevice graphicsDevice) : base(builder, factoreis, leader, graphicsDevice) { }
     }
 
     public abstract class DungeonBase<TFactories, TLeader> where TFactories : IFactories where TLeader : ILeader
@@ -85,7 +85,7 @@ namespace DungeonMasterEngine.DungeonContent
         public DungeonBase(IDungonBuilder<TFactories> builder, TFactories factoreis, TLeader leader, GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
-            InitializeGraphics();
+            InitializeGraphicDefaults();
             Builder = builder;
             Factories = factoreis;
 
@@ -100,7 +100,7 @@ namespace DungeonMasterEngine.DungeonContent
 
         }
 
-        protected void Leader_LocationChanged(object sender, EventArgs e)
+        private void Leader_LocationChanged(object sender, EventArgs e)
         {
             if (Time != null)//not on an initialization
             {
@@ -139,7 +139,7 @@ namespace DungeonMasterEngine.DungeonContent
             UpdateVisibleTiles();
         }
 
-        protected virtual void InitializeGraphics()
+        protected void InitializeGraphicDefaults()
         {
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.CullClockwiseFace };
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -148,7 +148,6 @@ namespace DungeonMasterEngine.DungeonContent
             pixel.SetData(new Color[1] { new Color(1f, 0, 0) });
 
             batcher = new SpriteBatch(GraphicsDevice);
-            var color = new Vector3(0xED, 0xD2, 0x4B) / 255f;
             Effect = new BasicEffect(GraphicsDevice)
             {
                 TextureEnabled = true,

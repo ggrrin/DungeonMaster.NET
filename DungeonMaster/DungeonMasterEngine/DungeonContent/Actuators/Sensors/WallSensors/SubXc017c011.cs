@@ -3,7 +3,7 @@ using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
 {
-    abstract class SubXc017c011<TActuatorX> : ItemConstrainSensor<TActuatorX> where TActuatorX : IActuatorX
+    abstract class SubXc017c011<TActuatorX> : ItemConstrainWallSensor<TActuatorX> where TActuatorX : IActuatorX
     {
         //process actutator
         protected override bool TryInteract(ILeader theron, WallActuator wallActuator, bool isLast, out bool L0753_B_DoNotTriggerSensor)

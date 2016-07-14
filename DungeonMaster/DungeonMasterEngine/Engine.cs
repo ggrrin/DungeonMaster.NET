@@ -55,7 +55,7 @@ namespace DungeonMasterEngine
             dungeonParser.Parse();
             var renderers = new DefaulRenderers(Content, GraphicsDevice);
             var factoreis = new LegacyFactories(dungeonParser.Data, renderers);
-            var theron = new Theron(factoreis);
+            var theron = new LegacyLeader(factoreis);
             dungeon = new Dungeon(new LegacyMapBuilder(dungeonParser.Data, renderers), factoreis, theron, GraphicsDevice);
             GameConsole.InitializeConsole(this, dungeon);
             GameConsole.Instance.DrawOrder = 1;

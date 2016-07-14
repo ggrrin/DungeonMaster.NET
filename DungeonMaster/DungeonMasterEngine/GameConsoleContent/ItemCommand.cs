@@ -12,11 +12,11 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     public class ItemCommand : Interpreter
     {
-        private Theron theron;
+        private LegacyLeader leader;
 
         public override async Task Run()
         {
-            theron = ConsoleContext.AppContext.Leader;
+            leader = ConsoleContext.AppContext.Leader;
 
             if (Parameters.Length > 0)
             {
@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                         int identifer = -1;
                         if (Parameters.Length == 2 && int.TryParse(Parameters[1], out identifer))
                         {
-                            if (theron.Hand != null)
+                            if (leader.Hand != null)
                                 Output.WriteLine("Hand is not empty.");
                             else
                             {
@@ -34,11 +34,11 @@ namespace DungeonMasterEngine.GameConsoleContent
                                 //TODO
 
 
-                                theron.Hand = factory.Create(new MiscInitializer
+                                leader.Hand = factory.Create(new MiscInitializer
                                 {
                                     Attribute = 0
                                 });
-                                Output.Write($"Item: {theron.Hand} added to hand.");
+                                Output.Write($"Item: {leader.Hand} added to hand.");
                             }
                         }
                         else

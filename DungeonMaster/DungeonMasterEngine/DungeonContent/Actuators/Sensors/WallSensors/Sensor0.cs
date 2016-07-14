@@ -4,7 +4,7 @@ using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
 {
-    public class Sensor0 : Sensor<IActuatorX>
+    public class Sensor0 : WallSensor<IActuatorX>
     {
 
         public Sensor0(SensorInitializer<IActuatorX> initializer) : base(initializer)

@@ -7,7 +7,7 @@ using DungeonMasterEngine.GameConsoleContent;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
 {
-    public class Sensor127 : Sensor<ChampionDecoration>
+    public class Sensor127 : WallSensor<ChampionDecoration>
     {
         private Champion champion;
 

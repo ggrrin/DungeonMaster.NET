@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
         public bool Rotate { get; }
 
         //remote target
-        public MapDirection Specifer { get; }
+        public MapDirection Specifier { get; }
         public Tile TargetTile { get; }
 
         public int TimeDelay { get; }
@@ -27,7 +27,6 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
 
         public bool Disabled { get; protected set; }
 
-
         public abstract IActuatorX GraphicsBase { get; }
 
         protected SensorX(SensorInitializerX initializer)
@@ -35,7 +34,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
             Effect = initializer.Effect;
             ExperienceGain = initializer.ExperienceGain;
             Rotate = initializer.Rotate;
-            Specifer = initializer.Specifer;
+            Specifier = initializer.Specifer;
             TargetTile = initializer.TargetTile;
             TimeDelay = initializer.TimeDelay;
             LocalEffect = initializer.LocalEffect;
@@ -79,7 +78,7 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors
                 //TODO send B,A,TargetCell only to wall tiles, floor tiles has set this flag NORTHWEST
                 //TODO time delay await Task.Delay(A.Value);
                 await Task.Delay(TimeDelay);
-                TargetTile.AcceptMessageBase(new Message(action, Specifer));
+                TargetTile.AcceptMessageBase(new Message(action, Specifier));
             }
         }
 

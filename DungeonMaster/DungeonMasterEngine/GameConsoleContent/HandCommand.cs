@@ -11,16 +11,16 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     public class HandCommand : Interpreter
     {
-        private Theron theron;
+        private LegacyLeader leader;
 
         public override async Task Run()
         {
-            theron = ConsoleContext.AppContext.Leader;
+            leader = ConsoleContext.AppContext.Leader;
 
             if (Parameters.Length == 0)
             {
-                if (theron.Hand != null)
-                    Output.WriteLine(theron.Hand.ToString());
+                if (leader.Hand != null)
+                    Output.WriteLine(leader.Hand.ToString());
                 else
                     Output.WriteLine("Empty");
             }
@@ -56,13 +56,13 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private async Task UseItem()
         {
-            if (theron.Hand == null)
+            if (leader.Hand == null)
             {
                 Output.WriteLine("No item in hand!.");
                 return;
             }
 
-            var effect = theron.Hand as IHasEffect;
+            var effect = leader.Hand as IHasEffect;
             if (effect != null)
             {
                 if (effect.Used)
@@ -71,12 +71,12 @@ namespace DungeonMasterEngine.GameConsoleContent
                 }
                 else
                 {
-                    Champion champion = await GetFromItemIndex(theron.PartyGroup);
+                    Champion champion = await GetFromItemIndex(leader.PartyGroup);
                     if (champion != null)
                     {
                         if (effect.ApplyEffect(champion))
                         {
-                            theron.Hand = effect.GetUsedOutcomeItem(ConsoleContext.AppContext.Factories);
+                            leader.Hand = effect.GetUsedOutcomeItem(ConsoleContext.AppContext.Factories);
                             Output.WriteLine(effect.Message);
                         }
                     }
@@ -90,9 +90,9 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private async Task PutSubItem()
         {
-            if (theron.Hand == null)
+            if (leader.Hand == null)
             {
-                var ch = await GetFromItemIndex(theron.PartyGroup);
+                var ch = await GetFromItemIndex(leader.PartyGroup);
 
                 if (ch != null)
                 {
@@ -107,7 +107,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                             {
                                 var item = chest.TakeItemFrom(itemIndex.Value);
                                 if (item != null)
-                                    theron.Hand = item;
+                                    leader.Hand = item;
                                 else
                                 {
                                     Output.WriteLine("Slot is empty.");
@@ -124,9 +124,9 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private async Task PutItem()
         {
-            if (theron.Hand == null)
+            if (leader.Hand == null)
             {
-                var ch = await GetFromItemIndex(theron.PartyGroup);
+                var ch = await GetFromItemIndex(leader.PartyGroup);
 
                 if (ch != null)
                 {
@@ -136,7 +136,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                         var itemIndex = await GetItemIndex(inventory.Storage);
                         if (itemIndex != null)
                         {
-                            theron.Hand = inventory.TakeItemFrom(itemIndex.Value);
+                            leader.Hand = inventory.TakeItemFrom(itemIndex.Value);
                         }
                     }
                 }
@@ -147,9 +147,9 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private async Task TakeSubItem()
         {
-            if (theron.Hand != null)
+            if (leader.Hand != null)
             {
-                var ch = await GetFromItemIndex(theron.PartyGroup);
+                var ch = await GetFromItemIndex(leader.PartyGroup);
 
                 if (ch != null)
                 {
@@ -162,7 +162,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                             var itemIndex = await GetItemIndex(chest.Storage);
                             if (itemIndex != null)
                             {
-                                theron.Hand = chest.TakeItemFrom(itemIndex.Value);
+                                leader.Hand = chest.TakeItemFrom(itemIndex.Value);
                             }
                         }
                     }
@@ -174,18 +174,18 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private async Task TakeItem()
         {
-            if (theron.Hand != null)
+            if (leader.Hand != null)
             {
-                var ch = await GetFromItemIndex(theron.PartyGroup);
+                var ch = await GetFromItemIndex(leader.PartyGroup);
 
                 if (ch != null)
                 {
                     var inventory = await GetFromItemIndex(ch.Body.Storages);
                     if (inventory != null)
                     {
-                        if (inventory.AddItem(theron.Hand))
+                        if (inventory.AddItem(leader.Hand))
                         {
-                            theron.Hand = null;
+                            leader.Hand = null;
                         }
                         else
                         {

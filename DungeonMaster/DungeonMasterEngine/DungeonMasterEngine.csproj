@@ -198,7 +198,7 @@
     <Compile Include="Interfaces\IFactories.cs" />
     <Compile Include="Interfaces\IMessageAcceptor.cs" />
     <Compile Include="Interfaces\IRenderable.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\ItemConstrainSensor.cs" />
+    <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\ItemConstrainWallSensor.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\Sensor.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\Sensor0.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\Sensor1.cs" />
@@ -456,7 +456,7 @@
     <Compile Include="DungeonContent\Entity\BodyInventory\SmallQuiverStorageType.cs" />
     <Compile Include="DungeonContent\Entity\Properties\StaminaProperty.cs" />
     <Compile Include="DungeonContent\Entity\Properties\StrengthProperty.cs" />
-    <Compile Include="Player\Theron.cs" />
+    <Compile Include="Player\LegacyLeader.cs" />
     <Compile Include="DungeonContent\Entity\BodyInventory\TorsoStorageType.cs" />
     <Compile Include="DungeonContent\Entity\Properties\VitalityProperty.cs" />
     <Compile Include="DungeonContent\Entity\Properties\WaterProperty.cs" />

@@ -7,7 +7,7 @@ namespace DungeonMasterEngine.DungeonContent.Constrains
     {
         public bool IsAcceptable(object item)
         {
-            var theron = item as Theron;
+            var theron = item as LegacyLeader;
             return theron?.PartyGroup.Count == 4;
         }
     }
