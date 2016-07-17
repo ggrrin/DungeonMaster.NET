@@ -58,6 +58,8 @@
 \usepackage[usenames]{xcolor}  % barevná sazba
 \usepackage{textcomp}
 \usepackage{float}
+\usepackage{enumitem}
+\usepackage{amssymb}
 
 
 
@@ -85,7 +87,7 @@
 \def\TypPracovisteEN{Department}
 
 % Vedoucí práce: Jméno a příjmení s~tituly
-\def\Vedouci{Mgr. Ježek Pavel Ph.D.}
+\def\Vedouci{Mgr. Pavel Ježek, Ph.D.}
 
 % Pracoviště vedoucího (opět dle Organizační struktury MFF)
 \def\KatedraVedouciho{Katedra distribuovaných a spolehlivých systémů}
@@ -98,7 +100,7 @@
 % Nepovinné poděkování (vedoucímu práce, konzultantovi, tomu, kdo
 % zapůjčil software, literaturu apod.)
 \def\Podekovani{%
-Děkuji svému vedoucímu práce Mgr. Pavlu Ježkovi Ph. D. jak za pomoc s výběrem práce, tak za cenné rady při její tvorbě.
+Děkuji svému vedoucímu práce Mgr. Pavlu Ježkovi, Ph. D. jak za pomoc s výběrem práce, tak za cenné rady při její tvorbě.
 }
 
 % Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
@@ -140,16 +142,28 @@ used for education.
 \hypersetup{pdfkeywords=\KlicovaSlova}
 \hypersetup{urlcolor=blue}
 
-\newcommand{\ccc}[1]{{\fontfamily{lmtt}\selectfont\textbf{#1}}}
+\newcommand{\ccc}[1]{{\mbox{\fontfamily{lmtt}\selectfont\textbf{#1}}}}
+\newcommand{\xxx}[1]{\textit{#1}}
 \newcommand{\cc}[1]{(viz obr. \ref{#1})}
 \newcommand{\vref}[1]{(viz sekce \ref{#1})}
 \newcommand{\vbref}[1]{(viz bod \ref{#1})}
 \newcommand{\aref}[1]{(viz cíl práce \ref{#1})}
 
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand\labelitemiii{$\diamond$}
+
+\newcommand{\imgx}[2]{\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{./img/#1}
+\caption{#2}
+\label{#1}
+\end{figure}}
+
+
 %% Definice různých užitečných maker (viz popis uvnitř souboru)
 \include{makra}
 
 %% Titulní strana a různé povinné informační strany
+
 \begin{document}
 
 \include{titulka}
@@ -162,6 +176,8 @@ used for education.
 %%%\include{uvod}
 %%%\include{kap01}
 
+\include{introduction}
+\include{analysis}
 \include{bcnotes}
 
 %%% Seznam použité literatury
