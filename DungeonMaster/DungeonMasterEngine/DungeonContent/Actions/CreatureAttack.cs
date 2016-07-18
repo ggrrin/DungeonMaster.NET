@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
@@ -17,14 +16,6 @@ using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actions
 {
-    public class CreatureAttackFactoryBase : IActionFactory
-    {
-        public IAction CreateAction(ILiveEntity actionProvider)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class CreatureAttack : AttackBase<CreatureAttackFactoryBase> 
     {
 
@@ -44,7 +35,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
         }
 
 
-        public override int ApplyAttack(MapDirection direction)
+        public override int Apply(MapDirection direction)
         {
             var tile = AttackProvider.Location.Tile.Neighbors.GetTile(direction);
 

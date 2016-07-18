@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Spells;
@@ -134,15 +133,5 @@ namespace DungeonMasterEngine.Builders
                     return new SpellFactoryMocap(initializer);
             }
         }
-    }
-
-    public class SpellFactoryMocap : SpellFactory<ISpell>
-    {
-        protected override ISpell ApplySpellEffect(ILiveEntity entity, IPowerSymbol powerSymbol, int skillLevel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public SpellFactoryMocap(SpellFactoryInitializer initializer) : base(initializer) {}
     }
 }

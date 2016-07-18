@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
     {
         public RemoteCreatureAttack(Creature attackProvider) : base(attackProvider) { }
 
-        public override int ApplyAttack(MapDirection direction)
+        public override int Apply(MapDirection direction)
         {
 
             //int A0437_T_Thing;

@@ -42,7 +42,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             HelpFactory.Instance,
             HandCommandFactory.Instance,
             ChampionCommandFactory.Instance,
-            ItemFactory.Instance,
+            //ItemFactory.Instance,
             TeleportFactory.Instance,
             SpellCommandFactory.Instance,
             FightCommandFactory.Instance

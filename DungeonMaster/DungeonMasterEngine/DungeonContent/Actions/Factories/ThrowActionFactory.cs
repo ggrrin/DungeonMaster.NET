@@ -15,7 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions.Factories
 
         public override IAction CreateAction(ILiveEntity actionProvider)
         {
-            return new ThrowAttakc(this,actionProvider, ActionHandStorageType.Instance);
+            return new ThrowAttack(this,actionProvider, ActionHandStorageType.Instance);
         }
     }
 }

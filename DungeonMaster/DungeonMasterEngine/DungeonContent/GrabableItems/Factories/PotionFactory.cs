@@ -19,7 +19,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Factories
         {
             return new Potion(new PotionInitializer
             {
-                PotionPower = 255,//TODO default potoion power ? ???
+                PotionPower = 10,//TODO default potoion power ? ???
                 Factory = this
             });
         }

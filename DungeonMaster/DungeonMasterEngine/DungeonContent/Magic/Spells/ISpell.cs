@@ -1,5 +1,4 @@
-﻿using System;
-using DungeonMasterEngine.DungeonContent.Entity;
+﻿using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
@@ -14,12 +13,5 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
     public interface ISpell
     {
         void Run(ILiveEntity caster, MapDirection direction);
-    }
-
-    public abstract class Spell : ISpell
-    {
-        protected static readonly Random rand = new Random();
-
-        public abstract void Run(ILiveEntity caster, MapDirection direction);
     }
 }

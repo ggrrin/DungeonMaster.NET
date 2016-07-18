@@ -11,17 +11,4 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
         public override int BaseValue { get; set; }
         public override IPropertyFactory Type => PropertyFactory<DefenseProperty>.Instance;
     }
-
-
-    public class ChampionDefenseProperty : DefenseProperty
-    {
-        private readonly ILiveEntity entity;
-
-        public ChampionDefenseProperty(ILiveEntity entity, int value) : base(value)
-        {
-            this.entity = entity;
-        }
-    }
-
-
 }

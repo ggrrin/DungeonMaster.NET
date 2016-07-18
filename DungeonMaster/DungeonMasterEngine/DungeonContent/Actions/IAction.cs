@@ -5,7 +5,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
     public interface IAction
     {
         IActionFactory Factory { get; }
-        int ApplyAttack(MapDirection direction);
+        int Apply(MapDirection direction);
     }
 
     public interface IAction<out TFactory> : IAction where TFactory : IActionFactory

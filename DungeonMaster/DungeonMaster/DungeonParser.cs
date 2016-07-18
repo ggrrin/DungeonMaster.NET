@@ -37,10 +37,10 @@ namespace DungeonMasterParser
             using (var r = reader)
             {
                 ReadHeader(r);
-                Debug.Assert(r.BaseStream.Position == 44);
+                //Debug.Assert(r.BaseStream.Position == 44);
 
                 Data.Maps = ReadMapsDefinitions(r);
-                Debug.Assert(r.BaseStream.Position == 268);
+                //Debug.Assert(r.BaseStream.Position == 268);
 
                 ReadObjectTilesShortcuts(r);
                 //Debug.Assert(r.BaseStream.Position == 1086); //more object ids

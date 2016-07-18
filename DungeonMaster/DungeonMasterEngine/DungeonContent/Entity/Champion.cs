@@ -206,7 +206,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 ReadyForAction = false;
                 var action = actionFactory.CreateAction(this);
                 if(action != null)
-                    await Task.Delay(action.ApplyAttack(MapDirection));
+                    await Task.Delay(action.Apply(MapDirection));
                 else
                     "Invalid action. => null".Dump();
 

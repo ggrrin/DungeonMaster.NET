@@ -1,5 +1,4 @@
 using System;
-using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
@@ -33,10 +32,5 @@ namespace DungeonMasterEngine.DungeonContent.Actuators
             return false;
         }
 
-    }
-
-    public interface IWaterJar
-    {
-        IGrabableItem Fill(IFactories factories);
     }
 }

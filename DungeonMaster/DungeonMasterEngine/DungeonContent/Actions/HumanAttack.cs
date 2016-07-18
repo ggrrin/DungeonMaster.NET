@@ -40,7 +40,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
             return enemy;
         }
 
-        public override int ApplyAttack(MapDirection direction)
+        public override int Apply(MapDirection direction)
         {
             var delay = Factory.Fatigue;
             var requiredSkill = attackProvider.GetSkill(Factory.SkillIndex);

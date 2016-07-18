@@ -20,11 +20,14 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base
         {
             var res = FullSpaces.Any(s => s.Area.Intersects(dreamPosition.Area));
             if (!res)
+            {
                 entitiesSpaces.Add(Tuple.Create(entity, dreamPosition));
+            }
             else
             {
                 
             }
+
             return !res;
         }
 

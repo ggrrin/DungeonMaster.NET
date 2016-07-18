@@ -155,7 +155,7 @@ namespace DungeonMasterEngine.Player
                 {
                     var newSpace = champoin.GroupLayout.AllSpaces.First(s => s.GridPosition == nextGridPoint(champoin.Location.Space.GridPosition));
                     champoin.Location = new FourthSpaceRouteElement(newSpace, targetLocation);
-                    Debug.Assert(targetLocation.LayoutManager.TryGetSpace(champoin, champoin.Location.Space));
+                    targetLocation.LayoutManager.TryGetSpace(champoin, champoin.Location.Space);
                 }
             }
         }
@@ -218,8 +218,8 @@ namespace DungeonMasterEngine.Player
             actionHand.AddItemTo(Hand, 0);
             Hand = null;
 
-            var action = new ThrowAttakc((ThrowActionFactory)factorie.FightActions[42], Leader, storageType);
-            action.ApplyAttack(MapDirection);
+            var action = new ThrowAttack((ThrowActionFactory)factorie.FightActions[42], Leader, storageType);
+            action.Apply(MapDirection);
 
             if(item != null)
                 actionHand.AddItemTo(item, 0);

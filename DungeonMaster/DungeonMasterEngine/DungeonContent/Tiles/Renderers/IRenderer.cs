@@ -4,11 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
-    public interface ITextureRenderer : IRenderer
-    {
-        Texture2D Texture { get; }
-    }
-
     public interface IRenderer
     {
         Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter);

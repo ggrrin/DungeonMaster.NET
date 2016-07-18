@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
 
         public TFactory Factory { get; }
 
-        public abstract int ApplyAttack(MapDirection direction);
+        public abstract int Apply(MapDirection direction);
 
 
 

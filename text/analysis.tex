@@ -1,4 +1,4 @@
-\chapter{Analýza}
+\chapter{Analýza}\label{analysis}
 
 Tato kapitola nejprve blíže popisuje formát a mechaniky originální hry a dále pojednává o postupech a řešeních použitých 
 při implementaci nového enginu. Jsou zde popsány jak slepé a nevhodné návrhy, tak návrhy, které se ukázaly 
@@ -406,7 +406,7 @@ Jádro enginu pak obsahuje následující tři důležité komponenty:
 \begin{itemize}
 \item Hráč -- tato komponenta zajišťuje interakci s uživatelem. Skrze ni lze ovládat hráčovu skupinu šampionů, sbírat předměty nebo bojovat.
 \item Builder herních úrovní -- tato komponenta zajišťuje sestavování herních úrovní.
-\item Objekt obsahující factories na herní objekty -- pro každý typ popsaný v sekci \ref{dungeon-properties} existuje odpovídající
+\item Objekt obsahující factories -- pro každý typ popsaný v sekci \ref{dungeon-properties} existuje odpovídající
 	factory obsahující jeho vlastnosti. Factories pak mohou vytvářet objekty, jejichž typ reprezentují. Toto bude konkrétně
 	specifikováno později \vref{item-factories}, nicméně důležité je, že skrze jádro enginu lze k těmto factories přistupovat.
 \end{itemize}
@@ -414,20 +414,24 @@ Podrobnosti o jádře enginu jsou ve vývojové dokumentaci \vref{engine-core-se
 
 \section{Reprezentace dlaždic}\label{tile-representation}
 
-V originální hře jsou dlaždice vždy uloženy v obdélníkovém poli \vref{dungeon-objects}. To znamená, že dlaždice, které nejsou využity pro~chodby,
-jsou vždy vyplněny zdmi. Jelikož jedním z cílů této práce je udělat engine co nejrozšiřitelnější \aref{aim-extensibility}, rozhodli jsme se tento problém vyřešit
-o něco obecněji. Mezi dlaždicemi jsou vazby, které s nimi dohromady tvoří obousměrný orientovaný graf. Nicméně, pro dlaždice stále platí, že musí být
-uspořádané do mřížky. Každá z dlaždic má potom stále nejvýše čtyři sousedy. Tato reprezentace pro hodně řídké mapy může ušetřit paměť.
+V originální hře jsou dlaždice vždy uloženy v obdélníkovém poli (viz sekce \ref{dungeon-objects} a obr \ref{tile-representation-img} vlevo).
+To znamená, že dlaždice, které nejsou využity pro~chodby, jsou vždy vyplněny zdmi. Jelikož jedním z cílů této práce je udělat engine co 
+nejrozšiřitelnější \aref{aim-extensibility}, rozhodli jsme se tento problém vyřešit o něco obecněji ( viz obr. \ref{tile-representation-img} vpravo).
+Každá dlaždice je vrchol grafu a pokud 
+jsou dvě dlaždice sousední jsou mezi nimi hrany oběma směry, to dohromady tvoří obousměrně orientovaný graf .
+Nicméně, pro dlaždice stále platí, že mají nanejvýš čtyři sousedy a jsou uspořádané do mřížky. Tato reprezentace pro hodně řídké mapy může ušetřit paměť.
 Avšak důležitější je, že při takové reprezentaci lze jednoduše získat sousedy pouze ze znalosti konkrétní dlaždice. V této 
 podobě by bylo navíc jednoduší engine upravit tak, aby dlaždice nemusely být na mřížce a aby mohli mít více sousedů.
 
+\imgx{tile-representation-img}{Uložení dlaždic v originálním vs tomto enginu.}
+
 Předchozí rozhodnutí také vede k tomu, že již nejsou potřeba dlaždice typu zeď \cc{tile-representation-img}, jelikož její stěny můžou být definovány ve 
-dlaždicích typu podlaha. Při vytváření podlahy je pak nutné číst i její sousední dlaždice. Pokud je soused daným směrem zeď, 
+dlaždicích typu podlaha \cc{tileside-move}. Při vytváření podlahy je pak nutné číst i její sousední dlaždice. Pokud je soused daným směrem zeď, 
 vytvoří se na této straně stěna a soused není nastaven. V opačném případě je soused nastaven na odpovídající dlaždici.
-Zprávy původně cílené zdím je také třeba posílat na odpovídající dlaždice podlahy. Tato reprezentace zdí opět vede k
+Zprávy původně cílené zdím je také třeba posílat na odpovídající dlaždice podlahy \cc{tile-representation-img}. Tato reprezentace zdí opět vede k
 vyšší flexibilitě, jelikož případné místo využité původními dlaždicemi typu zdi lze využít jiným způsobem.
 
-\imgx{tile-representation-img}{Uložení dlaždic v originálním vs tomto enginu.}
+\imgx{tileside-move}{Ilustrace přesunu stěn do dlaždice \xxx{podlahy}}
 
 Pokud jsou tedy stěny součástí dlaždic, je třeba vyřešit jejich reprezentaci. Buď je možné, aby veškeré funkce stěn obsahovala přímo
 dlaždice, a nebo je možné tyto části delegovat do zvláštních objektů. Ze začátku byl v enginu použit první zmiňovaný způsob. Nicméně 
@@ -455,15 +459,13 @@ Senzor má následující vlastnost:
 \begin{itemize}
 \item Typ -- číselné označení, dle kterého originální herní engine určí způsob aktivace.
 \item Akce -- může být buď lokální, nebo vzdálená. Pro lokální akce je to zarotování sekvencí senzorů 
-	přepínače \cc{actuator-rotation} nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy \vref{dungeon-objects} na danou cílovou dlaždici. 
-\item Data pro lokální resp. vzdálenou akci.
+	přepínače nebo přidání zkušeností hráči. Pro vzdálené akce je to odeslání zprávy \vref{dungeon-objects} na danou cílovou dlaždici. 
+\item Data - pro každý typ senzoru se může obsah lišit,  
 \item Zpoždění -- doba, po které se provede akce.
 \item Opačný efekt -- liší se dle typu senzoru, nicméně většinou otáčí podmínku aktivace pro daný typ senzoru. 
 \item Opakovatelnost -- určuje, zda lze senzor aktivovat neomezeně krát či pouze jednou.
-\item Dekorace  
+\item Dekorace  -- číselný identifikátor dekorace pro danou herní úroveň.
 \end{itemize}
-
-\imgx{actuator-rotation}{Ilustrace rotace sekvence senzorů.}
 
 Výše popsaný systém přepínačů přináší hned několik problémů:
 \begin{enumerate}[label=\textbf{P\arabic*}]
@@ -472,6 +474,52 @@ Výše popsaný systém přepínačů přináší hned několik problémů:
 \item\label{actuator-representation} Jak reprezentovat přepínače v novém enginu.
 \item\label{actuator-remote-actions} Jakým způsobem provádět vzdálené akce.
 \end{enumerate}
+
+\subsection{Příklady}
+Pro ujasnění celého konceptu přepínačů si pojďme ukázat několik příkladů. Textový popis aktivační podmínky senzorů pro jednotlivé 
+jejich typy může být nalezen v komunitní dokumentaci \cite{TechnicalDocumentationFontanel05}. Přesná funkce senzorů pak může být nalezna
+v dekompilovaných zdrojových kódech \cite{DMDecompilation} v následujících funkcích, které jsou v souboru \ccc{SENSOR.C}:
+
+\begin{itemize}
+\item \ccc{F275\_aszz\_SENSOR\_IsTriggeredByClickOnWall} -- chování pro senzory na zdech,
+\item \ccc{F276\_qzzz\_SENSOR\_ProcessThingAdditionOrRemoval} -- chování pro senzory na podlaze.
+\end{itemize}
+
+\subsubsection{Držák na pochodně}
+
+Držák na pochodně \cc{torch-actuator} se skládá ze dvou senzorů. Senzor na první pozici je typu~0,
+což znamená, že tento senzor nelze aktivovat. Tento senzor může pouze zobrazovat svoji dekoraci (v tomto případě prázdný držák na pochodně), pokud je na posledním 
+místě sekvence, ostatní jeho vlastnosti nejsou využity. Senzor na druhé pozici je typu~13, což znamená, že tento senzor
+lze aktivovat, pouze pokud má hráč prázdnou ruku a pochodeň je uložena ve zdi přepínače (viz první část obr. \ref{torch-actuator}) nebo naopak 
+(viz druhá část obrázku \ref{torch-actuator}). Dekorace této pochodně je držák s pochodní. Položka data pak určuje, pro jaký typ předmětu platí
+aktivační podmínka (v tomto případě tj. identifikátor pochodně). A efekt aktivace je rotace sekvence senzorů. Veškeré akce senzorů v tomto
+případě tedy dělá druhý senzor. Při aktivaci vezme pochodeň uloženou ve zdi, dá jí hráči do ruky(při druhé aktivaci naopak) a provede rotaci senzorů, čímž se zobrazí
+dekorace prvního senzoru (při druhé aktivaci dekorace druhého senzoru).
+
+\imgx{torch-actuator}{Ilustrace přepínače pro držák pochodní.}
+
+\subsubsection{Páka}
+
+Páku tvoří dva senzory stejného typu~1, který znamená, že senzor lze aktivovat s čímkoliv v hráčově ruce (i s ničím).
+První senzor má potom lokální akci rotace senzorů a dekoraci páky dole \cc{lever-actuator}. Druhý senzor má dekoraci s pákou 
+nahoře a naopak vzdálenou akci -- prohozeni stavu -- dlaždice \xxx{jámy} na pozici (1,0). Po aktivací prvního senzoru
+tedy dojde k rotaci senzorů a změně dekorace na páku dole. Druhý senzor potom odešle zprávu na cílovou dlaždici \xxx{jámy},
+která se následně zavře resp. otevře. Opětovná aktivace přepínač vrátí vše do původního stavu.
+
+\imgx{lever-actuator}{Ilustrace přepínače reprezentující páku.}
+
+
+\subsubsection{Tlačítko}
+
+Toto tlačítko se skládá opět ze dvou senzorů typu~1 (viz předchozí příklad). Oba senzory potom mají 
+vzdálenou akci na dlaždici (1,0) - první senzor má deaktivační zprávu a druhý aktivační \cc{button-actuator}.
+První senzor má potom opoždění jednu sekundu a druhý šest. Z toho důvodu dojde 1 sekundu po aktivaci přepínače k otevření
+\xxx{jámy} na pět sekund.
+
+\imgx{button-actuator}{Ilustrace přepínače reprezentující dočasné tlačítko.}
+
+
+
 
 \subsection{Reprezentace přepínačů}
 První tři body problémů  (viz \ref{actuator-unclear}, \ref{actuator-effective}, \ref{actuator-representation}) řeší tato sekce.
@@ -484,6 +532,12 @@ novém enginu objekty, které mají obecnější vlastnosti, a tak mohou být po
 objektu inicializují jeho vlastnosti. Celou situaci ilustruje obr. \ref{actuator-object}.
 
 \imgx{actuator-object}{Ilustrace transformace sekvence senzorů na objekt přepínač.}
+
+
+Konkrétním příkladem může být objekt přepínače reprezentující držák na pochodně \cc{actuator-object-example}.
+Kdy první sekvence reprezentuje držák s pochodní a druhá držák bez ní -- při vytváření objektu držáku se pak specifikuje, zda má či nemá pochodeň. 
+
+\imgx{actuator-object-example}{Ilustrace transformace sekvence senzorů na objekt přepínač.}
 
 Tento způsob sice řeší problém samotné reprezentace\vbref{actuator-representation}, ale později se ukázalo, že velice nevhodně. Například
 kód převádějící sekvence na přepínače je složitý a nepřehledný. Bylo také složité vytvořit přepínač podle technické dokumentace \cite{TechnicalDocumentationFontanel05}
@@ -520,7 +574,7 @@ Jak již bylo řečeno \vref{dungeon-objects}, celý systém mechanik herních �
 V originální hře je cíl odeslané zprávy vázán na její souřadnice dlaždice. 
 Jelikož jsme se v enginu nechtěli vázat na tyto pevné souřadnice, rozhodli jsem se namísto nich
 cílovou dlaždici identifikovat její referencí. To by případně ulehčilo práci při transformaci enginu tak, aby
-dlaždice mohli mít více sousedů nebo aby nemusely být na pevné mřížce \vref{tile-representation}.
+dlaždice mohly mít více sousedů nebo aby nemusely být na pevné mřížce \vref{tile-representation}.
 Při takovéto reprezentaci však nastává problém s inicializací dlaždic a přepínačů \vref{level-inicialization}.
 
 V originální hře lze mezi dlaždicemi posílat pouze jeden typ zprávy. Jelikož cílem této práce je udělat engine
@@ -566,7 +620,13 @@ Pokud je po entitě vyžadována dovednost, kterou entita nedisponuje, je její 
 V originální hře jsou dva typy dovedností: základní a skryté. Pokud některá akce vylepšuje skrytou dovednost,
 rozdělí se získané zkušenosti mezi obě dovednosti \vref{properties-skills}. Tento koncept schopností není v enginu vyžadován a 
 záleží potom na konkrétní implementaci dovednosti. Ta také specifikuje množství zkušeností nutné pro 
-získání nových úrovní. Implementace dovedností pro hru Dungeon Master odpovídá té ve zdrojových kódech hry. \cite{DMDecompilation}.
+získání nových úrovní. Implementace dovedností pro hru Dungeon Master odpovídá té ve zdrojových kódech hry \cite{DMDecompilation},
+konkrétně v následujících funkcích  v souboru \ccc{CHAMPION.C}:
+
+\begin{itemize}
+\item \ccc{F304\_apzz\_CHAMPION\_AddSkillExperience} -- přidání zkušeností dané dovednosti.
+\item \ccc{F303\_AA09\_CHAMPION\_GetSkillLevel} -- získání úrovně dané dovednosti.
+\end{itemize}
 
 \subsection{Relace mezi entitami}
 Další funkcí, kterou oproti originálu engine umožňuje, je definovat pro entity jejich nepřátelé. Každá živá entita má token identifikující

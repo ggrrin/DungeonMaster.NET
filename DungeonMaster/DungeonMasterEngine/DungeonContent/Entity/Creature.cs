@@ -421,44 +421,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual async Task Fight(ITile enemyTile, MapDirection moveDirection)
         {
-            new CreatureAttack(this).ApplyAttack(moveDirection);
+            new CreatureAttack(this).Apply(moveDirection);
             await Task.Delay(attackDuration);
-
-            //var sortedEnemyLocation = GroupLayout.AllSpaces
-            //    .Where(s => s.Sides.Contains(moveDirection.Opposite))
-            //    .Concat(GroupLayout.AllSpaces
-            //        .Where(s => s.Sides.Contains(moveDirection)))
-            //    .Where(s => !enemyTile.LayoutManager.IsFree(s));
-
-            //var locEnum = sortedEnemyLocation.GetEnumerator();
-
-
-            //while (locEnum.MoveNext() && (Activated && Alive))
-            //{
-            //    await Task.Delay(100);
-
-            //    if (enemyTile.LayoutManager.WholeTileEmpty)
-            //        break;
-
-            //    ILiveEntity enemy;
-            //    do
-            //    {
-            //        enemy = enemyTile.LayoutManager.GetEntities(locEnum.Current).FirstOrDefault();
-            //        if (enemy != null)
-            //        {
-            //            //TODO $"{enemy} hitted.".Dump();
-            //            new CreatureAttack(this).ApplyAttack(moveDirection);
-            //            await Task.Delay(attackDuration);
-            //            //TODO if killed reset enumerator
-            //            if (false)
-            //            {
-            //                locEnum.Reset();
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    while (Activated && Alive && enemy != null);
-            //}
         }
         #endregion
 

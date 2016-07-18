@@ -11,17 +11,11 @@ using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterEngine.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent
 {
-    public class Dungeon : DungeonBase<IFactories, LegacyLeader>
-    {
-        public Dungeon(IDungonBuilder<IFactories> builder, IFactories factoreis, LegacyLeader leader, GraphicsDevice graphicsDevice) : base(builder, factoreis, leader, graphicsDevice) { }
-    }
-
     public abstract class DungeonBase<TFactories, TLeader> where TFactories : IFactories where TLeader : ILeader
     {
         protected readonly RendererSearcher bfs = new RendererSearcher();
@@ -182,10 +176,11 @@ namespace DungeonMasterEngine.DungeonContent
 
                 Leader.Update(gameTime);
 
-                foreach (var level in ActiveLevels)
-                {
-                    level.Update(gameTime);
-                }
+                CurrentLevel.Update(gameTime);
+                //foreach (var level in ActiveLevels)
+                //{
+                //    level.Update(gameTime);
+                //}
                 UpdateLight(gameTime);
             }
         }
@@ -288,10 +283,5 @@ namespace DungeonMasterEngine.DungeonContent
                 Light = A1039_i_PaletteIndex;
             }
         }
-    }
-
-    internal interface ILightSource : IUpdate
-    {
-        int LightPower { get; }
     }
 }
