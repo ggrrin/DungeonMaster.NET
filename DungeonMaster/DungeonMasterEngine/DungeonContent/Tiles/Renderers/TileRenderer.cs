@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -45,7 +43,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 
 
             bool res = false;
-            if (leader.Location == Tile)
+            if (leader.Location.Tile == Tile)
             {
                 if (distance != null)
                 {

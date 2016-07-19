@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
+using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 
-namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
+namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {
     public class MagicTorchSpell : ISpell
     {

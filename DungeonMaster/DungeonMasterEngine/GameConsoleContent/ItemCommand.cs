@@ -1,12 +1,8 @@
 ﻿using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
-using Microsoft.Xna.Framework;
 using System.Threading.Tasks;
-using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.ItemCreator;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
+using DungeonMasterEngine.Builders.ItemCreators;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
-using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.CreatureCreator;
+using DungeonMasterEngine.Builders.CreatureCreators;
 using DungeonMasterEngine.DungeonContent.Actions;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
@@ -15,11 +13,8 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.CreatureSpecific;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -181,7 +176,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public override void MoveTo(ITile newLocation, bool setNewLocation)
         {
-
+            //TODO move creature
+            animator.MoveTo(this, GroupLayout.GetSpaceElement(Location.Space, newLocation), setNewLocation);
         }
 
         #region Simple AI

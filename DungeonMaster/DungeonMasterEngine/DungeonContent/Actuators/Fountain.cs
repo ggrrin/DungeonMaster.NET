@@ -1,8 +1,6 @@
-using System;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
-using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Actuators
 {

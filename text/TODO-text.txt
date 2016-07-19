@@ -1,28 +1,8 @@
-﻿general:
-
-reference to object dumper
-more references
-
-analysis:
-
-magic
-creatures 
-champions
-actions & attacks
-description of map direction
-maybe constrains
-about (console) commands
+﻿analysis:
 about whole console thing
-animator
-writing custom map builders (write to 3.9)
+
 
 documentation:
-
 describing whole details of legacy map builder and his extensibility
-more about neighbor interface
-about helper
 extensibility of players
-actions => fight actions
-magic
-more about implementation of synchronization context
-Rozšíření builderů Dungeon Masteru
+projectiles

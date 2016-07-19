@@ -1,9 +1,7 @@
-using DungeonMasterEngine.Builders.ItemCreator;
+using DungeonMasterEngine.Builders.ItemCreators;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
-using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
-using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;

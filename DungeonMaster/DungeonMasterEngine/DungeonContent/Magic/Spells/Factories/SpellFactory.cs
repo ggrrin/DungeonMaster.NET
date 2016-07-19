@@ -6,8 +6,6 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.GameConsoleContent;
 using Microsoft.Xna.Framework;
 

@@ -5,10 +5,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using DungeonMasterEngine.Builders.ActuatorCreators;
+using DungeonMasterEngine.Builders.CreatureCreators;
+using DungeonMasterEngine.Builders.ItemCreators;
+using DungeonMasterEngine.Builders.TileCreators;
 using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
+using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Player;
 using DungeonMasterParser;
 
@@ -51,15 +55,34 @@ namespace DungeonMasterEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResourceProvider.Instance.Initialize(GraphicsDevice, Content);
+
             var dungeonParser = new DungeonParser();
             dungeonParser.Parse();
+
             var renderers = new DefaulRenderers(Content, GraphicsDevice);
             var factoreis = new LegacyFactories(dungeonParser.Data, renderers);
             var theron = new LegacyLeader(factoreis);
-            dungeon = new Dungeon(new LegacyMapBuilder(dungeonParser.Data, renderers), factoreis, theron, GraphicsDevice);
+
+            var initializer = new LegacyMapBuilderInitializer();
+            var builder = new LegacyMapBuilder(initializer);
+            initializer.Data = dungeonParser.Data;
+            initializer.ItemCreator = new LegacyItemCreator(builder);
+
+            var wallActuatorCreator = new WallActuatorCreator(builder);
+            var floorActuatorCreator = new FloorActuatorCreator(builder);
+            var sidesCreator = new SidesCreator(builder, wallActuatorCreator, floorActuatorCreator);
+            var logicActuatorCreator = new LogicActuatorCreator(builder);
+            var creatureCreator = new CreatureCreator(builder);
+            initializer.TileCreator = new LegacyTileCreator(builder, sidesCreator, logicActuatorCreator, creatureCreator);
+            initializer.Initialize();
+
+            dungeon = new Dungeon(builder, factoreis, theron, GraphicsDevice);
+
             GameConsole.InitializeConsole(this, dungeon);
             GameConsole.Instance.DrawOrder = 1;
         }
+
+
 
         protected override void Update(GameTime gameTime)
         {

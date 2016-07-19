@@ -1,6 +1,4 @@
-﻿using DungeonMasterParser.Descriptors;
-
-namespace DungeonMasterParser
+﻿namespace DungeonMasterParser
 {
     public class ChampionDescriptor 
     {

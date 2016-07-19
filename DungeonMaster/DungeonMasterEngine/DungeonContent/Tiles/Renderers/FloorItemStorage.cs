@@ -5,7 +5,6 @@ using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
@@ -61,7 +60,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             }
             else if (leader.Hand != null)
             {
-                leader.Hand.SetLocationNoEvents(Layout.GetSpaceElement(Space, leader.Location));
+                leader.Hand.SetLocationNoEvents(Layout.GetSpaceElement(Space, leader.Location.Tile));
                 AddItem(leader.Hand);
                 leader.Hand = null;
                 return true;

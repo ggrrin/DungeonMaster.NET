@@ -1,5 +1,4 @@
-using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.CreatureCreator;
+using DungeonMasterEngine.Builders.CreatureCreators;
 using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using Microsoft.Xna.Framework.Graphics;

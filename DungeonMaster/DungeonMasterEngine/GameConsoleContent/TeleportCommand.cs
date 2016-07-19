@@ -14,14 +14,14 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (Parameters.Length == 2 && int.TryParse(Parameters[0], out targetLocation.X) && int.TryParse(Parameters[1], out targetLocation.Y))
             {
                 var theron = ConsoleContext.AppContext.Leader;
-                int currentLevel = theron.Location.LevelIndex;
+                int currentLevel = theron.Location.Tile.LevelIndex;
                 var level = ConsoleContext.AppContext.ActiveLevels.First(x => x.LevelIndex == currentLevel);//Level has to be there 
                 Tile targetTile = null;
                 level.TilesPositions.TryGetValue(targetLocation, out targetTile);
 
                 if (targetTile != null && targetTile.IsAccessible)
                 {
-                    theron.Location = targetTile;
+                    theron.Location = theron.Location.GetNew(targetTile);
                 }
                 else
                 {

@@ -13,7 +13,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         public DungeonLevel Level { get; set; }
         public Point GridPosition { get; set; }
         public TileNeighbors Neighbors { get; set; }
-        public IEnumerable<ILiveEntity> Creatures { get; set; }
 
         public virtual void SetupNeighbours(IDictionary<Point, Tile> tilesPositions)
         {

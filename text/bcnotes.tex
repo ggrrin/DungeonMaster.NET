@@ -1,5 +1,6 @@
 \chapter{Vývojová dokumentace}
-Celá práce je rozdělena do dvou projektů Visual Studia. První z nich je \ccc{DungeonMasterParser}, 
+Celá práce je rozdělena do dvou projektů Visual Studia, pro jejichž otevření je zapotřebí mít nainstalované MonoGame SDK 3.4.
+První z nich je \ccc{DungeonMasterParser}, 
 který zajišťuje rozparsování herních dat \vref{level-parsing}. Celý tento projekt se skládá z~datových 
 tříd odpovídající formátu souboru \ccc{DUNGEON.DAT} resp. \ccc{GRAPHICS.DAT} (viz sekce \ref{dungeon-objects} resp. \ref{dungeon-properties}),
 které pak sestaví dohromady třída \ccc{DungeonParser} za vzniku objektu třídy \ccc{DungeonData}.
@@ -34,13 +35,17 @@ Za těmito komponentami stojí následující rozhraní:
 \item \ccc{IDungeonBuilder} -- vytváří pro engine herní úrovně.
 \end{itemize}
 
+
 Pro reimplementaci hry Dungeon Master jsou pak použity následující třídy \ccc{LegacyLeader},
 \ccc{LegacyFactories}, \ccc{LegacyMapBuilder}. Konkrétní typy implementací rozhraní
 \ccc{ILeader} a \ccc{IDungeonBase} lze předat jádru jako typové parametry.
 Případný front end potom může skrze instanci jádra pracovat přímo s konkrétními typy \cc{frontend-core}. Tento projekt
 neobsahuje žádné uživatelské rozhraní, namísto něho je pro udávání některých příkazu použita konzole \ccc{GameConsole}.
 
+Jádro lze pak nalézt ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Tiles}.
+
 \imgx{frontend-core}{Ilustrace komunikace frondendu s jádrem enginu. }
+
 
 \subsection{Asynchronní funkce}\label{async-engine}
 
@@ -138,6 +143,7 @@ V poslední řadě rozhraní reprezentující dlaždice obsahuje prvky:
 		Tuto událost využívají živé entity k určení doby jejich obživnutí.
 \end{itemize}
 
+Všechny třídy s dlaždicemi jsou ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Tiles}.
 
 \subsection{Inicializace dlaždic}
 Jak již bylo zmíněno v analýze \vref{level-inicialization}, k inicializaci dlaždic jsou použity tzv. inicializátory. Inicializátor
@@ -233,7 +239,9 @@ kompatibility s původní hrou. Toto rozhraní pak implementuje třída \ccc{Act
 pro jejich funkci senzory z originální hry \vref{actuator-analyza}. Kromě toho dále existují implementace přepínačů, které jsou provedeny
 jiným způsobem.
 
-\subsection{Implementace obecných přepínačů}
+Třídy související se přepínači a senzory lze nalézt ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Actuators}.
+
+\subsection{Implementace obecných přepínačů}\label{general-sensors}
 Tato sekce pojednává o přepínačích, které ke své funkci nepoužívají senzory. V tomto enginu jsou použity pro 
 dekorace, které provádějí nějakou funkci. K těmto dekoracím v originální hře nenáleží žádné senzory. 
 Studií dekompilovaného kódu originální hry \cite{DMDecompilation} se ukázalo, že některé akce jsou fixovány 
@@ -253,7 +261,7 @@ Tyto přepínače se skládají z řady senzorů, které mohou provádět násle
 
 \begin{itemize}
 \item změna stavu vzdálené dlaždice,
-\item zarotování sekvencí senzorů přepínače \cc{actuator-rotation},
+\item zarotování sekvencí senzorů přepínače,
 \item přidání zkušeností hráči.
 \end{itemize}
 
@@ -294,7 +302,7 @@ Vlastnosti senzorů třídy \ccc{SensorX}:
 
 \item Vlastnosti pro lokální akci:
 	\begin{itemize}
-	\item \ccc{Rotate} -- informace určující, zda-li se má seznam senzorů při aktivaci zarotovat \cc{actuator-rotation}.
+	\item \ccc{Rotate} -- informace určující, zda-li se má seznam senzorů při aktivaci zarotovat.
 	\item \ccc{ExperienceGain} -- informace určující, zda-li se mají hráči po aktivaci přidat zkušenosti.
 	\end{itemize}
 
@@ -360,11 +368,7 @@ Poslední speciální implementací je třída \ccc{LogicActuator}, která můž
 Komunikace se senzory probíhá pomocí zasílání zpráv. Pro tento přepínač je vytvořena speciální dlaždice,
 na kterou nelze hráčem vstoupit. Tato dlaždice je reprezentována třídou \ccc{LogicTile}. 
 
-\begin{figure}[H]\centering
-\includegraphics[width=\textwidth]{./img/actuator-sensor-hierarchii.png}
-\caption{Ilustrace hierarchie přepínačů a senzorů.}
-\label{actuator-sensor-hierarchii}
-\end{figure}
+\imgx{actuator-sensor-hierarchii}{Ilustrace hierarchie přepínačů a senzorů.}
 
 \section{Herní entity}
 
@@ -497,7 +501,7 @@ je na ní dostatek prostoru pro oba \cc{layout-manager}.
 
 \imgx{layout-manager}{Ilustrace vlastností prostorů. }
 
-\subsection{Relace s dalšími entitami}
+\subsection{Relace s dalšími entitami}\label{entities-relations}
 
 Každá živá entita musí definovat vlastnost typu \ccc{IRelationManager}. Toto rozhraní musí definovat relační token typu
 \ccc{RelationToken} pro danou entitu. Dále definuje funkce, která pro daný token vrátí, zda entity odpovídající danému 
@@ -507,6 +511,8 @@ aby si vytvořil implementaci vlastní. K dispozici je ještě generátor uniká
 
 \subsection{Implementace entit}
 Engine obsahuje implementaci dvou entit a to pro šampiony jejich nepřátele.
+Třídy související s entitami jsou ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Entity}.
+
 
 \subsubsection{Šampion}
 Šampion je první živá
@@ -635,6 +641,8 @@ Třída \ccc{AttackBase} obsahuje některé funkce, které používají jak úto
 Třída \ccc{CreatureAttack} je jejím prvním potomkem a implementuje útoky nepřátelský entit. Třída \ccc{HumanAttack} 
 je jejím druhým potomkem a je rodičem pro všechny útoky šampionů, které lze nalézt ve jemném prostoru \ccc{DungeonMasterEngine.DungeonContent.Actions}.
 
+Implementace akcí lze nalézt ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Actions}.
+
 \section{Kouzla}
 Kouzlo definuje rozhraní \ccc{ISpell}, které vyžaduje implementovat jedinou funkci \ccc{Run}. Tato funkce má dva parametry 
 a to vyvolávající entitu a směr vyvolání kouzla. Pro každé kouzlo pak existuje factory, kterou definuje rozhraní \ccc{ISpellFactory} 
@@ -652,6 +660,16 @@ s následujícími položkami:
 Za jednotlivými symboly potom stojí rozhraní  \ccc{ISpellSymbol}, které definuje název symbolu a cenu many pro každý power level
 za použití symbolu. Pro samotné vyvolávání kouzel je pak použita třída \ccc{SpellCastingManager}, která implementuje rozhraní
 \ccc{ISpellCastingManager}.
+
+Implementace kouzel lze nalézt ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Magic}.
+
+\section{Projektily -- \ccc{Projectile}}
+Objekty lítající vzduchem -- aniž by interagovali s dlaždicemi, oproti tomu jak to je v případě entit --  reprezentuje třída \ccc{Projectile}.
+Tato třída je použita například pro kouzla nebo při hodech předmětů. Projektily se samy zaregistrují do kolekce \ccc{DungeonLevel.Updateables},
+odkud jsou následně aktualizovány. Po nárazu může projektil způsobit výbuch a zranění entitám, který reprezentuje třída \ccc{Impact}. 
+
+Projektily jsou ve jemném prostoru:\newline \ccc{DungeonMasterEngine.DungeonContent.Projectiles}.
+
 
 \section{Renderery}
 Jak bylo zmíněno v analýze engine odděluje zobrazovací vrstvu od zbytku enginu \vref{renderer-interactor}. Všechny objekty,
@@ -687,12 +705,12 @@ Celý tento koncept interactoru by šel sice udělat genericky, ale prolínal by
 důvodu jsme se rozhodli v tomto místě ustoupit a udělat situaci jednoduší na úkor kontroly za překladu.
 
 \section{Builder map}
-Nyní když máme rozebrané všechny části enginu, které je potenciálně možné rozšířit, si můžeme vysvětlit, jak
+Nyní když máme rozebrané všechny části enginu, které je potenciálně možné rozšířit, můžeme si vysvětlit, jak
 se vše sestaví dohromady v herní úrovně.
 
-\subsection{Vlastní implementace builderu}
+\subsection{Vlastní implementace builderu}\label{custom-builder}
 Jak již bylo zmíněno builder musí implementovat rozhraní \ccc{IDungeonBuilder} \vref{engine-core-section}. Toto rozhraní je
-potom dotazované pro načtení herní úrovně jádrem enginu. Je úkolem builderu rozhodnout jak bude jednat
+potom dotazované jádrem enginu s požadavkem o načtení určité herní úrovně. Je úkolem builderu rozhodnout, jak bude jednat
 v případě, že je podán několikrát dotaz na stejnou mapu. Typicky je tedy nutné rozhodnout
 se, jestli načtené mapy kešovat či nikoliv. 
 
@@ -705,121 +723,146 @@ To znamená vytvořit strany dlaždic a přepínače či předměty v nich obsa�
 
 \item Nastavení sousedů dlaždic do inicializátorů. 
 
-\item Vytvoření samotného levelu \ccc{DungeonLevel}.
+\item Vytvoření samotné herní úrovně \ccc{DungeonLevel}.
 
-\item Dokončení inicializace inicializátoru a zavolaní inicializaci dlaždic skrze inicializátory. 
+\item Dokončení inicializace dlaždic skrze inicializátory. 
 
 \item Případné kešování herní úrovně pro případný opakovaný požadavek. 
 \end{enumerate}
 
 
-\subsection{Implementace builderu Dungeon Masteru}
-Builder pro samotnu hru Dungeon Master řeší třída \ccc{LegacyMapBuilder}. Tento builder
-využívá již rozparsovaná data reprezentována třídou \ccc{DungeonData}.
-Samotný builder map potom využívá ještě další buildery. Jsou to třídy pro vytváření
-dlaždic, přepínačů, předmětů a příšer. Při požadavku na určitou mapu pak 
-následuje postup zmíněný v předchozí sekci.
-
-\chapter{Uživatelská dokumentace}
-Pro spuštění reimplementace Dungeon Masteru je zapotřebí:
-
+\subsection{Implementace builderu Dungeon Masteru - \ccc{LegacyMapBuilder}}
+Sestavení herní úrovně pro hru Dungeon Master zajišťuje třída \ccc{LegacyMapBuilder} z již připravených dat
+v podobě třídy \ccc{DungeonData}. Tato třída používá ještě ke své funkci další buildery, které mohou mít
+opět další -- celá jejich struktura viz obr. \ref{sub-builders}. Každý tento builder má typicky referenci
+na \ccc{LegacyMapBuilder}, aby měl přístup k celému kontextu. Vlastnosti kontextu lze rozdělit na dvě skupiny:
 \begin{itemize}
-\item Windows Vista a novější 
-\item DirectX 9.0c runtime  
-\item .NET 4.6
+\item data, která se načítají pro každou herní úroveň znovu,
+\item data, která jsou inicializovaná pouze při vytváření builderu. 
 \end{itemize}
 
-Tento projekt si neklade za cíl udělat zcela kompletní a dobře hratelnou reimplementaci Dungeon Master.
-Naopak se soustředí na dobrý návrh enginu jako takového. Z toho důvodu není herní zážitek nikterak
-oslňující, nicméně jako demonstrace funkčnosti enginu poslouží dobře.
-Hru je možné spustit souborem \ccc{/DungeonMaster/DungeonMasterEngine.exe}.
-
-\section{Mechaniky ve hře}
-Hráč reprezentuje vůdce skupiny bojovníků známých jako šampióni. Může ovládat jejich pohyb, 
-předávat jim předměty, donutit je k boji, ke kouzlení, ke konzumaci jedlých předmětů nebo lektvarů.
-Každý bojovník má sadu vlastností a dovedností, v kterých je schopný se zdokonalovat získáváním zkušeností.
-Zkušenosti lze získat bojem na prázdno, bojem proti nepřátelům, kouzlením, nebo jen použitím některých přepínačů.
-V dungeonu jsou přepínače na zdech, které lze aktivovat kliknutím myši. Dále jsou zde přepínače na 
-podlaze, které lze aktivovat vstoupením na podlahu nebo hozením předmětu na daný spínač. Předměty lze
-pokládat na zem, do výklenků a nebo je uložit na tělo bojovníka či do jeho batohu. Přepínače pak mohou 
-aktivovat nebo deaktivovat určité objekty ve hře jako jsou například dveře, teleporty, jámy, otevírací
-zdi, atd. Některé dveře je také možné rozbít útkem. Některé teleporty jsou pouze na konkrétní typy objektů.
-Do jam lze spadnout, ale lze se z nich většinou teleportem dostat ven. V chodbách je tma a proto je nutné 
-používat pochodně -- což lze vložením do jedné z ruk šampiona - nebo je nutné vyvolat magické pochodně.
-
-\imgx{dm-new-screen}{Ilustrace reimplementace hry Dungeon Master}
-
-\section{Cíl hry}
-Hra není úplně kompletní, proto ji není možné zcela dohrát. Z toho důvodu by se za cíl 
-hry dalo považovat dostaní se do poslední herní úrovně, kde nebudou neimplementované funkce
-bránit dalšímu postupu.
-
-\section{Ovládání}
-Pohybovat skupinou lze pomocí kláves W, S, A, D tj. dopředu, dozadu, doleva, doprava. Dále se je možné rozhlížet pomocí šipek na klávesnici.
-
-\subsection{Aktivace přepínačů a sbírání předmětů}
-Přepínače lze aktivovat namířením ukazatele myši na daný objekt a kliknutím nebo stiskem klávesy \ccc{ENTER}. Pokud
-se pod kurzorem vyskytuje předmět nebo  přepínač, který může vložit nějaký předmět hráčovi do ruky, tak se tak provede, pokud je
-hráčova ruka prázdná. Pokud hráč již v ruce něco má, provede se opačná akce tj. předmět se položí na dané místo nebo je 
-pohlcen přepínačem. Ostatní interakce probíhá přes konzoli. Konzole se aktivuje stiskem klávesy \ccc{TAB} a deaktivuje opětovným
-stisknutím tytéž klávesy. Příkaz \ccc{hand} zobrazí popis předmětu v hráčově ruce. Přidáním parametru \ccc{take} se provede
-uložení předmětu do dotazovaného inventáře daného bojovníka. Přidáním parametru \ccc{put} se naopak vloží dotazovaný objekt z inventáře
-do ruky. Dalším možným parametrem příkazu je \ccc{takesub} resp. \ccc{putsub}, pomocí kterého lze uložit předmět z ruky do
-truhly v inventáři nějakého šampiona resp. vložit předmět z truhly šampiona do ruky. Posledním možný parametrem příkazu \ccc{hand} je
-parametr \ccc{use}, který se pokusí aplikovat předmět v ruce na zvoleného šampiona. Takovým způsobem lze použít jídlo, lektvary, nebo voda.
-
-\subsection{Souboj}
-Pro souboj je nejprve nutné vložit zbraň to akční ruky. Což je možné provést příkazy z minulé sekce.
-Samotný souboj probíhá potom skrze příkaz \ccc{fight}, kdy je interaktivně vybrán bojovník a způsob útoku.
-Příkaz lze také použít s dvěma číselnými parametry, kde první identifikuje pořadí šampiona a druhý pořadí akce.
-Kromě boje na blízko lze ještě vyvolávat útočná kouzla. K tomu slouží příkaz \ccc{spell}, kterému se jako první parametr předá index šampiona a pak buď
-jako parametry jména symbolů, nebo při nespecifikování parametrů příkazu lze šampiona a symboly zadat interaktivně.
-
-\subsection{Odpočinek}
-Posledním příkazem je \ccc{champion}, který může mít následující parametry:
+Do první skupin patří následující důležité vlastnosti:
 \begin{itemize}
-\item \ccc{list} -- vypíše jména šampionů.
-\item \ccc{sleep} -- uspí šampiony a tím dojde krychlejší regeneraci vlastností.
-\item \ccc{wake} -- probudí šampiony ze spánku. 
+\item \ccc{CurrentLevelIndex} -- určuje pořadí právě sestavované herní úrovně.
+\item \ccc{CurrentMap} -- obsahuje data právě sestavované herní úrovně.
+\item \ccc{TilePositions} -- kolekce, v které lze za pomocí pozice získat dlaždici, která ji náleží.
+	Do této kolekce by se měly přidávat dlaždice s jejich pozicí při jejich vytváření.
+	Kolekce je pak předána do výsledné herní úrovně reprezentované třídou \ccc{DungeonLevel}.
+
+\item \ccc{TileInitializers} -- tato kolekce obsahuje inicializátory dlaždic, které by se měly 
+	 do kolekce přidávat při vytváření odpovídajích dlaždic. Po vytvoření všech dlaždic je skrze tyto 
+	 inicilizéry dokončena inicilizace dlaždic zaoválním funkce \ccc{InitializerBase.Initialize}.
+\end{itemize}
+Dále jsou pak v této skupině seznamy s texturami pro dveře, dekorace zdí, dekorace podlah a šampiony. Tyto seznamy mají prvky seřazeny tak, aby odpovídaly 
+správným texturám při použití indexů dekorací specifikovaných v datech. Dále obsahuje ještě texturu pro 
+dveře, zeď, tlačítko dveří a teleport.
+
+V druhé část jsou pak obsaženy následující vlastnosti:
+\begin{itemize}
+\item \ccc{Data} -- veškerá data herních úrovní získané z parsovací vrstvy \vref{level-parsing} v objektu typu \ccc{DungeonData}.
+\item \ccc{Factories} -- objekt obsahující všechny factories \vref{engine-core-section}.
+\item \ccc{ItemCreator} -- objekt typu \ccc{IItemCreator} zajišťující vytváření sbíratelných předmětů z odpovídajících dat.
+	Konkrétní implementaci je pak možné předat do konstruktoru při vytváření builderu.
+\item \ccc{TileCreator} -- objekt \ccc{ITileCreator} zajišťující tvorbu dlaždic z odpovídajících dat.
+	Konkrétní implementaci je pak možné předat do konstruktoru při vytváření builderu.
+\item \ccc{CreatureToken} a \ccc{ChampionToken} -- tokeny šampionů a nepřátelských entity (viz. relace mezi entitami v sekci \ref{entities-relations}) 
 \end{itemize}
 
-Pro více informací o příkazech je možné napsat příkaz \ccc{help} do konzole.
+Funkce \ccc{GetLevel} potom provede postup zmíněný v předchozí sekci (viz \ref{custom-builder}). Pro načtení dalších vlastních textur 
+před sestavováním herní úrovně je možné přetížit funkce \ccc{InitializeMapTextures}. Pro získání factory dle globálního identifikátoru \vref{item-descriptors} 
+existuje funkce \ccc{GetItemFactory}, která lze také případně přetížit. Pro získání již vytvořeného objektu dlaždice lze pak použít virtuální asynchronní funkci
+\ccc{GetTargetTile}. Funkci je možné zavolat ještě když objekt pro dlaždici na dané pozici neexistuje. V tom případě se čeká na promise, která se naplní 
+po vytvoření všech dlaždic. Funkce také řeší přesměrovaní pozice na dlaždici typu \xxx{zeď} na odpovídající dlaždici typu \xxx{podlaha} \vref{tile-representation}.
 
-\chapter*{Závěr}
-\addcontentsline{toc}{chapter}{Závěr}
+Buildery jsou ve jemném prostoru \ccc{DungeonMasterEngine.Builders}.
 
-V rámci této práce byl naimplementovaný engine pro Hru Dungeon Master. Engine 
-obsahuje podporu pro všechny funkce z originální hry. Nicméně všechny konkrétní funkce
-nejsou naimplementované, což dává možnost navázat na práci případným následovníkům. 
-Pro implementaci byl použit jazyk C\#, platforma .NET a framework MonoGame. 
-Většina částí enginu je jednoduše rozšiřitelná či modifikovatelná, což vede 
-na dobrou udržitelnost celého systému. Primárně je engine určený pro hru 
-Dungeon Master a dokáže si herní úrovně načíst z originální binárních dat. Avšak 
-načítání herních úrovní je v oddělené vrstvě, a proto je možné tuto vrstvu upravit kvůli případným 
-rozšířením nebo ji je možné nově naimplementovat i pro jiné vstupní formáty.
-Z toho důvodu lze tento engine využít i pro implementaci jiných her na podobných principech.
-Engine má také oddělenou renderovací vrstvu, což umožňuje jednoduše doimplementovat hře lepší look and feel.
-Tento projekt tak může sloužit pro vzdělávání jazyka C\# a objektově orientovaného programování. 
-Studenti si tak můžu vyzkoušet do enginu dodělat nové komponenty a tak si vyzkoušet objektově 
-orientované programování v praxi.
+\imgx{sub-builders}{Ilustrace struktury builderu.}
 
-\section*{Future works}
-Na tuto práce je potenciálně možné navázat v následujících bodech:
+\subsubsection{Builder dlaždic -- \ccc{ILegacyTileCreator}}
 
+Rozhraní \ccc{ILegacyTileCreator} má následující položky:
 \begin{itemize}
-\item Dodělání všech funkcí Dungeon Masteru, tak aby hra byla hratelná až do konce.
-\item Dodělání zobrazovací vrstvy, tak aby odpovídala vzhledu původní hry Dungeon Master.
-\item Dodělání lepší 3D zobrazovací vrstvy.
-\item Udělat podporu pro textový výstup zobrazovací vrstvy pro možnost automatizovaného kontrolování například systémem CodEx. 
-\item Vytvořit editor pro hru Dungeon Master. 
-\item Vytvořit jinou hru na tomto enginu.
-\item Upravit engine tak, aby nebyl vázaný na stejně velké dlaždice uspořádané do mřížky, a umožňoval tak
-	flexibilnější tvorbu herních úrovní. 
+\item \ccc{MiniMap} -- obsahuje texturu herní úrovně s dlaždicemi, které byly vytvořeny. 
+\item \ccc{GetTile} -- tato funkce by měla z odpovídajících dat předaných v konstruktoru vytvořit dlaždici a její inicializátor přidat 
+	do kolekce \ccc{LegacyMapBuilder.TileInitializers}. Dale by také měla zaznamenat dlaždici do minimapy.
+\end{itemize}  
+Implementací tohoto rozhraní je třída \ccc{LegacyTileCreator}, která dlaždice třídí pomocí návrhového vzoru visitor. Pro rozšíření
+	této třídy je možné přetížit funkc \ccc{GetTile}. Tato třída pak ještě obsahuje buildery pro tvorby stěn dlaždice, nepřátel a logických přepínačů.
+	Konkrétní implementace těchto tříd lze vložit do konstruktoru.
+
+
+\subsubsection{Builder stran dlaždic -- \ccc{ISideCreator}}
+
+Rozhraní \ccc{ISideCreator} obsahuje funkce \ccc{SetupSideAsync} a \ccc{SetupSideAwaitableAsync}, které vytvoří stěny dlaždic
+a vloží je do předaného inicializátoru. Obě funkce dělají to samé, akorát druhou z nich je možné awaitovat. Konkrétní implementaci
+tohoto rozhraní tvoří třída \ccc{SideCreator}, která obsahuje buildery pro vytvoření přepínačů na zdech a podlaze. Implementace
+těchto buildrů lze opět specifikovat v konstruktoru. Rozšířením této třídy lze pak přetížit funkce \ccc{GetCeelingSide}, 
+\ccc{GetWallSide} a \ccc{GetFloorSide}.
+
+
+\subsubsection{Builder přepínačů na zdi -- \ccc{IWallActuatorCreator}}
+Rozhraní \ccc{IWallActuatorCreator} vyžaduje funkci \ccc{ParseActuatorX}, která ze zadané sekvence dat senzorů a předmětů 
+ve zdi vytvoří přepínač. Pro toto rozhraní existuje implementace \ccc{WallActuatorCreator}, u které lze při rozšíření
+přetížit následující funkce:
+\begin{itemize}
+\item \ccc{ParseSensor} -- funkce dle typu senzoru v jeho datech vytvoří senzor pro tento engine.
+\item \ccc{CreateWallDecoration} -- funkce vytvoří dekoraci odpovídající přepínač \vref{general-sensors}.
 \end{itemize}
 
 
+\subsubsection{Builder přepínačů na podlaze -- \ccc{IFloorActuatorCreator}}
+Rozhraní \ccc{IFloorActuatorCreator} definuje funkci \ccc{GetFloorActuator}, která ze zadané sekvence dat senzorů vytvoří přepínač. Třída \ccc{FloorActuatorCreator}
+potom implementuje toto rozhraní, a při jejím rozšíření lze přetížit funkci \ccc{CreateSensor}. Tato funkce vytvoří z dat o senzoru
+senzor pro tento engine.
+
+\subsubsection{Builder nepřátelský entit -- \ccc{ICreatureCreator}}
+Toto rozhraní definuje jedinou funkci a to \ccc{AddCreatureToTile}, která by měla rozparsovat data o skupině nepřátel a vytvořit zní odpovídající entity.
+Nepřátelské entity se potom zaregistrují na událost indikující dokončení inicializace všech dlaždic a obživnou na specifikované dlaždici.
+Třída \ccc{CreatureCreator} implementuje toto rozhraní, kdy její funkce \ccc{AddCreatureToTile} lze přetížit.
+
+
+\subsubsection{Builder logických přepínačů -- \ccc{ILogicActuatorCreator}}
+Toto rozhraní implementuje třída \ccc{LogicActuatorCreator} a obsahuje funkci \ccc{SetLogicActuator}, která vytvoří logické senzory
+a nastaví je do předaného inicializátoru. Přetížením funkce \ccc{LogicActuatorCreator.ParseLogicSensor} lze dodat podporu
+pro další typy senzorů.
+
+
+\subsubsection{Builder předmětů -- \ccc{ILegacyItemCreator}}
+Tímto rozhraním lze za pomocí jeho funkce \ccc{CreateItem} vytvářet předměty na základě odpovídajících dat. Toto rozhraní implementuje třída
+\ccc{LegacyItemCreator}, která vytváří předměty pomocí návrhového vzoru visitor. Přetížením její funkce \ccc{CreateItem} je možné přidat podporu
+pro další předměty.
+
+
+\section{Implemetace hráče -- \ccc{ILeader}}
+Hráče reprezentuje rozhraní \ccc{ILeader}, které má následující položky:
+\begin{itemize}
+\item \ccc{LocationChanged} -- událost vyvolaná při změně dlaždice hráč. Jádro je na tuto událost zaregistrované a při jejím vyvolání provede aktualizaci
+	viditelných dlaždic a pokus o načtení případných dalších úrovní \vref{engine-core-section}.
+\item \ccc{PartyGroup} -- hráčova skupina obecných entit. Jádro tuto vlastnost používá k výpočtu osvětlení, dle obsahu předmětů entit.
+\item \ccc{Hand} -- ruka hráče, do které se vloží předmět po kliknutí na něj nebo jinými akcemi.
+\item \ccc{Interactor} -- objekt, který je používán k interakci s objekty. Používají ho renderery a musí vědět jakého typu je a přetypovat si ho na něj.
+\item \ccc{Layout} -- určuje layout hráče na dlaždici.
+\item \ccc{Leader} -- šampion, který je označený jako vůdce. Pomocí jeho statistik se pak určuje síla hodu předmětem.
+\item \ccc{View} -- matice zobrazení.
+\item \ccc{Projection} -- matice projekce.
+\item \ccc{Enabled} -- určuje, zda má hráč reagovat na vstup z periferií -- při zobrazení konzole je například zablokován.
+\item \ccc{AddChampoinToGroup} -- funkce pro přidání šampiona do skupiny.
+\item \ccc{Draw} -- funkce, v které lze vykreslovat objekty.
+\item \ccc{Update} -- funkce, v která je volána v každém cyklu herní smyčky.
+\end{itemize}
+
+Implementaci hráče pro hru Dungeon Master tvoří třída \ccc{LegacyLeader} ve jemném prostoru \ccc{DungeonMasterEngine.Player}. Jelikož v jádře se specifikuje typovým parametrem 
+přímo typ hráč, je možné přistupovat z front endu i k položkám, které nejsou v rozhraní \ccc{ILeader}.
 
 
 
 
+\section{Herní konzole -- \ccc{GameConsole}}
+Tato práce obsahuje vlastní implementaci konzole pro zadávání složitějších úkonů. Konzole pak může vykonávat
+příkazy, které jsou reprezentovány rozhraním \ccc{IInterpreter}. Od konzole lze vytvořit
+pouze jedna instance a to skrze statickou funkci \ccc{InitializeConsole}, které lze předat sadu
+interpretrů příkazů. Při zadání příkazu je nalezen jeho odpovídají interpreter a je mu následně předán vstup 
+i výstup na konzoli. Příkaz pak může skrze kontext reprezentovaný třídou \ccc{ConsoleContex} komunikovat s jádrem
+enginu.
 
+ Jednotlivé příkazy lze najít ve jemném prostoru:\newline \ccc{DungeonMasterEngine.GameConsoleContent}.

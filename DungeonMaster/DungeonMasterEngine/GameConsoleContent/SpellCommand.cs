@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Magic;
-using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
-using DungeonMasterEngine.DungeonContent.Magic.Symbols;
 using DungeonMasterEngine.GameConsoleContent.Base;
-using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

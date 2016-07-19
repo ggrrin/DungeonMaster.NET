@@ -1,8 +1,6 @@
 ﻿using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
-using System;
 using System.Threading.Tasks;
-using DungeonMasterEngine.Player;
 
 namespace DungeonMasterEngine.Helpers
 {

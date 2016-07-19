@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using DungeonMasterEngine.Builders;
-using DungeonMasterEngine.Builders.ActuatorCreator;
+using DungeonMasterEngine.Builders.ActuatorCreators;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Actions.Factories;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
-using DungeonMasterParser;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.Player
@@ -96,7 +90,7 @@ namespace DungeonMasterEngine.Player
             MovePartyToRight(newLocation);
         }
 
-        private void MovePartyToRight(ITile newLocation)
+        protected virtual void MovePartyToRight(ITile newLocation)
         {
             if (!newLocation.LayoutManager.WholeTileEmpty)
                 throw new InvalidOperationException();
@@ -123,7 +117,7 @@ namespace DungeonMasterEngine.Player
             newLocation?.OnObjectEntered(this);
         }
 
-        private void RotateParty(MapDirection oldDirection, MapDirection newDirection)
+        protected  virtual void RotateParty(MapDirection oldDirection, MapDirection newDirection)
         {
             var targetLocation = partyGroup.FirstOrDefault()?.Location?.Tile;
 
@@ -160,14 +154,14 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public bool AddChampoinToGroup(ILiveEntity entity)
+        public virtual bool AddChampoinToGroup(ILiveEntity entity)
         {
             var champion = entity as Champion;
             if (champion == null || partyGroup.Count == 4)
                 return false;
 
             var freeSpace = Small4GroupLayout.Instance.AllSpaces.Except(partyGroup.Select(ch => ch.Location?.Space).Where(x => x != null)).First();
-            champion.Location = new FourthSpaceRouteElement(freeSpace, Location);
+            champion.Location = new FourthSpaceRouteElement(freeSpace, Location.Tile);
             partyGroup.Add(champion);
             champion.Died += (sender, deadChampion) => partyGroup.Remove(deadChampion);
 
@@ -189,7 +183,7 @@ namespace DungeonMasterEngine.Player
             if (IsActive && Mouse.GetState().LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released
                 || Keyboard.GetState().IsKeyDown(Keys.Enter) && prevKeyboard.IsKeyUp(Keys.Enter))
             {
-                var tiles = new[] { Location }.Concat(Location.Neighbors
+                var tiles = new[] { Location.Tile }.Concat(Location.Tile.Neighbors
                     .Select(x => x.Item1))
                     .ToArray();
 
@@ -210,7 +204,7 @@ namespace DungeonMasterEngine.Player
             prevKeyboard = Keyboard.GetState();
         }
 
-        private void ThrowItem()
+        protected void ThrowItem()
         {
             var storageType = ActionHandStorageType.Instance;
             var actionHand = Leader.Body.GetBodyStorage(storageType);
@@ -227,7 +221,7 @@ namespace DungeonMasterEngine.Player
 
         public bool IsActive => true;
 
-        public void Draw(BasicEffect effect)
+        public virtual void Draw(BasicEffect effect)
         {
             foreach (var champoin in PartyGroup)
             {
@@ -235,5 +229,6 @@ namespace DungeonMasterEngine.Player
                 champoin.Renderer.Render(ref mat, effect, null);
             }
         }
+
     }
 }

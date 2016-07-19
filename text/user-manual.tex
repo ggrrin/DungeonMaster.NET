@@ -1,0 +1,63 @@
+\chapter{Uživatelská dokumentace}
+Pro spuštění reimplementace Dungeon Masteru je zapotřebí:
+\begin{itemize}
+\item Windows Vista a novější 
+\item DirectX 9.0c runtime  
+\item .NET 4.6
+\end{itemize}
+
+Tento projekt si neklade za cíl udělat zcela kompletní a dobře hratelnou reimplementaci Dungeon Master.
+Naopak se soustředí na dobrý návrh enginu jako takového. Z toho důvodu není herní zážitek nikterak
+oslňující, nicméně jako demonstrace funkčnosti enginu poslouží dobře.
+Hru je možné spustit souborem \ccc{/DungeonMaster/DungeonMasterEngine.exe}.
+
+\section{Mechaniky ve hře}
+Hráč reprezentuje vůdce skupiny bojovníků známých jako šampióni. Může ovládat jejich pohyb, 
+předávat jim předměty, donutit je k boji, ke kouzlení, ke konzumaci jedlých předmětů nebo lektvarů.
+Každý bojovník má sadu vlastností a dovedností, v kterých je schopný se zdokonalovat získáváním zkušeností.
+Zkušenosti lze získat bojem na prázdno, bojem proti nepřátelům, kouzlením, nebo jen použitím některých přepínačů.
+V dungeonu jsou přepínače na zdech, které lze aktivovat kliknutím myši. Dále jsou zde přepínače na 
+podlaze, které lze aktivovat vstoupením na podlahu nebo hozením předmětu na daný spínač. Předměty lze
+pokládat na zem, do výklenků a nebo je uložit na tělo bojovníka či do jeho batohu. Přepínače pak mohou 
+aktivovat nebo deaktivovat určité objekty ve hře jako jsou například dveře, teleporty, jámy, otevírací
+zdi, atd. Některé dveře je také možné rozbít útkem. Některé teleporty jsou pouze na konkrétní typy objektů.
+Do jam lze spadnout, ale lze se z nich většinou teleportem dostat ven. V chodbách je tma a proto je nutné 
+používat pochodně -- což lze vložením do jedné z ruk šampiona -- nebo je nutné vyvolat magické pochodně.
+
+\imgx{dm-new-screen}{Ilustrace reimplementace hry Dungeon Master}
+
+\section{Cíl hry}
+Hra není úplně kompletní, proto ji není možné zcela dohrát. Z toho důvodu by se za cíl 
+hry dalo považovat dostaní se do poslední herní úrovně, kde nebudou neimplementované funkce
+bránit dalšímu postupu.
+
+\section{Ovládání}
+Pohybovat skupinou lze pomocí kláves W, S, A, D tj. dopředu, dozadu, doleva, doprava. Dále se je možné rozhlížet pomocí šipek na klávesnici.
+
+\subsection{Aktivace přepínačů a sbírání předmětů}
+Přepínače lze aktivovat namířením ukazatele myši na daný objekt a kliknutím nebo stiskem klávesy \ccc{ENTER}. Pokud
+se pod kurzorem vyskytuje předmět nebo  přepínač, který může vložit nějaký předmět hráčovi do ruky, tak se tak provede, pokud je
+hráčova ruka prázdná. Pokud hráč již v ruce něco má, provede se opačná akce tj. předmět se položí na dané místo nebo je 
+pohlcen přepínačem. Ostatní interakce probíhá přes konzoli. Konzole se aktivuje stiskem klávesy \ccc{TAB} a deaktivuje opětovným
+stisknutím tytéž klávesy. Příkaz \ccc{hand} zobrazí popis předmětu v hráčově ruce. Přidáním parametru \ccc{take} se provede
+uložení předmětu do dotazovaného inventáře daného bojovníka. Přidáním parametru \ccc{put} se naopak vloží dotazovaný objekt z inventáře
+do ruky. Dalším možným parametrem příkazu je \ccc{takesub} resp. \ccc{putsub}, pomocí kterého lze uložit předmět z ruky do
+truhly v inventáři nějakého šampiona resp. vložit předmět z truhly šampiona do ruky. Posledním možný parametrem příkazu \ccc{hand} je
+parametr \ccc{use}, který se pokusí aplikovat předmět v ruce na zvoleného šampiona. Takovým způsobem lze použít jídlo, lektvary, nebo voda.
+
+\subsection{Souboj}
+Pro souboj je nejprve nutné vložit zbraň to akční ruky. Což je možné provést příkazy z minulé sekce.
+Samotný souboj probíhá potom skrze příkaz \ccc{fight}, kdy je interaktivně vybrán bojovník a způsob útoku.
+Příkaz lze také použít s dvěma číselnými parametry, kde první identifikuje pořadí šampiona a druhý pořadí akce.
+Kromě boje na blízko lze ještě vyvolávat útočná kouzla. K tomu slouží příkaz \ccc{spell}, kterému se jako první parametr předá index šampiona a pak buď
+jako parametry jména symbolů, nebo při nespecifikování parametrů příkazu lze šampiona a symboly zadat interaktivně.
+
+\subsection{Odpočinek}
+Posledním příkazem je \ccc{champion}, který může mít následující parametry:
+\begin{itemize}
+\item \ccc{list} -- vypíše jména šampionů.
+\item \ccc{sleep} -- uspí šampiony a tím dojde krychlejší regeneraci vlastností.
+\item \ccc{wake} -- probudí šampiony ze spánku. 
+\end{itemize}
+
+Pro více informací o příkazech je možné napsat příkaz \ccc{help} do konzole.

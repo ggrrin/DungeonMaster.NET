@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Renderers;
 using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -51,9 +45,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         private void AfterInitialized(TileInitializer initializer)
         {
             Renderer?.Initialize();
-            foreach (var liveEntity in initializer.Creatures)
-            {
-            }
 
             initializer.Initialized -= AfterInitialized;
             Initialized?.Invoke(this, new EventArgs());

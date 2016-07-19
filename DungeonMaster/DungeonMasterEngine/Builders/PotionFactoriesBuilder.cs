@@ -1,9 +1,7 @@
 using System.Linq;
-using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
-using DungeonMasterEngine.Interfaces;
 using DungeonMasterParser.Descriptors;
 using DungeonMasterParser.Enums;
 using DungeonMasterParser.Support;

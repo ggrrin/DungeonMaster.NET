@@ -1,13 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
-using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
-using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
@@ -52,7 +46,7 @@ namespace DungeonMasterEngine.DungeonContent
         public IDungonBuilder<TFactories> Builder { get; }
         public TFactories Factories { get; }
         public virtual LevelCollection ActiveLevels { get; }
-        const float FogHorizontMax = 5.5f;
+        const float FogHorizontMax = 6.5f;
         //FFFFC2
         //0xED, 0xD2, 0x4B
 
@@ -90,7 +84,7 @@ namespace DungeonMasterEngine.DungeonContent
             level = LoadLevel(0, new Point(9, 7));
             //level = LoadLevel(0, null);// start
             Leader = leader;
-            Leader.Location = level.StartTile;
+            Leader.Location = Leader.Layout.GetSpaceElement(Leader.Layout.AllSpaces.First(), level.StartTile);
 
         }
 
@@ -101,7 +95,7 @@ namespace DungeonMasterEngine.DungeonContent
                 UpdateVisibleTiles();
                 SetupLevelConnectors();
 
-                CurrentLevel = ActiveLevels.Single(x => x.LevelIndex == Leader.Location.LevelIndex);
+                CurrentLevel = ActiveLevels.Single(x => x.LevelIndex == Leader.Location.Tile.LevelIndex);
             }
         }
 
@@ -189,7 +183,7 @@ namespace DungeonMasterEngine.DungeonContent
         {
             currentVisibleTiles = new List<ITile>();
             int maxDistance = (int)Light + 2;
-            bfs.StartSearch(Leader.Location, Leader.Location, maxDistance, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
+            bfs.StartSearch(Leader.Location.Tile, Leader.Location.Tile, maxDistance, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
         }
 
         protected Texture2D pixel;
@@ -218,7 +212,7 @@ namespace DungeonMasterEngine.DungeonContent
                 const int scale = 8;
                 batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
                 batcher.Draw(CurrentLevel.MiniMap, new Rectangle(Point.Zero, new Point(CurrentLevel.MiniMap.Width * scale, CurrentLevel.MiniMap.Height * scale)), Color.White);
-                batcher.Draw(pixel, new Rectangle((Leader.Location.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
+                batcher.Draw(pixel, new Rectangle((Leader.Location.Tile.GridPosition.ToVector2() * scale).ToPoint(), new Point(scale, scale)), Color.White);
                 batcher.End();
             }
         }

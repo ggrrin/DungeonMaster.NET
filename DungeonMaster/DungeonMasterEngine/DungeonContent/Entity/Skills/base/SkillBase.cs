@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.Helpers;

@@ -9,12 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.GameConsoleContent.Factories;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
-    public class GameConsole : DrawableGameComponent
+    public class GameConsole : DrawableGameComponent 
     {
         private int cursor = 0;
         private StringBuilder line = new StringBuilder();

@@ -4,21 +4,13 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using DungeonMasterEngine.Builders.ActuatorCreator;
-using DungeonMasterEngine.Builders.ItemCreator;
-using DungeonMasterEngine.Builders.TileCreator;
+using DungeonMasterEngine.Builders.ActuatorCreators;
+using DungeonMasterEngine.Builders.ItemCreators;
+using DungeonMasterEngine.Builders.TileCreators;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
-using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
-using DungeonMasterEngine.DungeonContent.Entity.Skills;
-using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
-using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
-using DungeonMasterEngine.DungeonContent.Tiles;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework.Graphics;
 using DungeonMasterEngine.Graphics.ResourcesProvides;
@@ -31,64 +23,79 @@ using Tile = DungeonMasterEngine.DungeonContent.Tiles.Tile;
 
 namespace DungeonMasterEngine.Builders
 {
+
+    public class LegacyMapBuilderInitializer
+    {
+        public event EventHandler<LegacyMapBuilderInitializer> Initializing;
+        public DungeonData Data { get; set; }
+        public LegacyTileCreator TileCreator { get; set; }
+        public ILegacyItemCreator ItemCreator { get; set; }
+
+        public void Initialize()
+        {
+            Initializing?.Invoke(this, this);
+        }
+    }
+
+    
+
     public class LegacyMapBuilder : IDungonBuilder<IFactories>
     {
-        protected static readonly Random rand = new Random(1);
-        public Random Rand => rand;
-        private readonly Dictionary<int, DungeonLevel> loadedLevels = new Dictionary<int, DungeonLevel>();
         private Point start;
-        private LegacyTileCreator legacyTileCreator;
+        private TaskCompletionSource<bool> tileInitialized;
+        protected readonly Dictionary<int, DungeonLevel> loadedLevels = new Dictionary<int, DungeonLevel>();
 
         private Texture2D[] doorTextures;
         private Texture2D[] wallTextures;
         private Texture2D[] floorTextures;
         private Texture2D[] championTextures;
 
-        public DungeonData Data { get; }
+        public DungeonData Data { get; private set; }
+        public IFactories Factories { get; protected set; }
+        public ILegacyItemCreator ItemCreator { get; private set; }
+        public ILegacyTileCreator TileCreator { get; private set; }
+        public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
+        public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
+        
+        public int CurrentLevelIndex { get; private set; }
         public DungeonMap CurrentMap { get; private set; }
-        public Dictionary<Point, Tile> TilesPositions { get; private set; }
-        public FloorActuatorCreator FloorActuatorCreator { get; private set; }
-        public LegacyItemCreator ItemCreator { get; private set; }
-        public Texture2D defaultDoorTexture { get; private set; }
-        public Texture2D defaultMapDoorTypeTexture { get; private set; }
+        public Dictionary<Point, Tile> TilePositions { get; private set; }
+        public List<TileInitializer> TileInitializers { get; private set; }
+
+        public Texture2D DefaultDoorTexture { get; private set; }
+        public Texture2D DoorButtonTexture { get; protected set; }
+        public Texture2D TeleportTexture { get; protected set; }
+        public Texture2D WallTexture { get; private set; }
         public IReadOnlyList<Texture2D> DoorTextures => doorTextures;
         public IReadOnlyList<Texture2D> WallTextures => wallTextures;
         public IReadOnlyList<Texture2D> FloorTextures => floorTextures;
         public IReadOnlyList<Texture2D> ChampionTextures => championTextures;
-        public Texture2D WallTexture { get; private set; }
-        public int CurrentLevel { get; private set; }
-        public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
-        public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
 
-        public List<TileInitializer> TileInitializers { get; private set; }
-        private TaskCompletionSource<bool> tileInitialized;
-        public IFactories Factories { get; protected set; }
-        public virtual IRenderersSource RendererSource { get; }
-        
-        public Texture2D DoorButtonTexture { get; protected set; }
-        public Texture2D TeleportTexture { get; protected set; }
-
-        public LegacyMapBuilder(DungeonData data, IRenderersSource renderersSource)
+        public LegacyMapBuilder(LegacyMapBuilderInitializer initializer)
         {
-            Data = data; 
-
-            ItemCreator = new LegacyItemCreator(this);
-            RendererSource = renderersSource;
+            initializer.Initializing += InitializerOnInitializing;
         }
 
+        private void InitializerOnInitializing(object sender, LegacyMapBuilderInitializer initializer)
+        {
+            Data = initializer.Data;
+            ItemCreator = initializer.ItemCreator;
+            TileCreator = initializer.TileCreator;
+
+            initializer.Initializing -= InitializerOnInitializing;
+        }
 
         protected virtual void Initialize(int level, Point? startTile)
         {
-            CurrentLevel = level;
+            CurrentLevelIndex = level;
             CurrentMap = Data.Maps[level];
-            legacyTileCreator = new LegacyTileCreator(this);
-            FloorActuatorCreator = new FloorActuatorCreator(this);
-            ItemCreator = new LegacyItemCreator(this);
+            TileCreator.Reset();
+            ItemCreator.Reset();
             InitializeMapTextures();
             TileInitializers = new List<TileInitializer>();
 
             start = startTile ?? new Point(Data.StartPosition.Position.X, Data.StartPosition.Position.Y);
-            TilesPositions = new Dictionary<Point, Tile>();
+            TilePositions = new Dictionary<Point, Tile>();
         }
 
         public DungeonLevel GetLevel(IFactories factories, int level, Point? startTile)
@@ -106,9 +113,9 @@ namespace DungeonMasterEngine.Builders
             ProcessMapData();
             tileInitialized.SetResult(true);
 
-            SetupNeighbours(TilesPositions, TileInitializers);
+            SetupNeighbours(TilePositions, TileInitializers);
 
-            dungeonLevel = new DungeonLevel(level, TilesPositions, TilesPositions[start], legacyTileCreator.MiniMap, CurrentMap.Difficulty);
+            dungeonLevel = new DungeonLevel(level, TilePositions, TilePositions[start], TileCreator.MiniMap, CurrentMap.Difficulty);
 
             foreach (var tileInitializer in TileInitializers)
             {
@@ -131,23 +138,21 @@ namespace DungeonMasterEngine.Builders
                 for (int x = 0; x < CurrentMap.Width; x++)
                 {
                     var pos = new Point(x, y) + offset;
-                    var tile = legacyTileCreator.GetTile(new TileInfo<TileData>
+                    var tile = TileCreator.GetTile(new TileInfo<TileData>
                     {
                         Position = pos,
                         Tile = CurrentMap.GetTileData(pos)
                     });
 
                     if (tile != null)
-                        TilesPositions.Add(pos, tile);
+                        TilePositions.Add(pos, tile);
                 }
             }
         }
 
         protected virtual void InitializeMapTextures()
         {
-            defaultDoorTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DefaultDoor");
-
-            defaultMapDoorTypeTexture = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{Enum.GetName(CurrentMap.DoorType0.GetType(), CurrentMap.DoorType0)}");
+            DefaultDoorTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DefaultDoor");
 
             doorTextures = new Texture2D[CurrentMap.DoorDecorationCount];
             for (int i = 0; i < doorTextures.Length; i++)
@@ -201,7 +206,7 @@ namespace DungeonMasterEngine.Builders
             await tileInitialized.Task;
 
             Tile tile = null;
-            TilesPositions.TryGetValue(target.Value, out tile);
+            TilePositions.TryGetValue(target.Value, out tile);
 
             if (tile == null)
             {
@@ -217,7 +222,7 @@ namespace DungeonMasterEngine.Builders
                 else
                 {//find floor tile where is wall actuator put & thus invert message direction
                     invertMessageDirection = requesteDirection.Opposite;
-                    TilesPositions.TryGetValue(target.Value + requesteDirection.RelativeShift, out tile);
+                    TilePositions.TryGetValue(target.Value + requesteDirection.RelativeShift, out tile);
                     if (tile == null)
                         throw new InvalidOperationException();
                 }
@@ -242,9 +247,9 @@ namespace DungeonMasterEngine.Builders
             }
         }
 
-        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions,  IEnumerable<TileInitializer> initializers)
+        protected void SetupNeighbours(IDictionary<Point, Tile> tilesPositions, IEnumerable<TileInitializer> initializers)
         {
-            foreach (var t in initializers )
+            foreach (var t in initializers)
             {
                 t.SetupNeighbours(tilesPositions);
             }

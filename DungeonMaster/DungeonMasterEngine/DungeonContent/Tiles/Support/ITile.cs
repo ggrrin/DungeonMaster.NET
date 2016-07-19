@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
-using DungeonMasterEngine.DungeonContent.Tiles.Sides;
 using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Support

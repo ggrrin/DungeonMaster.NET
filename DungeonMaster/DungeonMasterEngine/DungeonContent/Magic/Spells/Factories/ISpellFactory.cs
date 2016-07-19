@@ -2,8 +2,6 @@
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Skills.Base;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
-using DungeonMasterEngine.DungeonContent.Tiles;
-using DungeonMasterEngine.DungeonContent.Tiles.Support;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells.Factories
 {

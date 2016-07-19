@@ -5,7 +5,6 @@ using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Potions;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using DungeonMasterEngine.Player;
-using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {

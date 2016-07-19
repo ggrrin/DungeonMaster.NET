@@ -1,5 +1,4 @@
 ﻿using DungeonMasterEngine.GameConsoleContent.Base;
-using DungeonMasterEngine.Player;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.Entity;

@@ -2,20 +2,16 @@
 
 Dungeon Master je počítačová hra žánru RPG (role playing game) vyvinuta firmou Faster Then Light v roce 1987.
 Byla to první real-time hra tohoto typu s pseudo 3D pohledem a ovládáním pomocí myši. Hráč má k dispozici skupinu až čtyř hrdinů,
-s kterými prochází podzemní bludiště a bojuje s nepřáteli \cc{obr0:uvod}. Tito hrdinové se ve hře nazývají šampioni a mohou se 
+s kterými prochází podzemní bludiště a bojuje s nepřáteli \cc{DM-original-screen}. Tito hrdinové se ve hře nazývají šampioni a mohou se 
 zdokonalovat v různých dovednostech. 
 
-\begin{figure}[H]\centering
-\includegraphics[width=\textwidth]{./img/DM-original-screen.png}
-\caption{Screenshot originální hry Dungeon Master}
-\label{obr0:uvod}
-\end{figure}
+\imgx{DM-original-screen}{Screenshot originální hry Dungeon Master}
 
 Bludiště se skládá z několika úrovní uspořádaných vertikálně pod sebou. 
 Jednotlivé úrovně pak nemusí být stejně velké a mohou být od sebe různě horizontálně odsazené.
 Každá úroveň je tvořena obdélníkovou plochou s pravidelnou mřížkou \cc{DM-levels}. Pole vymezena mřížkou nazýváme dlaždice a je jich 
 ve hře několik typů, které definují jejích vzhled a funkci. Některé dlaždice lze aktivovat tzv. přepínači. Takové typy dlaždic
-jsou například dveře nebo jáma \cc{obr0:uvod}, které lze takto otvírat či zavírat. Přepínače mohou být buď nášlapné na podlaze nebo aktivovatelné
+jsou například dveře nebo jáma \cc{DM-original-screen}, které lze takto otvírat či zavírat. Přepínače mohou být buď nášlapné na podlaze nebo aktivovatelné
 pomocí myši na zdech. Mezi úrovněmi lze sestupovat pomocí dlaždic typu schody.  Dále je možné se teleportovat mezi dlaždicemi, a to i v různých úrovních, pomocí dlaždice
 typu teleport. 
 
@@ -31,14 +27,10 @@ Tímto způsobem je možné vytvářet lektvary nebo vyvolávat útočná či ob
 
 Ve hře je celá řada nepřátelský entit. Liší se vzhledem, útokem a pohybem. Pohyb některých entit 
 probíhá ještě po hustší mřížce než jsou dlaždice. Každá entita má definovaný prostor dlaždice, který zaujímá. Je to buď prostor
-celé dlaždice, polovina či čtvrtina. \cc{obr2:uvod} Pohyb entit je potom opět diskrétní jako v případě hráčovi skupiny, 
+celé dlaždice, polovina či čtvrtina. \cc{DM-group-example} Pohyb entit je potom opět diskrétní jako v případě hráčovi skupiny, 
 ale tentokrát mezi definovanými částmi dlaždic. 
 
-\begin{figure}[H]\centering
-\includegraphics[width=\textwidth]{./img/DM-group-example.png}
-\caption{Ilustrace prostorů zaujímaných entitami.}
-\label{obr2:uvod}
-\end{figure}
+\imgx{DM-group-example}{Ilustrace prostorů zaujímaných entitami.}
 
 \section{Reimplementace Dungeon Masteru}
 

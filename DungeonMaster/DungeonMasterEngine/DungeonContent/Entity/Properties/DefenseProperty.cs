@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 
 namespace DungeonMasterEngine.DungeonContent.Entity.Properties

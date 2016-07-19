@@ -2,7 +2,7 @@
 
 namespace DungeonMasterParser.Support
 {
-    public struct ItemDescriptor
+    public class ItemDescriptor
     {
         public int TableIndex { get; set; }
         public int GlobalItemIndex { get; set; }

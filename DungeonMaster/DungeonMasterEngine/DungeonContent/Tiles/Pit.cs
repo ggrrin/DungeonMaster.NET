@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
@@ -84,7 +83,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             if (IsOpen)
             {
                 var entities = LayoutManager.Entities.ToArray();
-                var loc = localizable as IMovable<ITile>;
+                var loc = localizable as IMovable<ISpaceRouteElement>;
                 if (loc != null)
                 {
                     //loc.Location = PitNeighbours.Down;

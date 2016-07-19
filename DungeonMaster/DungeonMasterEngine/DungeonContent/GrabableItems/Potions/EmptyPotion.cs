@@ -1,4 +1,4 @@
-using DungeonMasterEngine.Builders.ItemCreator;
+using DungeonMasterEngine.Builders.ItemCreators;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.Interfaces;
 

@@ -2,15 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.CreatureSpecific;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics;
-using DungeonMasterParser.Enums;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {

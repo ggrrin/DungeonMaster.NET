@@ -1,16 +1,17 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.DungeonContent;
-using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 using DungeonMasterEngine.Helpers;
 
 namespace DungeonMasterEngine.Player
 {
-    public class PointOfViewCamera : FreeLookCamera, IMovable<ITile>
+    public class PointOfViewCamera : FreeLookCamera, IMovable<ISpaceRouteElement>
     {
-        private readonly Animator<PointOfViewCamera, ITile> animator = new Animator<PointOfViewCamera, ITile>();
+        private readonly Animator<PointOfViewCamera, ISpaceRouteElement> animator = new Animator<PointOfViewCamera, ISpaceRouteElement>();
         private IPOVInputProvider inputProvider = new DefaultPOVInput();
         private MapDirection mapDirection = MapDirection.South;
 
@@ -51,13 +52,15 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public Point GridPosition => location.GridPosition;
+        public Point GridPosition => location.Tile.GridPosition;
 
-        private ITile location;
+        private ISpaceRouteElement location;
 
         public event EventHandler LocationChanged;
 
-        public ITile Location
+        public IGroupLayout Layout => FullTileLayout.Instance;
+
+        public ISpaceRouteElement Location
         {
             get
             {
@@ -67,21 +70,21 @@ namespace DungeonMasterEngine.Player
             {
                 var oldLocation = location;
                 location = value;
-                Position = location.StayPoint;
+                Position = location.Tile.StayPoint;
 
-                if (location != oldLocation)
-                    OnLocationChanged(oldLocation, location);
+                if (location.Tile != oldLocation?.Tile)
+                    OnLocationChanged(oldLocation?.Tile, location.Tile);
             }
         }
 
-        public PointOfViewCamera() 
+        public PointOfViewCamera()
         {
         }
 
         protected virtual void OnLocationChanged(ITile oldLocation, ITile newLocation)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
-            $"{Location.Position}".Dump();
+            $"{Location.Tile.Position}".Dump();
         }
 
         protected virtual void OnLocationChanging(ITile oldLocation, ITile newLocation)
@@ -105,11 +108,11 @@ namespace DungeonMasterEngine.Player
             Point? translation = GetTranslation();
             if (translation != null)
             {
-                var newLocation = location.Neighbors.GetTile(new MapDirection(translation.Value));
+                var newLocation = location.Tile.Neighbors.GetTile(new MapDirection(translation.Value));
                 if (CanMoveToTile(newLocation))
                 {
-                    OnLocationChanging(Location, newLocation);
-                    animator.MoveTo(this, newLocation, setLocation: true);
+                    OnLocationChanging(Location.Tile, newLocation);
+                    animator.MoveTo(this, Layout.GetSpaceElement(OnethSpace.Instance, newLocation), setLocation: true);
                 }
             }
 
@@ -118,8 +121,8 @@ namespace DungeonMasterEngine.Player
 
         public void MoveTo(ITile newLocation, bool setNewLocation)
         {
-            OnLocationChanging(Location, newLocation);
-            animator.MoveTo(this, newLocation, setNewLocation);
+            OnLocationChanging(Location.Tile, newLocation);
+            animator.MoveTo(this, Layout.GetSpaceElement(OnethSpace.Instance, newLocation), setNewLocation);
         }
 
         private Point? GetTranslation()

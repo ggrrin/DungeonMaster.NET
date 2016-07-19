@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +10,7 @@ using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using HtmlAgilityPack;
 using static DungeonMasterParser.Enums.ObjectCategory;
-using static DungeonMasterParser.Enums.CarrryLocations;
+
 namespace DungeonMasterParser
 {
     public class DungeonData

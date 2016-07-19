@@ -12,7 +12,7 @@
 \setlength\headsep{0mm}
 \setlength\headheight{0mm}
 \setlength{\emergencystretch}{5em}
-% \openright zařídí, aby následující text začínal na pravé straně knihy
+ % \openright zařídí, aby následující text začínal na pravé straně knihy
 \let\openright=\clearpage
 
 %% Pokud tiskneme oboustranně:
@@ -25,6 +25,8 @@
 % \setlength\headsep{0mm}
 % \setlength\headheight{0mm}
 % \let\openright=\cleardoublepage
+% 
+%
 
 % Přepneme na českou sazbu
 \usepackage[czech]{babel}
@@ -61,6 +63,7 @@
 \usepackage{enumitem}
 \usepackage{amssymb}
 
+\raggedbottom
 
 
 %%% Údaje o práci
@@ -175,10 +178,12 @@ used for education.
 %%% Jednotlivé kapitoly práce jsou pro přehlednost uloženy v samostatných souborech
 %%%\include{uvod}
 %%%\include{kap01}
-
+\sloppy
 \include{introduction}
 \include{analysis}
 \include{bcnotes}
+\include{user-manual}
+\include{conclusion}
 
 %%% Seznam použité literatury
 \include{literatura}

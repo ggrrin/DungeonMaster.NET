@@ -9,7 +9,6 @@ using DungeonMasterParser.Enums;
 using DungeonMasterParser.Support;
 using DungeonMasterParser.Tiles;
 using DungeonMasterParser.Items;
-using DungeonMasterEngine.DungeonContent.Actuators;
 
 namespace DungeonMasterEngine.Helpers
 {

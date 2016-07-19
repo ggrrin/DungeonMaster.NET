@@ -5,6 +5,8 @@ namespace DungeonMasterEngine.DungeonContent.Actions
     public interface IAction
     {
         IActionFactory Factory { get; }
+
+
         int Apply(MapDirection direction);
     }
 

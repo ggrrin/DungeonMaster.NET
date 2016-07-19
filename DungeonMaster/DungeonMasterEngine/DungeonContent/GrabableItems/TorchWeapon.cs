@@ -1,6 +1,5 @@
 ﻿using DungeonMasterEngine.DungeonContent.GrabableItems.Factories;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;
-using DungeonMasterEngine.Helpers;
 using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.GrabableItems

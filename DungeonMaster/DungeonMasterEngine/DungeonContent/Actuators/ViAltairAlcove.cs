@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Misc;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;

@@ -1,5 +1,4 @@
-﻿using System.Xml.Schema;
-using DungeonMasterEngine.Graphics.ResourcesProvides;
+﻿using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.Interfaces;

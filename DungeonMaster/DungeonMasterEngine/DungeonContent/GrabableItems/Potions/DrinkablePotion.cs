@@ -1,5 +1,5 @@
 using System;
-using DungeonMasterEngine.Builders.ItemCreator;
+using DungeonMasterEngine.Builders.ItemCreators;
 using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems.Initializers;

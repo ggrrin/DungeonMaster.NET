@@ -6,7 +6,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.GroupSupport
 {
     class OnethSpaceRouteElement : ISpaceRouteElement
     {
-        public Vector3 StayPoint => Tile.Position +  new Vector3(Space.Area.X, 0,  Space.Area.Y) / 1000f + new Vector3(1/2f,0,1/2f);//TODO remove 1/8
+        public Vector3 StayPoint => Tile.StayPoint;
         public ISpace Space { get; }
         public ITile Tile { get; }
 

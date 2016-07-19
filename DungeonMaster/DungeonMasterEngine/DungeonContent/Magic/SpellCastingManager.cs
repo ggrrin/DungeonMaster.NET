@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity;
@@ -7,7 +6,6 @@ using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Magic.Spells;
 using DungeonMasterEngine.DungeonContent.Magic.Spells.Factories;
 using DungeonMasterEngine.DungeonContent.Magic.Symbols;
-using DungeonMasterEngine.Interfaces;
 
 namespace DungeonMasterEngine.DungeonContent.Magic
 {

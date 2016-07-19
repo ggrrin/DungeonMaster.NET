@@ -1,10 +1,5 @@
-using DungeonMasterEngine.DungeonContent.Entity;
-using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
-using DungeonMasterEngine.DungeonContent.Entity.Properties;
-using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Projectiles;
 using DungeonMasterEngine.DungeonContent.Projectiles.Impacts;
-using Microsoft.Xna.Framework;
 
 namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 {

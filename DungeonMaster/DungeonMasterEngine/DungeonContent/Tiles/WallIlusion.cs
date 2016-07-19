@@ -1,7 +1,5 @@
-﻿using System;
-using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
+﻿using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
-using DungeonMasterEngine.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles
 {
