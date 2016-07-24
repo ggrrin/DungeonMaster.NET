@@ -122,8 +122,9 @@ namespace DungeonMasterEngine.Builders
                 case "Darkness":
                 case "Torch":
                     return new MagicTorchSpellFactory(initializer, Factories.LightPowerToLightAmount);
-                case "Light":
                 case "OpenDoor":
+                    return new OpenDoorProjectileFactory(initializer); 
+                case "Light":
                 case "MagicFootprints":
                 case "SeeThroughWalls":
                 case "Invisibility":

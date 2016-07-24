@@ -16,25 +16,21 @@ namespace DungeonMasterEngine.GameConsoleContent
     public class GameConsole : DrawableGameComponent 
     {
         private int cursor = 0;
-        private StringBuilder line = new StringBuilder();
-        private SpriteBatch batcher;
+        private readonly StringBuilder line = new StringBuilder();
+        public SpriteBatch Batcher { get; private set; }
         private KeyboardState prevKeyState = new KeyboardState();
         private KeyboardState keyState;
-        private KeyboardStream input;
-        private BaseInterpreter interpreter;
-        private Texture2D whiteTexture;
+        private readonly KeyboardStream input;
+        private readonly BaseInterpreter interpreter;
+        public Texture2D WhiteTexture { get; private set; }
         private SpriteFont font;
         public TextWriter Out { get; }
 
-        public bool Activated
-        {
-            get { return activated; }
-            set { activated = value; }
-        }
+        public bool Activated { get; set; }
 
         public TextReader In { get; }
 
-        public Color BackgroundColor { get; set; } = new Color(new Vector4(0, 0, 0, 0.85f));
+        public Color BackgroundColor { get; set; } = new Color(new Vector4(0, 0, 0, 0.45f));
 
         private static readonly IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> defaultFactories =
         new ICommandFactory<ConsoleContext<Dungeon>>[] {
@@ -48,7 +44,6 @@ namespace DungeonMasterEngine.GameConsoleContent
             //TODO add default factories
         };
         private ScreenStream ouput;
-        private bool activated;
 
         public Rectangle Window { get; set; }
 
@@ -185,9 +180,9 @@ namespace DungeonMasterEngine.GameConsoleContent
 
         private void LoadResources()
         {
-            batcher = new SpriteBatch(Game.GraphicsDevice);
-            whiteTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
-            whiteTexture.SetData(new Color[] { Color.White });
+            Batcher = new SpriteBatch(Game.GraphicsDevice);
+            WhiteTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
+            WhiteTexture.SetData(new Color[] { Color.White });
             font = Game.Content.Load<SpriteFont>("Fonts/Default");
 
             SetWindowSize(0.2f);
@@ -203,15 +198,15 @@ namespace DungeonMasterEngine.GameConsoleContent
         public override void Draw(GameTime gameTime)
         {
 
-            batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            Batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
             //background
-            batcher.Draw(whiteTexture, Window, BackgroundColor);
+            Batcher.Draw(WhiteTexture, Window, BackgroundColor);
             //cursor
             int textY = Window.Y + Window.Height - font.LineSpacing;
             if (Activated)
-                batcher.Draw(whiteTexture, new Rectangle(Window.X + (int)font.MeasureString(line.ToString().Substring(0, CursorPosition)).X, textY, 2, font.LineSpacing), Color.White);
+                Batcher.Draw(WhiteTexture, new Rectangle(Window.X + (int)font.MeasureString(line.ToString().Substring(0, CursorPosition)).X, textY, 2, font.LineSpacing), Color.White);
             //command line
-            batcher.DrawString(font, line, new Vector2(Window.X, textY), Color.LightGreen);
+            Batcher.DrawString(font, line, new Vector2(Window.X, textY), Color.White);
             //output
             foreach (var outputLine in ouput.Lines.Reverse())
             {
@@ -219,10 +214,10 @@ namespace DungeonMasterEngine.GameConsoleContent
 
                 if (textY < Window.Y)
                     break;
-                batcher.DrawString(font, outputLine, new Vector2(Window.X, textY), Color.Green);
+                Batcher.DrawString(font, outputLine, new Vector2(Window.X, textY), Color.White);
             }
 
-            batcher.End();
+            Batcher.End();
 
             base.Draw(gameTime);
         }
@@ -234,7 +229,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (disposing)
             {
                 In.Dispose();
-                whiteTexture.Dispose();
+                WhiteTexture.Dispose();
             }
         }
     }

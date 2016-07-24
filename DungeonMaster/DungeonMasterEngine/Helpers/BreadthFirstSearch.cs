@@ -66,6 +66,7 @@ namespace DungeonMasterEngine.Helpers
                 var element = GetElement(currentTile);
                 action(currentTile, element.Layer, element.Bundle);
 
+                AddSucessors(++layer, currentTile);
 
                 if (searchStopped)
                 {
@@ -73,9 +74,6 @@ namespace DungeonMasterEngine.Helpers
                     queue.Clear();
                     break;
                 }
-
-                AddSucessors(++layer, currentTile);
-
             }
 
             OnSearchFinished();

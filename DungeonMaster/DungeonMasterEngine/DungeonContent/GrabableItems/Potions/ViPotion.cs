@@ -23,7 +23,7 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
 
             var bodyParts = entity.Body.BodyParts.ToArray();
 
-            if (bodyParts.Any(x => x.IsWound))
+            if (bodyParts.Any(x => x.IsWounded))
             { /* If the champion is wounded */
                 L1086_ui_Counter = 10;
                 do
@@ -42,8 +42,8 @@ namespace DungeonMasterEngine.DungeonContent.GrabableItems.Potions
                         foreach (int index in healIndices)
                         {
                             var part = bodyParts[index];
-                            atLeasOneHealed |= part.IsWound;
-                            part.IsWound = false;
+                            atLeasOneHealed |= part.IsWounded;
+                            part.IsWounded = false;
                         }
                     }
                     A1088_ui_HealWoundIterationCount = 1;

@@ -157,7 +157,9 @@ namespace DungeonMasterEngine.Builders
                 case 0:
                     return Small4GroupLayout.Instance;
                 case 1:
-                    return Medium2GroupLayout.Instance;
+                    //TODO half tile layout
+                    return Small4GroupLayout.Instance;
+                    //return Medium2GroupLayout.Instance;
                 case 2:
                     return FullTileLayout.Instance;
                 default:
@@ -386,8 +388,7 @@ namespace DungeonMasterEngine.Builders
                             action.Damage,
                             action.Fatigue * 1000 / 6,
                             Skills[action.ImprovedSkill],
-                            action.Stamina,
-                            -1);//TODO
+                            action.Stamina);
 
                     case FightActionEnum.C024_ACTION_DISRUPT:
                     case FightActionEnum.C016_ACTION_JAB:
@@ -408,8 +409,7 @@ namespace DungeonMasterEngine.Builders
                             action.Damage,
                             action.Fatigue * 1000 / 6,
                             Skills[action.ImprovedSkill],
-                            action.Stamina,
-                            -1);
+                            action.Stamina);
                     case FightActionEnum.C042_ACTION_THROW:
                         return new ThrowActionFactory(
                             action.Name,
@@ -420,7 +420,6 @@ namespace DungeonMasterEngine.Builders
                             action.Fatigue * 1000 / 6,
                             Skills[action.ImprovedSkill],
                             action.Stamina,
-                            -1,
                             RenderersSource);
 
                     default:

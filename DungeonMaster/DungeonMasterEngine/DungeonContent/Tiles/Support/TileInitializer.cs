@@ -38,7 +38,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         }
 
 
-        protected override void OnInitialing()
+        protected override void OnInitializing()
         {
             Initializing?.Invoke(this);
         }

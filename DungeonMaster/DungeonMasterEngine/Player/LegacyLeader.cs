@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DungeonMasterEngine.Builders.ActuatorCreators;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actions;
@@ -9,10 +10,14 @@ using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
+using DungeonMasterEngine.GameConsoleContent;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,7 +29,7 @@ namespace DungeonMasterEngine.Player
         private MouseState prevMouse = Mouse.GetState();
         private KeyboardState prevKeyboard;
 
-        public readonly List<Champion> partyGroup = new List<Champion>();
+        private readonly List<Champion> partyGroup = new List<Champion>();
 
         public IReadOnlyList<Champion> PartyGroup => partyGroup;
 
@@ -60,64 +65,59 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        protected override bool CanMoveToTile(ITile tile) => base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
-
-        protected override void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
+        protected override void OnLocationChanged(ITile oldLocation, ITile newLocation, bool moved)
         {
-            base.OnMapDirectionChanged(oldDirection, newDirection);
-            //TODO $"Direction changed: {oldDirection} -> {newDirection}".Dump();
+            base.OnLocationChanged(oldLocation, newLocation, moved);
+            if (!moved)
+            {
+                foreach (var champion in PartyGroup)
+                    champion.Location = champion.Location.GetNew(newLocation);
+            }
+        }
+
+        protected override bool CanMoveToTile(ITile tile) => PartyGroup.All(ch => !ch.Moving) && base.CanMoveToTile(tile) && tile.LayoutManager.WholeTileEmpty;
+
+        protected void RotateParty(MapDirection oldDirection, MapDirection newDirection)
+        {
+            //$"Direction changed: {oldDirection} -> {newDirection}".Dump();
 
             if (oldDirection != newDirection.Opposite)
-                RotateParty(oldDirection, newDirection);
+            {
+                RotatePartyPiOver2(oldDirection, newDirection);
+
+                foreach (var champion in PartyGroup)
+                    champion.MapDirection = MapDirection;
+            }
             else
             {
                 var midle = oldDirection.NextClockWise;
-                RotateParty(oldDirection, midle);
-                RotateParty(midle, newDirection);
+                RotatePartyPiOver2(oldDirection, midle);
+
+
+                foreach (var champion in PartyGroup)
+                    champion.MapDirection = midle;
             }
 
-            foreach (var champion in PartyGroup)
-                champion.MapDirection = MapDirection;
         }
 
-        protected override void OnLocationChanging(ITile oldLocation, ITile newLocation)
+        public override async Task MoveToAsync(ISpaceRouteElement newLocation)
         {
-            base.OnLocationChanging(oldLocation, newLocation);
-
-            oldLocation?.OnObjectLeaving(this);
-            newLocation?.OnObjectEntering(this);
-
-            MovePartyToRight(newLocation);
+            var b = base.MoveToAsync(newLocation);
+            var p = MovePartyAsync(newLocation.Tile);
+            await Task.WhenAll(p, b);
         }
 
-        protected virtual void MovePartyToRight(ITile newLocation)
+
+        protected virtual async Task MovePartyAsync(ITile newTile)
         {
-            if (!newLocation.LayoutManager.WholeTileEmpty)
+            if (!newTile.LayoutManager.WholeTileEmpty)
                 throw new InvalidOperationException();
 
-            foreach (var champion in PartyGroup)
-            {
-                var prevLocation = champion.Location;
-                if (!newLocation.LayoutManager.TryGetSpace(champion, prevLocation.Space))
-                    throw new InvalidOperationException("not expected");
-
-                champion.Location = new FourthSpaceRouteElement(prevLocation.Space, newLocation);
-                prevLocation.Tile.LayoutManager.FreeSpace(champion, prevLocation.Space);
-            }
+            await Task.WhenAll(PartyGroup.Select(ch => ch.MoveToAsync(ch.Location.GetNew(newTile))));
         }
 
-        protected override void OnLocationChanged(ITile oldLocation, ITile newLocation)
-        {
-            base.OnLocationChanged(oldLocation, newLocation);
 
-            //if (oldLocation == null)
-            //    InitMocap();
-
-            oldLocation?.OnObjectLeft(this);
-            newLocation?.OnObjectEntered(this);
-        }
-
-        protected  virtual void RotateParty(MapDirection oldDirection, MapDirection newDirection)
+        protected virtual void RotatePartyPiOver2(MapDirection oldDirection, MapDirection newDirection)
         {
             var targetLocation = partyGroup.FirstOrDefault()?.Location?.Tile;
 
@@ -148,8 +148,7 @@ namespace DungeonMasterEngine.Player
                 foreach (var champoin in PartyGroup)
                 {
                     var newSpace = champoin.GroupLayout.AllSpaces.First(s => s.GridPosition == nextGridPoint(champoin.Location.Space.GridPosition));
-                    champoin.Location = new FourthSpaceRouteElement(newSpace, targetLocation);
-                    targetLocation.LayoutManager.TryGetSpace(champoin, champoin.Location.Space);
+                    champoin.MoveToWithoutFree(new FourthSpaceRouteElement(newSpace, targetLocation), true);
                 }
             }
         }
@@ -162,6 +161,7 @@ namespace DungeonMasterEngine.Player
 
             var freeSpace = Small4GroupLayout.Instance.AllSpaces.Except(partyGroup.Select(ch => ch.Location?.Space).Where(x => x != null)).First();
             champion.Location = new FourthSpaceRouteElement(freeSpace, Location.Tile);
+            champion.MapDirection = MapDirection;
             partyGroup.Add(champion);
             champion.Died += (sender, deadChampion) => partyGroup.Remove(deadChampion);
 
@@ -174,6 +174,11 @@ namespace DungeonMasterEngine.Player
                 return;
 
             base.Update(time);
+
+            if (PartyGroup.Any() && PartyGroup.All(ch => !ch.Moving && ch.MapDirection != MapDirection))
+            {
+                RotateParty(partyGroup.First().MapDirection, MapDirection);
+            }
 
             foreach (var champoin in PartyGroup)
             {
@@ -215,7 +220,7 @@ namespace DungeonMasterEngine.Player
             var action = new ThrowAttack((ThrowActionFactory)factorie.FightActions[42], Leader, storageType);
             action.Apply(MapDirection);
 
-            if(item != null)
+            if (item != null)
                 actionHand.AddItemTo(item, 0);
         }
 
@@ -223,11 +228,44 @@ namespace DungeonMasterEngine.Player
 
         public virtual void Draw(BasicEffect effect)
         {
-            foreach (var champoin in PartyGroup)
+            Vector2 statisticPosition = new Vector2(600, 0);
+            foreach (var champion in PartyGroup)
             {
                 var mat = Matrix.Identity;
-                champoin.Renderer.Render(ref mat, effect, null);
+                champion.Renderer.Render(ref mat, effect, null);
+
+                DrawChampionStatistic(champion, statisticPosition);
+                statisticPosition.Y += 80;
             }
+
+        }
+
+        private void DrawChampionStatistic(Champion champion, Vector2 position)
+        {
+            var batcher = GameConsole.Instance?.Batcher;
+            var whiteTexture = GameConsole.Instance?.WhiteTexture;
+            var font = ResourceProvider.Instance.DefaultFont;
+
+            var properties = new IPropertyFactory[]
+            {
+                PropertyFactory<HealthProperty>.Instance,
+                PropertyFactory<StaminaProperty>.Instance,
+                PropertyFactory<ManaProperty>.Instance,
+            };
+
+            var str = champion.Name + Environment.NewLine + string.Join(Environment.NewLine, properties.Select(pf =>
+            {
+                var p = champion.GetProperty(pf);
+                return $"{p.GetType().Name}: {p.Value}/{p.MaxValue}";
+            }));
+
+            batcher.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
+            var rec = new Rectangle(position.ToPoint(), new Point(200, 80));
+            var c = new Color(Color.Black, 0.5f);
+            batcher.Draw(whiteTexture, rec, c);
+            batcher.DrawString(font, str, position, Color.White);
+
+            batcher.End();
         }
 
     }

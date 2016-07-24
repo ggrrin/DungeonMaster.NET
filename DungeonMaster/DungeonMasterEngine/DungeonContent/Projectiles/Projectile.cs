@@ -191,7 +191,12 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
                 .MinObj(sr => Vector3.Distance(sr.StayPoint, sourceSpace.StayPoint));//if ambiguous select closer to stay point
         }
 
-        public void MoveTo(ITile newLocation, bool setNewLocation)
+        public void MoveTo(ISpaceRouteElement newLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task MoveToAsync(ISpaceRouteElement newLocation)
         {
             throw new NotImplementedException();
         }

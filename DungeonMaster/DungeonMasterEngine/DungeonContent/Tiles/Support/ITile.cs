@@ -22,6 +22,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
 
         bool ContentActivated { get; }
         ICollection<IRenderable> Drawables { get; }
+        bool IsDangerous { get; }
 
         void ActivateTileContent();
         void DeactivateTileContent();
@@ -31,8 +32,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Support
         event EventHandler<object> ObjectLeft;
 
         void OnObjectEntered(object localizable);
-        void OnObjectEntering(object localizable);
-        void OnObjectLeaving(object localizable);
         void OnObjectLeft(object localizable);
 
 

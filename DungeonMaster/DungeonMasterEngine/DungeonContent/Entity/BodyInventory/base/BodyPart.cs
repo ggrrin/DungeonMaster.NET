@@ -16,7 +16,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base
 
         public int SharpResistance => 0;
 
-        public bool IsWound { get; set; }
+        public bool IsWounded { get; set; }
 
         public float HitProbability { get; }
 

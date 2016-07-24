@@ -64,22 +64,49 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             get { return location; }
             set
             {
-                if (location != null)
-                {
-                    animator.MoveTo(this, value, setLocation: false);
-                }
-                else//set Position at first
-                {
-                    if (!value.Tile.LayoutManager.TryGetSpace(this, value.Space))
-                        throw new ArgumentException("Location is not accessible!");
+                if(animator.IsAnimating)
+                    animator.AbortFinishAsync();
 
-                    Position = value.StayPoint;
-                }
+                if (!value.Tile.LayoutManager.TryGetSpace(this, value.Space))
+                    throw new ArgumentException("Location is not accessible!");
 
+                location?.Tile.LayoutManager.FreeSpace(this, location.Space);
+
+                Position = value.StayPoint;
                 location = value;
             }
         }
 
+
+        public async void MoveToWithoutFree(ISpaceRouteElement newLocation, bool setNewLocation)
+        {
+            if (!newLocation.Tile.LayoutManager.TryGetSpace(this, newLocation.Space))
+                throw new InvalidOperationException("cannot reserve the space");
+
+            await animator.MoveToAsync(this, newLocation, false);
+
+            if (setNewLocation)
+                location = newLocation;
+        }
+
+        public override async void MoveTo(ISpaceRouteElement newLocation)
+        {
+            await MoveToAsync(newLocation);
+        }
+
+        public override async Task MoveToAsync(ISpaceRouteElement newLocation)
+        {
+            if (!newLocation.Tile.LayoutManager.TryGetSpace(this, newLocation.Space))
+                throw new InvalidOperationException("cannot reserve the space");
+
+            await animator.MoveToAsync(this, newLocation, false);
+
+            location.Tile.LayoutManager.FreeSpace(this, location.Space);
+
+            location = newLocation;
+        }
+
+        public bool Moving => animator.IsAnimating;
 
         private TaskCompletionSource<bool> timeEffectStopped;
         private bool sleeping = false;
@@ -123,7 +150,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                     notUpdateTime = 0;
                 }
                 const int loopInterval = 1000;
-                notUpdateTime += loopInterval; 
+                notUpdateTime += loopInterval;
                 await Task.Delay(loopInterval);//TODO adjust interval
             }
 
@@ -150,6 +177,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             location = null;
         }
 
+        public override IEnumerable<ISkill> Skills => skills.Values;
+
         public override IProperty GetProperty(IPropertyFactory propertyType)
         {
             IProperty val;
@@ -158,6 +187,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             else
                 return new EmptyProperty();
         }
+
+        public override IEnumerable<IProperty> Properties => properties.Values;
 
         public override ISkill GetSkill(ISkillFactory skillType)
         {
@@ -180,10 +211,6 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public bool ReadyForAction { get; protected set; } = true;
 
-        public override void MoveTo(ITile newLocation, bool setNewLocation)
-        {
-            throw new NotImplementedException();
-        }
 
         public override void Update(GameTime gameTime)
         {
@@ -199,7 +226,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             {
                 ReadyForAction = false;
                 var action = actionFactory.CreateAction(this);
-                if(action != null)
+                if (action != null)
                     await Task.Delay(action.Apply(MapDirection));
                 else
                     "Invalid action. => null".Dump();

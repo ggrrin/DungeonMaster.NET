@@ -1,5 +1,0 @@
-\documentclass[]{standalone}
-\usepackage{graphicx}   
-\begin{document}
-	\includegraphics{./img/dm-new-screen}
-\end{document}

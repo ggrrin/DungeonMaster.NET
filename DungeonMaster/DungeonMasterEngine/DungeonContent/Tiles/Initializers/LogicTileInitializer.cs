@@ -14,9 +14,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public override void SetupNeighbours(IDictionary<Point, Tile> tilesPositions)
         { }
 
-        protected override void OnInitialing()
+        protected override void OnInitializing()
         {
-            base.OnInitialing();
+            base.OnInitializing();
             Initializing?.Invoke(this);
         }
     }

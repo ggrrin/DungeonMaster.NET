@@ -52,7 +52,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
             else if (Parameters.Length == 1)
             {
-                champoin = GetItemAt(t.partyGroup, 0);
+                champoin = GetItemAt(t.PartyGroup, 0);
                 if (!Ready(champoin))
                     return;
                 action = await GetFromItemIndex(champoin?.CurrentCombos.ToArray());
@@ -60,7 +60,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
             else if (Parameters.Length == 2)
             {
-                champoin = GetItemAt(t.partyGroup, 0);
+                champoin = GetItemAt(t.PartyGroup, 0);
                 if (!Ready(champoin))
                     return;
                 action = GetItemAt(champoin?.CurrentCombos.ToArray(), 1);

@@ -3,30 +3,30 @@
 %% Verze pro jednostranný tisk:
 % Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
 % (ale pozor, LaTeX si sám přidává 1in)
-\documentclass[12pt,a4paper]{report}
-\setlength\textwidth{145mm}
-\setlength\textheight{247mm}
-\setlength\oddsidemargin{15mm}
-\setlength\evensidemargin{15mm}
-\setlength\topmargin{0mm}
-\setlength\headsep{0mm}
-\setlength\headheight{0mm}
-\setlength{\emergencystretch}{5em}
+%\documentclass[12pt,a4paper]{report}
+%\setlength\textwidth{145mm}
+%\setlength\textheight{247mm}
+%\setlength\oddsidemargin{15mm}
+%\setlength\evensidemargin{15mm}
+%\setlength\topmargin{0mm}
+%\setlength\headsep{0mm}
+%\setlength\headheight{0mm}
+%\setlength{\emergencystretch}{5em}
  % \openright zařídí, aby následující text začínal na pravé straně knihy
-\let\openright=\clearpage
+%\let\openright=\clearpage
 
 %% Pokud tiskneme oboustranně:
-% \documentclass[12pt,a4paper,twoside,openright]{report}
-% \setlength\textwidth{145mm}
-% \setlength\textheight{247mm}
-% \setlength\oddsidemargin{14.2mm}
-% \setlength\evensidemargin{0mm}
-% \setlength\topmargin{0mm}
-% \setlength\headsep{0mm}
-% \setlength\headheight{0mm}
-% \let\openright=\cleardoublepage
-% 
-%
+ \documentclass[12pt,a4paper,twoside,openright]{report}
+ \setlength\textwidth{145mm}
+ \setlength\textheight{247mm}
+ \setlength\oddsidemargin{14.2mm}
+ \setlength\evensidemargin{0mm}
+ \setlength\topmargin{0mm}
+ \setlength\headsep{0mm}
+ \setlength\headheight{0mm}
+ \let\openright=\cleardoublepage
+ 
+
 
 % Přepneme na českou sazbu
 \usepackage[czech]{babel}
@@ -62,6 +62,8 @@
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{amssymb}
+\usepackage{tipa}
+
 
 \raggedbottom
 
@@ -103,37 +105,37 @@
 % Nepovinné poděkování (vedoucímu práce, konzultantovi, tomu, kdo
 % zapůjčil software, literaturu apod.)
 \def\Podekovani{%
-Děkuji svému vedoucímu práce Mgr. Pavlu Ježkovi, Ph. D. jak za pomoc s výběrem práce, tak za cenné rady při její tvorbě.
+Děkuji svému vedoucímu práce Mgr. Pavlu Ježkovi, Ph.D. jak za pomoc s výběrem práce, tak za cenné rady při její tvorbě.
 }
 
 % Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
 \def\Abstrakt{%
 Cílem bakalářské práce je reimplementovat hru Dungeon Master. V současné době existuje již několik klonů této 
-známé hry. Nicméně oproti nim se tato práce zaměřuje především na následující aspekty. Hra je naprogramována 
-v jazyce C\# s využitím platformy .NET. Dále celý engine je navrhnutý směrem k udržitelnosti a rozšiřitelnosti. 
-Tzn. s využitím tohoto enginu je možné naprogramovat i jinou hru založenou na podobných základech. Ale 
+známé hry. Nicméně oproti nim se tato práce zaměřuje především na dále uvedené aspekty. Hra je naprogramována 
+v jazyce C\# s využitím platformy .NET. Dále celý engine je navrhnutý směrem k udržitelnosti a rozšiřitelnosti, 
+tzn. s využitím tohoto enginu je možné vyrobit a vyvinout i jinou hru založenou na podobných základech. Ale 
 především je jednoduché přidávat do enginu nové funkce. Engine je také 
 připravený na rozdílné vstupní formáty herních úrovní. Dále je také kompletně oddělena zobrazovací vrstva. Vzhledem 
-k povaze projektu by engine měl sloužit jako ukázkový příklad použitelný pro vzdělávání.
+k povaze projektu engine může sloužit jako ukázkový příklad použitelný při výuce programování. 
 
 }
 \def\AbstraktEN{%
-The aim of this thesis is to reimplement the game Dungeon Master. There are currently several 
-clones of this wellknown game. However, compared to them this work focuses on the following aspects.
-The game is programmed in C\# using .NET platform. Furthermore, the entire engine is designed
-towards sustainability and scalability. That means that by using this engine it is possible to program 
-slightly differrent game based on the same basics. Especially, it is easy to add new features to the
+The goal of this thesis is to reimplement the Dungeon Master game. Currently there exist several 
+clones of this wellknown game. However, compared to them this thesis focuses on  aspect stated below.
+The game is implemented in the C\# language using .NET platform. Furthermore, the entire engine is designed
+towards sustainability and scalability -- i. e. that by using this engine it is possible to design 
+slightly differrent game based on the same principles. Especially, it is easy to add new features to the
 engine. The engine is also prepared for different input formats of levels. Also the rendering layer
-of the game engine is completely separate. Due to nature of the project the engine should serve as prime example
-used for education.
+of the game engine is completely separate. Due to nature of the project the engine can serve as 
+a representative example of a complex program in programming courses.
 }
 
 % 3 až 5 klíčových slov (doporučeno), každé uzavřeno ve složených závorkách
 \def\KlicovaSlova{%
-{RPG} {Dungeon Master} {Architektura softwaru} {vzdělávání}
+{RPG}, {engine}, {Dungeon Master}, {architektura softwaru}, {vzdělávání}
 }
 \def\KlicovaSlovaEN{%
-{RPG} {Dungeon Master} {Software architecture} {education}
+{RPG}, {engine}, {Dungeon Master}, {software architecture}, {education}
 }
 
 %% Balíček hyperref, kterým jdou vyrábět klikací odkazy v PDF,
@@ -147,10 +149,10 @@ used for education.
 
 \newcommand{\ccc}[1]{{\mbox{\fontfamily{lmtt}\selectfont\textbf{#1}}}}
 \newcommand{\xxx}[1]{\textit{#1}}
-\newcommand{\cc}[1]{(viz obr. \ref{#1})}
-\newcommand{\vref}[1]{(viz sekce \ref{#1})}
-\newcommand{\vbref}[1]{(viz bod \ref{#1})}
-\newcommand{\aref}[1]{(viz cíl práce \ref{#1})}
+\newcommand{\cc}[1]{(viz obr.~\ref{#1})}
+\newcommand{\vref}[1]{(viz sekce~\ref{#1})}
+\newcommand{\vbref}[1]{(viz bod~\ref{#1})}
+\newcommand{\aref}[1]{(viz cíl práce~\ref{#1})}
 
 \renewcommand{\labelitemii}{$\circ$}
 \renewcommand\labelitemiii{$\diamond$}
@@ -161,6 +163,21 @@ used for education.
 \label{#1}
 \end{figure}}
 
+
+\newcommand{\imgxx}[4]{\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{./img/#1}
+        \caption{#2}
+        \label{#1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{./img/#3}
+        \caption{#4}
+        \label{#3}
+    \end{subfigure}
+    \caption{}
+\end{figure}}
 
 %% Definice různých užitečných maker (viz popis uvnitř souboru)
 \include{makra}
@@ -181,8 +198,7 @@ used for education.
 \sloppy
 \include{introduction}
 \include{analysis}
-\include{bcnotes}
-\include{user-manual}
+\include{documentation}
 \include{conclusion}
 
 %%% Seznam použité literatury
@@ -190,7 +206,7 @@ used for education.
 
 %%% Obrázky v bakalářské práci
 %%% (pokud jich je malé množství, obvykle není třeba seznam uvádět)
-\listoffigures
+%%%\listoffigures
 
 %%% Tabulky v bakalářské práci (opět nemusí být nutné uvádět)
 %%% U matematických prací může být lepší přemístit seznam tabulek na začátek práce.
@@ -209,7 +225,7 @@ used for education.
 %%% v elektronické podobě než čteny (zdrojové kódy programů, datové soubory,
 %%% interaktivní grafy apod.). Elektronické přílohy se nahrávají do SISu a lze
 %%% je také do práce vložit na CD/DVD.
-\chapwithtoc{Přílohy}
+\include{user-manual}
 
 \openright
 

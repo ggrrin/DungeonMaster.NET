@@ -31,9 +31,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Properties
             L0929_ui_MaximumLoad = (liveEntity.GetProperty(PropertyFactory<StrengthProperty>.Instance).Value << 3) + 100;//  (P647_ps_Champion->Statistics[C1_STATISTIC_STRENGTH][C1_CURRENT] << 3) + 100;
             L0929_ui_MaximumLoad = MeleeAttack.F306_xxxx_CHAMPION_GetStaminaAdjustedValue(/*P647_ps_Champion,*/liveEntity.GetProperty(PropertyFactory<StaminaProperty>.Instance), L0929_ui_MaximumLoad);
             //if (L0930_i_Wounds = P647_ps_Champion->Wounds)
-            if (liveEntity.Body.BodyParts.Any(b => b.IsWound))
+            if (liveEntity.Body.BodyParts.Any(b => b.IsWounded))
             {
-                L0929_ui_MaximumLoad -= L0929_ui_MaximumLoad >> (liveEntity.Body.BodyParts.First(b => b.Type == LegsStorageType.Instance).IsWound ? 2 : 3);// (M07_GET(L0930_i_Wounds, MASK0x0010_LEGS) ? 2 : 3);
+                L0929_ui_MaximumLoad -= L0929_ui_MaximumLoad >> (liveEntity.Body.BodyParts.First(b => b.Type == LegsStorageType.Instance).IsWounded ? 2 : 3);// (M07_GET(L0930_i_Wounds, MASK0x0010_LEGS) ? 2 : 3);
             }
             //if (F033_aaaz_OBJECT_GetIconIndex(P647_ps_Champion->Slots[C05_SLOT_FEET]) == C119_ICON_ARMOUR_ELVEN_BOOTS)
             //{

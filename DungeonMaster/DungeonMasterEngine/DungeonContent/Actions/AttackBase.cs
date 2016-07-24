@@ -92,7 +92,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
             }
             L0935_i_Strength = F306_xxxx_CHAMPION_GetStaminaAdjustedValue(attackProvider.GetProperty(PropertyFactory<StaminaProperty>.Instance),/*L0939_ps_Champion,*/ L0935_i_Strength);
             //if (M07_GET(L0939_ps_Champion->Wounds, (P651_i_SlotIndex == C00_SLOT_READY_HAND) ? MASK0x0001_READY_HAND : MASK0x0002_ACTION_HAND))
-            if (attackProvider.Body.GetBodyStorage(P651_i_SlotIndex).IsWound)
+            if (attackProvider.Body.GetBodyStorage(P651_i_SlotIndex).IsWounded)
             {
                 L0935_i_Strength >>= 1;
             }

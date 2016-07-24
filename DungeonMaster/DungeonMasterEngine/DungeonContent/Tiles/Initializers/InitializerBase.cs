@@ -4,7 +4,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
     {
         public void Initialize()
         {
-            OnInitialing();
+            OnInitializing();
         }
 
         public void NotifyInitialized()
@@ -12,7 +12,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
             OnInitialized();
         }
 
-        protected abstract void OnInitialing();
+        protected abstract void OnInitializing();
 
         protected abstract void OnInitialized();
     }

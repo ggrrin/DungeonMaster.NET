@@ -79,9 +79,14 @@
 }
 
 @Book{krc,
-  author = {Brian Kernighan, Dennis Ritchie},
+  author = {Brian Kernighan and Dennis Ritchie},
   title  = {The C Programming Language},
   year   = {1978},
+}
+
+@WWW{CodEx,
+  title = {CodEx – The Code Examiner},
+  url   = {http://codex.ms.mff.cuni.cz/project/},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}

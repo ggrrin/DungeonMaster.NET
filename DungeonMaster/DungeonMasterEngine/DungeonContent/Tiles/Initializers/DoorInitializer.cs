@@ -8,9 +8,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public Door Door { get; set; }
         public bool HasButton { get; set; }
 
-        protected override void OnInitialing()
+        protected override void OnInitializing()
         {
-            base.OnInitialing();
+            base.OnInitializing();
             Initializing?.Invoke(this);
         }
     }

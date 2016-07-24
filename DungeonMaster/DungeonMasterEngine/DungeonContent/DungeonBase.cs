@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
+using DungeonMasterEngine.GameConsoleContent;
 using DungeonMasterEngine.Helpers;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
@@ -79,6 +80,8 @@ namespace DungeonMasterEngine.DungeonContent
 
             ActiveLevels = new LevelCollection();
             DungeonLevel level;
+            //level = LoadLevel(0, new Point(4, 15));
+            //level = LoadLevel(3, new Point(6, 8));
             //level = LoadLevel(1, new Point(4, 14));
             //level = LoadLevel(1, new Point(7,21));
             level = LoadLevel(0, new Point(9, 7));
@@ -183,6 +186,7 @@ namespace DungeonMasterEngine.DungeonContent
         {
             currentVisibleTiles = new List<ITile>();
             int maxDistance = (int)Light + 2;
+            //$"{maxDistance}:{Light}".Dump();
             bfs.StartSearch(Leader.Location.Tile, Leader.Location.Tile, maxDistance, (tile, layer, bundle) => currentVisibleTiles.Add(tile));
         }
 

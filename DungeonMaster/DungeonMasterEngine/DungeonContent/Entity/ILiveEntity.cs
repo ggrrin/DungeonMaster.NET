@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
@@ -14,6 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         IBody Body { get; }
         bool Activated { get; }
 
+        IEnumerable<ISkill> Skills { get; }
         ISkill GetSkill(ISkillFactory skillType);
     }
 }

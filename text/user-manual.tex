@@ -1,63 +1,297 @@
-\chapter{Uživatelská dokumentace}
-Pro spuštění reimplementace Dungeon Masteru je zapotřebí:
+\chapwithtoc{Příloha A -- Uživatelská dokumentace}
+Pro spuštění reimplementace Dungeon Masteru je zapotřebí alespoň:
 \begin{itemize}
-\item Windows Vista a novější 
+\item Windows x86 
 \item DirectX 9.0c runtime  
 \item .NET 4.6
 \end{itemize}
 
-Tento projekt si neklade za cíl udělat zcela kompletní a dobře hratelnou reimplementaci Dungeon Master.
+Tento projekt si neklade za cíl udělat zcela kompletní a dobře hratelnou reimplementaci hry Dungeon Master.
 Naopak se soustředí na dobrý návrh enginu jako takového. Z toho důvodu není herní zážitek nikterak
 oslňující, nicméně jako demonstrace funkčnosti enginu poslouží dobře.
 Hru je možné spustit souborem \ccc{/DungeonMaster/DungeonMasterEngine.exe}.
 
 \section{Mechaniky ve hře}
-Hráč reprezentuje vůdce skupiny bojovníků známých jako šampióni. Může ovládat jejich pohyb, 
-předávat jim předměty, donutit je k boji, ke kouzlení, ke konzumaci jedlých předmětů nebo lektvarů.
-Každý bojovník má sadu vlastností a dovedností, v kterých je schopný se zdokonalovat získáváním zkušeností.
-Zkušenosti lze získat bojem na prázdno, bojem proti nepřátelům, kouzlením, nebo jen použitím některých přepínačů.
-V dungeonu jsou přepínače na zdech, které lze aktivovat kliknutím myši. Dále jsou zde přepínače na 
+Hráč reprezentuje vůdce skupiny šampionů. Může ovládat jejich pohyb,
+předávat jim předměty, donutit je k boji, kouzlení, konzumaci jedlých předmětů nebo lektvarů.
+Každý šampion má sadu vlastností a dovedností, v kterých je schopný se zdokonalovat získáváním zkušeností.
+Zkušenosti lze získat bojem na prázdno, bojem proti nepřátelům, kouzlením nebo jen použitím některých přepínačů.
+V herních úrovních jsou přepínače na zdech, které lze aktivovat stiskem klávesy \ccc{ENTER}. Dále jsou zde přepínače na 
 podlaze, které lze aktivovat vstoupením na podlahu nebo hozením předmětu na daný spínač. Předměty lze
-pokládat na zem, do výklenků a nebo je uložit na tělo bojovníka či do jeho batohu. Přepínače pak mohou 
-aktivovat nebo deaktivovat určité objekty ve hře jako jsou například dveře, teleporty, jámy, otevírací
-zdi, atd. Některé dveře je také možné rozbít útkem. Některé teleporty jsou pouze na konkrétní typy objektů.
-Do jam lze spadnout, ale lze se z nich většinou teleportem dostat ven. V chodbách je tma a proto je nutné 
-používat pochodně -- což lze vložením do jedné z ruk šampiona -- nebo je nutné vyvolat magické pochodně.
-
-\imgx{dm-new-screen}{Ilustrace reimplementace hry Dungeon Master}
+pokládat na zem, do výklenků a nebo je uložit na tělo šampiona či do jeho batohu. Přepínače pak mohou 
+aktivovat nebo deaktivovat určité objekty ve hře, jako jsou například dveře, teleporty, jámy, otevírací
+zdi, atd. Některé dveře je také možné rozbít útokem. Některé teleporty jsou pouze na konkrétní typy objektů.
+Do jam lze spadnout, ale lze se z nich většinou teleportem dostat ven. V chodbách je tma, a proto je nutné 
+používat pochodně -- což lze udělat vložením do jedné z ruk šampiona -- nebo je nutné vyvolat magické pochodně.
 
 \section{Cíl hry}
 Hra není úplně kompletní, proto ji není možné zcela dohrát. Z toho důvodu by se za cíl 
 hry dalo považovat dostaní se do poslední herní úrovně, kde nebudou neimplementované funkce
 bránit dalšímu postupu.
 
-\section{Ovládání}
-Pohybovat skupinou lze pomocí kláves W, S, A, D tj. dopředu, dozadu, doleva, doprava. Dále se je možné rozhlížet pomocí šipek na klávesnici.
+\section{Tutorial}
 
-\subsection{Aktivace přepínačů a sbírání předmětů}
-Přepínače lze aktivovat namířením ukazatele myši na daný objekt a kliknutím nebo stiskem klávesy \ccc{ENTER}. Pokud
-se pod kurzorem vyskytuje předmět nebo  přepínač, který může vložit nějaký předmět hráčovi do ruky, tak se tak provede, pokud je
-hráčova ruka prázdná. Pokud hráč již v ruce něco má, provede se opačná akce tj. předmět se položí na dané místo nebo je 
-pohlcen přepínačem. Ostatní interakce probíhá přes konzoli. Konzole se aktivuje stiskem klávesy \ccc{TAB} a deaktivuje opětovným
-stisknutím tytéž klávesy. Příkaz \ccc{hand} zobrazí popis předmětu v hráčově ruce. Přidáním parametru \ccc{take} se provede
-uložení předmětu do dotazovaného inventáře daného bojovníka. Přidáním parametru \ccc{put} se naopak vloží dotazovaný objekt z inventáře
-do ruky. Dalším možným parametrem příkazu je \ccc{takesub} resp. \ccc{putsub}, pomocí kterého lze uložit předmět z ruky do
-truhly v inventáři nějakého šampiona resp. vložit předmět z truhly šampiona do ruky. Posledním možný parametrem příkazu \ccc{hand} je
-parametr \ccc{use}, který se pokusí aplikovat předmět v ruce na zvoleného šampiona. Takovým způsobem lze použít jídlo, lektvary, nebo voda.
+\imgxx{GPhalk}{obraz s šampionem}{GPapple}{předmět jablko}
 
-\subsection{Souboj}
-Pro souboj je nejprve nutné vložit zbraň to akční ruky. Což je možné provést příkazy z minulé sekce.
-Samotný souboj probíhá potom skrze příkaz \ccc{fight}, kdy je interaktivně vybrán bojovník a způsob útoku.
-Příkaz lze také použít s dvěma číselnými parametry, kde první identifikuje pořadí šampiona a druhý pořadí akce.
-Kromě boje na blízko lze ještě vyvolávat útočná kouzla. K tomu slouží příkaz \ccc{spell}, kterému se jako první parametr předá index šampiona a pak buď
-jako parametry jména symbolů, nebo při nespecifikování parametrů příkazu lze šampiona a symboly zadat interaktivně.
+Po spuštění hry se objevíme v první úrovní hry, kde si je nutné vybrat sadu šampionů. Mezi dlaždicemi se můžeme pohybovat
+pomocí kláves W, S, A, D tj. dopředu, dozadu, doleva, doprava. Dále je možné se rozhlížet pomocí šipek na klávesnici.
+Teď když víme, jak se pohybovat jděme chodbou dokud nenarazíme na nápis ,,HALL OF CHAMPION". Poté jděme hned 
+vpravo směrem na pozici (7, 9), dokud nenarazíme na obraz na obrázku \ref{GPhalk}. Obrazy v sobě mají uložené šampiony, 
+stisknutím klávesy \ccc{ENTER} při namířeném kurzoru na obraz, se zobrazí konzole, která nám vypíše statistiky šampiona 
+a nabídne, zda ho chceme buď reinkarnovat nebo osvobodit -- v prvním 
+případě lze specifikovat navíc jméno šampiona. V obou případech ale dojde k přidání šampiona do skupiny. 
+Po přidání šampiona do skupiny se vpravo zobrazí jeho základní statistiky, tj. zdraví, výdrž a mana.
+Konzoli lze zobrazit či skrýt stiskem klávesy \ccc{TAB}. Pojděme dále 
+na pozici (9, 13), kde je další šampion, kterého přidejme do skupiny. Hráč může mít až 
+čtyři šampiony, nicméně dva nám budou pro ukázku postačovat. První šampion je dobrý bojovník
+a druhý dobrý čaroděj, takže si s nimi budeme moci ukázat jak souboj tak kouzla.
 
-\subsection{Odpočinek}
-Posledním příkazem je \ccc{champion}, který může mít následující parametry:
+
+Vraťme se zpět k původnímu obrazu, vlevo od něj je brána a před ní na podlaze přepínač. Tento přepínač se aktivuje, pokud
+na něj vkročí hráč s alespoň jedním šampionem. Projděme tedy bránou, dokud na zemi neuvidíme jablko \cc{GPapple}. 
+V herních úrovních jsou všude roztroušeny potraviny, které jsou nutné k přežití skupiny. Ukázáním kurzorem na
+jablko a stisknutím klávesy \ccc{ENTER} se jablko dostane do hráčovy ruky. S předměty v hráčově ruce lze provádět akce.
+Zobrazme konzoli a napišme do ní příkaz \ccc{hand}, tím se zobrazí popis věci v ruce. Přidáním parametru \ccc{use}
+lze vybrat šampiona, který jablko sní a sníží se tak jeho hlad. Jděme dále, dokud vpravo neuvidíme schody vedoucí
+o úroveň níže. Na zemi lze nalézt lahev na vodu a svitek. Šampioni potřebují kromě jídla i pití -- do lahve lze nalít voda
+z fontánek, které jsou různě rozmístěné po herních úrovních. Vezměme si tedy tuto lahev do ruky a pomocí následujícího
+příkazu ji vložme do batohu druhého šampiona.
+
+\begin{code}
+> hand take
+Select index:
+0 HALK
+1 TIGGY
+> 1
+Select index:
+0 HeadStorageType
+1 NeckStorageType
+2 TorsoStorageType
+3 ActionHandStorageType
+4 ReadyHandStorageType
+5 LegsStorageType
+6 FeetsStorageType
+7 BackPackStorageType
+8 PouchStorageType
+9 SmallQuiverStorageType
+10 BigQuiverStorageType
+> 7
+\end{code}
+
+Text svitku lze přečíst příkazem \ccc{hand}, pokud ho máme 
+v hráčově ruce. Tento svitek říká, že kouzelnou pochodeň můžeme vyvolat pomocí symbolu ful.
+Sekvence symbolů pro všechna kouzla mohou být nalezena v dokumentaci \cite{DMSpells}.
+
+\begin{code}
+> hand
+Scrool "INVOKE FUL FOR A MAGIC TORCH"
+\end{code}
+
+Pro vyzkoušení kouzel
+pojděme po schodech dolů, kde je naprostá tma. Kouzlit lze pomocí příkazu \ccc{spell} a to buď v interaktivním módu,
+nebo pouze pomocí parametrů. Následující příklad ukazuje interaktivní mód, kdy je nejprve proveden dotaz
+na šampiona, který bude kouzlo vyvolávat a dále už lze odříkávat jednotlivé symboly zakončené příkazem
+\ccc{cast}. První symbol je tzv. power symbol, který určuje sílu kouzla. Každé vyvolání symbolu pak šampiona stojí manu. 
+Každé kouzlo také specifikuje úrovně dovedností, které jsou nutné, aby bylo vyvolání úspěšné. Pokud má šampion
+nižší úroveň, tak stále může kouzlo vyvolat ale s mnohem menší pravděpodobností. Úspěšný i neúspěšný pokus
+o vyvolání kouzla šampionovi rovněž přidá zkušenosti -- avšak neúspěšný pokus daleko méně.
+
+\begin{code}
+> spell 
+Select index:
+0 HALK
+1 TIGGY
+> 1
+Specify one of the following symbols: lo, um, on, ee, 
+pal, mon (sorted by difficulty ascending).
+Write symbol or cast it by "cast"
+> lo
+ManaProperty: 27 of 35 ; -8
+Write symbol or cast it by "cast"
+> ful
+ManaProperty: 22 of 35 ; -5
+Write symbol or cast it by "cast"
+> cast
+MagicalLightProperty: 409 of 2147483647 ; 409
+Spell successfully casted!
+\end{code}
+
+Toto kouzle je slabé, proto můžeme jeho efekt navýšit opětovným vyvoláním.
+Nyní tak ale proveďme druhou variantou pomocí parametrů, kde 
+první specifikuje index šampiona, druhý power symbol a ostatní už jsou běžné symboly.
+
+\begin{code}
+>spell 1 lo ful
+ManaProperty: 14 of 35 ; -8
+ManaProperty: 9 of 35 ; -5
+MagicalLightProperty: 818 of 2147483647 ; 409
+Spell successfully casted!
+\end{code}
+
+Jak vidíme ve výstupu, na další vyvolání kouzla už nám nebude stačit mana. Rychlé obnovení zdraví, výdrže
+a many lze provádět pomocí odpočinku. K němu lze využít příkaz \ccc{champion} s parametrem \ccc{sleep} --
+probuzení lze provést příkazem \ccc{wake}, viz následující ukázka.
+
+\begin{code}
+> champion sleep
+Write 'wake' to wake the group.
+FoodProperty: 1541 of 2048 ; -2
+WaterProperty: 1598 of 2048 ; -1
+StaminaProperty: 750 of 750 ; 0
+StaminaProperty: 443 of 450 ; -7
+ManaProperty: 3 of 35 ; 1
+...
+FoodProperty: 1497 of 2048 ; -2
+WaterProperty: 1483 of 2048 ; -1
+StaminaProperty: 450 of 450 ; 0
+FoodProperty: 1465 of 2048 ; -2
+WaterProperty: 1560 of 2048 ; -1
+StaminaProperty: 750 of 750 ; 0
+wake
+Party had just woken up.
+\end{code}
+
+Odpočinek zvyšuje u šampionů rychleji hlad a žízeň, proto je třeba doplňovat pití a jídlo.
+
+
+\imgxx{GPtorch}{držák na pochodeň}{GPaltar}{VI Altar Rebirth}
+
+Světlo je stále slabé, pojďme tedy zpět po schodech na pozici (4, 14), kde je na zdi pochodeň \cc{GPtorch}. Stiskem klávesy 
+\ccc{ENTER} a kurzorem namířeným na držák pochodně se pochodeň přemístí hráči do ruky. Tím, že se pochodeň vloží 
+do jedné z ruk některého šampiona, se rozsvítí. Intenzita světla, které pochodeň produkuje postupně klesá, až úplně zhasne.
+Vložme tedy pochodeň například prvnímu šampionovi do druhé ruky následujícím
+příkazem.
+
+\begin{code}
+> hand take
+Select index:
+0 HALK
+1 TIGGY
+> 0
+Select index:
+0 HeadStorageType
+1 NeckStorageType
+2 TorsoStorageType
+3 ActionHandStorageType
+4 ReadyHandStorageType
+5 LegsStorageType
+6 FeetsStorageType
+7 BackPackStorageType
+8 PouchStorageType
+9 SmallQuiverStorageType
+10 BigQuiverStorageType
+> 4
+\end{code}
+
+Ještě než sejdeme opět dolů, podívejme se na výklenek \cc{GPaltar} na pozici (4, 17). Pokud nějaký šampion zemře, zbudou po něm
+na zemi kosti. Do takto vypadajících výklenků lze pak tyto kosti vložit,  čímž dojde k oživení šampiona.
+Dále v chodbě jsou pak dveře, které lze otevřít červeným tlačítkem na jejich okraji.
+
+
+\imgxx{GPmummy}{mumie útočící na hráče}{GPkey}{dveře na klíč}
+
+Pojďme ale zpět o úroveň níž a pak vpravo až ke dveřím na pozici (6, 14), za kterými se skrývá mumie \cc{GPmummy}. 
+Po otevření dveří tlačítkem na nás zaútočí. Když bude mumie na dlaždici před hráčem lze na ní aplikovat útok na blízko.
+Útok se provede příkazem \ccc{fight}, který je rovněž k dispozici v interaktivní či parametrické formě. Nejprve
+je třeba vybrat šampiona, s kterým chceme útok provést a následně akci, kterou lze provést se zbraní šampiona.
+Používá se vždy zbraň v akční ruce. Po provedení akce se zbraní se šampionovi sníží výdrž, pokud je výdrž na příliš
+malé úrovni, mají pak útoky menší poškození. Po provedení akce zároveň šampion nemůže nějakou dobu útočit.
+
+\begin{code}
+> fight 
+Select index:
+0 HALK
+1 TIGGY
+> 0
+Select index:
+0 Throw
+1 Bash
+> 1
+HealthProperty: 0 of 20 ; -20
+StaminaProperty: 746 of 750 ; -4
+StaminaProperty: 736 of 750 ; -10
+
+Action available.
+\end{code}
+
+V tomto případě jsme měli štěstí, jelikož šampion zabil mumii na jeden útok.
+Pokud by bylo útoků potřeba provést více, existuje také zmíněná parametrická varianta příkazu, viz následující
+ukázka útoku na jinou nepřátelskou entitu. První parametr opět specifikuje index šampiona, další pak index akce.
+
+\begin{code}
+fight 0 1
+HealthProperty: 37 of 56 ; -11
+StaminaProperty: 731 of 750 ; -6
+StaminaProperty: 729 of 750 ; -2
+
+Action available.
+\end{code}
+
+Nyní projděme dveře na pozici (1, 14), až dojdeme ke dveřím \cc{GPkey}, které nemají tlačítko. 
+Vedle nich lze na zemi nalézt klíč, který lze vložit do zdířky vedle na stěně. Tím
+jsou dveře otevřeny. Na pozici (3,  22) je potom fontánka \cc{GPfountain}, v které si lze doplnit vodu do lahve nebo prázdné baňky.
+ Další klíč je na pozici (1, 23) a lze s ním otevřít dveře na pozici
+(4, 19), za kterými jsou dveře další. Pro jejich otevření musíme získat klíč na pozici (7, 23).
+Cestu k tomuto místu blokují dveře, které lze otevřít pákou na pozici (4, 25) a jáma \cc{GPpit}, kterou lze otevřít
+pákou na pozici (6, 21). 
+
+\imgxx{GPfountain}{fontánka s vodou}{GPpit}{jáma zavíratelná pákou}
+
+Tímto jsme prošli základní mechaniky hry, další postup už je na hráči.
+
+\section{Seznam příkazů a jejich použití}
+\begingroup
+\fontfamily{lmtt}\selectfont
 \begin{itemize}
-\item \ccc{list} -- vypíše jména šampionů.
-\item \ccc{sleep} -- uspí šampiony a tím dojde krychlejší regeneraci vlastností.
-\item \ccc{wake} -- probudí šampiony ze spánku. 
+\item hand - použití: hand [put\textpipe putsub\textpipe take\textpipe takesub]
+	\begin{itemize}
+	\item bez parametrů:  zobrazí textový popis předmětu v ruce
+	\item put: vloží předmět z šampionova inventáře do hráčovi ruky 
+	\item putsub: vloží předmět z truhly v šampionově inventáři do hráčovy ruky
+	\item take: vezme předmět z hráčovy ruky a vloží jej to šampionova inventáře 
+	\item takesub: vezme předmět z hráčovy ruky a vloží jej do truhly v šampionově inventáři 
+	\end{itemize}
+
+\item champion - použití: champion list\textpipe sleep
+	\begin{itemize}
+	\item list: zobrazí seznam šampionů a pro vybraného šampiona zobrazí jeho dovednosti 
+	\item sleep: přivede skupinu šampionů k odpočinku -- probuzení se provede příkazem wake
+	\end{itemize}
+
+\item spell - použití: spell [championIndex symbolSequence]
+	\begin{itemize}
+	\item bez parametrů: interaktivní výběr šampiona a vyvolání kouzla
+	\item s parametry: šampion daný indexem championIndex vyvolá kouzlo  definované sekvencí symbolů symoblSequence
+	\end{itemize}
+
+\item fight - použití: fight [champoinIndex] [actionIndex] 
+	\begin{itemize}
+	\item bez parametru: interaktivní výběr šampiona a akce
+	\item s parametry: šampion s indexem championIndex provede akci s indexem actionIndex
+	\end{itemize}
+
+\item help - použití: help [commandToken]
+	\begin{itemize}
+	\item bez parametrů: zobrazí všechny příkazy 
+	\item commandToken: zobrazí pomocnou zprávu k příkazu commandToken 
+	\end{itemize}
 \end{itemize}
 
-Pro více informací o příkazech je možné napsat příkaz \ccc{help} do konzole.
+\endgroup
+
+\chapwithtoc{Příloha B -- Struktura přiloženého CD}
+Zdrojové kódy jsou určeny pro Visual Studio 2015 s doinstalovaným MonoGame SDK 3.4.
+\begin{itemize}
+\item \ccc{/SourceCodes} -- obsahuje solution s oběma následujícími projekty.
+	\begin{itemize}
+	\item \ccc{/DungeonMaster} -- projekt s parserem vstupních dat z originální hry Dungeon Master.
+	\item \ccc{/DungeonMasterEngine} -- projekt s reimplementovaným enginem hry Dungeon Master.
+	\end{itemize}
+\item \ccc{/Framework} -- obsahuje použitý instalátor MonoGame SDK 3.4.
+\item \ccc{/DungeonMaster} -- obsahuje všechny soubory reimplementace hry Dungeon Master.
+	\begin{itemize}
+	\item \ccc{/DungeonMasterEngine.exe}  -- binárka spouštějící hru.
+	\end{itemize}
+\item \ccc{/prace.pdf} -- text této práce.
+\item \ccc{/README.txt} -- informace o struktuře CD.
+\end{itemize}

@@ -9,7 +9,7 @@ namespace DungeonMasterEngine.Helpers
         private Stopable newLocation, oldLocation;
         private Movable movableObject;
         private TaskCompletionSource<bool> animationPromise;
-        public Task AnimatingTask => animationPromise.Task;
+        public Task AnimatingTask => animationPromise?.Task;
         private bool setLocation;
 
         public bool IsAnimating { get; private set; }
@@ -17,11 +17,11 @@ namespace DungeonMasterEngine.Helpers
         private Vector3 translation;
         private double timeDuration;
 
-        public async Task MoveToAsync(Movable movableObject, Stopable newLocation, bool setLocation)
+        public async Task<bool> MoveToAsync(Movable movableObject, Stopable newLocation, bool setLocation)
         {
             animationPromise = new TaskCompletionSource<bool>();
             MoveTo(movableObject, newLocation, setLocation);
-            await animationPromise.Task;
+            return await animationPromise.Task;
         }
 
         public void MoveTo(Movable movableObject, Stopable newLocation, bool setLocation)
@@ -72,6 +72,7 @@ namespace DungeonMasterEngine.Helpers
 
         public void AbortFinishAsync()
         {
+            IsAnimating = false;
             animationPromise?.TrySetResult(false);
         }
     }

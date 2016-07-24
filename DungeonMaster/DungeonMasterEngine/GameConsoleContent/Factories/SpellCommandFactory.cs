@@ -30,8 +30,9 @@ namespace DungeonMasterEngine.GameConsoleContent.Factories
         /// Help text for command
         /// </summary>
         /// <value>The help text.</value>
-        public string HelpText => "usage: spell [ChampionIndex [SYMBOL*]]\r\n"
-            +" ";
+        public string HelpText => "usage: spell [championIndex symbolSequence]\r\n" +
+             "without parameters: interactive spell cast \r\n" +
+             "with parameters: champion with index championIndex cast spell defined by symbolSequence";
 
 
         public IParameterParser ParameterParser => null;

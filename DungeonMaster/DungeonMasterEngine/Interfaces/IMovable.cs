@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using Microsoft.Xna.Framework;
 
@@ -8,6 +9,7 @@ namespace DungeonMasterEngine.Interfaces
         Vector3 Position { get; set; }
         float TranslationVelocity { get; }
 
-        void MoveTo(ITile newLocation, bool setNewLocation);
+        void MoveTo(U newLocation );
+        Task MoveToAsync(U newLocation );
     }
 }

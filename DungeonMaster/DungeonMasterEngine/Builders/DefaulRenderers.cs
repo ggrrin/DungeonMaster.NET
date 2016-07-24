@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Entity;
@@ -117,9 +118,14 @@ namespace DungeonMasterEngine.Builders
             return new PitTileRenderer(pit);
         }
 
-        public virtual IRenderer GetStairsTileRenderer(Stairs stairs, Texture2D wallTexture)
+        public IRenderer GetLowerStairsTileRenderer(Stairs res, Texture2D wallTexture)
         {
-            return new StairsRenderer(stairs, wallTexture);
+            return new TileRenderer<Stairs>(res);
+        }
+
+        public virtual IRenderer GetUpperStairsTileRenderer(MapDirection upperEntry, MapDirection lowerEntry, Stairs stairs, Texture2D wallTexture)
+        {
+            return new StairsRenderer(upperEntry, lowerEntry, stairs, wallTexture);
         }
 
         public virtual Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D)
@@ -131,6 +137,7 @@ namespace DungeonMasterEngine.Builders
         {
             return new MovableRenderer<Projectile>(projectile, texture);
         }
+
 
         public virtual IRenderer GetFloorRenderer(FloorTileSide floorTile, Texture2D wallTexture, Texture2D decorationTexture)
         {

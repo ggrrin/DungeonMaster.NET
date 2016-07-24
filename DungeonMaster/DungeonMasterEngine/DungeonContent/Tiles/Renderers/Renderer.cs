@@ -1,13 +1,17 @@
 using System;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
+using DungeonMasterEngine.Graphics.ResourcesProvides;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
     public abstract class Renderer : IRenderer
     {
+        public ResourceProvider Resources => ResourceProvider.Instance;
+
         public abstract Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter);
 
         public abstract Matrix GetCurrentTransformation(ref Matrix parentTransformation);

@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Actuators;
 using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Entity;
@@ -19,7 +20,7 @@ namespace DungeonMasterEngine.Builders
         IRenderer GetTileRenderer(Tile tile);
         IRenderer GetPitTileRenderer(Pit pit1);
         IRenderer GetWallIllusionTileRenderer(WallIlusion wallIlusion, Texture2D wallTexture);
-        IRenderer GetStairsTileRenderer(Stairs stairs, Texture2D wallTexture);
+        IRenderer GetUpperStairsTileRenderer(MapDirection upperEntry, MapDirection lowerEntry, Stairs stairs, Texture2D wallTexture);
 
         //sides
         IRenderer GetActuatorFloorRenderer(ActuatorFloorTileSide floor, Texture2D wallTexture, Texture2D texture);
@@ -52,5 +53,7 @@ namespace DungeonMasterEngine.Builders
         Renderer GetCreatureRenderer(Creature creature, Texture2D texture2D);
 
         IRenderer GetProjectileSpellRenderer(Projectile projectile, Texture2D texture);
+
+        IRenderer GetLowerStairsTileRenderer(Stairs res, Texture2D wallTexture);
     }
 }

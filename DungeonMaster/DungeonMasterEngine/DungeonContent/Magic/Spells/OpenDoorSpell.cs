@@ -9,6 +9,7 @@ namespace DungeonMasterEngine.DungeonContent.Magic.Spells
 
         public override void Run(ILiveEntity caster, MapDirection direction)
         {
+            Projectile.Run(caster.Location, direction);
         }
 
         public OpenDoorSpell(int kineticEnergy, int stepEnergy)

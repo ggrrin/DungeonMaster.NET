@@ -30,13 +30,12 @@ namespace DungeonMasterEngine.GameConsoleContent.Factories
         /// Help text for command
         /// </summary>
         /// <value>The help text.</value>
-        public string HelpText => @"usage: hand [put|putsub|take|takesub|throw [DISTANCE]]
+        public string HelpText => @"usage: hand [put|putsub|take|takesub]
 without parametres show content of hand
 put: put item from specific inventory to hand 
 putsub: put item from chest in inventory to hadn
 take: take item from  hand to specific inventory
-takesub: tak item from hand to chest in specific inventory
-throw: item in hand on floor of current tile or specifed distance.";
+takesub: tak item from hand to chest in specific inventory";
 
 
         public IParameterParser ParameterParser => null;

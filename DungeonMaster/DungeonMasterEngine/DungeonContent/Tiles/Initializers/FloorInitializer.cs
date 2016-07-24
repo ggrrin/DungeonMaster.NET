@@ -12,9 +12,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public FloorTileSide FloorSide { get; set; }
         public IEnumerable<TileSide> WallSides { get; set; }
 
-        protected override void OnInitialing()
+        protected override void OnInitializing()
         {
-            base.OnInitialing();
+            base.OnInitializing();
             Initializing?.Invoke(this);
         }
 

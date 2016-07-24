@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport;
@@ -52,7 +53,7 @@ namespace DungeonMasterEngine.Player
             }
         }
 
-        public Point GridPosition => location.Tile.GridPosition;
+        public Point GridPosition => Location.Tile.GridPosition;
 
         private ISpaceRouteElement location;
 
@@ -68,27 +69,26 @@ namespace DungeonMasterEngine.Player
             }
             set
             {
+                if(animator.IsAnimating)
+                    animator.AbortFinishAsync();
+
                 var oldLocation = location;
+
+                location?.Tile.OnObjectLeft(this);
                 location = value;
+                location.Tile.OnObjectEntered(this);
                 Position = location.Tile.StayPoint;
 
                 if (location.Tile != oldLocation?.Tile)
-                    OnLocationChanged(oldLocation?.Tile, location.Tile);
+                    OnLocationChanged(oldLocation?.Tile, location.Tile, false);
             }
         }
 
-        public PointOfViewCamera()
-        {
-        }
-
-        protected virtual void OnLocationChanged(ITile oldLocation, ITile newLocation)
+        protected virtual void OnLocationChanged(ITile oldLocation, ITile newLocation, bool moved)
         {
             LocationChanged?.Invoke(this, new LocationChangedEventArgs(oldLocation, newLocation));
             $"{Location.Tile.Position}".Dump();
         }
-
-        protected virtual void OnLocationChanging(ITile oldLocation, ITile newLocation)
-        { }
 
         protected virtual void OnMapDirectionChanged(MapDirection oldDirection, MapDirection newDirection)
         { }
@@ -108,21 +108,35 @@ namespace DungeonMasterEngine.Player
             Point? translation = GetTranslation();
             if (translation != null)
             {
-                var newLocation = location.Tile.Neighbors.GetTile(new MapDirection(translation.Value));
+                var newLocation = Location.Tile.Neighbors.GetTile(new MapDirection(translation.Value));
                 if (CanMoveToTile(newLocation))
                 {
-                    OnLocationChanging(Location.Tile, newLocation);
-                    animator.MoveTo(this, Layout.GetSpaceElement(OnethSpace.Instance, newLocation), setLocation: true);
+                    MoveTo(Layout.GetSpaceElement(OnethSpace.Instance, newLocation));
                 }
             }
 
             return Vector3.Zero;
         }
 
-        public void MoveTo(ITile newLocation, bool setNewLocation)
+        public async void MoveTo(ISpaceRouteElement newLocation)
         {
-            OnLocationChanging(Location.Tile, newLocation);
-            animator.MoveTo(this, Layout.GetSpaceElement(OnethSpace.Instance, newLocation), setNewLocation);
+            await MoveToAsync(newLocation);
+        }
+
+        public virtual async Task MoveToAsync(ISpaceRouteElement newLocation)
+        {
+            var destination = Layout.GetSpaceElement(OnethSpace.Instance, newLocation.Tile);
+            await animator.MoveToAsync(this, destination, false);
+
+            var oldLocation = location;
+
+            location?.Tile.OnObjectLeft(this);
+            location = destination;
+            location.Tile.OnObjectEntered(this);
+            Position = location.Tile.StayPoint;
+
+            if (location.Tile != oldLocation?.Tile)
+                OnLocationChanged(oldLocation?.Tile, location.Tile, true);
         }
 
         private Point? GetTranslation()

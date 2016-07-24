@@ -112,7 +112,7 @@ namespace DungeonMasterEngine.GameConsoleContent.Base
 
         public void RunCommand(IInterpreter<ConsoleContext<Dungeon>> interpreter)
         {
-            interpreterPromise.SetResult(interpreter);//TODO try set result (maybe)
+            interpreterPromise.SetResult(interpreter);
         }
 
     }

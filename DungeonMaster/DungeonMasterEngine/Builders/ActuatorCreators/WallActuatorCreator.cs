@@ -118,8 +118,11 @@ namespace DungeonMasterEngine.Builders.ActuatorCreators
         {
             var factory = builder.GetItemFactory(data);
 
-            var res = items.Single(i => i.FactoryBase == factory);
-            items.Remove(res);
+            var res = items.SingleOrDefault(i => i.FactoryBase == factory);
+
+            if(res != null)
+                items.Remove(res);
+
             return res;
         }
 

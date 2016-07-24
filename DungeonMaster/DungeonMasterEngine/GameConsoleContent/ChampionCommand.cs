@@ -25,20 +25,40 @@ namespace DungeonMasterEngine.GameConsoleContent
                 switch (parameter)
                 {
                     case "list":
-                        await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup, false);
+                        var champion = await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup);
+                        if (champion != null)
+                        {
+                            foreach (var skill in champion.Skills)
+                                Output.WriteLine($"{skill.GetType().Name}: {skill.SkillLevel}");
+                        }
                         break;
                     case "sleep":
-                        foreach (var champion in ConsoleContext.AppContext.Leader.partyGroup)
-                            champion.Sleeping = true;
-                        break;
-                    case "wake":
-                        foreach (var champion in ConsoleContext.AppContext.Leader.partyGroup)
-                            champion.Sleeping = false;
+                        await Sleep();
                         break;
                 }
             }
             else
                 Output.WriteLine("Invalid parameter");
+        }
+
+        private async Task Sleep()
+        {
+            foreach (var champion in ConsoleContext.AppContext.Leader.PartyGroup)
+                champion.Sleeping = true;
+
+            while (true)
+            {
+                Output.WriteLine("Write 'wake' to wake the group.");
+                var text = await Input.ReadLineAsync();
+                if (text.Trim() == "wake")
+                {
+                    foreach (var champion in ConsoleContext.AppContext.Leader.PartyGroup)
+                        champion.Sleeping = false;
+
+                    Output.WriteLine("Party had just woken up.");
+                    break;
+                }
+            }
         }
 
         private async Task ChampoinReincarnation()
@@ -51,6 +71,8 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
 
             Output.WriteLine(Actuator.Champion);
+            foreach (var skill in Actuator.Champion.Skills)
+                Output.WriteLine($"{skill.GetType().Name}: {skill.SkillLevel}");
 
             var getOption = new string[] { "Reincarnate", "rescue" };
             var res = await GetFromItemIndex(getOption);

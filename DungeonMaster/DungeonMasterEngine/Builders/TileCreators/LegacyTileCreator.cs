@@ -247,21 +247,26 @@ namespace DungeonMasterEngine.Builders.TileCreators
             StairsInitializer stairsInitializer = new StairsInitializer { Down = t.Direction == VerticalDirection.Down };
 
             var res = new Stairs(stairsInitializer);
-            res.Renderer = builder.Factories.RenderersSource.GetStairsTileRenderer(res, builder.WallTexture);
+            sidesCreator.SetupSidesAsync(stairsInitializer, currentGridPosition, res);
+            if (t.Direction == VerticalDirection.Down)
+            {
+                var upperStairsEntry = FindStairsEntryDirection(tilePosition.ToGrid(), -(int) tilePosition.Y);
+                var lowerStairsEntry = FindStairsEntryDirection(tilePosition.ToGrid(), -(int) tilePosition.Y + 1);
+                res.Renderer = builder.Factories.RenderersSource.GetUpperStairsTileRenderer(upperStairsEntry, lowerStairsEntry, res, builder.WallTexture);
+            }
+            else
+            {
+                res.Renderer = builder.Factories.RenderersSource.GetLowerStairsTileRenderer(res, builder.WallTexture);
+            }
+
             this.initializer = stairsInitializer;
             return res;
         }
 
-        private TileInfo<StairsTileData> FindStairs(Point pos, int level)
+        private MapDirection FindStairsEntryDirection(Point pos, int level)
         {
             var map = builder.Data.Maps[level];
-
-            var stairs = map[pos.X, pos.Y];
-
-            if (stairs.GetType() == typeof(StairsTileData))
-                return new TileInfo<StairsTileData> { Position = pos, Tile = (StairsTileData)stairs };
-            else
-                throw new InvalidOperationException("Should not be possible");
+            return MapDirection.Sides.First(s => !(map.GetTileData(pos + s.RelativeShift) is WallTileData));
         }
 
         private IConstrain GetTeleportScopeType(TeleportScope scope)

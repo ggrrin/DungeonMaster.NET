@@ -84,6 +84,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         public virtual bool ContentActivated { get; protected set; }
         public ICollection<IRenderable> Drawables { get; } = new HashSet<IRenderable>();
+        public virtual bool IsDangerous => false; 
 
         public virtual void ActivateTileContent()
         {

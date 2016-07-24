@@ -14,6 +14,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         public TileRenderer(TTile tile)
         {
             Tile = tile;
+
         }
 
         public override Matrix GetCurrentTransformation(ref Matrix parentTransformation) => translation * parentTransformation;

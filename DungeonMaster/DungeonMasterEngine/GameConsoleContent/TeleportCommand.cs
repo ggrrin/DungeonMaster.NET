@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent;
 using DungeonMasterEngine.DungeonContent.Tiles;
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.GameConsoleContent.Base;
 using Microsoft.Xna.Framework;
 
@@ -27,6 +29,11 @@ namespace DungeonMasterEngine.GameConsoleContent
                 {
                     Output.WriteLine("Invalid target location.");
                 }
+            }
+            else if (Parameters.Length == 3 && Parameters[2] == "x" && int.TryParse(Parameters[0], out targetLocation.X) && int.TryParse(Parameters[1], out targetLocation.Y))
+            {
+                var target = ConsoleContext.AppContext.Leader.Location.Tile.Level.TilesPositions[targetLocation];
+                target.AcceptMessageBase(new Message (MessageAction.Toggle, MapDirection.North));
             }
             else
             {

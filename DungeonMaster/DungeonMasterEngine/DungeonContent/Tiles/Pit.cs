@@ -50,6 +50,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public bool Imaginary { get; private set; }
 
         public bool IsOpen => ContentActivated;
+        public override bool IsDangerous => IsOpen; 
 
         public override bool IsAccessible => true;
 
@@ -60,12 +61,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             {
                 base.ContentActivated = value;
                 foreach (var subItem in SubItems.ToArray())
-                {
-                    var movable = subItem as IMovable<ITile>;
-
-                    if (movable != null)
-                        MakeItemFall(subItem);
-                }
+                    MakeItemFall(subItem);
 
             }
         }
@@ -78,18 +74,22 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         }
 
-        private void MakeItemFall(object localizable)
+        private async void MakeItemFall(object item)
         {
             if (IsOpen)
             {
                 var entities = LayoutManager.Entities.ToArray();
-                var loc = localizable as IMovable<ISpaceRouteElement>;
-                if (loc != null)
+                var movable = item as IMovable<ISpaceRouteElement>;
+                if (movable != null)
                 {
-                    //loc.Location = PitNeighbours.Down;
-                    loc.MoveTo(PitNeighbors.Down, true);
+                    await movable.MoveToAsync(movable.Location.GetNew(PitNeighbors.Down));
                 }
-
+                else
+                {
+                    var localizable = item as ILocalizable<ISpaceRouteElement>;
+                    if(localizable != null)
+                        localizable.Location = localizable.Location.GetNew(PitNeighbors.Down);
+                }
 
                 foreach (var entity in entities)
                     F324_aezz_CHAMPION_DamageAll_GetDamagedChampionCount(entity, 20); //, MASK0x0010_LEGS | MASK0x0020_FEET, C2_ATTACK_SELF)

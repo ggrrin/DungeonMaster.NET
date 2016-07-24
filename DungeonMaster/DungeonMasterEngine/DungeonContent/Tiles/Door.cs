@@ -67,5 +67,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             properties.TryGetValue(propertyType, out res);
             return res ?? new EmptyProperty();
         }
+
+        public IEnumerable<IProperty> Properties => properties.Values;
     }
 }

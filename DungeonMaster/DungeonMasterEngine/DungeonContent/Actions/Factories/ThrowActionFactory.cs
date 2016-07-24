@@ -8,7 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions.Factories
     public class ThrowActionFactory : HumanActionFactoryBase
     {
         public IRenderersSource Renderers { get; }
-        public ThrowActionFactory(string name, int experienceGain, int defenseModifer, int hitProbability, int damage, int fatigue, ISkillFactory skillIndex, int stamina, int mapDifficulty, IRenderersSource renderers) : base(name, experienceGain, defenseModifer, hitProbability, damage, fatigue, skillIndex, stamina, mapDifficulty)
+        public ThrowActionFactory(string name, int experienceGain, int defenseModifer, int hitProbability, int damage, int fatigue, ISkillFactory skillIndex, int stamina, IRenderersSource renderers) : base(name, experienceGain, defenseModifer, hitProbability, damage, fatigue, skillIndex, stamina)
         {
             Renderers = renderers;
         }

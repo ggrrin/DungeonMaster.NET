@@ -1,4 +1,6 @@
-﻿using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DungeonMasterEngine.DungeonContent.Entity.BodyInventory.Base;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Relations;
@@ -22,14 +24,19 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         public Vector3 Position { get; set; }
         public abstract float TranslationVelocity { get; }
 
-        public abstract void MoveTo(ITile newLocation, bool setNewLocation);
+        public abstract void MoveTo(ISpaceRouteElement newLocation);
+
+        public abstract Task MoveToAsync(ISpaceRouteElement newLocation);
 
         public virtual void Update(GameTime time) { }
 
         public abstract IBody Body { get; }
         public virtual bool Activated { get; protected set; }
+        public abstract IEnumerable<ISkill> Skills { get; }
 
         public abstract IProperty GetProperty(IPropertyFactory propertyType);
+
+        public abstract IEnumerable<IProperty> Properties { get; }
 
         public abstract ISkill GetSkill(ISkillFactory skillType);
     }

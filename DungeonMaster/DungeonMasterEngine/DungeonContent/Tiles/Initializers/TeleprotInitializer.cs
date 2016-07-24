@@ -15,9 +15,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public bool Visible { get; set; }
         public IConstrain ScopeConstrain { get; set; }
 
-        protected override void OnInitialing()
+        protected override void OnInitializing()
         {
-            base.OnInitialing();
+            base.OnInitializing();
             Initializing?.Invoke(this);
         }
     }

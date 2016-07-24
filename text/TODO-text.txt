@@ -1,8 +1,0 @@
-﻿analysis:
-about whole console thing
-
-
-documentation:
-describing whole details of legacy map builder and his extensibility
-extensibility of players
-projectiles

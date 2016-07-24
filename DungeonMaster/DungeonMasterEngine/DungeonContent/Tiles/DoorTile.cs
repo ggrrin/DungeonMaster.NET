@@ -62,7 +62,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             }
 
             Closing = false;
-
         }
 
         public override bool IsAccessible => ContentActivated;

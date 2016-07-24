@@ -1,32 +1,32 @@
 \chapter*{Závěr}
 \addcontentsline{toc}{chapter}{Závěr}
 
-V rámci této práce byl naimplementovaný engine pro Hru Dungeon Master. Engine 
+V rámci této práce byl naimplementovaný engine pro hru Dungeon Master. Engine 
 obsahuje podporu pro všechny funkce z originální hry. Nicméně všechny konkrétní funkce
 nejsou naimplementované, což dává možnost navázat na práci případným následovníkům. 
 Pro implementaci byl použit jazyk C\#, platforma .NET a framework MonoGame. 
 Většina částí enginu je jednoduše rozšiřitelná či modifikovatelná, což vede 
-na dobrou udržitelnost celého systému. Primárně je engine určený pro hru 
+k dobré udržitelnost celého systému. Primárně je engine určený pro hru 
 Dungeon Master a dokáže si herní úrovně načíst z originální binárních dat. Avšak 
 načítání herních úrovní je v oddělené vrstvě, a proto je možné tuto vrstvu upravit kvůli případným 
 rozšířením nebo ji je možné nově naimplementovat i pro jiné vstupní formáty.
 Z toho důvodu lze tento engine využít i pro implementaci jiných her na podobných principech.
-Engine má také oddělenou renderovací vrstvu, což umožňuje jednoduše doimplementovat hře lepší look and feel.
-Tento projekt tak může sloužit pro vzdělávání jazyka C\# a objektově orientovaného programování. 
-Studenti si tak můžu vyzkoušet do enginu dodělat nové komponenty a tak si vyzkoušet objektově 
+Engine má také oddělenou renderovací vrstvu, což umožňuje jednoduše doimplementovat hře lepší ,,look and feel".
+Tento projekt může sloužit pro vzdělávání jazyka C\# a objektově orientovaného programování. 
+Studenti si tak můžou vyzkoušet do enginu dodělat nové komponenty a tím si vyzkoušet objektově 
 orientované programování v praxi.
 
-\section*{Future works}
-Na tuto práce je potenciálně možné navázat v následujících bodech:
+\section*{Možný budoucí vývoj}
+Na tuto práci je potenciálně možné navázat v následujících bodech:
 
 \begin{itemize}
-\item Dodělání všech funkcí Dungeon Masteru, tak aby hra byla hratelná až do konce.
-\item Dodělání zobrazovací vrstvy, tak aby odpovídala vzhledu původní hry Dungeon Master.
+\item Dodělání všech funkcí Dungeon Masteru tak, aby bylo možné hru dohrát až do konce hry \vref{not-implemented}.
+\item Dodělání zobrazovací vrstvy tak, aby odpovídala vzhledu původní hry Dungeon Master.
 \item Dodělání lepší 3D zobrazovací vrstvy.
-\item Udělat podporu pro textový výstup zobrazovací vrstvy pro možnost automatizovaného kontrolování například systémem CodEx. 
+\item Udělat podporu pro textový výstup zobrazovací vrstvy pro možnost automatizovaného kontrolování například systémem CodEx \cite{CodEx}. 
 \item Vytvořit editor pro hru Dungeon Master. 
 \item Vytvořit jinou hru na tomto enginu.
-\item Upravit engine tak, aby nebyl vázaný na stejně velké dlaždice uspořádané do mřížky, a umožňoval tak
+\item Upravit engine tak, aby nebyl vázaný na stejně velké dlaždice uspořádané do mřížky a umožňoval tak
 	flexibilnější tvorbu herních úrovní. 
 \end{itemize}
 

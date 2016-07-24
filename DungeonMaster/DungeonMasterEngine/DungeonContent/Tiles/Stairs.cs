@@ -26,19 +26,21 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         /// <param name="position"></param>
         public Stairs(StairsInitializer initializer) : base(initializer)
         {
-            initializer.Initializer += Initialize;
+            initializer.Initializing += Initialize;
             Up = !initializer.Down;
         }
 
         private void Initialize(StairsInitializer initializer)
         {
+            sides = new List<ITileSide>(initializer.WallSides.Where(w => !(w is FloorTileSide)));
 
-            initializer.Initializer -= Initialize;
+            initializer.Initializing -= Initialize;
         }
 
         public override bool IsAccessible => true;
 
-        public override IEnumerable<ITileSide> Sides => Enumerable.Empty<ITileSide>();
+        protected List<ITileSide> sides;
+        public override IEnumerable<ITileSide> Sides => sides; 
         private readonly List<object> subItems = new List<object>();
         public override IEnumerable<object> SubItems => subItems;
         public override Vector3 StayPoint => base.StayPoint + 0.5f * (Up ? Vector3.Up : Vector3.Down);

@@ -298,7 +298,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
                         var bodyPart = L0979_ps_Champion.Body.BodyParts.ElementAtOrDefault(rand.Next(8));
                         if (bodyPart != null && P664_i_AllowedWounds.Contains(bodyPart.Type))
                         {
-                            bodyPart.IsWound = true;
+                            bodyPart.IsWounded = true;
                         }
                     }
                     while ((P663_i_Attack > (A0976_i_AdjustedAttack <<= 1)) && A0976_i_AdjustedAttack > 0);
@@ -363,7 +363,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
             //}
 
             //if (M07_GET(L0946_ps_Champion->Wounds, 1 << P653_ui_WoundIndex))
-            if (L0946_ps_Champion.Body.GetBodyStorage(P653_ui_WoundIndex.WoundIndex).IsWound)
+            if (L0946_ps_Champion.Body.GetBodyStorage(P653_ui_WoundIndex.WoundIndex).IsWounded)
             {
                 A0942_i_WoundDefense -= 8 + rand.Next(4);
             }

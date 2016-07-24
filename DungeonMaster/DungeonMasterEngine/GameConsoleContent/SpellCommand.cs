@@ -60,6 +60,9 @@ namespace DungeonMasterEngine.GameConsoleContent
             if (clearSequence)
             {
                 manger.ClearCastingSequence();
+                if(e is AsyncEnumerator)
+                    Output.WriteLine("Specify one of the following symbols: lo, um, on, ee, pal, mon (sorted by difficulty ascending).");
+
                 await e.MoveNext();
 
                 var powerSymbol = factories.PowerSymbol.FirstOrDefault(x => x.Name.Equals(e.Current, StringComparison.InvariantCultureIgnoreCase));
@@ -180,7 +183,7 @@ namespace DungeonMasterEngine.GameConsoleContent
                 await Task.CompletedTask;
                 if (!Symbols.MoveNext())
                     return false;
-                Current = Symbols.Current;
+                Current = Symbols.Current.Trim();
                 return true;
             }
 
@@ -201,7 +204,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             public override async Task<bool> MoveNext()
             {
                 Interpreter.Output.WriteLine("Write symbol or cast it by \"cast\"");
-                Current = await Interpreter.Input.ReadLineAsync();
+                Current = (await Interpreter.Input.ReadLineAsync()).Trim();
                 return IsFinish();
             }
 
