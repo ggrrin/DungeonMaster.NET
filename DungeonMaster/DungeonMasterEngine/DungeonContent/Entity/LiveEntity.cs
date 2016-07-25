@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         public abstract void MoveTo(ISpaceRouteElement newLocation);
 
-        public abstract Task MoveToAsync(ISpaceRouteElement newLocation);
+        public abstract Task<bool> MoveToAsync(ISpaceRouteElement newLocation);
 
         public virtual void Update(GameTime time) { }
 

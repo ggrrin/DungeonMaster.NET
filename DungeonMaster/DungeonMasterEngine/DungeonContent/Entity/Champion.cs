@@ -67,12 +67,14 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if(animator.IsAnimating)
                     animator.AbortFinishAsync();
 
-                if (!value.Tile.LayoutManager.TryGetSpace(this, value.Space))
+                if (value != null && !value.Tile.LayoutManager.TryGetSpace(this, value.Space))
                     throw new ArgumentException("Location is not accessible!");
 
                 location?.Tile.LayoutManager.FreeSpace(this, location.Space);
 
-                Position = value.StayPoint;
+                if(value != null)
+                    Position = value.StayPoint;
+
                 location = value;
             }
         }
@@ -94,16 +96,20 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             await MoveToAsync(newLocation);
         }
 
-        public override async Task MoveToAsync(ISpaceRouteElement newLocation)
+        public override async Task<bool> MoveToAsync(ISpaceRouteElement newLocation)
         {
             if (!newLocation.Tile.LayoutManager.TryGetSpace(this, newLocation.Space))
-                throw new InvalidOperationException("cannot reserve the space");
+                return false;//throw new InvalidOperationException("cannot reserve the space");
 
-            await animator.MoveToAsync(this, newLocation, false);
+            if (!await animator.MoveToAsync(this, newLocation, false))
+            {
+                newLocation.Tile.LayoutManager.FreeSpace(this, newLocation.Space);
+                return false;
+            }
 
             location.Tile.LayoutManager.FreeSpace(this, location.Space);
-
             location = newLocation;
+            return true;
         }
 
         public bool Moving => animator.IsAnimating;

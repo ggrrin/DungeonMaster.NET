@@ -86,10 +86,10 @@ namespace DungeonMasterEngine
 
         protected override void Update(GameTime gameTime)
         {
+            if (IsActive)
+                dungeon?.Update(gameTime);
 
 
-
-            dungeon?.Update(gameTime);
             while (taskQueue.Count > 0)
             {
                 Tuple<SendOrPostCallback, object> task;

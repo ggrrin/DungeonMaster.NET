@@ -12,8 +12,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
 
         protected override void OnInitializing()
         {
-            Initializing?.Invoke(this);
             base.OnInitializing();
+            Initializing?.Invoke(this);
         }
 
     }

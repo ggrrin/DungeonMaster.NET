@@ -10,6 +10,6 @@ namespace DungeonMasterEngine.Interfaces
         float TranslationVelocity { get; }
 
         void MoveTo(U newLocation );
-        Task MoveToAsync(U newLocation );
+        Task<bool> MoveToAsync(U newLocation);
     }
 }

@@ -73,6 +73,14 @@ namespace DungeonMasterParser
             {
                 new DoorDescriptor
                 {
+                    Type = DoorType.GrateDoor,
+                    Animated = false,
+                    ItemsPassThrough = true,
+                    CreatureSeeThrough = true,
+                    Resistance = 0x6E,
+                },
+                new DoorDescriptor
+                {
                     Type = DoorType.WoodenDoor,
                     Animated = false,
                     ItemsPassThrough = false,
@@ -1142,8 +1150,8 @@ namespace DungeonMasterParser
         //    01 Square Alcove
         //    02 Vi Altar
         //    03 Arched Alcove
-        //     Hook
-        //     Iron Lock
+        //    04 Hook
+        //    05 Iron Lock
         //    06 Wood Ring
         //    07 Small Switch
         //    08 Dent 1

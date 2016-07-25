@@ -28,7 +28,8 @@ namespace DungeonMasterEngine.DungeonContent.Actuators.Renderers
         {
             if (base.Interact(leader, ref currentTransformation, param))
             {
-                return Item.Trigger(leader);
+                Item.Trigger(leader);
+                return true;
             }
             return false;
         }

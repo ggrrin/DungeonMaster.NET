@@ -123,7 +123,7 @@ namespace DungeonMasterEngine.Player
             await MoveToAsync(newLocation);
         }
 
-        public virtual async Task MoveToAsync(ISpaceRouteElement newLocation)
+        public virtual async Task<bool> MoveToAsync(ISpaceRouteElement newLocation)
         {
             var destination = Layout.GetSpaceElement(OnethSpace.Instance, newLocation.Tile);
             await animator.MoveToAsync(this, destination, false);
@@ -137,6 +137,7 @@ namespace DungeonMasterEngine.Player
 
             if (location.Tile != oldLocation?.Tile)
                 OnLocationChanged(oldLocation?.Tile, location.Tile, true);
+            return true;//TODO
         }
 
         private Point? GetTranslation()

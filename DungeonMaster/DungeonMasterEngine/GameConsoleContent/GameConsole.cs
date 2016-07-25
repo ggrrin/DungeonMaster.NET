@@ -13,7 +13,7 @@ using DungeonMasterEngine.GameConsoleContent.Factories;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
-    public class GameConsole : DrawableGameComponent 
+    public class GameConsole : DrawableGameComponent
     {
         private int cursor = 0;
         private readonly StringBuilder line = new StringBuilder();
@@ -38,19 +38,19 @@ namespace DungeonMasterEngine.GameConsoleContent
             HandCommandFactory.Instance,
             ChampionCommandFactory.Instance,
             //ItemFactory.Instance,
-            TeleportFactory.Instance,
+            //TeleportFactory.Instance,
             SpellCommandFactory.Instance,
             FightCommandFactory.Instance
             //TODO add default factories
         };
-        private ScreenStream ouput;
+        protected readonly ScreenStream output;
 
         public Rectangle Window { get; set; }
 
         public static void InitializeConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories)
         {
             if (Instance != null)
-                throw new InvalidOperationException($"Cannont create multiple instances of {Instance.GetType()}. Instead access instance through {nameof(Instance)}");
+                throw new InvalidOperationException($"Cannot create multiple instances of {Instance.GetType()}. Instead access instance through {nameof(Instance)}");
 
             Instance = new GameConsole(game, dungeon, thirdPartyFactories);
         }
@@ -60,7 +60,7 @@ namespace DungeonMasterEngine.GameConsoleContent
         private GameConsole(Game game, Dungeon dungeon, IEnumerable<ICommandFactory<ConsoleContext<Dungeon>>> thirdPartyFactories) : base(game)
         {
             In = new KeyboardStreamReader(input = new KeyboardStream());
-            var s = new StreamWriter(ouput = new ScreenStream())
+            var s = new StreamWriter(output = new ScreenStream())
             { AutoFlush = true };
             Out = s;
             interpreter = new BaseInterpreter(defaultFactories.Concat(thirdPartyFactories), In, Out, input)
@@ -94,6 +94,8 @@ namespace DungeonMasterEngine.GameConsoleContent
             ActivateDeactivateConsole();
         }
 
+        protected string lastCommand = "";
+
         private void ReadKeyBoard()
         {
 
@@ -122,6 +124,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             {
                 Out.WriteLine(line.ToString());
                 input.WriteLineToInput(line.ToString());
+                lastCommand = line.ToString();
                 CursorPosition = 0;
                 line.Clear();
             }
@@ -144,6 +147,10 @@ namespace DungeonMasterEngine.GameConsoleContent
             {
                 line.Insert(CursorPosition, ' ');
                 CursorPosition++;
+            }
+            else if (line.Length == 0 && keyState.IsKeyDown(Keys.Up) && prevKeyState.IsKeyUp(Keys.Up))
+            {
+                line.Append(lastCommand);
             }
         }
 
@@ -208,7 +215,7 @@ namespace DungeonMasterEngine.GameConsoleContent
             //command line
             Batcher.DrawString(font, line, new Vector2(Window.X, textY), Color.White);
             //output
-            foreach (var outputLine in ouput.Lines.Reverse())
+            foreach (var outputLine in output.Lines.Reverse())
             {
                 textY -= font.LineSpacing;
 

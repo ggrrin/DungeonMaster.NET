@@ -1,4 +1,5 @@
 using System.Linq;
+using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,6 +30,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
             {
                 finalTransformation = base.Render(ref currentTransformation, effect, parameter);
             }
+
+            foreach (var subItem in Tile.Drawables.Concat(Tile.SubItems.OfType<IRenderable>()))
+                subItem.Renderer?.Render(ref currentTransformation, effect, parameter);
 
             return finalTransformation;
         }

@@ -22,11 +22,16 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
             var finalTransformation = GetCurrentTransformation(ref currentTransformation);
+
+            var upperOpen = (Tile.PitNeighbors.Up as Pit)?.IsOpen ?? false;
             foreach (var side in Tile.WallSides)
             {
-                var renderer = side.Renderer;
-                renderer.Highlighted = Highlighted;
-                renderer.Render(ref finalTransformation, effect, parameter);
+                if (side.Face != MapDirection.Up || !upperOpen)
+                {
+                    var renderer = side.Renderer;
+                    renderer.Highlighted = Highlighted;
+                    renderer.Render(ref finalTransformation, effect, parameter);
+                }
             }
 
 

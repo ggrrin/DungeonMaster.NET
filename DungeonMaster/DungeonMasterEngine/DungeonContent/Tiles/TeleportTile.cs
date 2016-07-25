@@ -1,5 +1,8 @@
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Entity;
 using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
+using DungeonMasterEngine.DungeonContent.Entity.Properties;
+using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Tiles.Initializers;
 using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
@@ -67,6 +70,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
             NextLevelIndex = initializer.NextLevelIndex;
             ScopeConstrain = initializer.ScopeConstrain;
             TargetTilePosition = initializer.TargetTilePosition;
+            NextLevelEnter = initializer.NextLevelEnter;
             Visible = initializer.Visible;
             Open = initializer.Open;
 
@@ -78,7 +82,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         private void TeleportItem(object obj)
         {
             var localizable = obj as ILocalizable<ISpaceRouteElement>;
-            if (localizable != null && Open && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)//TODO how to set taget location creatures
+            if (localizable != null && Open && ScopeConstrain.IsAcceptable(obj) && NextLevelEnter != null)
             {
                 if (AbsoluteDirection)
                 {
@@ -88,9 +92,26 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 {
                     localizable.MapDirection = localizable.MapDirection.GetRotated(Direction.Index + 1);
                 }
-                localizable.Location = localizable.Location.GetNew(NextLevelEnter);
+
+                if (localizable.Location.Tile != NextLevelEnter)
+                {
+                    TryKillRemoteEntities(localizable);
+                    localizable.Location = localizable.Location.GetNew(NextLevelEnter);
+                }
             }
         }
+
+        private void TryKillRemoteEntities(ILocalizable<ISpaceRouteElement> movable)
+        {
+            var entity = movable as ILiveEntity;
+            if (entity != null)
+            {
+                foreach (var e in NextLevelEnter.LayoutManager.GetEntities(entity.Location.Space))
+                    e.GetProperty(PropertyFactory<HealthProperty>.Instance).Value = 0;
+            }
+        }
+
+
 
     }
 }

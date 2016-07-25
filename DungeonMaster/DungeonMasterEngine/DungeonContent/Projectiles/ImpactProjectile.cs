@@ -1,8 +1,11 @@
 using System.Linq;
+using DungeonMasterEngine.DungeonContent.Actions;
 using DungeonMasterEngine.DungeonContent.Entity;
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Entity.Properties;
 using DungeonMasterEngine.DungeonContent.Entity.Properties.Base;
 using DungeonMasterEngine.DungeonContent.Projectiles.Impacts;
+using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Projectiles
 {
@@ -15,9 +18,21 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
             Impact = impact;
         }
 
-        protected override bool TryApplyBeforeMoving()
+        protected override bool TryApplyBeforeMoving(ISpaceRouteElement newLocation)
         {
-            return F217_xxxx_PROJECTILE_HasImpactOccured();
+            if (!newLocation.Tile.IsAccessible)
+            {
+                var doors = newLocation.Tile as IHasEntity;
+                if (doors != null)
+                {
+                    var L0488_i_Attack = Impact.GetImpact(this);
+                    L0488_i_Attack.Attack++;
+                    SwingAttack.F232_dzzz_GROUP_IsDoorDestroyedByAttack(doors.Entity, L0488_i_Attack.Attack + rand.Next(L0488_i_Attack.Attack), Impact.IsMagic);
+                }
+                return true;
+            }
+
+            return F217_xxxx_PROJECTILE_HasImpactOccured(newLocation);
         }
 
         protected override void FinishImpact()
@@ -27,19 +42,30 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
             Impact.FinishImpact(this);
         }
 
-        bool F217_xxxx_PROJECTILE_HasImpactOccured()
+        bool F217_xxxx_PROJECTILE_HasImpactOccured(ISpaceRouteElement newLocation)
         {
             //potionException(L0486_T_ProjectileAssociatedThing, ref L0491_ps_Group, ref L0492_ps_Potion, ref L0498_T_ExplosionThing, ref L0508_i_PotionPower, ref L0509_B_RemovePotion, L0510_i_ProjectileAssociatedThingType);
-            //TODO break doors
-            //L0488_i_Attack = F216_xxxx_PROJECTILE_GetImpactAttack(L0490_ps_Projectile, L0486_T_ProjectileAssociatedThing) + 1;
-            //F232_dzzz_GROUP_IsDoorDestroyedByAttack(AP454_i_ProjectileTargetMapX, AP455_i_ProjectileTargetMapY, L0488_i_Attack + M02_RANDOM(L0488_i_Attack), FALSE, 0);
 
             var matchingEnemies = Location.Tile.LayoutManager.GetEntities(Location.Space).ToArray();
             if (matchingEnemies.Length == 0)
                 return false;
 
             var closestSpace = GetClosestSpace(Location, matchingEnemies.Select(x => x.Location));
-            var enemy = matchingEnemies.First(x => x.Location == closestSpace);
+            //var enemy = matchingEnemies.First(x => x.Location == closestSpace);
+            ILiveEntity enemy;
+            if(closestSpace != null)
+            { 
+                enemy = Location.Tile.LayoutManager.GetEntities(closestSpace.Space).First(); //matchingEnemies.First(x => x.Location == closestSpace);
+            }
+            else if(Location.Tile.LayoutManager.Entities.Any())
+            {
+                enemy = Location.Tile.LayoutManager.Entities.First();
+            }
+            else
+            {
+                return false;
+            }
+
 
             AttackInfo impact = Impact.GetImpact(this);
             int L0488_i_Attack = (impact.Attack << 6) / (enemy.GetProperty(PropertyFactory<DefenseProperty>.Instance).Value + 1); //TODO remove +1, it is just to avoid division by zero exception

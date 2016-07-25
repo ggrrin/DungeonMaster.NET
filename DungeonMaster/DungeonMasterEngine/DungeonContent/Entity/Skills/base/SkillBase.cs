@@ -61,7 +61,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity.Skills.Base
             //    P638_ui_Experience >>= 1;
             //}
 
-            if (exp > 0)
+            if (exp > 0 && liveEntity.Location != null)
             {
                 var mapDifficulty = liveEntity.Location.Tile.LevelIndex; //TODO make it right int[14] { 0, 1, 1, 2, 2, 2, 3, 3, 3, 4, 5, 5, 6, 6 }
                 if (mapDifficulty > 0)

@@ -51,9 +51,17 @@ namespace DungeonMasterEngine.Builders.TileCreators
                             .Select(async t => await CreateWallSide(t.Item1, (WallTileData)t.Item2, pos))
                             .ToArray());
 
-            initalizer.WallSides = sides
-                .Concat(new[] { GetCeelingSide() })
-                .ToArray();
+            //int level = builder.CurrentLevelIndex - 1;
+            //if (level >= 0 && builder.Data.Maps[level].GetTileData(pos) is PitTileData)
+            //{
+            //    initalizer.WallSides = sides;
+            //}
+            //else
+            //{
+                initalizer.WallSides = sides
+                    .Concat(new[] { GetCeelingSide() })
+                    .ToArray();
+            //}
 
             initalizer.FloorSide = await GetFloorSide(pos, tile);
         }

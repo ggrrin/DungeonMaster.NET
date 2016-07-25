@@ -89,13 +89,13 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
         public virtual void ActivateTileContent()
         {
             ContentActivated = true;
-            $"Activating message received at {GridPosition}".Dump();
+            //$"Activating message received at {GridPosition}".Dump();
         }
 
         public virtual void DeactivateTileContent()
         {
             ContentActivated = false;
-            $"Deactivating message recived at {GridPosition}".Dump();
+            //$"Deactivating message recived at {GridPosition}".Dump();
         }
 
         public virtual void OnObjectEntered(object localizable)

@@ -37,7 +37,7 @@ namespace DungeonMasterEngine.Builders
         }
     }
 
-    
+
 
     public class LegacyMapBuilder : IDungonBuilder<IFactories>
     {
@@ -56,7 +56,7 @@ namespace DungeonMasterEngine.Builders
         public ILegacyTileCreator TileCreator { get; private set; }
         public RelationToken CreatureToken { get; } = new RelationToken(1); //TODO RelationTokenFactory.GetNextToken();
         public RelationToken ChampionToken { get; } = new RelationToken(0); //TODO RelationTokenFactory.GetNextToken();
-        
+
         public int CurrentLevelIndex { get; private set; }
         public DungeonMap CurrentMap { get; private set; }
         public Dictionary<Point, Tile> TilePositions { get; private set; }
@@ -166,9 +166,7 @@ namespace DungeonMasterEngine.Builders
             for (int i = 0; i < floorTextures.Length; i++)
                 floorTextures[i] = ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/{CurrentMap.FloorDecorations[i].Name}");
 
-            championTextures = Data.ChamptionDescriptors
-                .Select(x => ResourceProvider.Instance.Content.Load<Texture2D>(x.TexturePath))
-                .ToArray();
+            championTextures = Data.ChamptionDescriptors.Select(x => ResourceProvider.Instance.Content.Load<Texture2D>(x.TexturePath)).ToArray();
 
             WallTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/Wall");
             DoorButtonTexture = ResourceProvider.Instance.Content.Load<Texture2D>("Textures/DoorButton");

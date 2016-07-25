@@ -7,6 +7,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
 {
     public abstract class FireBaseExplosionImpact : ExplosionImpact
     {
+        public override bool IsMagic => true; 
 
         protected override int ModifyAttackyByResistance(int attack, ILiveEntity entity)
         {

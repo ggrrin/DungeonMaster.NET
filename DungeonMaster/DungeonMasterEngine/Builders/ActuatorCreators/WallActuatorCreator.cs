@@ -7,6 +7,7 @@ using DungeonMasterEngine.DungeonContent.Actuators.Renderers;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.Initializers;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.GrabableItems;
+using DungeonMasterParser.Enums;
 using DungeonMasterParser.Items;
 using DungeonMasterParser.Support;
 using Microsoft.Xna.Framework;
@@ -20,9 +21,9 @@ namespace DungeonMasterEngine.Builders.ActuatorCreators
 
 
 
-    public class WallActuatorCreator : ActuatorCreatorBase, IWallActuatorCreator 
+    public class WallActuatorCreator : ActuatorCreatorBase, IWallActuatorCreator
     {
-        public WallActuatorCreator(LegacyMapBuilder builder) : base(builder) { } 
+        public WallActuatorCreator(LegacyMapBuilder builder) : base(builder) { }
 
         public async Task<IActuatorX> ParseActuatorX(IEnumerable<ActuatorItemData> data, List<IGrabableItem> items, Point pos)
         {
@@ -48,9 +49,20 @@ namespace DungeonMasterEngine.Builders.ActuatorCreators
                     initializer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
                     return new Sensor0(initializer);
                 case 1:
-                    await SetupInitializer(initializer, data);
-                    initializer.Graphics = CreateWallDecoration(data.Decoration - 1, items);
-                    return new Sensor1(initializer);
+                    var wallDecoration = CreateWallDecoration(data.Decoration - 1, items);
+                    if (data.Action == ActionType.Hold && wallDecoration is Alcove)
+                    {
+                        var alcInitializer = new SensorInitializer<Alcove>();
+                        await SetupInitializer(alcInitializer, data);
+                        alcInitializer.Graphics = (Alcove)wallDecoration;
+                        return new Sensor1HoldAlcove(alcInitializer);
+                    }
+                    else
+                    {
+                        await SetupInitializer(initializer, data);
+                        initializer.Graphics = wallDecoration;
+                        return new Sensor1(initializer);
+                    }
                 case 2:
                     var sensor2initalizer = new ItemConstrainSensorInitalizer<IActuatorX> { Data = builder.GetItemFactory(data.Data) };
                     await SetupInitializer(sensor2initalizer, data);
@@ -120,7 +132,7 @@ namespace DungeonMasterEngine.Builders.ActuatorCreators
 
             var res = items.SingleOrDefault(i => i.FactoryBase == factory);
 
-            if(res != null)
+            if (res != null)
                 items.Remove(res);
 
             return res;

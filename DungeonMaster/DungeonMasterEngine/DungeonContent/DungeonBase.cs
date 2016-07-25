@@ -80,12 +80,16 @@ namespace DungeonMasterEngine.DungeonContent
 
             ActiveLevels = new LevelCollection();
             DungeonLevel level;
+            //level = LoadLevel(2, new Point(9, 27));
+            //level = LoadLevel(2, new Point(12, 34));
+            //level = LoadLevel(1, new Point(20, 30));
             //level = LoadLevel(0, new Point(4, 15));
             //level = LoadLevel(3, new Point(6, 8));
             //level = LoadLevel(1, new Point(4, 14));
             //level = LoadLevel(1, new Point(7,21));
-            level = LoadLevel(0, new Point(9, 7));
-            //level = LoadLevel(0, null);// start
+            //level = LoadLevel(0, new Point(9, 7));
+            level = LoadLevel(0, null);// start
+            //level = LoadLevel(4, new Point(7, 25));
             Leader = leader;
             Leader.Location = Leader.Layout.GetSpaceElement(Leader.Layout.AllSpaces.First(), level.StartTile);
 
@@ -173,11 +177,11 @@ namespace DungeonMasterEngine.DungeonContent
 
                 Leader.Update(gameTime);
 
-                CurrentLevel.Update(gameTime);
-                //foreach (var level in ActiveLevels)
-                //{
-                //    level.Update(gameTime);
-                //}
+                //CurrentLevel.Update(gameTime);
+                foreach (var level in ActiveLevels)
+                {
+                    level.Update(gameTime);
+                }
                 UpdateLight(gameTime);
             }
         }
@@ -201,9 +205,12 @@ namespace DungeonMasterEngine.DungeonContent
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             var mat = Matrix.Identity;
-            foreach (var t in currentVisibleTiles.ReverseLazy())
-                t.Renderer?.Render(ref mat, Effect, null);
+            if (currentVisibleTiles != null)
+            {
+                foreach (var t in currentVisibleTiles.ReverseLazy())
+                    t.Renderer?.Render(ref mat, Effect, null);
 
+            }
             Leader.Draw(Effect);
 
             DrawMiniMap();

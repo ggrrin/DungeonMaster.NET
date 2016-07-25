@@ -4,6 +4,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
 {
     public class HarmNonMaterialExplosionImpact : ExplosionImpact
     {
+
         public override bool CreatesExplosion => true;
 
         protected override AttackInfo GetDefaultImpact(Projectile projectile)

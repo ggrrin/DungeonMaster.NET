@@ -82,6 +82,8 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
                 var movable = item as IMovable<ISpaceRouteElement>;
                 if (movable != null)
                 {
+                    TryKillLowerEntities(movable);
+
                     await movable.MoveToAsync(movable.Location.GetNew(PitNeighbors.Down));
                 }
                 else
@@ -93,6 +95,16 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
                 foreach (var entity in entities)
                     F324_aezz_CHAMPION_DamageAll_GetDamagedChampionCount(entity, 20); //, MASK0x0010_LEGS | MASK0x0020_FEET, C2_ATTACK_SELF)
+            }
+        }
+
+        private void TryKillLowerEntities(IMovable<ISpaceRouteElement> movable)
+        {
+            var entity = movable as ILiveEntity;
+            if(entity != null)
+            {
+                foreach (var e in PitNeighbors.Down.LayoutManager.GetEntities(entity.Location.Space))
+                    e.GetProperty(PropertyFactory<HealthProperty>.Instance).Value = 0;
             }
         }
 

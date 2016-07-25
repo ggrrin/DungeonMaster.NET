@@ -17,7 +17,7 @@ namespace DungeonMasterEngine.DungeonContent
         private static readonly MapDirection[] sides = { North, East, South, West };
         public static IReadOnlyList<MapDirection> Sides { get; } = sides;
 
-        private static readonly  MapDirection[] horizontalDirections = { Down, Up };
+        private static readonly MapDirection[] horizontalDirections = { Down, Up };
         public static IReadOnlyList<MapDirection> HorizontalDirections => horizontalDirections;
 
         public static IEnumerable<MapDirection> AllDirections => Sides.Concat(HorizontalDirections);
@@ -148,16 +148,28 @@ namespace DungeonMasterEngine.DungeonContent
 
         public override string ToString()
         {
-            if (RelativeShift == new Point(0, 1))
-                return "South";
-            else if (RelativeShift == new Point(0, -1))
-                return "North";
-            else if (RelativeShift == new Point(1, 0))
-                return "East";
-            else if (RelativeShift == new Point(-1, 0))
-                return "West";
+            if (DirectionShift.VerticalShift == ShiftType)
+            {
+                if (RelativeShift == new Point(0, 1))
+                    return "South";
+                else if (RelativeShift == new Point(0, -1))
+                    return "North";
+                else if (RelativeShift == new Point(1, 0))
+                    return "East";
+                else if (RelativeShift == new Point(-1, 0))
+                    return "West";
+                else
+                    return "Undefined.";
+            }
             else
-                return "Undefined.";
+            {
+                if (HorizontalShift == 1)
+                    return "Up";
+                else if (HorizontalShift == -1)
+                    return "Down";
+                else
+                    return "Undefined.";
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent.Entity.GroupSupport.Base;
 using DungeonMasterEngine.DungeonContent.Tiles;
 
 namespace DungeonMasterEngine.DungeonContent.Projectiles
@@ -9,7 +10,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
 
         }
 
-        protected override bool TryApplyBeforeMoving()
+        protected override bool TryApplyBeforeMoving(ISpaceRouteElement newLocation)
         {
             var doorTile = Location.Tile as DoorTile;
             if (doorTile != null)

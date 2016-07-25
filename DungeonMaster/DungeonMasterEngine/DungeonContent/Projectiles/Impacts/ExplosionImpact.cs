@@ -7,6 +7,8 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
 {
     public abstract class ExplosionImpact : Impact
     {
+        public override bool IsMagic => true; 
+
         protected abstract override AttackInfo GetDefaultImpact(Projectile projectile);
 
         protected virtual int ModifyAttackyByResistance(int attack, ILiveEntity entity)

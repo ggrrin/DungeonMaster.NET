@@ -125,7 +125,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
 
         protected virtual bool TryApplyAfterMoving() => false;
 
-        protected virtual bool TryApplyBeforeMoving() => false;
+        protected virtual bool TryApplyBeforeMoving(ISpaceRouteElement newLocation) => false;
 
         protected virtual ISpaceRouteElement GetInitialLocation(ISpaceRouteElement casterSpace, MapDirection direction)
         {
@@ -158,16 +158,18 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
             else
             {
                 //smash it right on caster space
-                return GetClosestSpace(casterSpace, Layout.AllSpaces.Select(x => Layout.GetSpaceElement(x, casterSpace.Tile)));
+                return GetClosestSpace(casterSpace, Layout.AllSpaces.Select(x => Layout.GetSpaceElement(x, casterSpace.Tile))) ?? casterSpace;
             }
         }
 
         private async Task<bool> Move(ISpace space, ITile location)
         {
-            if (TryApplyBeforeMoving())
+            var newLocation = Layout.GetSpaceElement(space, location);
+
+            if (TryApplyBeforeMoving(newLocation))
                 return false;
 
-            await animator.MoveToAsync(this, Layout.GetSpaceElement(space, location), true);
+            await animator.MoveToAsync(this, newLocation, true);
 
             KineticEnergy -= StepEnergy;
             Attack -= StepEnergy;
@@ -196,7 +198,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles
             throw new NotImplementedException();
         }
 
-        public Task MoveToAsync(ISpaceRouteElement newLocation)
+        public Task<bool> MoveToAsync(ISpaceRouteElement newLocation)
         {
             throw new NotImplementedException();
         }

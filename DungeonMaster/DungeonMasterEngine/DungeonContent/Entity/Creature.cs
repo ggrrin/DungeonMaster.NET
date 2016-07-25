@@ -70,26 +70,41 @@ namespace DungeonMasterEngine.DungeonContent.Entity
                 if (location == value)
                     throw new InvalidOperationException("Cannot move from space to itself.");
 
-                bool alreadyOnTile = location?.Tile == value.Tile;
+                bool alreadyOnTile = location?.Tile == value?.Tile;
                 bool differentLevel = location?.Tile?.Level != value?.Tile?.Level;
+
+                if (animator.IsAnimating)
+                    animator.AbortFinishAsync();
+
+                if (value != null && !value.Tile.LayoutManager.TryGetSpace(this, value.Space))
+                    throw new ArgumentException($"Location is not accessible, check it before assigning to {nameof(Location)}!");
 
                 if (!alreadyOnTile)
                 {
                     location?.Tile?.OnObjectLeft(this);
+
                     if (differentLevel)
+                    {
                         location?.Tile?.Level?.Updateables.Remove(this);
+                    }
                 }
 
+                if(value != null)
+                    Position = value.StayPoint;
+
+                var prevLocation = location;
                 location = value;
-                Position = location.StayPoint;
 
                 if (!alreadyOnTile)
                 {
                     location?.Tile?.OnObjectEntered(this);
 
                     if (differentLevel)
+                    {
                         location?.Tile?.Level?.Updateables.Add(this);
+                    }
                 }
+                prevLocation?.Tile.LayoutManager.FreeSpace(this, prevLocation.Space);
             }
         }
 
@@ -133,31 +148,30 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             };
         }
 
-        private async void TryDie(object sender, int value)
+        private void TryDie(object sender, int value)
         {
             if (Activated && value <= 0)
             {
                 Activated = false;
 
-                await animator.AnimatingTask;
-                location.Tile.LayoutManager.FreeSpace(this, location.Space);
-                location.Tile.OnObjectLeft(this);
-                location.Tile.Level.Updateables.Remove(this);
+                //if (animator.IsAnimating && animator.AnimatingTask != null)
+                //    await animator.AnimatingTask;
+
+                //location.Tile.LayoutManager.FreeSpace(this, location.Space);
+                //location.Tile.OnObjectLeft(this);
+                //location.Tile.Level.Updateables.Remove(this);
 
                 foreach (var item in Possessions)
                 {
                     item.Location = GroupLayout.GetSpaceElement(location.Space, location.Tile);
                 }
+                Location = null;
             }
         }
 
         protected void InitializeTileRelated(ISpaceRouteElement element)
         {
-            element.Tile.Level.Updateables.Add(this);
             Location = element;
-
-            if (!element.Tile.LayoutManager.TryGetSpace(this, element.Space))
-                throw new ArgumentException("Location is not accessible!");
 
             watchAroungOrigin = element.Tile;
             LiveAsync();
@@ -184,21 +198,53 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             await MoveToAsync(newLocation);
         }
 
-        public override async Task MoveToAsync(ISpaceRouteElement newLocation)
+        public override async Task<bool> MoveToAsync(ISpaceRouteElement newLocation)
         {
+            if (location == newLocation)
+                throw new InvalidOperationException("Cannot move from space to itself.");
+
+            bool alreadyOnTile = location?.Tile == newLocation.Tile;
+            bool differentLevel = location?.Tile?.Level != newLocation?.Tile?.Level;
+
             if (animator.IsAnimating)
-            {
                 animator.AbortFinishAsync();
-            }
-            else
+
+            if (!newLocation.Tile.LayoutManager.TryGetSpace(this, newLocation.Space))
+                return false;
+
+
+            //following line is done by animator itself
+            //Position = newLocation.StayPoint;
+
+            location?.Tile.LayoutManager.FreeSpace(this, location.Space);
+            await animator.MoveToAsync(this, newLocation, false);
+
+
+            if (!alreadyOnTile)
             {
-                location?.Tile.LayoutManager.FreeSpace(this, location.Space);
+                location?.Tile?.OnObjectLeft(this);
+
+                if (differentLevel)
+                {
+                    location?.Tile?.Level?.Updateables.Remove(this);
+                }
             }
 
-            if(!newLocation.Tile.LayoutManager.TryGetSpace(this, newLocation.Space))
-                throw new Exception("somebody on the bottom of pit");
+            location = newLocation;
 
-            await animator.MoveToAsync(this, newLocation, true);
+            if (!alreadyOnTile)
+            {
+                location?.Tile?.OnObjectEntered(this);
+
+                if (differentLevel)
+                {
+                    location?.Tile?.Level?.Updateables.Add(this);
+                }
+            }
+            //move following line before animation start in order to let creatures
+            //move more consistently
+            //location?.Tile.LayoutManager.FreeSpace(this, location.Space);
+            return true;
         }
 
         protected virtual async void LiveAsync()
@@ -240,6 +286,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual async Task WatchAround()
         {
+            if (Location == null)
+                return;
+
             var nextRoute = FindNextWatchLocation();
             foreach (var tile in nextRoute.Skip(1))//first tile is current tile
             {
@@ -252,7 +301,8 @@ namespace DungeonMasterEngine.DungeonContent.Entity
         {
             if (tile.IsAccessible && !tile.IsDangerous)
             {
-                if (await MoveThroughSpaces(tile, findEnemies))
+                //move was successful and no teleporation occurred afterwards
+                if (await MoveThroughSpaces(tile, findEnemies) && Location == tile)
                 {
                     if (!hounting && !gettingHome)
                         watchAroundArea.SetBundle(tile, watchAroundArea.GetBundle(tile) + 1);
@@ -268,6 +318,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual async Task<bool> MoveThroughSpaces(ITile targetTile, bool findEnemies)
         {
+            if (Location == null)
+                return false;
+
             var spaceRoute = GroupLayout.GetToNeighbour(Location, targetTile, false);
 
             if (spaceRoute == null)
@@ -289,22 +342,19 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual async Task<bool> MoveToSpace(ISpaceRouteElement destination)
         {
-            bool EnemyAtTile = destination.Tile.LayoutManager.Entities.Any(x => RelationManager.IsEnemy(x.RelationManager.RelationToken));
-            if (Activated &&
-                destination.Tile.IsAccessible &&
-                !EnemyAtTile &&
-                destination.Tile.LayoutManager.TryGetSpace(this, destination.Space))
+            //something stole control to creature, i.e. falling to pit
+            if (animator.IsAnimating)
             {
-                location?.Tile.LayoutManager.FreeSpace(this, location.Space);
-                var res = await animator.MoveToAsync(this, destination, setLocation: true);
+                //wait until finish move
+                await animator.AnimatingTask;
+                //reset movement
+                return false;
+            }
 
-                //clean spaces
-                if (!res)
-                {
-                    destination.Tile.LayoutManager.FreeSpace(this, destination.Space);
-                }
-
-                return res;
+            bool EnemyAtTile = destination.Tile.LayoutManager.Entities.Any(x => RelationManager.IsEnemy(x.RelationManager.RelationToken));
+            if (Activated && destination.Tile.IsAccessible && !EnemyAtTile)
+            {
+                return await MoveToAsync(destination);
             }
             else
                 return false;
@@ -312,6 +362,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual IReadOnlyList<ITile> FindNextWatchLocation()
         {
+            if (Location == null)
+                return Enumerable.Empty<ITile>().ToList();
+
             var maxTravelDistance = random.Next(2, 2 * watchAroundRadius + 1);
             ITile destTile = Location.Tile;
             uint destTileUsages = 0;
@@ -343,6 +396,12 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual bool FindEnemies()
         {
+            if (Location == null)
+            {
+                hountingPath = null;
+                return false;
+            }
+
             ILiveEntity enemy = null;
             ITile matchedTile = null;
             globalSearcher.StartSearch(Location.Tile, Location.Tile, Math.Max(DetectRange, SightRange), (tile, layer, bundle) =>
@@ -358,7 +417,7 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             if (enemy != null)
             {
                 hountingPath = globalSearcher.GetShortestRoute(matchedTile);
-                $"{this} found enemies at {hountingPath.Last().GridPosition}".Dump();
+                //$"{this} found enemies at {hountingPath.Last().GridPosition}".Dump();
                 return true;
             }
             else
@@ -370,6 +429,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual async Task Hount()
         {
+            if (Location == null)
+                return;
+
             if (hountingPath != null)
             {
                 if (hountingPath.Count == 2)
@@ -392,6 +454,9 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual bool GetPathHome()
         {
+            if (Location == null)
+                return false;
+
             var distance = watchAroungOrigin.GridPosition - Location.Tile.GridPosition;//TODO calculate appropriate distance
             var maxDistance = Math.Max(Math.Abs(distance.X), Math.Abs(distance.Y));
             ITile destTile = null;
@@ -405,13 +470,13 @@ namespace DungeonMasterEngine.DungeonContent.Entity
             });
             if (destTile == null) //lost
             {
-                $"{this} lost".Dump();
+                //$"{this} lost".Dump();
                 homeRoute = null;
                 return false;
             }
             else
             {
-                $"{this} going home.".Dump();
+                //$"{this} going home.".Dump();
                 homeRoute = globalSearcher.GetShortestRoute(destTile);
                 return true;
             }
@@ -419,45 +484,43 @@ namespace DungeonMasterEngine.DungeonContent.Entity
 
         protected virtual void EstablishNewBase()
         {
+            if (Location == null)
+                return;
 
-            $"{this} reestablishing base at {Location}.".Dump();
+            //$"{this} reestablishing base at {Location}.".Dump();
             watchAroundArea.ClearBundles();
             watchAroungOrigin = Location.Tile;
         }
 
         protected virtual async Task PrepareForFight(ITile enemyTile)
         {
-            var moveDirection = Location.Tile.Neighbors.Single(t => t.Item1 == enemyTile).Item2;
+            if (Location == null)
+                return;
 
-            while (true)
+            var moveDirection = Location.Tile.Neighbors.SingleOrDefault(t => t.Item1 == enemyTile)?.Item2;
+            if (moveDirection == null)
             {
-                var routeToSide = GroupLayout.GetToSide(Location, moveDirection, false);
-                if (routeToSide != null)
+                //creature fall to pit for example
+                return;
+            }
+
+            var routeToSide = GroupLayout.GetToSide(Location, moveDirection.Value, false);
+            if (routeToSide != null)
+            {
+                foreach (var space in routeToSide.Skip(1))
                 {
-                    foreach (var space in routeToSide.Skip(1))
+                    if (!await MoveToSpace(space))
                     {
-                        if (!await MoveToSpace(space))
-                        {
-                            goto whileLoop;
-                        }
-                        await Task.Delay(MoveDuration);
+                        return;
                     }
-
-                    await Fight(enemyTile, moveDirection);
-                    break;
+                    await Task.Delay(MoveDuration);
                 }
-
-                whileLoop:
-                await Task.Delay(100);
+                if (Location == null)
+                    return;
+                new CreatureAttack(this).Apply(moveDirection.Value);
+                await Task.Delay(attackDuration);
             }
         }
-
-        protected virtual async Task Fight(ITile enemyTile, MapDirection moveDirection)
-        {
-            new CreatureAttack(this).Apply(moveDirection);
-            await Task.Delay(attackDuration);
-        }
-
 
         public override void Update(GameTime time)
         {

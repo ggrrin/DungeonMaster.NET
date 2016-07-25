@@ -26,7 +26,7 @@ namespace DungeonMasterEngine.DungeonContent
             LastAddedLevel = item;
             queue.Enqueue(item);
 
-            if (Count > 3)
+            if (Count > 4)
                 queue.Dequeue();
         }
 

@@ -9,10 +9,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
     {
         private readonly Matrix outerWallTransformation = Matrix.CreateTranslation(Vector3.UnitZ * 1.001f) * Matrix.CreateRotationY(MathHelper.Pi);
         private readonly DecorationRenderer<DecorationItem> decorationRenderer;
+        private readonly bool drawDecoration;  
 
         public WallIllusionTileSideRenderer(TileSide tileSide, Texture2D wallTexture, Texture2D decoration) : base(tileSide, wallTexture)
         {
             decorationRenderer = new DecorationRenderer<DecorationItem>(decoration, new DecorationItem());
+            drawDecoration = decoration != null;
         }
 
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
@@ -21,7 +23,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 
             var finalTransformation = outerWallTransformation * baseTransformation;
             RenderWall(effect, ref finalTransformation);
-            decorationRenderer.Render(ref finalTransformation, effect, parameter);
+
+            if(drawDecoration)
+                decorationRenderer.Render(ref finalTransformation, effect, parameter);
 
             return baseTransformation;
         }

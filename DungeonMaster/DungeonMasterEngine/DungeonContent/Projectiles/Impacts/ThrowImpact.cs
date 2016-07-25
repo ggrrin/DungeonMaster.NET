@@ -12,7 +12,8 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
             Item = item;
         }
 
-        public override bool CreatesExplosion => false; 
+        public override bool CreatesExplosion => false;
+        public override bool IsMagic => false; 
 
         protected override AttackInfo GetDefaultImpact(Projectile projectile)
         {

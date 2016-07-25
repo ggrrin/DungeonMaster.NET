@@ -32,14 +32,14 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         private void Initialize(StairsInitializer initializer)
         {
-            sides = new List<ITileSide>(initializer.WallSides.Where(w => !(w is FloorTileSide)));
+            sides = initializer.WallSides;
 
             initializer.Initializing -= Initialize;
         }
 
         public override bool IsAccessible => true;
 
-        protected List<ITileSide> sides;
+        protected IEnumerable<ITileSide> sides;
         public override IEnumerable<ITileSide> Sides => sides; 
         private readonly List<object> subItems = new List<object>();
         public override IEnumerable<object> SubItems => subItems;

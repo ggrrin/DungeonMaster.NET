@@ -47,14 +47,18 @@ namespace DungeonMasterEngine.Player
         public LegacyLeader(IFactories factorie)
         {
             this.factorie = factorie;
+            //InitMocap();
         }
 
-        private void InitMocap()
+        private async void InitMocap()
         {
+            await Task.Delay(2000);
+
             var builder = new ChampionMocapCreator();
             var x = new[]
             {
-                builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|AACPACJOAABB|DJCFCPDJCFCPCF|BDACAAAAAAAADCDB"),
+                  builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|FFFFFFFFFFFF|FFFFFFFFFFFFFF|BDACAAAAAAAADCDB"),
+                //builder.GetChampion("CHANI|SAYYADINA SIHAYA||F|AACPACJOAABB|DJCFCPDJCFCPCF|BDACAAAAAAAADCDB"),
                 builder.GetChampion("IAIDO|RUYITO CHIBURI||M|AADAACIKAAAL|CICLDHCICDCNDC|CDACAAAABBBCAAAA"),
                 builder.GetChampion("HAWK|$CFEARLESS||M|AAEGADFCAAAK|CICNCDCGDHCDCD|CAACAAAAADADAAAA"),
                 builder.GetChampion("ZED|DUKE OF BANVILLE||M|AADMACFIAAAK|DKCICICIDCCICI|CBBCCBCBBCBBBCBB"),
@@ -100,11 +104,12 @@ namespace DungeonMasterEngine.Player
 
         }
 
-        public override async Task MoveToAsync(ISpaceRouteElement newLocation)
+        public override async Task<bool> MoveToAsync(ISpaceRouteElement newLocation)
         {
             var b = base.MoveToAsync(newLocation);
             var p = MovePartyAsync(newLocation.Tile);
             await Task.WhenAll(p, b);
+            return true;
         }
 
 
@@ -163,13 +168,21 @@ namespace DungeonMasterEngine.Player
             champion.Location = new FourthSpaceRouteElement(freeSpace, Location.Tile);
             champion.MapDirection = MapDirection;
             partyGroup.Add(champion);
-            champion.Died += (sender, deadChampion) => partyGroup.Remove(deadChampion);
+            champion.Died += (sender, deadChampion) =>
+            {
+                partyGroup.Remove(deadChampion);
+                if (!partyGroup.Any())
+                {
+                    GameConsole.Instance.RunCommand(new ChampionCommand {GameOver = true});
+                }
+            };
 
             return true;
         }
 
         public override void Update(GameTime time)
         {
+
             if (!Enabled)
                 return;
 
@@ -201,7 +214,7 @@ namespace DungeonMasterEngine.Player
                         break;
                     }
 
-                if (!anyTriggered && Hand != null)
+                if (!anyTriggered && Hand != null && Leader != null)
                     ThrowItem();
             }
 

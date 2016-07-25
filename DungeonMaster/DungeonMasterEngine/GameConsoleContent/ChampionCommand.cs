@@ -1,4 +1,6 @@
-﻿using DungeonMasterEngine.GameConsoleContent.Base;
+﻿using System;
+using System.Diagnostics;
+using DungeonMasterEngine.GameConsoleContent.Base;
 using System.Threading.Tasks;
 using DungeonMasterEngine.DungeonContent.Actuators.Sensors.WallSensors;
 using DungeonMasterEngine.DungeonContent.Entity;
@@ -7,14 +9,25 @@ namespace DungeonMasterEngine.GameConsoleContent
 {
     public class ChampionCommand : Interpreter
     {
+        public bool GameOver { get; set; }
         public Sensor127 Actuator { get; set; }
 
         public override async Task Run()
         {
-            if (Actuator != null)
+            if (GameOver)
+            {
+                Output.WriteLine("GAME OVER!!! --> send anything to exit");
+                await Input.ReadLineAsync();
+                Environment.Exit(0);
+            }
+            else if (Actuator != null)
+            {
                 await ChampoinReincarnation();
+            }
             else
+            {
                 await ChampoinInfo();
+            }
         }
 
         private async Task ChampoinInfo()
@@ -35,10 +48,34 @@ namespace DungeonMasterEngine.GameConsoleContent
                     case "sleep":
                         await Sleep();
                         break;
+                    case "switch":
+                        await SwitchChampions();
+                        break;
                 }
             }
             else
                 Output.WriteLine("Invalid parameter");
+        }
+
+        private async Task SwitchChampions()
+        {
+            Output.WriteLine("Specify first champion.");
+            var champion1 = await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup);
+            Output.WriteLine("Specify second champion.");
+            var champion2 = await GetFromItemIndex(ConsoleContext.AppContext.Leader.PartyGroup);
+
+            if (champion1 == null || champion2 == null)
+            {
+                Output.WriteLine("Invalid champion selection.");
+            }
+            else
+            {
+                var firstLocation = champion1.Location;
+                var secondLocation = champion2.Location;
+                champion1.Location = null;
+                champion2.Location = firstLocation;
+                champion1.Location = secondLocation;
+            }
         }
 
         private async Task Sleep()
@@ -71,6 +108,10 @@ namespace DungeonMasterEngine.GameConsoleContent
             }
 
             Output.WriteLine(Actuator.Champion);
+
+            if (Actuator.Champion == null)
+                return;
+
             foreach (var skill in Actuator.Champion.Skills)
                 Output.WriteLine($"{skill.GetType().Name}: {skill.SkillLevel}");
 

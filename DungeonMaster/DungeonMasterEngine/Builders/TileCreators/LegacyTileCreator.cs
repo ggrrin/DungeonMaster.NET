@@ -172,10 +172,20 @@ namespace DungeonMasterEngine.Builders.TileCreators
 
 
             var res = new TeleportTile(initializer);
+            //setup target tile for in level teleports, cross lever teleportation doesn't work for creatures unless player is near by.
+            GetTeleportTarget(initializer);
             SetupTeleportSides(initializer, currentGridPosition, true, res);
             res.Renderer = builder.Factories.RenderersSource.GetTileRenderer(res);
             this.initializer = initializer;
             return res;
+        }
+
+        private async void GetTeleportTarget(TeleprotInitializer teleportInitializer)
+        {
+            if (teleportInitializer.NextLevelIndex != builder.CurrentLevelIndex)
+                return;
+
+            teleportInitializer.NextLevelEnter = (await builder.GetTargetTile(teleportInitializer.TargetTilePosition, MapDirection.North)).Item1;
         }
 
         private async void SetupTeleportSides(TeleprotInitializer initializer, Point gridPosition, bool randomDecoration, ITile tile)
@@ -241,13 +251,26 @@ namespace DungeonMasterEngine.Builders.TileCreators
                 .ToArray();
         }
 
+
+        private async void SetupStairsSides(StairsInitializer stairsInitializer, ITile res)
+        {
+            var pos = currentGridPosition;
+            await sidesCreator.SetupSidesAwaitableAsync(stairsInitializer, pos, res);
+            stairsInitializer.FloorSide = null;
+
+            stairsInitializer.WallSides = stairsInitializer.WallSides
+                .Where(w => w.Face != MapDirection.Down && (stairsInitializer.Down || w.Face != MapDirection.Up))
+                .ToArray();
+        }
+
+
         public Tile GetTile(StairsTileData t)
         {
             SetMinimapTile(Color.Yellow);
             StairsInitializer stairsInitializer = new StairsInitializer { Down = t.Direction == VerticalDirection.Down };
 
             var res = new Stairs(stairsInitializer);
-            sidesCreator.SetupSidesAsync(stairsInitializer, currentGridPosition, res);
+            SetupStairsSides(stairsInitializer, res);
             if (t.Direction == VerticalDirection.Down)
             {
                 var upperStairsEntry = FindStairsEntryDirection(tilePosition.ToGrid(), -(int) tilePosition.Y);

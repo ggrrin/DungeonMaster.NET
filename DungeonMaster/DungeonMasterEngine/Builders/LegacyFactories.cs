@@ -208,7 +208,7 @@ namespace DungeonMasterEngine.Builders
         protected virtual CreatureFactory[] InitCreatureFactories()
         {
             return Data.CreatureDescriptors
-                            .Select(wd => new CreatureFactory(GetGroupLayout(wd.Size), wd.Name, MathHelper.Clamp(wd.MovementDuration * 1000 / 6, 500, 1200),
+                            .Select(wd => new CreatureFactory(GetGroupLayout(wd.Size), wd.Name, wd.MovementDuration * 1000 / 6 / 2,//MathHelper.Clamp(wd.MovementDuration * 1000 / 6, 500, 1200),
                             wd.DetectionRange, wd.SightRange, wd.ExperienceClass,
                             ResourceProvider.Instance.Content.Load<Texture2D>($"Textures/Creatures/DM-Creature-SuperNES-{wd.Name}"),
                             wd.WoundFeet, wd.WoundLegs, wd.WoundTorso, wd.WoundLegs,

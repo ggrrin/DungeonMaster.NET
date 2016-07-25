@@ -34,8 +34,6 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
                     mirror = -1;
                     stairsModel = Resources.Content.Load<Model>("Models/stairs1");
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
 
             }
 
@@ -54,7 +52,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
             var newTransformation = base.Render(ref currentTransformation, effect, parameter);
-            DrawModel(stairsModel, ref newTransformation, effect);
+            if(stairsModel != null)
+                DrawModel(stairsModel, ref newTransformation, effect);
+
             return newTransformation;
         }
 

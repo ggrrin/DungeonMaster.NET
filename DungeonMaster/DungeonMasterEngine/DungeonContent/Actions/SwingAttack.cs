@@ -35,7 +35,7 @@ namespace DungeonMasterEngine.DungeonContent.Actions
                 base.PerformAttack(direction, ref delay);
             }
         }
-        protected void F232_dzzz_GROUP_IsDoorDestroyedByAttack(IEntity door, int P506_i_Attack, bool P507_B_MagicAttack)
+        public static void F232_dzzz_GROUP_IsDoorDestroyedByAttack(IEntity door, int P506_i_Attack, bool P507_B_MagicAttack)
         {
             var doorHealth = door.GetProperty(PropertyFactory<HealthProperty>.Instance);
             var doorDefense = door.GetProperty(PropertyFactory<DefenseProperty>.Instance);
@@ -43,7 +43,6 @@ namespace DungeonMasterEngine.DungeonContent.Actions
 
             if (P507_B_MagicAttack)
             {
-                //TODO test !!
                 doorHealth.Value -= MathHelper.Clamp(P506_i_Attack - doorAntiMagic.Value, 0, int.MaxValue);
             }
             else

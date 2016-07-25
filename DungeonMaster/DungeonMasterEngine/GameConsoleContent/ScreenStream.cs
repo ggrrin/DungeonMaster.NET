@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DungeonMasterEngine.GameConsoleContent
 {
-    internal class ScreenStream : Stream
+    public class ScreenStream : Stream
     {
         StreamWriter fileOutput = new StreamWriter("console_output.log");
 

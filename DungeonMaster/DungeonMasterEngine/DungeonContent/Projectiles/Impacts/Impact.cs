@@ -8,6 +8,7 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
         protected static readonly Random rand = new Random();
 
         public abstract bool CreatesExplosion { get; }
+        public abstract bool IsMagic { get; }
 
         public AttackInfo GetImpact(Projectile projectile)
         {

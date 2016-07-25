@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
 {
+  
     public class FloorTileSideRenderer<TFloorTileSide> : TileWallSideRenderer<TFloorTileSide> where TFloorTileSide : FloorTileSide
     {
         public FloorTileSideRenderer(TFloorTileSide tileSide, Texture2D wallTexture, Texture2D decorationTexture) : base(tileSide, wallTexture) { }
@@ -27,6 +28,9 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Renderers
         public override Matrix Render(ref Matrix currentTransformation, BasicEffect effect, object parameter)
         {
             Matrix finalTransformation = base.Render(ref currentTransformation, effect, parameter);
+
+            var buttomFloorSideTransformation = Matrix.CreateRotationZ(MathHelper.Pi) * Matrix.CreateTranslation(-Vector3.Up * 1.01f);
+            base.Render(ref buttomFloorSideTransformation, effect, parameter);
 
             int j = 1;
             foreach (var space in TileSide.Spaces)

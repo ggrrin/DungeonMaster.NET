@@ -1,3 +1,4 @@
+using DungeonMasterEngine.DungeonContent.Tiles.Support;
 using DungeonMasterEngine.Interfaces;
 using Microsoft.Xna.Framework;
 
@@ -14,6 +15,7 @@ namespace DungeonMasterEngine.DungeonContent.Tiles.Initializers
         public bool Open { get; set; }
         public bool Visible { get; set; }
         public IConstrain ScopeConstrain { get; set; }
+        public ITile NextLevelEnter { get; set; }
 
         protected override void OnInitializing()
         {
