@@ -553,7 +553,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DungeonMaster\DungeonMasterParser.csproj">
+    <ProjectReference Include="..\DungeonMasterParser\DungeonMasterParser.csproj">
       <Project>{351001d7-1aa1-443a-b750-7f91be101a9b}</Project>
       <Name>DungeonMasterParser</Name>
     </ProjectReference>
