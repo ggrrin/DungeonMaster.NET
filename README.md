@@ -1,4 +1,8 @@
-﻿# DungeonMaster 
+﻿DungeonMaster 
+=============
+
+
+# Abstract
 
 The goal of this thesis is to reimplement the Dungeon Master game. Currently there exist several 
 clones of this well-known game. However, compared to them this thesis focuses on  aspect stated below.
@@ -17,4 +21,9 @@ tzn. s využitím tohoto enginu je možné vyrobit a vyvinout i jinou hru založ
 především je jednoduché přidávat do enginu nové funkce. Engine je také 
 připravený na rozdílné vstupní formáty herních úrovní. Dále je také kompletně oddělena zobrazovací vrstva. Vzhledem 
 k povaze projektu engine může sloužit jako ukázkový příklad použitelný při výuce programování. 
+
+# Notes
+- Tested with MonoGame 3.6
+- DungeonMasterEngine is project with the game (be sure to compile this one)
+- DungeonMasterParser is just helper project for parsing original DUNGEON.DAT data !!!
 

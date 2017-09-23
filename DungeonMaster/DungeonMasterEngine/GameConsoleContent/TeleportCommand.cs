@@ -12,6 +12,7 @@ namespace DungeonMasterEngine.GameConsoleContent
     {
         public override async Task Run()
         {
+            await Task.Yield();
             Point targetLocation;
             if (Parameters.Length == 2 && int.TryParse(Parameters[0], out targetLocation.X) && int.TryParse(Parameters[1], out targetLocation.Y))
             {

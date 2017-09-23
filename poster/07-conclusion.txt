@@ -1,0 +1,3 @@
+﻿Závěr
+
+V rámci této práce byl naimplmentovaný engine pro hru Dungeon Master, přičemž byly splněny cíle práce. Engine je naprogramovaný v jazyce C# a má vhodný objektový návrh pro rozšiřování konkrétních funkcí enginu. Engine je tak možné použít jako pomůcku pro výuku objektově orientovaného programovaní v jazyce C#. Konkrétní funkce enginu jsou naimplementované odhadem z více jak 50% (tj. 19 ze 29 přepínačů, 18 ze 44 akcí a 15 z 23 kouzel).

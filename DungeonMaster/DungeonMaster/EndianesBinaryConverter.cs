@@ -7,27 +7,27 @@ namespace DungeonMasterParser
         private readonly BinaryWriter writer;
         public EndianesBinaryConverter(Stream input) : base(input)
         {
-            writer = new BinaryWriter(new FileStream("endianess.dat", FileMode.Create));
+            //writer = new BinaryWriter(new FileStream("endianess.dat", FileMode.Create));
         }
 
         public override byte ReadByte()
         {
             var res = base.ReadByte();
-            writer.Write(res);
+            writer?.Write(res);
             return res;
         }
 
         public override byte[] ReadBytes(int count)
         {
             var res = base.ReadBytes(count);
-            writer.Write(res);
+            writer?.Write(res);
             return res;
         }
 
         public override ushort ReadUInt16()
         {
             var res = base.ReadUInt16();
-            writer.Write(res);
+            writer?.Write(res);
             return res;
         }
 
@@ -35,7 +35,7 @@ namespace DungeonMasterParser
 
         protected override void Dispose(bool disposing)
         {
-            writer.Dispose();
+            writer?.Dispose();
 
             base.Dispose(disposing);
         }

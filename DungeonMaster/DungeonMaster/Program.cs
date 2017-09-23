@@ -12,36 +12,39 @@ namespace DungeonMasterParser
     {
         static void Main(string[] args)
         {
-            var dat = new DungeonParser();
-            dat.Parse();
+            Console.WriteLine("This executable is not intended to run. ");
+            Console.WriteLine("It's referenced by DungeonMasterEngine assembly.");
+            Console.WriteLine("It was also used for testing parsing of DUNGEON.DAT.");
+            //var dat = new DungeonParser();
+            //dat.Parse();
 
-            a(dat.Data.Maps[1], dat.Data);
+            //a(dat.Data.Maps[1], dat.Data);
 
-            using (var w = new StreamWriter("output.txt"))
-            {
+            //using (var w = new StreamWriter("output.txt"))
+            //{
 
-                //var stairTiles = (from i in dat.Data.Maps.SelectMany(x => x.Tiles) where i.GetType() == typeof(StairsTile) select i).SelectMany(x => x.GetItems(dat.Data));
-
-
-                //var q = from j in stairTiles
-
-                //        where j.GetType() == typeof(Actuator) //&& (j as Actuator).AcutorType == 5/*stair actuator*/
-                //        select new { Action = ((Actuator)j).Action, Position = ((Actuator)j).ActionType.ToString() };
-
-                //foreach (var k in from i in dat.Data.ObjectIDs
-                //                  where i.Category == ObjectCategory.Actuators && ((Actuator)i.GetObject(dat.Data)).AcutorType == 5
-                //                  select ((RmtTrg)((Actuator)i.GetObject(dat.Data)).ActionType).Position.ToString() + " " +
-                //                  dat.Data.Actuators.IndexOf((Actuator)i.GetObject(dat.Data)))
-
-                //    w.WriteLine(k);
+            //    //var stairTiles = (from i in dat.Data.Maps.SelectMany(x => x.Tiles) where i.GetType() == typeof(StairsTile) select i).SelectMany(x => x.GetItems(dat.Data));
 
 
-                //var stairAcutorsIDs = (from i in new int[] { 55, 166, 402, 166, 127 }
-                //                       select ((((0 ^ (int)TilePosition.North_TopLeft) << 4) ^ (int)ObjectCategory.Actuators) << 10) ^ i).ToArray();
-                WriteActuators(w, dat);
-                WriteStairTiles(w, dat);
-                WriteMapsTiles(w, dat);
-            }
+            //    //var q = from j in stairTiles
+
+            //    //        where j.GetType() == typeof(Actuator) //&& (j as Actuator).AcutorType == 5/*stair actuator*/
+            //    //        select new { Action = ((Actuator)j).Action, Position = ((Actuator)j).ActionType.ToString() };
+
+            //    //foreach (var k in from i in dat.Data.ObjectIDs
+            //    //                  where i.Category == ObjectCategory.Actuators && ((Actuator)i.GetObject(dat.Data)).AcutorType == 5
+            //    //                  select ((RmtTrg)((Actuator)i.GetObject(dat.Data)).ActionType).Position.ToString() + " " +
+            //    //                  dat.Data.Actuators.IndexOf((Actuator)i.GetObject(dat.Data)))
+
+            //    //    w.WriteLine(k);
+
+
+            //    //var stairAcutorsIDs = (from i in new int[] { 55, 166, 402, 166, 127 }
+            //    //                       select ((((0 ^ (int)TilePosition.North_TopLeft) << 4) ^ (int)ObjectCategory.Actuators) << 10) ^ i).ToArray();
+            //    WriteActuators(w, dat);
+            //    WriteStairTiles(w, dat);
+            //    WriteMapsTiles(w, dat);
+            //}
         }
 
         private static void WriteActuators(StreamWriter w, DungeonParser dat)

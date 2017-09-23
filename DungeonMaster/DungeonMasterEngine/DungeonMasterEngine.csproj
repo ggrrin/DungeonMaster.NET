@@ -196,13 +196,9 @@
     <Compile Include="DungeonContent\Actuators\Sensors\FloorSensors\FloorSensorC06.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\Initializers\ItemConstrainSensorInitalizer.cs" />
     <Compile Include="DungeonContent\Actuators\LogicActuator.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\Mess\ActuatorType.cs" />
     <Compile Include="DungeonContent\Actuators\ActuatorX.cs" />
     <Compile Include="DungeonContent\Actuators\Renderers\WallActuatorRenderer.cs" />
     <Compile Include="DungeonContent\Actuators\Alcove.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\Mess\BA.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\Mess\BB.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\Mess\BUninon.cs" />
     <Compile Include="DungeonContent\Actuators\DecorationItem.cs" />
     <Compile Include="DungeonContent\Actuators\Fountain.cs" />
     <Compile Include="DungeonContent\Actuators\IActuatorX.cs" />
@@ -231,7 +227,6 @@
     <Compile Include="DungeonContent\Actuators\Sensors\Initializers\StorageSensorInitializer.cs" />
     <Compile Include="DungeonContent\Actuators\Sensors\WallSensors\SubXc017c011.cs" />
     <Compile Include="DungeonContent\Actuators\ViAltairAlcove.cs" />
-    <Compile Include="DungeonContent\Actuators\Sensors\Mess\APart1.cs" />
     <Compile Include="DungeonContent\Entity\IChampionInitializer.cs" />
     <Compile Include="DungeonContent\Entity\Properties\CreatureSpecific\ExperienceProperty.cs" />
     <Compile Include="DungeonContent\Entity\Skills\FightSkill.cs" />
@@ -386,8 +381,6 @@
     <Compile Include="GameConsoleContent\Factories\HandCommandFactory.cs" />
     <Compile Include="GameConsoleContent\HelpCommand.cs" />
     <Compile Include="GameConsoleContent\Factories\HelpFactory.cs" />
-    <Compile Include="GameConsoleContent\ItemCommand.cs" />
-    <Compile Include="GameConsoleContent\Factories\ItemFactory.cs" />
     <Compile Include="GameConsoleContent\KeyboardStream.cs" />
     <Compile Include="GameConsoleContent\ScreenStream.cs" />
     <Compile Include="GameConsoleContent\SpellCommand.cs" />
@@ -568,9 +561,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Data\DUNGEON.DAT">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\DUNGEON_ATARI - Copy.DAT">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\DUNGEON_ATARI.DAT">

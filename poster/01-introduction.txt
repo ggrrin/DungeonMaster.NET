@@ -1,0 +1,6 @@
+
+Úvod
+Dungeon Master je RPG (role playing game), ve které má hráč k dispozici skupinu hrdinů, s kterými putuje v podzemním bludišti. Největším specifikem hry je, že jednotlivé úrovně bludiště se skládají z obdélníkových ploch s pravidelnou mřížkou. Hráč se pak pohybuje diskrétně mezi jednotlivými částmi mřížky, které mouhou být různých typů (např.: jáma, dveře, atd.). Tyto části lze pak aktivovat pomocí přepínačů na zdech či podlaze. Dále se v bludišti objevují nepřátelské entity nebo sbíratelné předměty.
+
+Výsledkem práce by měl být engine, který umožňuje jednoduché rozšiřování enginu o další funkcionality a může tak sloužit jako vhodný prostředek pro výuku objektově orientovaného programovaní v jazyce C#. Hra Dungeon Master obsahuje potenciálně mnoho míst, které by šlo jednoduše rozšířít, a proto je idálním kandidátem pro reimplemetaci jejího enginu. Případní studenti by si tak mohli vyzkoušet do enginu doimplementovat další funkce.
+

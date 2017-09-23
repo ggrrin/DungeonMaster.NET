@@ -251,7 +251,6 @@ namespace DungeonMasterParser
                 {
                     var columns = tr.Elements("td").Select(td => td.InnerText).ToArray();
                     var classDelta = columns[3].Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    int val;
                     var res = new ArmorDescriptor
                     {
                         Name = columns[0].Trim(),

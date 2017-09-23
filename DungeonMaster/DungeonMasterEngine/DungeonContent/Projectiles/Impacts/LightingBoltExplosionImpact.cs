@@ -20,7 +20,6 @@ namespace DungeonMasterEngine.DungeonContent.Projectiles.Impacts
         public override void FinishImpact(Projectile projectile)
         {
             var attack = projectile.KineticEnergy >> 1;
-            var delay = 1 * 1000 / 6; //rebirth1 5
             var location = projectile.Location;
             var attackBefore = attack;
             //send event ==>

@@ -1,0 +1,9 @@
+Cíle
+
+Cílem této práce je vytvořit engine pro hru Dungeon Master, tak aby splňovala následující požadavky:
+1. Engine bude naprogramovaný v jazyce C#.
+2. Engine bude obsahovat podporu pro funkce a mechaniky vyskytující se ve hře Dungeon Master.
+3. Bude kladen důraz na dobrý objektový návrh tak, aby byl engine co nejlépe rozšiřitelný a bylo tak možné do enginu dodávat jednoduše nové funkce.
+4. Engine bude schopný sestavit herní úrovně podle vstupních dat použitých v originální hře. Nicméně bude také poskytovat možnost dodělat si podporu pro jiné formáty.
+5. Engine bude obsahovat oddělenou zobrazovací vrstvu tak, aby mohl být její výstup jednoduše změněn.
+6 Projekt bude cílený pro vzdělávaní tak, aby si studenti mohli vyzkoušet do enginu doprogramovat další funkce.

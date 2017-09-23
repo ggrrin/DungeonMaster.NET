@@ -103,13 +103,13 @@ namespace DungeonMasterEngine.Player
 
             float verticalAngle = 0;
             float horizontalAngle = 0;
-            //TODO solve monogame mouse bug
-            //if (mouseMove != Vector2.Zero)
-            //{
-            //    verticalAngle = mouseMove.X / GraphicsDevice.Viewport.Width * FieldOfView;
-            //    horizontalAngle = mouseMove.Y / GraphicsDevice.Viewport.Width * FieldOfView;
-            //}
-            //else
+
+            if (mouseMove != Vector2.Zero)
+            {
+                verticalAngle = mouseMove.X / GraphicsDevice.Viewport.Width * FieldOfView;
+                horizontalAngle = mouseMove.Y / GraphicsDevice.Viewport.Width * FieldOfView;
+            }
+            else
             {
                 KeyboardState keys = Keyboard.GetState();
                 const float move = 0.03f;

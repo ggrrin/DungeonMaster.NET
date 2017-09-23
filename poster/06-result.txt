@@ -1,0 +1,9 @@
+﻿Výsledek reimplementace
+
+Do nového enginu se nám podařilo reimplementovat všechny koncepty z původní hry Dungeon Master. Nicméně engine neobsahuje implementace všech konkrétních funkcí z originální hry. Naimplementované funkce jsou však dostačující pro hraní prvních pěti úrovní hry. Oproti originálu, který je pseudo 3D, je v základu výstup tohoto enginu ve 3D. Avšak veškeré vykreslovací obsluhy jsou vyčleněny do zvláštní vrstvy, kterou lze nahradit vlastní implementací. Vizuální rozdíl mezi originální hrou a tímto enginem ilustrují následující obrázky.
+
+Originální hra:
+[obrázek DM-original-screen]
+
+Výsledek práce
+[obrázky GPit, GMummy v tomto pořadí] [Mummy predelat screen !!!!]

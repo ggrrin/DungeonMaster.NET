@@ -1,0 +1,62 @@
+﻿Asynchronní operace
+
+Engine zajišťuje podporu pro asynchronní operace, které jsou prováděny vždy ve vlákně s herní smyčkou. Pro psaní asynchronních funkcí je tak možné využít konstrukt await jazyka C#, který při překladu umožňuje převést sekvenčně zapsaný kód do asynchronní podoby. Aby se výsledné funkce prováděly asynchronně bylo nutné provést implementaci třídy SynchronizationContext, která provádí synchronizaci skrze frontu operací, která je vyprázdněna v každém cyklu herní smyčky.
+
+[nasledujici cast v ramecku vlevo]
+
+Tento příklad ukazuje část implementaci umělé inteligence nepřátelských entit, kde se nepřátelská entita rozhoduje zda útočí (Hount), jde domů (GoHome) nebo jen hlídá (WatchAround). Na dokončení každého úkonu je asynchronně čekáno až několik sekund, proto zde využití asynchronních funkcí usnadňuje implementaci.
+
+protected virtual async void LiveAsync()
+{
+	Activated = true;
+
+	await Task.Yield();
+	while (Activated)
+	{
+		if (hounting)
+			await Hount();
+		else if (gettingHome)
+			await GoHome();
+		else
+			await WatchAround();
+
+		await Task.Delay(100);
+
+		if (animator.AnimatingTask != null)
+			await animator.AnimatingTask;
+	}
+}
+
+[nasledujici cast v ramecku vpravo ]
+
+
+Dalším příkladem je čekání na vstup uživatele ve smyčce konzole, které se provádí ve funkci GetInterpreter.
+Po odeslání příkazu uživatelem se nalezne odpovídající interpreter příkazu, kterému se předá kontrola.
+
+
+public override async Task Run()
+{
+	Output.WriteLine("Welcome! Write a command.");
+
+	while (Running)
+	{
+		RunningCommand = await GetInterpreter();
+
+		if (RunningCommand != null)
+		{
+			RunningCommand.Input = Input;
+			RunningCommand.Output = Output;
+			RunningCommand.ConsoleCtx = ConsoleCtx;
+
+			await RunningCommand.Run();
+			RunningCommand = null;
+			Output.WriteLine();
+		}
+		else
+		{
+			Output.WriteLine("Invalid command!");
+		}
+	}
+
+	Output.WriteLine("Have a nice day.");
+}

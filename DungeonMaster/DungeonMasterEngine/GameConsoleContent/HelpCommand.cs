@@ -9,6 +9,7 @@ namespace DungeonMasterEngine.GameConsoleContent
     {
         public override async Task Run()
         {
+            await Task.Yield();
             if (!Parameters.Any())
             {
                 foreach (var cmd in ConsoleContext.Factories)

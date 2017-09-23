@@ -112,13 +112,12 @@ namespace DungeonMasterEngine.DungeonContent.Tiles
 
         void F324_aezz_CHAMPION_DamageAll_GetDamagedChampionCount(ILiveEntity entity, int P669_ui_Attack)//, int P670_i_Wounds, int P671_i_AttackType)
         {
-            int L0984_i_ChampionIndex;
-            int L0985_i_RandomAttack;
-            int L0986_i_DamagedChampionCount;
+            //int L0984_i_ChampionIndex;
+            //int L0986_i_DamagedChampionCount;
 
             
             //customized 
-            L0985_i_RandomAttack = (P669_ui_Attack >> 3) + 1;
+            int L0985_i_RandomAttack = (P669_ui_Attack >> 3) + 1;
             P669_ui_Attack += (rand.Next(3) - 1) * L0985_i_RandomAttack;
 
             entity.GetProperty(PropertyFactory<HealthProperty>.Instance).Value -= P669_ui_Attack;

@@ -36,6 +36,7 @@ namespace DungeonMasterEngine
                 PreferredBackBufferHeight = 600,
                 IsFullScreen = false
             };
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             SynchronizationContext.SetSynchronizationContext(new GameSynchronizationContext(taskQueue));

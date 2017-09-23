@@ -318,12 +318,10 @@ namespace DungeonMasterEngine.DungeonContent.Actions
 
         int F313_xxxx_CHAMPION_GetWoundDefense(ILiveEntity P652_i_ChampionIndex, WoundInfo P653_ui_WoundIndex)
         {
-            int A0942_i_SlotIndex;
             int L0943_ui_ArmourShieldDefense = 0;
-            bool L0944_B_UseSharpDefense;
 
             var L0946_ps_Champion = P652_i_ChampionIndex;//&G407_s_Party.Champions[P652_i_ChampionIndex];
-            L0944_B_UseSharpDefense = P653_ui_WoundIndex.UseSharpDefense;
+            bool L0944_B_UseSharpDefense = P653_ui_WoundIndex.UseSharpDefense;
             //if (L0944_B_UseSharpDefense = M07_GET(P653_ui_WoundIndex, MASK0x8000_USE_SHARP_DEFENSE))
             //{
             //    M09_CLEAR(P653_ui_WoundIndex, MASK0x8000_USE_SHARP_DEFENSE);
