@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonMasterParser", "DungeonMasterParser\DungeonMasterParser.csproj", "{351001D7-1AA1-443A-B750-7F91BE101A9B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonMasterEngine", "DungeonMasterEngine\DungeonMasterEngine.csproj", "{4114B299-4744-4DF2-A9BA-D91F45A1394A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonMasterParser", "DungeonMasterParser\DungeonMasterParser.csproj", "{351001D7-1AA1-443A-B750-7F91BE101A9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
